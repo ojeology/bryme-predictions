@@ -3,18 +3,24 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: dark;
+  color-scheme: light dark;
 }
 
-body {
+html.dark body {
   background-color: #070D1A;
   color: #F8FAFC;
-  overflow-x: hidden;
-  font-family: 'Inter', system-ui, sans-serif;
   background-image: 
-    radial-gradient(circle at 50% 0%, rgba(0, 230, 118, 0.08) 0%, transparent 50%),
-    radial-gradient(circle at 90% 20%, rgba(30, 58, 138, 0.15) 0%, transparent 40%),
+    radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 90% 20%, rgba(30, 58, 138, 0.12) 0%, transparent 40%),
     radial-gradient(circle at 10% 40%, rgba(16, 185, 129, 0.06) 0%, transparent 40%);
+}
+
+html.light body {
+  background-color: #F8FAFC;
+  color: #0F172A;
+  background-image: 
+    radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.06) 0%, transparent 50%),
+    radial-gradient(circle at 90% 20%, rgba(59, 130, 246, 0.06) 0%, transparent 40%);
 }
 
 /* Custom scrollbars */
@@ -23,72 +29,26 @@ body {
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #070D1A;
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #182847;
+  background: #94A3B8;
   border-radius: 9999px;
 }
-::-webkit-scrollbar-thumb:hover {
-  background: #21355D;
+.dark ::-webkit-scrollbar-thumb {
+  background: #182847;
 }
 
-/* Glass Card with neon border highlight */
+/* Card utilities */
 .glass-card {
-  background: linear-gradient(180deg, rgba(18, 30, 54, 0.75) 0%, rgba(12, 21, 39, 0.85) 100%);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(33, 53, 93, 0.6);
-  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
-}
-
-.glass-card:hover {
-  border-color: rgba(0, 230, 118, 0.35);
-}
-
-/* Physical Ladder Rung styling */
-.ladder-rung {
-  position: relative;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
-
-.ladder-rung::before,
-.ladder-rung::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  width: 12px;
-  height: 6px;
-  background: #21355D;
-  border-radius: 2px;
-  transform: translateY(-50%);
+.dark .glass-card {
+  background: linear-gradient(180deg, rgba(14, 23, 42, 0.9) 0%, rgba(10, 18, 36, 0.95) 100%);
+  border-color: rgba(255, 255, 255, 0.08);
 }
-
-.ladder-rung::before {
-  left: -12px;
-}
-.ladder-rung::after {
-  right: -12px;
-}
-
-.ladder-rung-active {
-  box-shadow: 0 0 20px rgba(0, 230, 118, 0.45);
-  border-color: #00E676 !important;
-}
-
-.ladder-rung-active::before,
-.ladder-rung-active::after {
-  background: #00E676;
-  box-shadow: 0 0 8px #00E676;
-}
-
-.ladder-rung-gold {
-  box-shadow: 0 0 20px rgba(245, 158, 11, 0.45);
-  border-color: #F59E0B !important;
-}
-
-.ladder-rung-gold::before,
-.ladder-rung-gold::after {
-  background: #F59E0B;
-  box-shadow: 0 0 8px #F59E0B;
+.light .glass-card {
+  background: #ffffff;
+  border-color: #E2E8F0;
+  box-shadow: 0 4px 15px -2px rgba(0, 0, 0, 0.04);
 }

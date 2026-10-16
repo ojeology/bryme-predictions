@@ -1,9 +1,206 @@
+/**
+ * BRYME Predictions - Pan-African Tickets & Results Database
+ * Covering all African football regions + European top flights:
+ * - West Africa: Nigeria (NPFL), Ghana (GPL)
+ * - East Africa: Kenya (FKF), Uganda (UPL), Tanzania (NBC Premier League)
+ * - Southern Africa: South Africa (PSL), Zambia
+ * - North Africa & Continental: CAF Champions League, Egypt, Morocco, Tunisia
+ * - European Top Flights: Premier League, Champions League, La Liga
+ */
+
+export const AFRICAN_REGIONS = [
+  { id: 'all', name: 'All African & Global', flag: '🌍' },
+  { id: 'nigeria', name: 'Nigeria (NPFL)', flag: '🇳🇬' },
+  { id: 'kenya', name: 'Kenya (FKF)', flag: '🇰🇪' },
+  { id: 'ghana', name: 'Ghana (GPL)', flag: '🇬🇭' },
+  { id: 'south-africa', name: 'South Africa (PSL)', flag: '🇿🇦' },
+  { id: 'east-africa', name: 'East Africa (UG/TZ)', flag: '🇺🇬' },
+  { id: 'north-africa-caf', name: 'CAF & North Africa', flag: '🏆' },
+  { id: 'europe', name: 'Europe Top Flights', flag: '🇪🇺' },
+];
+
 export const TICKETS = [
-  // --- ANYBODY-WIN TICKETS ---
+  // ── 1. NIGERIA (NPFL) TICKETS ──
+  {
+    id: 'npfl-weekend-trio',
+    title: 'NPFL Matchday 8 Home Fortress Acca',
+    marketId: 'match-winner-dc',
+    region: 'nigeria',
+    date: '2026-10-18',
+    publishedAt: '2026-10-16 14:00 WAT',
+    source: '@NaijaTactician',
+    punterId: 'naija-tactician',
+    punterName: 'The Naija Tactician',
+    bookmaker: 'Bet9ja',
+    bookingCode: 'B9J-NPFL-08',
+    totalOdds: 2.85,
+    status: 'pending',
+    editorialNote: 'Targeting Nigeria Premier Football League home dominance where home sides win over 64% of domestic clashes.',
+    selections: [
+      { id: 'ng1', match: 'Enyimba FC vs Remo Stars', homeTeam: 'Enyimba FC', awayTeam: 'Remo Stars', league: 'Nigeria NPFL', kickoff: '16:00 WAT', market: 'Double Chance', pick: 'Enyimba 1X (Home or Draw)', odds: 1.28, status: 'pending' },
+      { id: 'ng2', match: 'Rivers United vs Rangers International', homeTeam: 'Rivers United', awayTeam: 'Rangers Int.', league: 'Nigeria NPFL', kickoff: '16:00 WAT', market: 'Double Chance', pick: 'Rivers United 1X', odds: 1.24, status: 'pending' },
+      { id: 'ng3', match: 'Shooting Stars vs Kano Pillars', homeTeam: 'Shooting Stars (3SC)', awayTeam: 'Kano Pillars', league: 'Nigeria NPFL', kickoff: '16:00 WAT', market: 'Match Winner', pick: 'Shooting Stars to Win', odds: 1.80, status: 'pending' }
+    ]
+  },
+  {
+    id: 'npfl-goals-slip',
+    title: 'NPFL Low-Variance Under Goals Double',
+    marketId: 'over-under-goals',
+    region: 'nigeria',
+    date: '2026-10-18',
+    publishedAt: '2026-10-16 11:30 WAT',
+    source: '@LagosStatsGuy',
+    punterId: 'lagos-stats-guy',
+    punterName: 'Lagos Stats Room',
+    bookmaker: 'SportyBet',
+    bookingCode: 'BC4-NPFL-UN',
+    totalOdds: 1.95,
+    status: 'pending',
+    editorialNote: 'NPFL away fixtures heavily trend toward tactical low-scoring ties (Under 2.5 Goals hit rate: 71%).',
+    selections: [
+      { id: 'ng4', match: 'Bendel Insurance vs Plateau United', homeTeam: 'Bendel Insurance', awayTeam: 'Plateau United', league: 'Nigeria NPFL', kickoff: '16:00 WAT', market: 'Over/Under', pick: 'Under 2.5 Goals', odds: 1.40, status: 'pending' },
+      { id: 'ng5', match: 'Kwara United vs Sunshine Stars', homeTeam: 'Kwara United', awayTeam: 'Sunshine Stars', league: 'Nigeria NPFL', kickoff: '16:00 WAT', market: 'Over/Under', pick: 'Under 2.5 Goals', odds: 1.39, status: 'pending' }
+    ]
+  },
+
+  // ── 2. KENYA (FKF) TICKETS ──
+  {
+    id: 'fkf-mashemeji-special',
+    title: 'Mashemeji Derby & FKF Premier League Double',
+    marketId: 'match-winner-dc',
+    region: 'kenya',
+    date: '2026-10-18',
+    publishedAt: '2026-10-16 12:15 EAT',
+    source: '@CoachKipKE',
+    punterId: 'coach-kip-ke',
+    punterName: 'Coach Kip KE',
+    bookmaker: 'SportyBet',
+    bookingCode: 'BC4-FKF-DERBY',
+    totalOdds: 2.15,
+    status: 'pending',
+    editorialNote: 'Nairobi Mashemeji Derby special featuring Kenya record champions Gor Mahia against AFC Leopards.',
+    selections: [
+      { id: 'ke1', match: 'Gor Mahia vs AFC Leopards', homeTeam: 'Gor Mahia', awayTeam: 'AFC Leopards', league: 'Kenya FKF Premier League', kickoff: '15:00 EAT', market: 'Double Chance', pick: 'Gor Mahia 1X', odds: 1.32, status: 'pending' },
+      { id: 'ke2', match: 'Tusker FC vs Kenya Police FC', homeTeam: 'Tusker FC', awayTeam: 'Kenya Police', league: 'Kenya FKF Premier League', kickoff: '15:00 EAT', market: 'Double Chance', pick: '12 (Either Team Wins)', odds: 1.38, status: 'pending' }
+    ]
+  },
+  {
+    id: 'fkf-coastal-goals',
+    title: 'FKF East African Over 1.5 Goals Slip',
+    marketId: 'over-under-goals',
+    region: 'kenya',
+    date: '2026-10-18',
+    publishedAt: '2026-10-16 10:00 EAT',
+    source: '@NairobiPunter',
+    punterId: 'nairobi-punter',
+    punterName: 'Nairobi Corner & Cards',
+    bookmaker: 'MozzartBet',
+    bookingCode: 'MZ-FKF-O15',
+    totalOdds: 2.45,
+    status: 'pending',
+    editorialNote: 'Over 1.5 Goals double backed by attacking flank conversion metrics in Mombasa and Machakos.',
+    selections: [
+      { id: 'ke3', match: 'Bandari FC vs Kakamega Homeboyz', homeTeam: 'Bandari FC', awayTeam: 'Kakamega Homeboyz', league: 'Kenya FKF Premier League', kickoff: '15:00 EAT', market: 'Over/Under', pick: 'Over 1.5 Goals', odds: 1.48, status: 'pending' },
+      { id: 'ke4', match: 'Ulinzi Stars vs KCB FC', homeTeam: 'Ulinzi Stars', awayTeam: 'KCB FC', league: 'Kenya FKF Premier League', kickoff: '15:00 EAT', market: 'Over/Under', pick: 'Over 1.5 Goals', odds: 1.52, status: 'pending' }
+    ]
+  },
+
+  // ── 3. GHANA (GPL) TICKETS ──
+  {
+    id: 'ghana-gpl-super-clash',
+    title: 'Ghana Premier League Super Clash Ticket',
+    marketId: 'match-winner-dc',
+    region: 'ghana',
+    date: '2026-10-18',
+    publishedAt: '2026-10-16 13:00 GMT',
+    source: 'BRYME Editorial',
+    punterId: 'naija-tactician',
+    punterName: 'The Naija Tactician',
+    bookmaker: 'SportyBet',
+    bookingCode: 'BC4-GPL-CLASH',
+    totalOdds: 2.22,
+    status: 'pending',
+    editorialNote: 'Kumasi and Accra giants clash: Asante Kotoko host Accra Hearts of Oak at Baba Yara Stadium.',
+    selections: [
+      { id: 'gh1', match: 'Asante Kotoko vs Hearts of Oak', homeTeam: 'Asante Kotoko', awayTeam: 'Hearts of Oak', league: 'Ghana Premier League', kickoff: '15:00 GMT', market: 'Double Chance', pick: 'Asante Kotoko 1X', odds: 1.30, status: 'pending' },
+      { id: 'gh2', match: 'Medeama SC vs Aduana Stars', homeTeam: 'Medeama SC', awayTeam: 'Aduana Stars', league: 'Ghana Premier League', kickoff: '15:00 GMT', market: 'Double Chance', pick: 'Medeama 1X', odds: 1.25, status: 'pending' }
+    ]
+  },
+
+  // ── 4. SOUTH AFRICA (PSL) TICKETS ──
+  {
+    id: 'psl-sundowns-pirates',
+    title: 'South Africa PSL Heavyweights 3-Fold',
+    marketId: 'match-winner-dc',
+    region: 'south-africa',
+    date: '2026-10-17',
+    publishedAt: '2026-10-16 15:30 SAST',
+    source: 'BRYME Editorial',
+    punterId: 'lagos-stats-guy',
+    punterName: 'Lagos Stats Room',
+    bookmaker: 'BetKing',
+    bookingCode: 'BK-PSL-SAF3',
+    totalOdds: 2.68,
+    status: 'pending',
+    editorialNote: 'South Africa Betway Premiership showdown: Mamelodi Sundowns host Orlando Pirates in Pretoria.',
+    selections: [
+      { id: 'za1', match: 'Mamelodi Sundowns vs Orlando Pirates', homeTeam: 'Sundowns', awayTeam: 'Orlando Pirates', league: 'South Africa PSL', kickoff: '15:30 SAST', market: 'Double Chance', pick: 'Sundowns 1X', odds: 1.26, status: 'pending' },
+      { id: 'za2', match: 'Kaizer Chiefs vs SuperSport United', homeTeam: 'Kaizer Chiefs', awayTeam: 'SuperSport United', league: 'South Africa PSL', kickoff: '17:30 SAST', market: 'Double Chance', pick: '12 (Either Win)', odds: 1.36, status: 'pending' },
+      { id: 'za3', match: 'Stellenbosch FC vs Cape Town City', homeTeam: 'Stellenbosch', awayTeam: 'Cape Town City', league: 'South Africa PSL', kickoff: '15:00 SAST', market: 'Double Chance', pick: 'Stellenbosch 1X', odds: 1.30, status: 'pending' }
+    ]
+  },
+
+  // ── 5. EAST AFRICA (UGANDA & TANZANIA) ──
+  {
+    id: 'east-africa-kariakoo-kampala',
+    title: 'Kariakoo & Kampala Derby Weekend Combo',
+    marketId: 'btts',
+    region: 'east-africa',
+    date: '2026-10-17',
+    publishedAt: '2026-10-16 14:45 EAT',
+    source: '@CoachKipKE',
+    punterId: 'coach-kip-ke',
+    punterName: 'Coach Kip KE',
+    bookmaker: 'Fortebet',
+    bookingCode: 'FT-EAF-DERBY',
+    totalOdds: 3.10,
+    status: 'pending',
+    editorialNote: 'Tanzania Kariakoo Derby (Simba vs Yanga) plus Uganda Premier League title clash (Vipers vs KCCA).',
+    selections: [
+      { id: 'ea1', match: 'Simba SC vs Young Africans (Yanga)', homeTeam: 'Simba SC', awayTeam: 'Young Africans', league: 'Tanzania NBC Premier League', kickoff: '17:00 EAT', market: 'BTTS', pick: 'Both Teams to Score (GG)', odds: 1.82, status: 'pending' },
+      { id: 'ea2', match: 'Vipers SC vs KCCA FC', homeTeam: 'Vipers SC', awayTeam: 'KCCA FC', league: 'Uganda Premier League', kickoff: '16:00 EAT', market: 'Double Chance', pick: 'Vipers SC 1X', odds: 1.32, status: 'pending' }
+    ]
+  },
+
+  // ── 6. CAF CHAMPIONS LEAGUE & NORTH AFRICA ──
+  {
+    id: 'caf-continental-titans',
+    title: 'CAF Champions League Continental Titans Slip',
+    marketId: 'match-winner-dc',
+    region: 'north-africa-caf',
+    date: '2026-10-18',
+    publishedAt: '2026-10-16 16:00 WAT',
+    source: 'BRYME Editorial',
+    punterId: 'delta-capo',
+    punterName: 'Delta Capo Bets',
+    bookmaker: '1xBet',
+    bookingCode: '1X-CAF-TITANS',
+    totalOdds: 3.40,
+    status: 'pending',
+    editorialNote: 'Africa premier club competition: Record 12-time kings Al Ahly take on South African champions Sundowns.',
+    selections: [
+      { id: 'caf1', match: 'Al Ahly vs Mamelodi Sundowns', homeTeam: 'Al Ahly', awayTeam: 'Mamelodi Sundowns', league: 'CAF Champions League', kickoff: '19:00 Cairo', market: 'Double Chance', pick: 'Al Ahly 1X', odds: 1.35, status: 'pending' },
+      { id: 'caf2', match: 'Esperance de Tunis vs Pyramids FC', homeTeam: 'Esperance', awayTeam: 'Pyramids FC', league: 'CAF Champions League', kickoff: '20:00 Tunis', market: 'Double Chance', pick: 'Esperance 1X', odds: 1.38, status: 'pending' },
+      { id: 'caf3', match: 'Raja Casablanca vs AS FAR Rabat', homeTeam: 'Raja Casablanca', awayTeam: 'AS FAR Rabat', league: 'Morocco Botola Pro', kickoff: '20:30 WAT', market: 'Double Chance', pick: '12 (Either Win)', odds: 1.36, status: 'pending' }
+    ]
+  },
+
+  // ── 7. ANYBODY-WIN (12) TICKETS ──
   {
     id: 'anybody-win-20-sat',
-    title: 'Weekend 20-Match Anybody-Win Accumulator',
+    title: 'Weekend 20-Match Anybody-Win Mega Ticket',
     marketId: 'anybody-win',
+    region: 'europe',
     anybodyWinTab: '20-selections',
     date: '2026-10-17',
     publishedAt: '2026-10-16 14:00 WAT',
@@ -15,411 +212,142 @@ export const TICKETS = [
     totalOdds: 8.42,
     status: 'pending',
     editorialNote: 'Carefully vetted 20 fixtures where both teams play high-tempo football with negligible draw likelihood.',
-    originalSourceUrl: 'https://twitter.com/placeholder_deltacapo/status/aw20',
     selections: [
       { id: 's1', match: 'Tottenham vs West Ham', homeTeam: 'Tottenham', awayTeam: 'West Ham', league: 'Premier League', kickoff: '12:30 WAT', market: 'Double Chance', pick: '12 (Either Team Wins)', odds: 1.18, status: 'pending' },
       { id: 's2', match: 'Fulham vs Aston Villa', homeTeam: 'Fulham', awayTeam: 'Aston Villa', league: 'Premier League', kickoff: '15:00 WAT', market: 'Double Chance', pick: '12 (Either Team Wins)', odds: 1.25, status: 'pending' },
-      { id: 's3', match: 'Manchester United vs Brentford', homeTeam: 'Manchester United', awayTeam: 'Brentford', league: 'Premier League', kickoff: '15:00 WAT', market: 'Double Chance', pick: '12 (Either Team Wins)', odds: 1.22, status: 'pending' },
-      { id: 's4', match: 'Newcastle vs Brighton', homeTeam: 'Newcastle', awayTeam: 'Brighton', league: 'Premier League', kickoff: '15:00 WAT', market: 'Double Chance', pick: '12 (Either Team Wins)', odds: 1.20, status: 'pending' },
-      { id: 's5', match: 'Southampton vs Leicester', homeTeam: 'Southampton', awayTeam: 'Leicester', league: 'Premier League', kickoff: '15:00 WAT', market: 'Double Chance', pick: '12 (Either Team Wins)', odds: 1.24, status: 'pending' },
-      { id: 's6', match: 'Bournemouth vs Arsenal', homeTeam: 'Bournemouth', awayTeam: 'Arsenal', league: 'Premier League', kickoff: '17:30 WAT', market: 'Double Chance', pick: '12 (Either Team Wins)', odds: 1.19, status: 'pending' },
-      { id: 's7', match: 'Bayer Leverkusen vs Frankfurt', homeTeam: 'Bayer Leverkusen', awayTeam: 'Frankfurt', league: 'German Bundesliga', kickoff: '14:30 WAT', market: 'Double Chance', pick: '12 (Either Team Wins)', odds: 1.15, status: 'pending' },
-      { id: 's8', match: 'Hoffenheim vs Bochum', homeTeam: 'Hoffenheim', awayTeam: 'Bochum', league: 'German Bundesliga', kickoff: '14:30 WAT', market: 'Double Chance', pick: '12 (Either Team Wins)', odds: 1.20, status: 'pending' },
-      { id: 's9', match: 'Freiburg vs Augsburg', homeTeam: 'Freiburg', awayTeam: 'Augsburg', league: 'German Bundesliga', kickoff: '14:30 WAT', market: 'Double Chance', pick: '12 (Either Team Wins)', odds: 1.21, status: 'pending' },
-      { id: 's10', match: 'Bayern Munich vs Stuttgart', homeTeam: 'Bayern Munich', awayTeam: 'Stuttgart', league: 'German Bundesliga', kickoff: '17:30 WAT', market: 'Double Chance', pick: '12 (Either Team Wins)', odds: 1.14, status: 'pending' },
-      { id: 's11', match: 'Genoa vs Bologna', homeTeam: 'Genoa', awayTeam: 'Bologna', league: 'Italian Serie A', kickoff: '14:00 WAT', market: 'Double Chance', pick: '12 (Either Team Wins)', odds: 1.30, status: 'pending' },
-      { id: 's12', match: 'AC Milan vs Udinese', homeTeam: 'AC Milan', awayTeam: 'Udinese', league: 'Italian Serie A', kickoff: '17:00 WAT', market: 'Double Chance', pick: '12 (Either Team Wins)', odds: 1.22, status: 'pending' },
-      { id: 's13', match: 'Juventus vs Lazio', homeTeam: 'Juventus', awayTeam: 'Lazio', league: 'Italian Serie A', kickoff: '19:45 WAT', market: 'Double Chance', pick: '12 (Either Team Wins)', odds: 1.28, status: 'pending' },
-      { id: 's14', match: 'Athletic Bilbao vs Espanyol', homeTeam: 'Athletic Bilbao', awayTeam: 'Espanyol', league: 'Spanish La Liga', kickoff: '13:00 WAT', market: 'Double Chance', pick: '12 (Either Team Wins)', odds: 1.19, status: 'pending' },
-      { id: 's15', match: 'Osasuna vs Real Betis', homeTeam: 'Osasuna', awayTeam: 'Real Betis', league: 'Spanish La Liga', kickoff: '15:15 WAT', market: 'Double Chance', pick: '12 (Either Team Wins)', odds: 1.30, status: 'pending' },
-      { id: 's16', match: 'Girona vs Real Sociedad', homeTeam: 'Girona', awayTeam: 'Real Sociedad', league: 'Spanish La Liga', kickoff: '17:30 WAT', market: 'Double Chance', pick: '12 (Either Team Wins)', odds: 1.26, status: 'pending' },
-      { id: 's17', match: 'Celta Vigo vs Real Madrid', homeTeam: 'Celta Vigo', awayTeam: 'Real Madrid', league: 'Spanish La Liga', kickoff: '20:00 WAT', market: 'Double Chance', pick: '12 (Either Team Wins)', odds: 1.18, status: 'pending' },
-      { id: 's18', match: 'PSV vs AZ Alkmaar', homeTeam: 'PSV', awayTeam: 'AZ Alkmaar', league: 'Dutch Eredivisie', kickoff: '17:45 WAT', market: 'Double Chance', pick: '12 (Either Team Wins)', odds: 1.16, status: 'pending' },
-      { id: 's19', match: 'Feyenoord vs Go Ahead Eagles', homeTeam: 'Feyenoord', awayTeam: 'Go Ahead Eagles', league: 'Dutch Eredivisie', kickoff: '20:00 WAT', market: 'Double Chance', pick: '12 (Either Team Wins)', odds: 1.12, status: 'pending' },
-      { id: 's20', match: 'Sporting CP vs Portimonense', homeTeam: 'Sporting CP', awayTeam: 'Portimonense', league: 'Portuguese Primeira Liga', kickoff: '20:30 WAT', market: 'Double Chance', pick: '12 (Either Team Wins)', odds: 1.10, status: 'pending' }
-    ]
-  },
-  {
-    id: 'anybody-win-40-sat',
-    title: 'Continental 40-Game No-Draw Mega Ticket',
-    marketId: 'anybody-win',
-    anybodyWinTab: '40-selections',
-    date: '2026-10-17',
-    publishedAt: '2026-10-16 11:30 WAT',
-    source: 'BRYME Editorial',
-    punterId: 'delta-capo',
-    punterName: 'Delta Capo Bets',
-    bookmaker: 'SportyBet',
-    bookingCode: 'BC4-AW40-MEG',
-    totalOdds: 38.65,
-    status: 'pending',
-    editorialNote: 'Aggregated 40-fold ticket covering top 5 European divisions plus Dutch, Belgian, and Portuguese weekend fixtures.',
-    originalSourceUrl: 'https://twitter.com/placeholder_deltacapo/status/aw40',
-    selections: [
-      { id: 's1', match: 'Tottenham vs West Ham', homeTeam: 'Tottenham', awayTeam: 'West Ham', league: 'Premier League', kickoff: '12:30 WAT', market: 'Double Chance', pick: '12', odds: 1.18, status: 'pending' },
-      { id: 's2', match: 'Fulham vs Aston Villa', homeTeam: 'Fulham', awayTeam: 'Aston Villa', league: 'Premier League', kickoff: '15:00 WAT', market: 'Double Chance', pick: '12', odds: 1.25, status: 'pending' },
-      { id: 's3', match: 'Manchester United vs Brentford', homeTeam: 'Manchester United', awayTeam: 'Brentford', league: 'Premier League', kickoff: '15:00 WAT', market: 'Double Chance', pick: '12', odds: 1.22, status: 'pending' },
-      { id: 's4', match: 'Newcastle vs Brighton', homeTeam: 'Newcastle', awayTeam: 'Brighton', league: 'Premier League', kickoff: '15:00 WAT', market: 'Double Chance', pick: '12', odds: 1.20, status: 'pending' }
-    ]
-  },
-  {
-    id: 'anybody-win-50-sat',
-    title: 'The Weekend 50-Selection Marathon',
-    marketId: 'anybody-win',
-    anybodyWinTab: '50-selections',
-    date: '2026-10-17',
-    publishedAt: '2026-10-16 10:15 WAT',
-    source: 'BRYME Editorial',
-    punterId: 'delta-capo',
-    punterName: 'Delta Capo Bets',
-    bookmaker: 'Bet9ja',
-    bookingCode: 'B9J-AW50-FULL',
-    totalOdds: 92.10,
-    status: 'pending',
-    editorialNote: 'Maximalist recreational accumulator. Only suitable for micro-stakes (₦100 to ₦500 max). High variance disclaimer applies.',
-    originalSourceUrl: 'https://twitter.com/placeholder_deltacapo/status/aw50',
-    selections: [
-      { id: 's1', match: 'Tottenham vs West Ham', homeTeam: 'Tottenham', awayTeam: 'West Ham', league: 'Premier League', kickoff: '12:30 WAT', market: 'Double Chance', pick: '12', odds: 1.18, status: 'pending' },
-      { id: 's2', match: 'Bayer Leverkusen vs Frankfurt', homeTeam: 'Bayer Leverkusen', awayTeam: 'Frankfurt', league: 'German Bundesliga', kickoff: '14:30 WAT', market: 'Double Chance', pick: '12', odds: 1.15, status: 'pending' },
-      { id: 's3', match: 'Bayern Munich vs Stuttgart', homeTeam: 'Bayern Munich', awayTeam: 'Stuttgart', league: 'German Bundesliga', kickoff: '17:30 WAT', market: 'Double Chance', pick: '12', odds: 1.14, status: 'pending' }
-    ]
-  },
-  {
-    id: 'anybody-win-today-01',
-    title: "Friday Night 8-Game Anybody-Win Quick Ticket",
-    marketId: 'anybody-win',
-    anybodyWinTab: 'todays-picks',
-    date: '2026-10-16',
-    publishedAt: '2026-10-16 15:00 WAT',
-    source: 'BRYME Editorial',
-    punterId: 'naija-tactician',
-    punterName: 'The Naija Tactician',
-    bookmaker: 'SportyBet',
-    bookingCode: 'BC4-AW-FRI08',
-    totalOdds: 3.12,
-    status: 'pending',
-    editorialNote: 'Evening fixtures across Championship, Ligue 1, and La Liga night games.',
-    originalSourceUrl: 'https://twitter.com/placeholder_naijatactician/status/fri',
-    selections: [
-      { id: 's1', match: 'Leeds United vs Sheffield United', homeTeam: 'Leeds', awayTeam: 'Sheffield United', league: 'Championship', kickoff: '20:00 WAT', market: 'Double Chance', pick: '12', odds: 1.22, status: 'pending' },
-      { id: 's2', match: 'Monaco vs Lille', homeTeam: 'Monaco', awayTeam: 'Lille', league: 'Ligue 1', kickoff: '19:45 WAT', market: 'Double Chance', pick: '12', odds: 1.25, status: 'pending' },
-      { id: 's3', match: 'Alaves vs Real Valladolid', homeTeam: 'Alaves', awayTeam: 'Real Valladolid', league: 'La Liga', kickoff: '20:00 WAT', market: 'Double Chance', pick: '12', odds: 1.30, status: 'pending' }
-    ]
-  },
-  {
-    id: 'anybody-win-longshot-flyer',
-    title: 'The 100-Odds Double Chance Long Shot Slip',
-    marketId: 'anybody-win',
-    anybodyWinTab: 'long-shots',
-    date: '2026-10-17',
-    publishedAt: '2026-10-16 16:30 WAT',
-    source: 'BRYME Editorial',
-    punterId: 'delta-capo',
-    punterName: 'Delta Capo Bets',
-    bookmaker: 'MSport',
-    bookingCode: 'MS-AW-FLYER100',
-    totalOdds: 114.50,
-    status: 'pending',
-    editorialNote: 'Heavy recreational slip with high cumulative odds. Treat purely as lottery entertainment.',
-    originalSourceUrl: 'https://twitter.com/placeholder_deltacapo/status/longshot',
-    selections: [
-      { id: 's1', match: 'Bournemouth vs Arsenal', homeTeam: 'Bournemouth', awayTeam: 'Arsenal', league: 'Premier League', kickoff: '17:30 WAT', market: 'Double Chance', pick: '12', odds: 1.19, status: 'pending' },
-      { id: 's2', match: 'Juventus vs Lazio', homeTeam: 'Juventus', awayTeam: 'Lazio', league: 'Serie A', kickoff: '19:45 WAT', market: 'Double Chance', pick: '12', odds: 1.28, status: 'pending' }
+      { id: 's3', match: 'Manchester United vs Brentford', homeTeam: 'Man United', awayTeam: 'Brentford', league: 'Premier League', kickoff: '15:00 WAT', market: 'Double Chance', pick: '12 (Either Team Wins)', odds: 1.22, status: 'pending' },
+      { id: 's4', match: 'Bayer Leverkusen vs Frankfurt', homeTeam: 'Leverkusen', awayTeam: 'Frankfurt', league: 'Bundesliga', kickoff: '14:30 WAT', market: 'Double Chance', pick: '12 (Either Team Wins)', odds: 1.15, status: 'pending' }
     ]
   },
 
-  // --- OVER/UNDER GOALS ---
+  // ── 8. COMPLETED HISTORICAL RESULTS (ACROSS AFRICA) ──
   {
-    id: 'over-under-goals-t1',
-    title: 'European High-Tempo Over 2.5 Goals 4-Fold',
-    marketId: 'over-under-goals',
-    date: '2026-10-17',
-    publishedAt: '2026-10-16 13:45 WAT',
-    source: '@CoachKipKE',
-    punterId: 'coach-kip-ke',
-    punterName: 'Coach Kip KE',
-    bookmaker: 'SportyBet',
-    bookingCode: 'BC4-O25-KIP',
-    totalOdds: 3.85,
-    status: 'pending',
-    editorialNote: 'Targeting top scoring teams with over 3.2 match xG average over their last 6 matches.',
-    originalSourceUrl: 'https://twitter.com/placeholder_coachkipke/status/goals',
-    selections: [
-      { id: 's1', match: 'Bayer Leverkusen vs Frankfurt', homeTeam: 'Leverkusen', awayTeam: 'Frankfurt', league: 'Bundesliga', kickoff: '14:30 WAT', market: 'Over/Under', pick: 'Over 2.5 Goals', odds: 1.44, status: 'pending' },
-      { id: 's2', match: 'PSV vs AZ Alkmaar', homeTeam: 'PSV', awayTeam: 'AZ Alkmaar', league: 'Eredivisie', kickoff: '17:45 WAT', market: 'Over/Under', pick: 'Over 2.5 Goals', odds: 1.48, status: 'pending' },
-      { id: 's3', match: 'Bayern Munich vs Stuttgart', homeTeam: 'Bayern', awayTeam: 'Stuttgart', league: 'Bundesliga', kickoff: '17:30 WAT', market: 'Over/Under', pick: 'Over 2.5 Goals', odds: 1.35, status: 'pending' },
-      { id: 's4', match: 'Newcastle vs Brighton', homeTeam: 'Newcastle', awayTeam: 'Brighton', league: 'Premier League', kickoff: '15:00 WAT', market: 'Over/Under', pick: 'Over 2.5 Goals', odds: 1.54, status: 'pending' }
-    ]
-  },
-
-  // --- BOTH TEAMS TO SCORE (BTTS) ---
-  {
-    id: 'btts-weekend-t1',
-    title: 'Weekend Both Teams to Score (GG) 3-Way Trio',
-    marketId: 'btts',
-    date: '2026-10-17',
-    publishedAt: '2026-10-16 12:00 WAT',
+    id: 'result-npfl-derby-won',
+    title: 'NPFL Matchday 7 Oriental Derby (WON)',
+    marketId: 'match-winner-dc',
+    region: 'nigeria',
+    date: '2026-10-13',
+    publishedAt: '2026-10-13 18:30 WAT',
     source: '@NaijaTactician',
     punterId: 'naija-tactician',
     punterName: 'The Naija Tactician',
     bookmaker: 'Bet9ja',
-    bookingCode: 'B9J-GG-3TRIO',
-    totalOdds: 4.10,
-    status: 'pending',
-    editorialNote: 'Selected clubs where both sides scored in at least 75% of their matches this campaign.',
-    originalSourceUrl: 'https://twitter.com/placeholder_naijatactician/status/btts',
+    bookingCode: 'B9J-ORIENT-WON',
+    totalOdds: 2.10,
+    status: 'won',
+    editorialNote: 'FT: Enyimba 2 - 1 Remo Stars & Rangers 1 - 0 Kwara United. Clean home double in Aba and Enugu!',
     selections: [
-      { id: 's1', match: 'Tottenham vs West Ham', homeTeam: 'Tottenham', awayTeam: 'West Ham', league: 'Premier League', kickoff: '12:30 WAT', market: 'BTTS', pick: 'Both Teams to Score - Yes', odds: 1.52, status: 'pending' },
-      { id: 's2', match: 'Fulham vs Aston Villa', homeTeam: 'Fulham', awayTeam: 'Aston Villa', league: 'Premier League', kickoff: '15:00 WAT', market: 'BTTS', pick: 'Both Teams to Score - Yes', odds: 1.58, status: 'pending' },
-      { id: 's3', match: 'Celta Vigo vs Real Madrid', homeTeam: 'Celta Vigo', awayTeam: 'Real Madrid', league: 'La Liga', kickoff: '20:00 WAT', market: 'BTTS', pick: 'Both Teams to Score - Yes', odds: 1.70, status: 'pending' }
+      { id: 'rn1', match: 'Enyimba FC vs Remo Stars', homeTeam: 'Enyimba FC', awayTeam: 'Remo Stars', league: 'Nigeria NPFL', kickoff: 'FT: 2-1', market: 'Double Chance', pick: 'Enyimba 1X', odds: 1.28, status: 'won' },
+      { id: 'rn2', match: 'Rangers Int. vs Kwara United', homeTeam: 'Rangers Int.', awayTeam: 'Kwara United', league: 'Nigeria NPFL', kickoff: 'FT: 1-0', market: 'Match Winner', pick: 'Rangers Int. to Win', odds: 1.64, status: 'won' }
     ]
   },
-
-  // --- MATCH WINNER / DOUBLE CHANCE ---
   {
-    id: 'winner-dc-t1',
-    title: 'Heavy Home Favorites & Double Chance Multiplier',
+    id: 'result-fkf-gor-won',
+    title: 'Kenya FKF Nyayo Stadium Banker (WON)',
     marketId: 'match-winner-dc',
-    date: '2026-10-17',
-    publishedAt: '2026-10-16 14:15 WAT',
-    source: '@LagosStatsGuy',
+    region: 'kenya',
+    date: '2026-10-12',
+    publishedAt: '2026-10-12 17:15 EAT',
+    source: '@CoachKipKE',
+    punterId: 'coach-kip-ke',
+    punterName: 'Coach Kip KE',
+    bookmaker: 'SportyBet',
+    bookingCode: 'BC4-GOR-WON',
+    totalOdds: 1.75,
+    status: 'won',
+    editorialNote: 'FT: Gor Mahia 2 - 0 Shabana FC at Nyayo Stadium. Clean sheet and 3 points secured.',
+    selections: [
+      { id: 'rk1', match: 'Gor Mahia vs Shabana FC', homeTeam: 'Gor Mahia', awayTeam: 'Shabana FC', league: 'Kenya FKF Premier League', kickoff: 'FT: 2-0', market: 'Match Winner', pick: 'Gor Mahia to Win', odds: 1.42, status: 'won' },
+      { id: 'rk2', match: 'Tusker FC vs Murang’a Seal', homeTeam: 'Tusker FC', awayTeam: 'Murang’a Seal', league: 'Kenya FKF Premier League', kickoff: 'FT: 1-1', market: 'Double Chance', pick: 'Tusker 1X', odds: 1.23, status: 'won' }
+    ]
+  },
+  {
+    id: 'result-psl-sundowns-won',
+    title: 'South Africa PSL Loftus Versfeld Double (WON)',
+    marketId: 'over-under-goals',
+    region: 'south-africa',
+    date: '2026-10-14',
+    publishedAt: '2026-10-14 21:30 SAST',
+    source: 'BRYME Editorial',
     punterId: 'lagos-stats-guy',
     punterName: 'Lagos Stats Room',
     bookmaker: 'BetKing',
-    bookingCode: 'BK-DC-SAFE2',
-    totalOdds: 2.38,
-    status: 'pending',
-    editorialNote: 'Low-variance ticket balancing one straight home win and two safety nets.',
-    originalSourceUrl: 'https://twitter.com/placeholder_lagosstatsguy/status/dc',
+    bookingCode: 'BK-SUN-WON',
+    totalOdds: 2.30,
+    status: 'won',
+    editorialNote: 'FT: Mamelodi Sundowns 3 - 0 Marumo Gallants & Pirates 2 - 1 Polokwane City.',
     selections: [
-      { id: 's1', match: 'Arsenal vs Bournemouth', homeTeam: 'Arsenal', awayTeam: 'Bournemouth', league: 'Premier League', kickoff: '17:30 WAT', market: 'Double Chance', pick: 'Arsenal X2 (Away/Draw)', odds: 1.15, status: 'pending' },
-      { id: 's2', match: 'Athletic Bilbao vs Espanyol', homeTeam: 'Bilbao', awayTeam: 'Espanyol', league: 'La Liga', kickoff: '13:00 WAT', market: 'Match Winner', pick: 'Athletic Bilbao to Win', odds: 1.48, status: 'pending' },
-      { id: 's3', match: 'AC Milan vs Udinese', homeTeam: 'Milan', awayTeam: 'Udinese', league: 'Serie A', kickoff: '17:00 WAT', market: 'Double Chance', pick: 'AC Milan 1X', odds: 1.38, status: 'pending' }
+      { id: 'rz1', match: 'Mamelodi Sundowns vs Marumo Gallants', homeTeam: 'Sundowns', awayTeam: 'Marumo Gallants', league: 'South Africa PSL', kickoff: 'FT: 3-0', market: 'Match Winner', pick: 'Sundowns to Win', odds: 1.38, status: 'won' },
+      { id: 'rz2', match: 'Orlando Pirates vs Polokwane City', homeTeam: 'Orlando Pirates', awayTeam: 'Polokwane City', league: 'South Africa PSL', kickoff: 'FT: 2-1', market: 'Over/Under', pick: 'Over 1.5 Goals', odds: 1.40, status: 'won' }
     ]
   },
-
-  // --- FIRST HALF GOALS ---
   {
-    id: 'first-half-goals-t1',
-    title: 'Early Action: First Half Over 0.5 Goals 4-Fold',
-    marketId: 'first-half-goals',
-    date: '2026-10-17',
-    publishedAt: '2026-10-16 11:00 WAT',
-    source: '@CoachKipKE',
-    punterId: 'coach-kip-ke',
-    punterName: 'Coach Kip KE',
-    bookmaker: 'SportyBet',
-    bookingCode: 'BC4-1H-O05',
-    totalOdds: 2.65,
-    status: 'pending',
-    editorialNote: 'Games featuring teams that concede or score within the first 25 minutes of kickoff.',
-    originalSourceUrl: 'https://twitter.com/placeholder_coachkipke/status/1hgoals',
-    selections: [
-      { id: 's1', match: 'Tottenham vs West Ham', homeTeam: 'Tottenham', awayTeam: 'West Ham', league: 'Premier League', kickoff: '12:30 WAT', market: '1st Half Goals', pick: '1st Half Over 0.5', odds: 1.25, status: 'pending' },
-      { id: 's2', match: 'Bayer Leverkusen vs Frankfurt', homeTeam: 'Leverkusen', awayTeam: 'Frankfurt', league: 'Bundesliga', kickoff: '14:30 WAT', market: '1st Half Goals', pick: '1st Half Over 0.5', odds: 1.22, status: 'pending' },
-      { id: 's3', match: 'Feyenoord vs Go Ahead Eagles', homeTeam: 'Feyenoord', awayTeam: 'Go Ahead Eagles', league: 'Eredivisie', kickoff: '20:00 WAT', market: '1st Half Goals', pick: '1st Half Over 0.5', odds: 1.24, status: 'pending' },
-      { id: 's4', match: 'Bayern Munich vs Stuttgart', homeTeam: 'Bayern', awayTeam: 'Stuttgart', league: 'Bundesliga', kickoff: '17:30 WAT', market: '1st Half Goals', pick: '1st Half Over 0.5', odds: 1.20, status: 'pending' }
-    ]
-  },
-
-  // --- SECOND HALF GOALS ---
-  {
-    id: 'second-half-goals-t1',
-    title: 'Second Half Momentum & 2H Over 0.5 Slip',
-    marketId: 'second-half-goals',
-    date: '2026-10-17',
-    publishedAt: '2026-10-16 15:40 WAT',
-    source: '@NairobiPunter',
-    punterId: 'nairobi-punter',
-    punterName: 'Nairobi Corner & Cards',
+    id: 'result-caf-ahly-won',
+    title: 'CAF Champions League Cairo Night (WON)',
+    marketId: 'match-winner-dc',
+    region: 'north-africa-caf',
+    date: '2026-10-11',
+    publishedAt: '2026-10-11 22:00 Cairo',
+    source: 'BRYME Editorial',
+    punterId: 'delta-capo',
+    punterName: 'Delta Capo Bets',
     bookmaker: '1xBet',
-    bookingCode: '1X-2H-O05S',
-    totalOdds: 2.15,
-    status: 'pending',
-    editorialNote: 'Taking advantage of late defensive tiredness in high-stakes European league games.',
-    originalSourceUrl: 'https://twitter.com/placeholder_nairobipunter/status/2h',
+    bookingCode: '1X-AHLY-WON',
+    totalOdds: 1.90,
+    status: 'won',
+    editorialNote: 'FT: Al Ahly 3 - 0 Gor Mahia in CAF Champions League preliminary tie at Cairo International Stadium.',
     selections: [
-      { id: 's1', match: 'Manchester United vs Brentford', homeTeam: 'Man United', awayTeam: 'Brentford', league: 'Premier League', kickoff: '15:00 WAT', market: '2nd Half Goals', pick: '2nd Half Over 0.5', odds: 1.18, status: 'pending' },
-      { id: 's2', match: 'Juventus vs Lazio', homeTeam: 'Juventus', awayTeam: 'Lazio', league: 'Serie A', kickoff: '19:45 WAT', market: '2nd Half Goals', pick: '2nd Half Over 0.5', odds: 1.28, status: 'pending' },
-      { id: 's3', match: 'Girona vs Real Sociedad', homeTeam: 'Girona', awayTeam: 'Real Sociedad', league: 'La Liga', kickoff: '17:30 WAT', market: '2nd Half Goals', pick: '2nd Half Over 0.5', odds: 1.30, status: 'pending' }
+      { id: 'rc1', match: 'Al Ahly vs Gor Mahia', homeTeam: 'Al Ahly', awayTeam: 'Gor Mahia', league: 'CAF Champions League', kickoff: 'FT: 3-0', market: 'Match Winner', pick: 'Al Ahly to Win', odds: 1.25, status: 'won' },
+      { id: 'rc2', match: 'Esperance vs Dekedaha', homeTeam: 'Esperance', awayTeam: 'Dekedaha', league: 'CAF Champions League', kickoff: 'FT: 4-0', market: 'Over/Under', pick: 'Over 2.5 Goals', odds: 1.45, status: 'won' }
     ]
   },
-
-  // --- CORNERS ---
   {
-    id: 'corners-special-t1',
-    title: 'Premier League Wing Play Corner Total Over 9.5',
-    marketId: 'corners',
-    date: '2026-10-17',
-    publishedAt: '2026-10-16 12:30 WAT',
-    source: '@NairobiPunter',
-    punterId: 'nairobi-punter',
-    punterName: 'Nairobi Corner & Cards',
-    bookmaker: '1xBet',
-    bookingCode: '1X-CRN-PL95',
-    totalOdds: 3.10,
-    status: 'pending',
-    editorialNote: 'Based on flank shot volume and defensive blocks per 90 metrics.',
-    originalSourceUrl: 'https://twitter.com/placeholder_nairobipunter/status/corners',
-    selections: [
-      { id: 's1', match: 'Tottenham vs West Ham', homeTeam: 'Tottenham', awayTeam: 'West Ham', league: 'Premier League', kickoff: '12:30 WAT', market: 'Corners', pick: 'Over 9.5 Corners', odds: 1.62, status: 'pending' },
-      { id: 's2', match: 'Bournemouth vs Arsenal', homeTeam: 'Bournemouth', awayTeam: 'Arsenal', league: 'Premier League', kickoff: '17:30 WAT', market: 'Corners', pick: 'Over 8.5 Corners', odds: 1.55, status: 'pending' },
-      { id: 's3', match: 'Newcastle vs Brighton', homeTeam: 'Newcastle', awayTeam: 'Brighton', league: 'Premier League', kickoff: '15:00 WAT', market: 'Corners', pick: 'Over 9.5 Corners', odds: 1.70, status: 'pending' }
-    ]
-  },
-
-  // --- ACCUMULATORS ---
-  {
-    id: 'acca-weekend-5way',
-    title: 'The Saturday 5-Way Balanced European Acca',
-    marketId: 'accumulators',
-    date: '2026-10-17',
-    publishedAt: '2026-10-16 14:00 WAT',
+    id: 'result-gpl-hearts-lost',
+    title: 'Ghana Premier League Away Trip (LOST)',
+    marketId: 'match-winner-dc',
+    region: 'ghana',
+    date: '2026-10-10',
+    publishedAt: '2026-10-10 18:00 GMT',
     source: '@NaijaTactician',
     punterId: 'naija-tactician',
     punterName: 'The Naija Tactician',
-    bookmaker: 'Bet9ja',
-    bookingCode: 'B9J-ACC5-OCT',
-    totalOdds: 4.88,
-    status: 'pending',
-    editorialNote: 'A disciplined accumulator blending double chances with over 1.5 goal lines.',
-    originalSourceUrl: 'https://twitter.com/placeholder_naijatactician/status/acca5',
+    bookmaker: 'SportyBet',
+    bookingCode: 'BC4-HEARTS-LOST',
+    totalOdds: 2.80,
+    status: 'lost',
+    editorialNote: 'Honest permanent record: Hearts of Oak suffered a surprise 1-0 away defeat at Bibiani Gold Stars.',
     selections: [
-      { id: 's1', match: 'Arsenal vs Bournemouth', homeTeam: 'Arsenal', awayTeam: 'Bournemouth', league: 'Premier League', kickoff: '17:30 WAT', market: 'Double Chance', pick: 'Arsenal 1X', odds: 1.15, status: 'pending' },
-      { id: 's2', match: 'Leverkusen vs Frankfurt', homeTeam: 'Leverkusen', awayTeam: 'Frankfurt', league: 'Bundesliga', kickoff: '14:30 WAT', market: 'Over/Under', pick: 'Over 1.5 Goals', odds: 1.16, status: 'pending' },
-      { id: 's3', match: 'Bayern vs Stuttgart', homeTeam: 'Bayern', awayTeam: 'Stuttgart', league: 'Bundesliga', kickoff: '17:30 WAT', market: 'Over/Under', pick: 'Over 2.5 Goals', odds: 1.35, status: 'pending' },
-      { id: 's4', match: 'PSV vs AZ Alkmaar', homeTeam: 'PSV', awayTeam: 'AZ Alkmaar', league: 'Eredivisie', kickoff: '17:45 WAT', market: 'Over/Under', pick: 'Over 1.5 Goals', odds: 1.15, status: 'pending' },
-      { id: 's5', match: 'Barcelona vs Sevilla', homeTeam: 'Barcelona', awayTeam: 'Sevilla', league: 'La Liga', kickoff: '20:00 WAT', market: 'Match Winner', pick: 'Barcelona Win', odds: 1.36, status: 'pending' }
+      { id: 'rg1', match: 'Gold Stars vs Hearts of Oak', homeTeam: 'Gold Stars', awayTeam: 'Hearts of Oak', league: 'Ghana Premier League', kickoff: 'FT: 1-0', market: 'Double Chance', pick: 'Hearts of Oak X2', odds: 1.45, status: 'lost' },
+      { id: 'rg2', match: 'Asante Kotoko vs Nations FC', homeTeam: 'Asante Kotoko', awayTeam: 'Nations FC', league: 'Ghana Premier League', kickoff: 'FT: 2-0', market: 'Match Winner', pick: 'Kotoko to Win', odds: 1.62, status: 'won' }
     ]
   },
-
-  // --- LONG SHOTS ---
   {
-    id: 'long-shot-flyer-weekend',
-    title: 'Weekend 45-Odds Speculative Long Shot Flyer',
-    marketId: 'long-shots',
-    date: '2026-10-17',
-    publishedAt: '2026-10-16 15:30 WAT',
-    source: '@DeltaCapo',
-    punterId: 'delta-capo',
-    punterName: 'Delta Capo Bets',
-    bookmaker: 'MSport',
-    bookingCode: 'MS-LONG-45X',
-    totalOdds: 46.20,
-    status: 'pending',
-    editorialNote: 'High odds recreational accumulator. Explicitly labeled high variance.',
-    originalSourceUrl: 'https://twitter.com/placeholder_deltacapo/status/long45',
-    selections: [
-      { id: 's1', match: 'Fulham vs Aston Villa', homeTeam: 'Fulham', awayTeam: 'Aston Villa', league: 'Premier League', kickoff: '15:00 WAT', market: 'BTTS & Over 2.5', pick: 'BTTS & Over 2.5 Goals', odds: 2.05, status: 'pending' },
-      { id: 's2', match: 'Newcastle vs Brighton', homeTeam: 'Newcastle', awayTeam: 'Brighton', league: 'Premier League', kickoff: '15:00 WAT', market: 'Match Winner & BTTS', pick: 'Newcastle Win & GG', odds: 3.40, status: 'pending' },
-      { id: 's3', match: 'Celta Vigo vs Real Madrid', homeTeam: 'Celta Vigo', awayTeam: 'Real Madrid', league: 'La Liga', kickoff: '20:00 WAT', market: 'BTTS & Over 2.5', pick: 'BTTS & Over 2.5 Goals', odds: 1.95, status: 'pending' },
-      { id: 's4', match: 'Juventus vs Lazio', homeTeam: 'Juventus', awayTeam: 'Lazio', league: 'Serie A', kickoff: '19:45 WAT', market: 'Match Result', pick: 'Draw (X)', odds: 3.35, status: 'pending' }
-    ]
-  },
-
-  // --- RECENT COMPLETED TICKETS (FOR ARCHIVE & RESULTS) ---
-  {
-    id: 'archive-sample-won-01',
-    title: 'Midweek Champions League Goals Double (WON)',
+    id: 'result-ucl-madrid-won',
+    title: 'European Champions League 4-Fold (WON)',
     marketId: 'over-under-goals',
+    region: 'europe',
     date: '2026-10-14',
-    publishedAt: '2026-10-14 17:00 WAT',
+    publishedAt: '2026-10-14 22:30 WAT',
     source: '@CoachKipKE',
     punterId: 'coach-kip-ke',
     punterName: 'Coach Kip KE',
     bookmaker: 'Bet9ja',
-    bookingCode: 'B9J-UCL-WON1',
+    bookingCode: 'B9J-UCL-WON4',
     totalOdds: 2.12,
     status: 'won',
-    editorialNote: 'Clean result: Real Madrid vs Dortmund produced 7 goals, and Aston Villa comfortably dispatched Bologna.',
-    originalSourceUrl: 'https://twitter.com/placeholder_coachkipke/status/uclwon',
+    editorialNote: 'Real Madrid vs Dortmund 5-2 goal feast, and Aston Villa 2-0 Bologna.',
     selections: [
-      { id: 's1', match: 'Real Madrid vs Borussia Dortmund', homeTeam: 'Real Madrid', awayTeam: 'Borussia Dortmund', league: 'Champions League', kickoff: '20:00 WAT', market: 'Over/Under', pick: 'Over 2.5 Goals', odds: 1.48, status: 'won' },
-      { id: 's2', match: 'Aston Villa vs Bologna', homeTeam: 'Aston Villa', awayTeam: 'Bologna', league: 'Champions League', kickoff: '20:00 WAT', market: 'Match Winner', pick: 'Aston Villa to Win', odds: 1.43, status: 'won' }
-    ]
-  },
-  {
-    id: 'archive-sample-won-02',
-    title: 'Lagos Stats Room 1.65 Rollover Banker (WON)',
-    marketId: 'match-winner-dc',
-    date: '2026-10-15',
-    publishedAt: '2026-10-15 16:30 WAT',
-    source: '@LagosStatsGuy',
-    punterId: 'lagos-stats-guy',
-    punterName: 'Lagos Stats Room',
-    bookmaker: 'SportyBet',
-    bookingCode: 'BC4-LS-WON2',
-    totalOdds: 1.65,
-    status: 'won',
-    editorialNote: 'Target secured without stress as both sides held leads into final whistle.',
-    originalSourceUrl: 'https://twitter.com/placeholder_lagosstatsguy/status/bankerwon',
-    selections: [
-      { id: 's1', match: 'Inter Milan vs Red Star Belgrade', homeTeam: 'Inter Milan', awayTeam: 'Red Star Belgrade', league: 'Champions League', kickoff: '20:00 WAT', market: 'Team Goals', pick: 'Inter Over 1.5 Goals', odds: 1.28, status: 'won' },
-      { id: 's2', match: 'Barcelona vs Young Boys', homeTeam: 'Barcelona', awayTeam: 'Young Boys', league: 'Champions League', kickoff: '20:00 WAT', market: 'Double Chance', pick: 'Barcelona 1X', odds: 1.12, status: 'won' }
-    ]
-  },
-  {
-    id: 'archive-sample-lost-01',
-    title: 'Midweek BTTS Accumulator (LOST)',
-    marketId: 'btts',
-    date: '2026-10-13',
-    publishedAt: '2026-10-13 18:00 WAT',
-    source: '@NaijaTactician',
-    punterId: 'naija-tactician',
-    punterName: 'The Naija Tactician',
-    bookmaker: 'Bet9ja',
-    bookingCode: 'B9J-GG-LOST1',
-    totalOdds: 3.45,
-    status: 'lost',
-    editorialNote: 'Honest record: Sporting CP kept an unexpected clean sheet, causing the ticket to lose on 1 selection.',
-    originalSourceUrl: 'https://twitter.com/placeholder_naijatactician/status/bttslost',
-    selections: [
-      { id: 's1', match: 'Arsenal vs Paris Saint-Germain', homeTeam: 'Arsenal', awayTeam: 'PSG', league: 'Champions League', kickoff: '20:00 WAT', market: 'BTTS', pick: 'Both Teams to Score - Yes', odds: 1.70, status: 'lost' },
-      { id: 's2', match: 'PSV vs Sporting CP', homeTeam: 'PSV', awayTeam: 'Sporting CP', league: 'Champions League', kickoff: '20:00 WAT', market: 'BTTS', pick: 'Both Teams to Score - Yes', odds: 1.58, status: 'won' }
-    ]
-  },
-  {
-    id: 'archive-sample-lost-02',
-    title: 'Weekend Anybody-Win 25-Fold (LOST on 2 games)',
-    marketId: 'anybody-win',
-    date: '2026-10-12',
-    publishedAt: '2026-10-12 12:00 WAT',
-    source: '@DeltaCapo',
-    punterId: 'delta-capo',
-    punterName: 'Delta Capo Bets',
-    bookmaker: 'SportyBet',
-    bookingCode: 'BC4-AW-LOST2',
-    totalOdds: 14.80,
-    status: 'lost',
-    editorialNote: '23 matches won, but 2 matches ended in shock 0-0 draws (Juventus vs Cagliari). Lost.',
-    originalSourceUrl: 'https://twitter.com/placeholder_deltacapo/status/lost2',
-    selections: [
-      { id: 's1', match: 'Juventus vs Cagliari', homeTeam: 'Juventus', awayTeam: 'Cagliari', league: 'Serie A', kickoff: '11:30 WAT', market: 'Double Chance', pick: '12', odds: 1.18, status: 'lost' },
-      { id: 's2', match: 'Chelsea vs Nottingham Forest', homeTeam: 'Chelsea', awayTeam: 'Nottingham Forest', league: 'Premier League', kickoff: '14:00 WAT', market: 'Double Chance', pick: '12', odds: 1.20, status: 'lost' }
-    ]
-  },
-  {
-    id: 'archive-sample-void-01',
-    title: 'Rain Abandonment League Cup Ticket (VOID)',
-    marketId: 'match-winner-dc',
-    date: '2026-10-10',
-    publishedAt: '2026-10-10 17:30 WAT',
-    source: '@LagosStatsGuy',
-    punterId: 'lagos-stats-guy',
-    punterName: 'Lagos Stats Room',
-    bookmaker: 'MSport',
-    bookingCode: 'MS-VOID-01',
-    totalOdds: 1.95,
-    status: 'void',
-    editorialNote: 'Match abandoned after 20 minutes due to waterlogged pitch. Stakes refunded / settled as 1.00 odds.',
-    originalSourceUrl: 'https://twitter.com/placeholder_lagosstatsguy/status/void1',
-    selections: [
-      { id: 's1', match: 'Grimsby Town vs Doncaster', homeTeam: 'Grimsby', awayTeam: 'Doncaster', league: 'EFL Trophy', kickoff: '19:45 WAT', market: 'Match Winner', pick: 'Grimsby or Draw (1X)', odds: 1.40, status: 'void' }
+      { id: 'eu1', match: 'Real Madrid vs Dortmund', homeTeam: 'Real Madrid', awayTeam: 'Dortmund', league: 'Champions League', kickoff: 'FT: 5-2', market: 'Over/Under', pick: 'Over 2.5 Goals', odds: 1.48, status: 'won' },
+      { id: 'eu2', match: 'Aston Villa vs Bologna', homeTeam: 'Aston Villa', awayTeam: 'Bologna', league: 'Champions League', kickoff: 'FT: 2-0', market: 'Match Winner', pick: 'Aston Villa to Win', odds: 1.43, status: 'won' }
     ]
   }
 ];
 
-// Helper to look up tickets by market, punter, status
+export function getTicketsByRegion(region) {
+  if (!region || region === 'all') return TICKETS;
+  return TICKETS.filter(t => t.region === region);
+}
+
 export function getTicketsByMarket(marketId) {
   return TICKETS.filter(t => t.marketId === marketId);
 }
