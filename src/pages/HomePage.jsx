@@ -1,14 +1,10 @@
 import React, { useState } from 'react';
 import { TICKETS } from '../data/tickets';
-import { MARKETS, ANYBODY_WIN_TABS } from '../data/markets';
+import { MARKETS } from '../data/markets';
 import { PUNTERS } from '../data/punters';
-import { EDITOR_PICKS } from '../data/editorPicks';
 import { ACTIVE_CHALLENGE, LADDER_AGGREGATE_STATS } from '../data/ladder';
+import SportyMatchRow from '../components/SportyMatchRow';
 import VisibleLadder from '../components/VisibleLadder';
-import TicketCard from '../components/TicketCard';
-import StatusBadge from '../components/StatusBadge';
-import RegionSelector from '../components/RegionSelector';
-import CurrencyCalculator from '../components/CurrencyCalculator';
 import AdPlaceholder from '../components/AdPlaceholder';
 import { 
   Trophy, ArrowRight, Sparkles, TrendingUp, Users, CheckCircle, 
@@ -16,117 +12,201 @@ import {
   Copy, Check, Target, Award, Globe
 } from 'lucide-react';
 
-export default function HomePage({ onNavigate }) {
-  const [selectedRegion, setSelectedRegion] = useState('all');
-  const [selectedMarketTab, setSelectedMarketTab] = useState('all-markets');
-  const [anybodyTab, setAnybodyTab] = useState('20-selections');
+export default function HomePage({ onNavigate, onSelectOdd, selectedOdds = [] }) {
+  const [selectedLeagueTab, setSelectedLeagueTab] = useState('all');
+  const [copiedCode, setCopiedCode] = useState(false);
 
-  // Filter tickets by selected region and market
-  const currentTickets = TICKETS.filter(t => {
-    if (selectedRegion !== 'all' && t.region !== selectedRegion) return false;
-    if (selectedMarketTab === 'all-markets') return true;
-    if (selectedMarketTab === 'anybody-win') {
-      return t.marketId === 'anybody-win' && (t.anybodyWinTab === anybodyTab || !t.anybodyWinTab);
+  const handleCopyCode = (code) => {
+    navigator.clipboard.writeText(code);
+    setCopiedCode(true);
+    setTimeout(() => setCopiedCode(false), 2000);
+  };
+
+  // Flatten match selections for the SportyBet match list
+  const allMatches = [];
+  TICKETS.forEach(ticket => {
+    if (ticket.selections) {
+      ticket.selections.forEach(sel => {
+        allMatches.push({
+          id: sel.id,
+          ticketId: ticket.id,
+          match: sel.match,
+          homeTeam: sel.homeTeam,
+          awayTeam: sel.awayTeam,
+          league: sel.league,
+          kickoff: sel.kickoff,
+          pick: sel.pick,
+          odds: sel.odds,
+          region: ticket.region,
+          bookingCode: ticket.bookingCode,
+          status: sel.status,
+          odds1: (sel.odds * 0.95).toFixed(2),
+          oddsX: '3.20',
+          odds2: (sel.odds * 1.35).toFixed(2),
+        });
+      });
     }
-    return t.marketId === selectedMarketTab;
   });
 
-  const recentResults = TICKETS.filter(t => t.status !== 'pending').slice(0, 3);
+  // Filter matches based on selected tab
+  const displayedMatches = allMatches.filter(m => {
+    if (selectedLeagueTab === 'all') return true;
+    return m.region === selectedLeagueTab;
+  });
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
+    <div className="max-w-4xl mx-auto space-y-4">
       
-      {/* ── 1. WELCOME HERO (Clean Light & Dark Mode) ── */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-800 via-emerald-950 to-slate-950 text-white p-5 sm:p-7 shadow-lg">
-        <div className="absolute -right-10 -top-10 w-48 h-48 rounded-full bg-white/[0.08] blur-2xl pointer-events-none" />
-        <div className="absolute right-10 -bottom-10 w-36 h-36 rounded-full bg-amber-400/[0.1] blur-2xl pointer-events-none" />
+      {/* ── 1. SPORTYBET HERO BANNER: THE LADDER CHALLENGE ── */}
+      <div className="rounded-2xl bg-gradient-to-r from-[#B7151C] via-[#E41B23] to-[#8E0E14] text-white p-4 sm:p-5 shadow-sporty-btn relative overflow-hidden">
+        <div className="absolute right-0 top-0 -mr-6 -mt-6 w-36 h-36 rounded-full bg-white/10 blur-xl pointer-events-none" />
 
         <div className="relative z-10 space-y-3">
-          <div className="inline-flex items-center gap-1.5 bg-white/[0.12] border border-white/[0.2] rounded-md px-2.5 py-0.5">
-            <ShieldCheck className="h-3.5 w-3.5 text-amber-300" />
-            <span className="text-[10px] font-display font-bold uppercase tracking-wider text-white">
-              Official Pan-African Sports Intelligence &bull; 18+
+          <div className="flex items-center justify-between gap-2">
+            <span className="inline-flex items-center gap-1.5 bg-black/25 px-2.5 py-0.5 rounded-full text-[10px] font-display font-black uppercase tracking-wider">
+              <span className="w-2 h-2 rounded-full bg-white animate-ping"></span>
+              Live Rollover Challenge #50
+            </span>
+            <span className="text-xs font-mono font-bold text-amber-300">
+              ₦1,000 &rarr; ₦1,000,000 Target
             </span>
           </div>
 
-          <h1 className="text-2xl sm:text-3xl font-display font-black tracking-tight text-white leading-tight">
-            BRYME Predictions <span className="text-amber-300">&amp; The Rollover Ladder</span>
-          </h1>
-
-          <p className="text-white/85 text-xs sm:text-sm max-w-xl leading-relaxed">
-            Covering Nigeria (NPFL), Kenya (FKF), Ghana (GPL), South Africa (PSL), and CAF Champions League with 100% verified bookkeeping. Zero deleted losses.
-          </p>
-
-          {/* Ladder Quick Progress Meter */}
-          <div className="pt-2">
-            <div className="flex items-center justify-between text-xs mb-1.5">
-              <span className="text-white font-medium flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-                <span>Rollover Progress: <strong>Step 3 of 18</strong></span>
-              </span>
-              <span className="text-amber-300 font-bold font-mono">
-                Purse: ₦{ACTIVE_CHALLENGE.currentBalance.toLocaleString()}
-              </span>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <h1 className="text-xl sm:text-2xl font-display font-black tracking-tight text-white leading-tight">
+                Step 3 of 18 &bull; Current Purse: ₦{ACTIVE_CHALLENGE.currentBalance.toLocaleString()}
+              </h1>
+              <p className="text-xs text-white/90 mt-0.5">
+                Today's 1.50 Code: <strong className="font-mono text-white underline">{ACTIVE_CHALLENGE.sportyCode}</strong> (Arsenal 1X + Bayern vs Stuttgart O2.5)
+              </p>
             </div>
 
-            <div className="h-2 w-full bg-white/[0.15] rounded-full overflow-hidden">
-              <div className="h-full bg-gradient-to-r from-emerald-400 to-amber-300 rounded-full" style={{ width: '16.7%' }}></div>
+            {/* Quick Copy Code Button */}
+            <div className="flex items-center gap-2 self-start sm:self-auto flex-shrink-0">
+              <button
+                onClick={() => handleCopyCode(ACTIVE_CHALLENGE.sportyCode)}
+                className="px-3.5 py-2 bg-white text-sporty-red hover:bg-slate-100 font-display font-black text-xs uppercase tracking-wider rounded-xl transition-all shadow-sm flex items-center gap-1.5"
+              >
+                {copiedCode ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
+                <span>{copiedCode ? 'Copied!' : 'Copy Code'}</span>
+              </button>
+              <button
+                onClick={() => onNavigate('ladder')}
+                className="px-3.5 py-2 bg-black/25 hover:bg-black/40 text-white font-display font-bold text-xs uppercase tracking-wider rounded-xl transition-all"
+              >
+                Ledger &rarr;
+              </button>
+            </div>
+          </div>
+
+          {/* Progress bar */}
+          <div className="space-y-1 pt-1">
+            <div className="h-2 w-full bg-black/20 rounded-full overflow-hidden">
+              <div className="h-full bg-amber-300 rounded-full" style={{ width: '16.7%' }}></div>
+            </div>
+            <div className="flex items-center justify-between text-[10px] text-white/80 font-mono">
+              <span>Day 6 Safe Haven: Bank 50% (₦5,695)</span>
+              <span>18 Wins Needed for ₦1M</span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* ── 2. TWO PRIMARY ACTION TILES ── */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {/* Tile 1: The Ladder */}
-        <div 
-          onClick={() => onNavigate('ladder')}
-          className="rounded-2xl border border-emerald-500/30 hover:border-emerald-500 bg-white dark:bg-[#0E172A] p-4 flex items-center justify-between gap-3 cursor-pointer transition-all hover:shadow-md hover:-translate-y-0.5 shadow-sm group"
-        >
-          <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-500/30 flex items-center justify-center flex-shrink-0 text-emerald-600 dark:text-emerald-400 group-hover:scale-105 transition-transform">
-              <Trophy className="w-5 h-5" />
-            </div>
-            <div>
-              <p className="font-display font-bold text-slate-900 dark:text-white text-sm">The Rollover Ladder</p>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">₦1,000 &rarr; ₦1M · Step 3 Active</p>
-            </div>
+      {/* ── 2. SPORTYBET SHORTCUTS GRID ── */}
+      <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+        {[
+          { label: 'Rollover Ladder', icon: '🪜', action: () => onNavigate('ladder') },
+          { label: 'Nigeria NPFL', icon: '🇳🇬', action: () => setSelectedLeagueTab('nigeria') },
+          { label: 'Kenya FKF', icon: '🇰🇪', action: () => setSelectedLeagueTab('kenya') },
+          { label: 'Ghana GPL', icon: '🇬🇭', action: () => setSelectedLeagueTab('ghana') },
+          { label: 'South Africa', icon: '🇿🇦', action: () => setSelectedLeagueTab('south-africa') },
+          { label: 'Results Archive', icon: '📜', action: () => onNavigate('results') },
+        ].map((item, idx) => (
+          <button
+            key={idx}
+            onClick={item.action}
+            className="rounded-xl border border-slate-200 dark:border-sporty-border bg-white dark:bg-sporty-card hover:bg-slate-50 dark:hover:bg-sporty-oddsBox p-2.5 flex flex-col items-center justify-center gap-1 transition-all shadow-sm"
+          >
+            <span className="text-xl">{item.icon}</span>
+            <span className="text-[10px] font-display font-bold text-slate-800 dark:text-slate-200 text-center leading-tight">
+              {item.label}
+            </span>
+          </button>
+        ))}
+      </div>
+
+      {/* ── 3. SPORTYBET MATCHES TABLE (Iconic 1 X 2 Odds List) ── */}
+      <div className="rounded-2xl border border-slate-200 dark:border-sporty-border bg-white dark:bg-sporty-card overflow-hidden shadow-sm">
+        
+        {/* Table Header: Market & League Filter Tabs */}
+        <div className="bg-slate-100 dark:bg-sporty-oddsBox border-b border-slate-200 dark:border-sporty-border p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+          <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none pb-1 sm:pb-0">
+            {[
+              { id: 'all', label: 'All Matches' },
+              { id: 'nigeria', label: '🇳🇬 NPFL' },
+              { id: 'kenya', label: '🇰🇪 FKF' },
+              { id: 'ghana', label: '🇬🇭 GPL' },
+              { id: 'south-africa', label: '🇿🇦 PSL' },
+              { id: 'north-africa-caf', label: '🏆 CAF' },
+              { id: 'europe', label: '🇪🇺 Top Europe' },
+            ].map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => setSelectedLeagueTab(tab.id)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-display font-bold uppercase whitespace-nowrap transition-all ${
+                  selectedLeagueTab === tab.id
+                    ? 'bg-sporty-red text-white shadow-sm'
+                    : 'bg-white dark:bg-sporty-card text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-sporty-border'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
           </div>
-          <ArrowRight className="w-4 h-4 text-emerald-500 group-hover:translate-x-1 transition-transform" />
+
+          {/* Odds Column Headers (1 | X | 2) */}
+          <div className="hidden sm:flex items-center gap-1.5 text-xs font-mono font-bold text-slate-500 dark:text-slate-400">
+            <span className="w-16 text-center">1</span>
+            <span className="w-16 text-center">X</span>
+            <span className="w-16 text-center">2</span>
+          </div>
         </div>
 
-        {/* Tile 2: Editor's Picks */}
-        <div 
-          onClick={() => onNavigate('editor-picks')}
-          className="rounded-2xl border border-amber-500/30 hover:border-amber-500 bg-white dark:bg-[#0E172A] p-4 flex items-center justify-between gap-3 cursor-pointer transition-all hover:shadow-md hover:-translate-y-0.5 shadow-sm group"
-        >
-          <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-xl bg-amber-50 dark:bg-amber-950/60 border border-amber-500/30 flex items-center justify-center flex-shrink-0 text-amber-600 dark:text-amber-400 group-hover:scale-105 transition-transform">
-              <Sparkles className="w-5 h-5" />
+        {/* Matches Rows */}
+        <div className="divide-y divide-slate-100 dark:divide-sporty-border">
+          {displayedMatches.slice(0, 10).map((m, idx) => (
+            <SportyMatchRow 
+              key={m.id || idx}
+              match={m}
+              selectedOdds={selectedOdds}
+              onSelectOdd={onSelectOdd}
+              onNavigate={onNavigate}
+            />
+          ))}
+
+          {displayedMatches.length === 0 && (
+            <div className="p-8 text-center text-xs text-slate-500">
+              No matches found for this league filter.
             </div>
-            <div>
-              <p className="font-display font-bold text-slate-900 dark:text-white text-sm">Editor's Best Pick</p>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Weekend 2.00 Odds · Form Analysis</p>
-            </div>
-          </div>
-          <ArrowRight className="w-4 h-4 text-amber-500 group-hover:translate-x-1 transition-transform" />
+          )}
         </div>
       </div>
 
-      {/* ── 3. SIGNATURE FEATURE: THE VISIBLE LADDER ── */}
+      {/* ── 4. THE VISIBLE 18-STEP ROLLOVER LADDER ── */}
       <section className="space-y-3">
         <div className="flex items-center justify-between px-1">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-display font-bold text-xs">
+            <span className="w-6 h-6 rounded-lg bg-sporty-red/10 text-sporty-red flex items-center justify-center font-bold text-xs">
               🪜
-            </div>
-            <h2 className="text-lg font-display font-black text-slate-900 dark:text-white">
-              The Visible Rollover Ladder
+            </span>
+            <h2 className="text-base sm:text-lg font-display font-black text-slate-900 dark:text-white">
+              The Visible 18-Step Rollover Ladder
             </h2>
           </div>
           <button
             onClick={() => onNavigate('ladder')}
-            className="text-xs font-display font-bold text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1"
+            className="text-xs font-display font-bold text-sporty-red hover:underline flex items-center gap-1"
           >
             <span>Full Ledger</span>
             <ArrowRight className="w-3.5 h-3.5" />
@@ -136,144 +216,49 @@ export default function HomePage({ onNavigate }) {
         <VisibleLadder onNavigate={onNavigate} showFullInitial={false} />
       </section>
 
-      {/* ── 4. PAN-AFRICAN REGIONAL LEAGUE SELECTIONS ── */}
-      <section className="space-y-3">
-        <div className="flex items-center justify-between px-1">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-lg bg-blue-500/20 text-blue-600 dark:text-blue-400 flex items-center justify-center font-display font-bold text-xs">
-              🌍
-            </div>
-            <h2 className="text-lg font-display font-black text-slate-900 dark:text-white">
-              Pan-African League Selections
-            </h2>
-          </div>
-          <button
-            onClick={() => onNavigate('predictions')}
-            className="text-xs font-display font-bold text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1"
-          >
-            <span>View All</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </button>
-        </div>
-
-        {/* African Region Selector Chips */}
-        <RegionSelector 
-          selectedRegion={selectedRegion} 
-          onSelectRegion={setSelectedRegion} 
-        />
-
-        {/* Slips List */}
-        <div className="space-y-3">
-          {currentTickets.slice(0, 3).map((ticket) => (
-            <TicketCard 
-              key={ticket.id} 
-              ticket={ticket} 
-              onNavigate={onNavigate} 
-            />
-          ))}
-
-          {currentTickets.length === 0 && (
-            <div className="p-6 text-center rounded-2xl bg-white dark:bg-[#0A1224] border border-slate-200 dark:border-white/[0.08] text-xs text-slate-500">
-              No tickets currently scheduled for this African league. Check back before kickoff.
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* ── 5. CURRENCY & PAYOUT CALCULATOR ── */}
-      <section className="space-y-3">
-        <CurrencyCalculator />
-      </section>
-
       {/* RESERVED ADSTERRA SLOT */}
-      <AdPlaceholder label="Featured Placement Slot" />
+      <AdPlaceholder label="SportyBet Placement Slot" />
 
-      {/* ── 6. FAVORITE PUNTERS & CONSENSUS ── */}
+      {/* ── 5. RECENT RESULTS ARCHIVE (PAN-AFRICAN) ── */}
       <section className="space-y-3">
         <div className="flex items-center justify-between px-1">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-lg bg-purple-500/20 text-purple-600 dark:text-purple-400 flex items-center justify-center font-display font-bold text-xs">
-              👥
-            </div>
-            <h2 className="text-lg font-display font-black text-slate-900 dark:text-white">
-              Favorite Punters Catalog
-            </h2>
-          </div>
-          <button
-            onClick={() => onNavigate('weekend-hub')}
-            className="text-xs font-display font-bold text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1"
-          >
-            <span>Consensus Hub</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </button>
-        </div>
-
-        {/* Punter Rows */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {PUNTERS.slice(0, 4).map((punter) => (
-            <div
-              key={punter.id}
-              onClick={() => onNavigate(`punters/${punter.id}`)}
-              className="rounded-2xl border border-slate-200 dark:border-white/[0.08] hover:border-emerald-500/40 bg-white dark:bg-[#0E172A] p-3.5 cursor-pointer transition-all flex items-center justify-between gap-3 group shadow-sm hover:shadow-md"
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center font-display font-black text-emerald-600 dark:text-emerald-400 text-xs flex-shrink-0">
-                  {punter.avatar}
-                </div>
-                <div>
-                  <h4 className="font-display font-bold text-slate-900 dark:text-white text-xs group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
-                    {punter.displayName}
-                  </h4>
-                  <p className="text-[10px] font-mono text-slate-500 dark:text-slate-400">
-                    {punter.handle} &bull; {punter.region}
-                  </p>
-                  <p className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold mt-0.5">
-                    {punter.stats.won}W - {punter.stats.lost}L ({punter.stats.avgOdds}x avg)
-                  </p>
-                </div>
-              </div>
-              <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-emerald-500 group-hover:translate-x-0.5 transition-all flex-shrink-0" />
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ── 7. RECENT RESULTS ARCHIVE ── */}
-      <section className="space-y-3">
-        <div className="flex items-center justify-between px-1">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-lg bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center font-display font-bold text-xs">
+            <span className="w-6 h-6 rounded-lg bg-emerald-500/10 text-emerald-600 flex items-center justify-center font-bold text-xs">
               📜
-            </div>
-            <h2 className="text-lg font-display font-black text-slate-900 dark:text-white">
+            </span>
+            <h2 className="text-base sm:text-lg font-display font-black text-slate-900 dark:text-white">
               Recent Tracked Results (African &amp; Global)
             </h2>
           </div>
           <button
             onClick={() => onNavigate('results')}
-            className="text-xs font-display font-bold text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1"
+            className="text-xs font-display font-bold text-sporty-red hover:underline flex items-center gap-1"
           >
             <span>View All</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </button>
         </div>
 
-        <div className="space-y-2">
-          {recentResults.map((ticket) => (
+        <div className="rounded-2xl border border-slate-200 dark:border-sporty-border bg-white dark:bg-sporty-card divide-y divide-slate-100 dark:divide-sporty-border overflow-hidden">
+          {TICKETS.filter(t => t.status !== 'pending').slice(0, 4).map((ticket) => (
             <div
               key={ticket.id}
               onClick={() => onNavigate(`ticket/${ticket.id}`)}
-              className="rounded-xl border border-slate-200 dark:border-white/[0.08] hover:border-slate-300 dark:hover:border-slate-500 bg-white dark:bg-[#0E172A] p-3 flex items-center justify-between gap-3 cursor-pointer transition-colors shadow-sm"
+              className="p-3.5 flex items-center justify-between gap-3 hover:bg-slate-50 dark:hover:bg-sporty-oddsBox cursor-pointer transition-colors"
             >
               <div className="truncate pr-2">
-                <span className="font-display font-bold text-xs text-slate-900 dark:text-white block truncate">
+                <span className="font-display font-bold text-xs sm:text-sm text-slate-900 dark:text-white block truncate">
                   {ticket.title}
                 </span>
-                <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">
+                <span className="text-[11px] text-slate-500 dark:text-slate-400 font-mono">
                   {ticket.punterName} &bull; {ticket.totalOdds}x &bull; {ticket.date}
                 </span>
               </div>
-              <StatusBadge status={ticket.status} size="xs" />
+              <span className={`text-xs px-2.5 py-0.5 rounded-full font-display font-black uppercase ${
+                ticket.status === 'won' ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400' : 'bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-400'
+              }`}>
+                {ticket.status}
+              </span>
             </div>
           ))}
         </div>
