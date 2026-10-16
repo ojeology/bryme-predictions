@@ -1,0 +1,122 @@
+export const PUNTERS = [
+  {
+    id: 'naija-tactician',
+    handle: '@NaijaTactician',
+    displayName: 'The Naija Tactician',
+    region: 'Nigeria',
+    countryCode: 'NG',
+    avatar: 'NT',
+    color: 'emerald',
+    bio: 'Specialist in European top flights, double-chance multipliers, and conservative weekend accumulator builds.',
+    primaryMarkets: ['Double Chance', 'Over 1.5 Goals', 'BTTS'],
+    verifiedDisclaimer: 'Independent tracking by BRYME Predictions. No commercial endorsement or partnership.',
+    originalPlatform: 'X (Twitter)',
+    profileUrl: 'https://twitter.com/placeholder_naijatactician',
+    stats: {
+      totalTracked: 48,
+      won: 28,
+      lost: 17,
+      void: 3,
+      pending: 2,
+      winRateDemonstration: '58.3% (Demo Sample)',
+      avgOdds: 2.15,
+      lastActive: 'Today, 14:30 WAT'
+    }
+  },
+  {
+    id: 'coach-kip-ke',
+    handle: '@CoachKipKE',
+    displayName: 'Coach Kip KE',
+    region: 'Kenya',
+    countryCode: 'KE',
+    avatar: 'CK',
+    color: 'amber',
+    bio: 'Data-driven Kenyan football analyst tracking goals markets, Eredivisie overs, and Scandinavian league trends.',
+    primaryMarkets: ['Over 2.5 Goals', '1st Half Over 0.5', 'Team Corners'],
+    verifiedDisclaimer: 'Independent tracking by BRYME Predictions. No commercial endorsement or partnership.',
+    originalPlatform: 'X (Twitter)',
+    profileUrl: 'https://twitter.com/placeholder_coachkipke',
+    stats: {
+      totalTracked: 42,
+      won: 23,
+      lost: 16,
+      void: 3,
+      pending: 1,
+      winRateDemonstration: '54.7% (Demo Sample)',
+      avgOdds: 2.45,
+      lastActive: 'Today, 12:15 EAT'
+    }
+  },
+  {
+    id: 'lagos-stats-guy',
+    handle: '@LagosStatsGuy',
+    displayName: 'Lagos Stats Room',
+    region: 'Nigeria',
+    countryCode: 'NG',
+    avatar: 'LS',
+    color: 'blue',
+    bio: 'Focuses on low-variance 1.50 - 1.80 rollover singles and disciplined weekend 2-odds bankers.',
+    primaryMarkets: ['Rollover Singles', 'Match Winner', 'Over 1.5 Goals'],
+    verifiedDisclaimer: 'Independent tracking by BRYME Predictions. No commercial endorsement or partnership.',
+    originalPlatform: 'Telegram & X',
+    profileUrl: 'https://twitter.com/placeholder_lagosstatsguy',
+    stats: {
+      totalTracked: 55,
+      won: 34,
+      lost: 18,
+      void: 3,
+      pending: 3,
+      winRateDemonstration: '61.8% (Demo Sample)',
+      avgOdds: 1.62,
+      lastActive: 'Today, 16:00 WAT'
+    }
+  },
+  {
+    id: 'nairobi-punter',
+    handle: '@NairobiPunter',
+    displayName: 'Nairobi Corner & Cards',
+    region: 'Kenya',
+    countryCode: 'KE',
+    avatar: 'NP',
+    color: 'teal',
+    bio: 'Niche market enthusiast hunting set-piece numbers, bookings, and second-half momentum shifts in Serie A & Premier League.',
+    primaryMarkets: ['Total Corners', 'Second Half Goals', 'Cards'],
+    verifiedDisclaimer: 'Independent tracking by BRYME Predictions. No commercial endorsement or partnership.',
+    originalPlatform: 'X (Twitter)',
+    profileUrl: 'https://twitter.com/placeholder_nairobipunter',
+    stats: {
+      totalTracked: 36,
+      won: 19,
+      lost: 14,
+      void: 3,
+      pending: 2,
+      winRateDemonstration: '52.7% (Demo Sample)',
+      avgOdds: 2.80,
+      lastActive: 'Yesterday, 19:40 EAT'
+    }
+  },
+  {
+    id: 'delta-capo',
+    handle: '@DeltaCapo',
+    displayName: 'Delta Capo Bets',
+    region: 'Nigeria',
+    countryCode: 'NG',
+    avatar: 'DC',
+    color: 'purple',
+    bio: 'Curator of extended weekend Anybody-Win slips (20-40 games) and long-shot accumulator experiments.',
+    primaryMarkets: ['Anybody-Win (12)', 'High Odds Accas', 'Weekend Mega'],
+    verifiedDisclaimer: 'Independent tracking by BRYME Predictions. No commercial endorsement or partnership.',
+    originalPlatform: 'X (Twitter)',
+    profileUrl: 'https://twitter.com/placeholder_deltacapo',
+    stats: {
+      totalTracked: 29,
+      won: 9,
+      lost: 19,
+      void: 1,
+      pending: 1,
+      winRateDemonstration: '31.0% (Demo Sample - High Odds Accas)',
+      avgOdds: 14.50,
+      lastActive: 'Today, 11:00 WAT'
+    }
+  }
+];
