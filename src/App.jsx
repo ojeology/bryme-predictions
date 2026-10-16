@@ -92,9 +92,9 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-pitch-900 text-slate-100 flex flex-col selection:bg-brand-green selection:text-pitch-950 font-sans">
+    <div className="min-h-screen bg-[#070D1A] text-slate-100 flex flex-col selection:bg-emerald-500 selection:text-black font-sans">
       
-      {/* 1. Pulsing Ladder Banner (Top banner per section 3) */}
+      {/* 1. Pulsing Ladder Banner */}
       <LadderBanner onNavigate={navigate} />
 
       {/* 2. Top Navigation Bar */}
@@ -104,15 +104,15 @@ export default function App() {
         onOpenSearch={() => setSearchOpen(true)} 
       />
 
-      {/* 3. Main Content Container */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6">
+      {/* 3. Main Content Container (Focused max-w-3xl width inspired by Fortebet Portal) */}
+      <main className="flex-1 max-w-3xl w-full mx-auto px-3 sm:px-4 py-4 sm:py-6">
         {renderContent()}
       </main>
 
       {/* 4. Footer */}
       <Footer onNavigate={navigate} />
 
-      {/* 5. Mobile Bottom Navigation Bar (Home, Predictions, Markets, Ladder, Results) */}
+      {/* 5. Mobile Bottom Navigation Bar */}
       <BottomNav 
         currentRoute={mainRoute} 
         onNavigate={navigate} 
