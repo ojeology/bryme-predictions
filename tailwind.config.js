@@ -6,38 +6,52 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        display: ['Outfit', 'Inter', 'sans-serif'],
+        mono: ['JetBrains Mono', 'monospace'],
+      },
       colors: {
-        pitch: {
-          950: '#060A12',
-          900: '#0B111E',
-          850: '#0F172A',
-          800: '#152037',
-          750: '#1B2945',
-          700: '#243557',
-          600: '#334A75',
-          500: '#4A6598',
+        fortegreen: {
+          DEFAULT: '#00B140',
+          neon: '#00E676',
+          dark: '#008730',
+          glow: 'rgba(0, 230, 118, 0.35)',
         },
-        brand: {
-          green: '#10B981',
-          greenLight: '#34D399',
-          greenDark: '#059669',
-          gold: '#F59E0B',
-          navy: '#0B111E',
-          card: '#131C2E',
-          cardBorder: '#1E2D4A',
+        pitch: {
+          950: '#04070F',
+          900: '#070D1A',
+          850: '#0C1527',
+          800: '#121E36',
+          750: '#182847',
+          700: '#21355D',
+          600: '#314C83',
+        },
+        gold: {
+          400: '#FCD34D',
+          500: '#F59E0B',
+          600: '#D97706',
+          glow: 'rgba(245, 158, 11, 0.4)',
         }
       },
-      fontFamily: {
-        sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
-        mono: ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
+      boxShadow: {
+        'glow-green': '0 0 25px rgba(0, 230, 118, 0.35)',
+        'glow-gold': '0 0 25px rgba(245, 158, 11, 0.4)',
+        'glow-blue': '0 0 25px rgba(59, 130, 246, 0.35)',
+        'card-subtle': '0 10px 30px -10px rgba(0, 0, 0, 0.5)',
       },
       animation: {
-        'ladder-pulse': 'ladderGlow 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'pulse-glow': 'pulseGlow 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'marquee': 'marquee 28s linear infinite',
       },
       keyframes: {
-        ladderGlow: {
-          '0%, 100%': { opacity: '1', boxShadow: '0 0 14px rgba(16, 185, 129, 0.35)' },
-          '50%': { opacity: '0.88', boxShadow: '0 0 4px rgba(16, 185, 129, 0.15)' },
+        pulseGlow: {
+          '0%, 100%': { opacity: '1', filter: 'drop-shadow(0 0 12px rgba(0, 230, 118, 0.6))' },
+          '50%': { opacity: '0.85', filter: 'drop-shadow(0 0 4px rgba(0, 230, 118, 0.2))' },
+        },
+        marquee: {
+          '0%': { transform: 'translateX(0%)' },
+          '100%': { transform: 'translateX(-50%)' },
         }
       }
     },

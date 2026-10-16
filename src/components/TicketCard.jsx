@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import StatusBadge from './StatusBadge';
-import { Copy, Check, Share2, ArrowRight, ExternalLink, ShieldCheck } from 'lucide-react';
+import { Copy, Check, Share2, ArrowRight } from 'lucide-react';
 
 export default function TicketCard({ ticket, onNavigate }) {
   const [copiedCode, setCopiedCode] = useState(false);
@@ -27,9 +27,7 @@ export default function TicketCard({ ticket, onNavigate }) {
     if (navigator.share) {
       try {
         await navigator.share(shareData);
-      } catch (err) {
-        // Fallback to copy link if user dismisses or API rejects
-      }
+      } catch (err) {}
     } else {
       navigator.clipboard.writeText(shareUrl);
       setCopiedLink(true);
@@ -44,22 +42,22 @@ export default function TicketCard({ ticket, onNavigate }) {
   return (
     <div
       onClick={() => onNavigate(`ticket/${ticket.id}`)}
-      className="bg-brand-card hover:bg-pitch-800/90 border border-brand-cardBorder hover:border-slate-600 rounded-xl p-3.5 sm:p-4 transition-all duration-150 cursor-pointer shadow-sm relative group flex flex-col justify-between"
+      className="glass-card hover:border-fortegreen-neon/50 rounded-2xl p-4 sm:p-5 transition-all duration-200 cursor-pointer shadow-lg relative group flex flex-col justify-between hover:scale-[1.01]"
     >
       <div>
         {/* Card Header: Bookmaker, Odds badge & Status */}
-        <div className="flex items-center justify-between gap-2 mb-2.5">
+        <div className="flex items-center justify-between gap-2 mb-3">
           <div className="flex items-center gap-2">
-            <span className="text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-pitch-850 text-slate-300 border border-pitch-750">
+            <span className="text-[10px] font-display font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-[#121E36] text-slate-200 border border-[#1E3258]">
               {ticket.bookmaker || 'Generic'}
             </span>
             <span className="text-xs text-slate-400 font-mono">
-              {selectionsCount} {selectionsCount === 1 ? 'Pick' : 'Picks'}
+              {selectionsCount} {selectionsCount === 1 ? 'Game' : 'Games'}
             </span>
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="text-xs sm:text-sm font-extrabold font-mono text-brand-green bg-brand-green/10 border border-brand-green/30 px-2 py-0.5 rounded-md">
+            <span className="text-xs sm:text-sm font-display font-black font-mono text-fortegreen-neon bg-[#072412] border border-fortegreen-neon/40 px-2.5 py-0.5 rounded-lg shadow-sm">
               {ticket.totalOdds.toFixed(2)}x
             </span>
             <StatusBadge status={ticket.status} size="xs" />
@@ -68,61 +66,59 @@ export default function TicketCard({ ticket, onNavigate }) {
 
         {/* Ticket Title & Attribution */}
         <div className="mb-3">
-          <h3 className="font-bold text-slate-100 text-sm sm:text-base leading-snug group-hover:text-emerald-400 transition-colors line-clamp-1">
+          <h3 className="font-display font-black text-slate-100 text-base leading-snug group-hover:text-fortegreen-neon transition-colors line-clamp-1">
             {ticket.title}
           </h3>
           <div className="flex items-center gap-2 mt-1 text-[11px] text-slate-400 flex-wrap">
-            <span className="font-medium text-slate-300">
+            <span className="font-semibold text-slate-300">
               By {ticket.punterName || ticket.source}
             </span>
             <span>&bull;</span>
-            <span>{ticket.date}</span>
-            <span>&bull;</span>
-            <span className="text-slate-500 font-mono text-[10px]">{ticket.publishedAt}</span>
+            <span className="font-mono">{ticket.date}</span>
           </div>
         </div>
 
-        {/* Selections Preview (Mobile-compact) */}
-        <div className="space-y-1.5 mb-3 bg-pitch-950/60 rounded-lg p-2.5 border border-pitch-800/80">
+        {/* Selections Preview */}
+        <div className="space-y-1.5 mb-3 bg-[#070D1A]/90 rounded-xl p-3 border border-[#182847]">
           {previewSelections.map((sel, idx) => (
-            <div key={sel.id || idx} className="flex items-center justify-between text-xs py-1 border-b border-pitch-850 last:border-b-0 gap-2">
+            <div key={sel.id || idx} className="flex items-center justify-between text-xs py-1 border-b border-[#121E36] last:border-b-0 gap-2">
               <div className="truncate flex-1">
-                <span className="font-medium text-slate-200 block truncate">
+                <span className="font-semibold text-slate-200 block truncate">
                   {sel.match}
                 </span>
                 <span className="text-[10px] text-slate-400">
-                  {sel.league} &bull; <strong className="text-slate-300 font-normal">{sel.pick}</strong>
+                  {sel.league} &bull; <strong className="text-amber-300 font-normal">{sel.pick}</strong>
                 </span>
               </div>
-              <span className="font-mono text-xs font-semibold text-slate-300 px-1.5 py-0.5 bg-pitch-800 rounded">
+              <span className="font-mono font-bold text-xs text-slate-300 px-1.5 py-0.5 bg-[#121E36] rounded">
                 {sel.odds.toFixed(2)}
               </span>
             </div>
           ))}
 
           {remainingCount > 0 && (
-            <div className="text-[11px] text-brand-greenLight font-medium pt-1 text-center">
-              + {remainingCount} more {remainingCount === 1 ? 'selection' : 'selections'} on full ticket
+            <div className="text-[11px] text-fortegreen-neon font-display font-bold pt-1 text-center">
+              + {remainingCount} more {remainingCount === 1 ? 'game' : 'games'} on ticket slip
             </div>
           )}
         </div>
       </div>
 
       {/* Card Footer: Booking Code + Actions */}
-      <div className="pt-2 border-t border-pitch-800 flex items-center justify-between gap-2 mt-auto">
+      <div className="pt-2.5 border-t border-[#182847] flex items-center justify-between gap-2 mt-auto">
         {/* Booking Code with Copy button */}
         {ticket.bookingCode ? (
-          <div className="flex items-center gap-1.5 bg-pitch-900 border border-pitch-750 px-2 py-1 rounded-md">
+          <div className="flex items-center gap-1.5 bg-[#070D1A] border border-fortegreen-neon/40 px-2.5 py-1 rounded-xl">
             <span className="text-[10px] uppercase font-mono text-slate-400">Code:</span>
-            <span className="text-xs font-mono font-bold text-slate-200">
+            <span className="text-xs font-mono font-black text-fortegreen-neon">
               {ticket.bookingCode}
             </span>
             <button
               onClick={handleCopyCode}
               title="Copy Booking Code"
-              className="p-1 hover:text-brand-green text-slate-400 transition-colors"
+              className="p-1 hover:text-white text-slate-400 transition-colors"
             >
-              {copiedCode ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
+              {copiedCode ? <Check className="w-3.5 h-3.5 text-fortegreen-neon" /> : <Copy className="w-3.5 h-3.5" />}
             </button>
           </div>
         ) : (
@@ -130,13 +126,13 @@ export default function TicketCard({ ticket, onNavigate }) {
         )}
 
         {/* Share & Open Details */}
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1.5">
           <button
             onClick={handleShare}
             title="Share Ticket"
-            className="p-1.5 rounded-lg bg-pitch-850 hover:bg-pitch-750 border border-pitch-750 text-slate-400 hover:text-white transition-colors"
+            className="p-2 rounded-xl bg-[#0C1527] hover:bg-[#182847] border border-[#1E3258] text-slate-300 hover:text-white transition-colors"
           >
-            {copiedLink ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Share2 className="w-3.5 h-3.5" />}
+            {copiedLink ? <Check className="w-3.5 h-3.5 text-fortegreen-neon" /> : <Share2 className="w-3.5 h-3.5" />}
           </button>
           
           <button
@@ -144,7 +140,7 @@ export default function TicketCard({ ticket, onNavigate }) {
               e.stopPropagation();
               onNavigate(`ticket/${ticket.id}`);
             }}
-            className="px-2.5 py-1 text-xs font-semibold text-slate-300 group-hover:text-emerald-400 flex items-center gap-1 transition-colors"
+            className="px-3 py-1.5 text-xs font-display font-bold uppercase tracking-wider text-slate-200 group-hover:text-fortegreen-neon flex items-center gap-1 transition-colors"
           >
             <span>View</span>
             <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ACTIVE_CHALLENGE } from '../data/ladder';
-import { Trophy, Copy, Check, ArrowRight, Zap } from 'lucide-react';
+import { Copy, Check, ArrowRight, Zap, Trophy } from 'lucide-react';
 
 export default function LadderBanner({ onNavigate }) {
   const [copied, setCopied] = useState(false);
@@ -13,53 +13,53 @@ export default function LadderBanner({ onNavigate }) {
   };
 
   return (
-    <div className="sticky top-0 z-40 w-full bg-pitch-950/95 backdrop-blur-md border-b border-brand-green/30 shadow-lg">
-      <div className="max-w-7xl mx-auto px-3 py-2 sm:py-2.5 flex flex-wrap items-center justify-between gap-2">
+    <div className="sticky top-0 z-40 w-full bg-[#050A14]/95 backdrop-blur-md border-b-2 border-fortegreen-neon/40 shadow-glow-green">
+      <div className="max-w-7xl mx-auto px-3 py-2 flex flex-wrap items-center justify-between gap-2">
         {/* Challenge Info */}
         <div 
           onClick={() => onNavigate('ladder')}
-          className="flex items-center gap-2 cursor-pointer group flex-1 min-w-[260px]"
+          className="flex items-center gap-2.5 cursor-pointer group flex-1 min-w-[280px]"
         >
-          <span className="relative flex h-3 w-3">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-green opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-3 w-3 bg-brand-green"></span>
+          <span className="relative flex h-3.5 w-3.5">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-fortegreen-neon opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-fortegreen-neon shadow-[0_0_8px_#00E676]"></span>
           </span>
 
-          <div className="flex items-center gap-1.5 text-xs sm:text-sm font-semibold tracking-wide text-slate-200">
-            <span className="text-brand-green font-bold uppercase flex items-center gap-1">
-              <Zap className="w-3.5 h-3.5 fill-brand-green" />
-              Ladder #{ACTIVE_CHALLENGE.challengeNumber}
+          <div className="flex items-center gap-2 text-xs sm:text-sm font-display font-black tracking-wide text-white">
+            <span className="text-fortegreen-neon uppercase flex items-center gap-1">
+              <Zap className="w-4 h-4 fill-fortegreen-neon text-fortegreen-neon" />
+              LADDER #{ACTIVE_CHALLENGE.challengeNumber}
             </span>
             <span className="text-slate-500">&bull;</span>
-            <span className="text-slate-300">Day {ACTIVE_CHALLENGE.currentDay}/18</span>
+            <span className="text-white">STEP {ACTIVE_CHALLENGE.currentDay}/18</span>
             <span className="text-slate-500">&bull;</span>
-            <span className="hidden xs:inline text-amber-400 font-mono">
-              Purse: ₦{ACTIVE_CHALLENGE.currentBalance.toLocaleString()}
+            <span className="text-amber-400 font-mono font-bold">
+              PURSE: ₦{ACTIVE_CHALLENGE.currentBalance.toLocaleString()}
             </span>
           </div>
 
-          <span className="text-[11px] text-brand-greenLight font-medium group-hover:underline flex items-center gap-0.5 ml-1">
-            <span className="hidden sm:inline">View Ledger</span>
-            <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+          <span className="text-[11px] text-fortegreen-neon font-display font-bold group-hover:underline flex items-center gap-0.5 ml-1 hidden sm:inline-flex">
+            <span>Open Ladder</span>
+            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
           </span>
         </div>
 
         {/* Today's 1.50 Code with Instant Copy */}
         <div className="flex items-center gap-2 self-end sm:self-center">
-          <div className="flex items-center bg-pitch-850 border border-brand-green/40 rounded-lg px-2 py-1 text-xs">
-            <span className="text-[11px] text-slate-400 font-medium mr-1.5 hidden md:inline">
-              Today's 1.50 Code:
+          <div className="flex items-center bg-[#091224] border border-fortegreen-neon/60 rounded-xl px-2.5 py-1 text-xs shadow-sm">
+            <span className="text-[10px] text-slate-400 font-mono uppercase font-bold mr-1.5 hidden md:inline">
+              Daily 1.50 Code:
             </span>
-            <span className="font-mono font-bold text-brand-green tracking-wider text-xs sm:text-sm">
+            <span className="font-mono font-black text-fortegreen-neon tracking-wider text-xs sm:text-sm">
               {ACTIVE_CHALLENGE.todaysCode}
             </span>
             <button
               onClick={handleCopy}
               title="Copy code to clipboard"
-              className="ml-2 p-1 rounded hover:bg-pitch-750 text-slate-300 hover:text-white transition-colors"
+              className="ml-2 p-1 rounded-md hover:bg-fortegreen-neon hover:text-pitch-950 text-slate-300 transition-colors"
             >
               {copied ? (
-                <Check className="w-3.5 h-3.5 text-emerald-400" />
+                <Check className="w-3.5 h-3.5 text-fortegreen-neon" />
               ) : (
                 <Copy className="w-3.5 h-3.5" />
               )}
@@ -68,7 +68,7 @@ export default function LadderBanner({ onNavigate }) {
 
           <button
             onClick={() => onNavigate('ladder')}
-            className="px-2.5 py-1 bg-brand-green hover:bg-brand-greenDark text-pitch-950 font-bold text-xs rounded-lg transition-colors flex items-center gap-1 shadow-sm"
+            className="px-3 py-1 bg-fortegreen-neon hover:bg-[#00c853] text-pitch-950 font-display font-black text-xs uppercase tracking-wider rounded-xl transition-all shadow-md shadow-fortegreen-neon/20 flex items-center gap-1"
           >
             <span>Ledger</span>
           </button>

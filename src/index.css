@@ -7,9 +7,14 @@
 }
 
 body {
-  background-color: #0B111E;
+  background-color: #070D1A;
   color: #F8FAFC;
   overflow-x: hidden;
+  font-family: 'Inter', system-ui, sans-serif;
+  background-image: 
+    radial-gradient(circle at 50% 0%, rgba(0, 230, 118, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 90% 20%, rgba(30, 58, 138, 0.15) 0%, transparent 40%),
+    radial-gradient(circle at 10% 40%, rgba(16, 185, 129, 0.06) 0%, transparent 40%);
 }
 
 /* Custom scrollbars */
@@ -18,45 +23,72 @@ body {
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0B111E;
+  background: #070D1A;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1E2D4A;
+  background: #182847;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #334A75;
+  background: #21355D;
 }
 
-/* Glass and card utilities */
-.glass-panel {
-  background: rgba(19, 28, 46, 0.85);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid #1E2D4A;
+/* Glass Card with neon border highlight */
+.glass-card {
+  background: linear-gradient(180deg, rgba(18, 30, 54, 0.75) 0%, rgba(12, 21, 39, 0.85) 100%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(33, 53, 93, 0.6);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
 }
 
-.card-hover {
-  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
-}
-.card-hover:hover {
-  border-color: #2D4268;
-  transform: translateY(-1px);
-}
-.card-hover:active {
-  transform: translateY(0);
+.glass-card:hover {
+  border-color: rgba(0, 230, 118, 0.35);
 }
 
-/* Pulsing badge animation */
-@keyframes pulseGlow {
-  0%, 100% {
-    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
-  }
-  50% {
-    box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
-  }
+/* Physical Ladder Rung styling */
+.ladder-rung {
+  position: relative;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.pulse-indicator {
-  animation: pulseGlow 2s infinite;
+.ladder-rung::before,
+.ladder-rung::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 12px;
+  height: 6px;
+  background: #21355D;
+  border-radius: 2px;
+  transform: translateY(-50%);
+}
+
+.ladder-rung::before {
+  left: -12px;
+}
+.ladder-rung::after {
+  right: -12px;
+}
+
+.ladder-rung-active {
+  box-shadow: 0 0 20px rgba(0, 230, 118, 0.45);
+  border-color: #00E676 !important;
+}
+
+.ladder-rung-active::before,
+.ladder-rung-active::after {
+  background: #00E676;
+  box-shadow: 0 0 8px #00E676;
+}
+
+.ladder-rung-gold {
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.45);
+  border-color: #F59E0B !important;
+}
+
+.ladder-rung-gold::before,
+.ladder-rung-gold::after {
+  background: #F59E0B;
+  box-shadow: 0 0 8px #F59E0B;
 }
