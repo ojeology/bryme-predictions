@@ -22,7 +22,7 @@ export default function BottomNav({ currentRoute, onNavigate }) {
               onClick={() => onNavigate(item.id)}
               className={`flex flex-col items-center justify-center flex-1 h-full py-1 transition-all relative ${
                 isActive 
-                  ? 'text-emerald-600 dark:text-emerald-400 font-black' 
+                  ? 'text-blue-600 dark:text-blue-400 font-black' 
                   : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
               }`}
             >
@@ -30,8 +30,8 @@ export default function BottomNav({ currentRoute, onNavigate }) {
                 <Icon className={`w-5 h-5 ${isActive ? 'stroke-[2.5] scale-110' : 'stroke-2'}`} />
                 {item.hasPulse && (
                   <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-500"></span>
                   </span>
                 )}
               </div>

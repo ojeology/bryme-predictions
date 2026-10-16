@@ -131,12 +131,12 @@ export default function LadderPage({ onNavigate }) {
               </div>
 
               <div className="flex items-center gap-1.5 bg-white dark:bg-[#0C1527] border border-slate-200 dark:border-white/[0.08] px-2.5 py-1 rounded-lg text-xs shadow-sm">
-                <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">Sporty:</span>
+                <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">Alt Code:</span>
                 <span className="font-mono font-bold text-slate-800 dark:text-slate-200">{ACTIVE_CHALLENGE.sportyCode}</span>
                 <button
                   onClick={() => handleCopy(ACTIVE_CHALLENGE.sportyCode, 'sporty')}
                   className="p-1 hover:text-slate-900 dark:hover:text-white text-slate-400"
-                  title="Copy SportyBet code"
+                  title="Copy code"
                 >
                   {copiedSporty ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
                 </button>

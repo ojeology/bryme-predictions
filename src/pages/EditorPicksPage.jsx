@@ -201,7 +201,7 @@ export default function EditorPicksPage({ onNavigate }) {
 
           <div className="pt-4 border-t border-pitch-800 flex items-center justify-between text-xs">
             <div className="flex items-center gap-2 bg-pitch-950 px-2.5 py-1.5 rounded-lg border border-pitch-800">
-              <span className="text-slate-400 font-mono text-[10px]">Sporty:</span>
+              <span className="text-slate-400 font-mono text-[10px]">Booking Code:</span>
               <span className="font-mono font-bold text-slate-200">{EDITOR_PICKS.sundayPick.bookingCode}</span>
               <button
                 onClick={() => handleCopy(EDITOR_PICKS.sundayPick.bookingCode, 'sun')}

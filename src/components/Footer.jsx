@@ -3,8 +3,8 @@ import { ShieldAlert, HeartHandshake, FileText, Phone, Mail, ArrowUpRight } from
 
 export default function Footer({ onNavigate }) {
   return (
-    <footer className="bg-slate-100 dark:bg-[#050A14] border-t border-slate-200 dark:border-[#182847] text-slate-600 dark:text-slate-400 mt-12 pt-8 pb-20 md:pb-8 transition-colors">
-      <div className="max-w-3xl mx-auto px-4 space-y-6">
+    <footer className="bg-slate-100 dark:bg-[#070D1E] border-t border-slate-200 dark:border-blue-950/60 text-slate-600 dark:text-slate-400 mt-12 pt-8 pb-20 md:pb-8 transition-colors">
+      <div className="max-w-5xl mx-auto px-4 space-y-6">
         
         {/* Responsible Gambling Mandatory Banner (18+) */}
         <div className="bg-white dark:bg-[#0E172A] border border-amber-300 dark:border-amber-900/40 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-sm">

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
-import LadderBanner from './components/LadderBanner';
 import BottomNav from './components/BottomNav';
 import Footer from './components/Footer';
 import SearchModal from './components/SearchModal';
@@ -28,18 +27,19 @@ export default function App() {
   const [currentHash, setCurrentHash] = useState(window.location.hash || '#/');
   const [searchOpen, setSearchOpen] = useState(false);
   const [betslipOpen, setBetslipOpen] = useState(false);
+  const [activeLeague, setActiveLeague] = useState('all');
   const [selectedBets, setSelectedBets] = useState([
     {
-      id: 'ng1-1',
-      match: { match: 'Enyimba FC vs Remo Stars', league: 'Nigeria NPFL' },
+      id: 'epl1-1',
+      match: { match: 'Liverpool vs Chelsea', homeTeam: 'Liverpool', awayTeam: 'Chelsea', league: 'Premier League' },
       pickKey: '1 (Home Win)',
-      oddsValue: '1.85'
+      oddsValue: '1.68'
     },
     {
-      id: 'ke1-1X',
-      match: { match: 'Gor Mahia vs AFC Leopards', league: 'Kenya FKF' },
-      pickKey: '1X (Gor Mahia or Draw)',
-      oddsValue: '1.32'
+      id: 'll1-1',
+      match: { match: 'Barcelona vs Sevilla', homeTeam: 'Barcelona', awayTeam: 'Sevilla', league: 'La Liga' },
+      pickKey: '1 (Home Win)',
+      oddsValue: '1.30'
     }
   ]);
 
@@ -93,22 +93,22 @@ export default function App() {
             onNavigate={navigate} 
             onSelectOdd={handleSelectOdd}
             selectedOdds={selectedBets.map(b => b.id)}
+            activeLeague={activeLeague}
+            onSelectLeague={setActiveLeague}
           />
         );
       case 'predictions':
         return <PredictionsPage onNavigate={navigate} />;
       case 'markets':
-        if (param) {
-          return <MarketDetailPage slug={param} onNavigate={navigate} />;
-        }
         return <MarketsDirectoryPage onNavigate={navigate} />;
+      case 'market':
+        return <MarketDetailPage marketId={param} onNavigate={navigate} />;
       case 'ladder':
         return <LadderPage onNavigate={navigate} />;
       case 'punters':
-        if (param) {
-          return <PunterProfilePage punterId={param} onNavigate={navigate} />;
-        }
         return <PuntersPage onNavigate={navigate} />;
+      case 'punter':
+        return <PunterProfilePage punterId={param} onNavigate={navigate} />;
       case 'weekend-hub':
         return <WeekendHubPage onNavigate={navigate} />;
       case 'editor-picks':
@@ -128,24 +128,34 @@ export default function App() {
       case 'contact':
         return <ContactPage onNavigate={navigate} />;
       default:
-        return <HomePage onNavigate={navigate} onSelectOdd={handleSelectOdd} selectedOdds={selectedBets.map(b => b.id)} />;
+        return (
+          <HomePage 
+            onNavigate={navigate} 
+            onSelectOdd={handleSelectOdd} 
+            selectedOdds={selectedBets.map(b => b.id)}
+            activeLeague={activeLeague}
+            onSelectLeague={setActiveLeague}
+          />
+        );
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#F4F6F8] dark:bg-[#111418] text-slate-900 dark:text-slate-100 flex flex-col font-sans transition-colors">
+    <div className="min-h-screen bg-[#F1F5F9] dark:bg-[#0A0F1D] text-slate-900 dark:text-slate-100 flex flex-col font-sans transition-colors">
       
-      {/* 1. Header with SportyBet Red, Search, Theme Toggle, Betslip */}
+      {/* 1. Header with Mature Midnight Navy, Search, Theme Toggle, Betslip */}
       <Header 
         currentRoute={mainRoute} 
         onNavigate={navigate} 
         onOpenSearch={() => setSearchOpen(true)}
         betCount={selectedBets.length}
         onOpenBetslip={() => setBetslipOpen(true)}
+        activeLeague={activeLeague}
+        onSelectLeague={setActiveLeague}
       />
 
       {/* 2. Main Content Container */}
-      <main className="flex-1 max-w-4xl w-full mx-auto px-3 sm:px-4 py-3 sm:py-5">
+      <main className="flex-1 max-w-5xl w-full mx-auto px-3 sm:px-4 py-3 sm:py-5">
         {renderContent()}
       </main>
 
@@ -165,7 +175,7 @@ export default function App() {
         onNavigate={navigate} 
       />
 
-      {/* 6. SportyBet Interactive Betslip Drawer */}
+      {/* 6. Interactive Betslip Drawer */}
       <SportyBetslipDrawer
         isOpen={betslipOpen}
         onClose={() => setBetslipOpen(false)}

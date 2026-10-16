@@ -7,13 +7,13 @@
 }
 
 html.dark body {
-  background-color: #111418;
+  background-color: #0A0F1D;
   color: #F8FAFC;
 }
 
 html.light body {
-  background-color: #F4F6F8;
-  color: #111827;
+  background-color: #F1F5F9;
+  color: #0F172A;
 }
 
 /* Custom scrollbars */
@@ -25,15 +25,15 @@ html.light body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #64748B;
+  background: #334155;
   border-radius: 9999px;
 }
 
-/* SportyBet Style Odds Box */
-.sporty-odds-box {
+/* Interactive Odds Selection Box */
+.odds-box {
   transition: all 0.15s ease-in-out;
   user-select: none;
 }
-.sporty-odds-box:active {
+.odds-box:active {
   transform: scale(0.96);
 }
