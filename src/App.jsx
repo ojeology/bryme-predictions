@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
+import Sidebar from './components/Sidebar';
 import BottomNav from './components/BottomNav';
 import Footer from './components/Footer';
 import SearchModal from './components/SearchModal';
+import { ACTIVE_CHALLENGE } from './data/ladder';
+import { Sparkles, Clock, Flame, ShieldCheck } from 'lucide-react';
 
 // Pages
 import HomePage from './pages/HomePage';
@@ -91,28 +94,69 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[#F1F5F9] dark:bg-[#0A0F1D] text-slate-900 dark:text-slate-100 flex flex-col font-sans transition-colors">
       
-      {/* 1. Header with Midnight Navy & 02:00 AM Midnight Drop Indicator */}
+      {/* 1. Top Header with Midnight Navy & Navigation */}
       <Header 
         currentRoute={mainRoute} 
         onNavigate={navigate} 
         onOpenSearch={() => setSearchOpen(true)}
       />
 
-      {/* 2. Main Content Container */}
-      <main className="flex-1 max-w-5xl w-full mx-auto px-3 sm:px-4 py-3 sm:py-5">
-        {renderContent()}
+      {/* 2. Live Drop Marquee Ticker (Signature 2:00 AM WAT Tracker) */}
+      <div className="bg-[#080E20] dark:bg-[#050914] border-b border-blue-900/40 text-xs py-1.5 px-3 text-slate-300 overflow-x-auto scrollbar-none">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4 text-[11px] font-mono whitespace-nowrap">
+          <div className="flex items-center gap-2">
+            <span className="flex h-2 w-2 relative">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            <span className="font-bold text-white">MIDNIGHT DROP 02:00 AM WAT:</span>
+            <span className="text-amber-400 font-bold">Ladder Step 3 (1.50 Odds) LIVE</span>
+          </div>
+
+          <div className="hidden sm:flex items-center gap-4 text-slate-400">
+            <span>Sporty: <strong className="text-white">{ACTIVE_CHALLENGE.sportyCode}</strong></span>
+            <span>&bull;</span>
+            <span>Bet9ja: <strong className="text-white">{ACTIVE_CHALLENGE.todaysCode}</strong></span>
+            <span>&bull;</span>
+            <span className="text-emerald-400 font-bold">Weekend 2 Odds: 76.9% Hit Rate</span>
+          </div>
+
+          <button 
+            onClick={() => navigate('results')} 
+            className="text-blue-400 hover:text-blue-300 font-display font-bold uppercase text-[10px] underline ml-auto sm:ml-0"
+          >
+            Ledger &rarr;
+          </button>
+        </div>
+      </div>
+
+      {/* 3. Main Layout Container with Desktop Sidebar */}
+      <main className="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          
+          {/* Left Desktop Sidebar (Missing piece restored!) */}
+          <div className="hidden lg:block lg:col-span-4 xl:col-span-3.5 space-y-4">
+            <Sidebar currentRoute={mainRoute} onNavigate={navigate} />
+          </div>
+
+          {/* Main Content Workspace */}
+          <div className="lg:col-span-8 xl:col-span-8.5 space-y-6">
+            {renderContent()}
+          </div>
+
+        </div>
       </main>
 
-      {/* 3. Footer */}
+      {/* 4. Footer */}
       <Footer onNavigate={navigate} />
 
-      {/* 4. Mobile Bottom Navigation Bar */}
+      {/* 5. Mobile Bottom Navigation Bar */}
       <BottomNav 
         currentRoute={mainRoute} 
         onNavigate={navigate} 
       />
 
-      {/* 5. Instant Search Modal */}
+      {/* 6. Instant Search Modal */}
       <SearchModal 
         isOpen={searchOpen} 
         onClose={() => setSearchOpen(false)} 
