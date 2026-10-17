@@ -296,10 +296,10 @@ export default function VisibleLadder({ onNavigate }) {
               <div className="p-3.5 rounded-xl bg-white dark:bg-[#162238] border border-emerald-500/50 shadow-sm space-y-1">
                 <div className="flex items-center gap-2">
                   <span className="w-6 h-6 rounded-lg bg-[#00C250] text-black font-mono font-black text-xs flex items-center justify-center">3</span>
-                  <div className="font-display font-black text-xs text-emerald-600 dark:text-emerald-400">Bank 50% at Day 6</div>
+                  <div className="font-display font-black text-xs text-emerald-600 dark:text-emerald-400">The Savings Safety Plan (Never Lose It All)</div>
                 </div>
                 <p className="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed">
-                  At Day 6 (₦11,390), immediately withdraw <strong>₦5,695 cash</strong>. From Day 7 onward, you play risk-free!
+                  The ladder is 18 basic steps. At Day 6 (₦11,390), immediately withdraw <strong>₦5,695 cash</strong> to your pocket! You have recovered your ₦1,000 + ₦4,695 profit. At Day 12, bank another ₦32,434. You never lose it all!
                 </p>
               </div>
             </div>

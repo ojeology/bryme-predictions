@@ -25,6 +25,7 @@ import EditorialPolicyPage from './pages/EditorialPolicyPage';
 import ResponsibleGamblingPage from './pages/ResponsibleGamblingPage';
 import ContactPage from './pages/ContactPage';
 import AdminPage from './pages/AdminPage';
+import ConvertCodesPage from './pages/ConvertCodesPage';
 
 export default function App() {
   const [currentHash, setCurrentHash] = useState(window.location.hash || '#/');
@@ -60,6 +61,10 @@ export default function App() {
         return <HomePage onNavigate={navigate} />;
       case 'admin':
         return <AdminPage onNavigate={navigate} />;
+      case 'convert':
+      case 'converter':
+      case 'catalogue':
+        return <ConvertCodesPage onNavigate={navigate} />;
       case 'predictions':
         return <PredictionsPage onNavigate={navigate} />;
       case 'markets':

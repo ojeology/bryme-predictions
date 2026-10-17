@@ -1,13 +1,12 @@
 import React from 'react';
-import { Home, Flame, Layers, Trophy, CheckSquare } from 'lucide-react';
+import { Home, Flame, Layers, Trophy, Zap } from 'lucide-react';
 
 export default function BottomNav({ currentRoute, onNavigate }) {
   const items = [
-    { id: 'home', label: 'Home', icon: Home },
-    { id: 'predictions', label: 'Predictions', icon: Flame },
-    { id: 'ladder', label: 'Ladder', icon: Trophy, hasPulse: true },
+    { id: 'home', label: 'Ladder', icon: Trophy, hasPulse: true },
+    { id: 'convert', label: 'Convert', icon: Zap },
+    { id: 'predictions', label: 'Slips', icon: Flame },
     { id: 'markets', label: 'Markets', icon: Layers },
-    { id: 'results', label: 'Results', icon: CheckSquare }
   ];
 
   return (
@@ -22,7 +21,7 @@ export default function BottomNav({ currentRoute, onNavigate }) {
               onClick={() => onNavigate(item.id)}
               className={`flex flex-col items-center justify-center flex-1 h-full py-1 transition-all relative ${
                 isActive 
-                  ? 'text-blue-600 dark:text-blue-400 font-black' 
+                  ? 'text-[#E41B13] dark:text-rose-400 font-black' 
                   : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
               }`}
             >
@@ -30,8 +29,8 @@ export default function BottomNav({ currentRoute, onNavigate }) {
                 <Icon className={`w-5 h-5 ${isActive ? 'stroke-[2.5] scale-110' : 'stroke-2'}`} />
                 {item.hasPulse && (
                   <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-500"></span>
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#E41B13] opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#00FF66]"></span>
                   </span>
                 )}
               </div>

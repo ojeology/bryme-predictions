@@ -5,12 +5,12 @@ import ThemeToggle from './ThemeToggle';
 export default function Header({ currentRoute, onNavigate, onOpenSearch }) {
   const topNav = [
     { id: 'home', label: '🔥 ₦1K → ₦1M Ladder', action: () => onNavigate('home'), isHook: true },
+    { id: 'convert', label: '⚡ Convert Bet Codes', action: () => onNavigate('convert') },
     { id: 'ladder', label: '🪜 18-Step Mountain', action: () => onNavigate('ladder') },
-    { id: 'home', label: '🔴 SportyBet Slips', action: () => onNavigate('home') },
+    { id: 'predictions', label: '📋 Pick Codes Hub', action: () => onNavigate('predictions') },
+    { id: 'markets', label: '📂 35+ Markets DB', action: () => onNavigate('markets') },
     { id: 'weekend2', label: '🎯 Weekend 2 Odds', action: () => onNavigate('editor-picks') },
-    { id: 'results', label: '📊 Verified Results', action: () => onNavigate('results') },
-    { id: 'punters', label: '👑 Top Punters', action: () => onNavigate('punters') },
-    { id: 'markets', label: '📂 Market Directory', action: () => onNavigate('markets') },
+    { id: 'results', label: '📊 Results Ledger', action: () => onNavigate('results') },
   ];
 
   return (

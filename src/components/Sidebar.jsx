@@ -29,12 +29,14 @@ export default function Sidebar({ currentRoute, onNavigate }) {
 
   const navItems = [
     { id: 'home', label: '🔥 The Rollover Ladder', icon: '🪜', badge: `Day ${currentDay}`, isFeatured: true },
+    { id: 'convert', label: '⚡ Convert Bet Codes & Vault', icon: '⚡', badge: 'Hot' },
     { id: 'ladder', label: '🪜 Full 18-Step Mountain', icon: '⛰️' },
+    { id: 'predictions', label: '📋 Pick Codes Hub', icon: '📋' },
+    { id: 'markets', label: '📂 35+ Markets Database', icon: '🗂️' },
     { id: 'editor-picks', label: '🎯 Weekend 2.00x Banker', icon: '🎯', badge: '76.9%' },
     { id: 'results', label: '📊 Verified Results Ledger', icon: '📈' },
     { id: 'weekend-hub', label: '🤝 Consensus Hub', icon: '👥' },
     { id: 'punters', label: '👑 Tracked African Punters', icon: '⭐' },
-    { id: 'markets', label: '📂 Betting Markets Directory', icon: '🗂️' },
     { id: 'bookmakers', label: '📱 Bookmakers & Codes', icon: '🎰' },
     { id: 'admin', label: '⚡ Admin Control Deck', icon: '🛠️', badge: 'Owner' },
     { id: 'responsible-gambling', label: '🛡️ Responsible Gaming (18+)', icon: '🔒' }
