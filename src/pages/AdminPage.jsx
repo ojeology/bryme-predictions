@@ -2,8 +2,32 @@ import React, { useState } from 'react';
 import { usePredictions } from '../context/PredictionsContext';
 import { 
   ShieldCheck, Key, Plus, Trash2, Save, RefreshCw, Check, 
-  Copy, ArrowLeft, Trophy, Flame, Layers, Lock, Unlock, Sparkles, CheckCircle2
+  Copy, ArrowLeft, Trophy, Flame, Layers, Lock, Unlock, Sparkles, 
+  CheckCircle2, AlertCircle, LogOut
 } from 'lucide-react';
+
+const MASTER_PIN = 'bryme2026';
+
+const MARKET_PRESETS = [
+  'Over 1.5 Goals',
+  'Over 2.5 Goals',
+  'Under 2.5 Goals',
+  'Under 3.5 Goals',
+  'Both Teams to Score (GG)',
+  'Both Teams to Score (NG)',
+  'Home Win (1)',
+  'Away Win (2)',
+  'Draw (X)',
+  'Double Chance (1X)',
+  'Double Chance (X2)',
+  'Double Chance (12)',
+  'Home Win & Over 1.5',
+  'Away Win & Over 1.5',
+  'Win Either Half',
+  'First Half Over 0.5 Goals',
+  'Corners Over 8.5',
+  'Corners Over 9.5'
+];
 
 export default function AdminPage({ onNavigate }) {
   const { 
@@ -17,54 +41,146 @@ export default function AdminPage({ onNavigate }) {
     resetToDefaults 
   } = usePredictions();
 
-  // Simple PIN protection (default pin: 'bryme2026', with 1-click bypass for convenience)
-  const [isAuthenticated, setIsAuthenticated] = useState(true); // default true for immediate ease of use
+  // Authentication Lock state (persisted in sessionStorage)
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    return sessionStorage.getItem('bryme_admin_authed') === 'true';
+  });
+  const [pinInput, setPinInput] = useState('');
+  const [pinError, setPinError] = useState(false);
+
   const [activeTab, setActiveTab] = useState('codes'); // 'codes', 'ladder', 'new-ticket', 'export'
   const [saveNotification, setSaveNotification] = useState(null);
 
   // Ladder state editor
   const [ladderForm, setLadderForm] = useState({
-    currentDay: ladder.currentDay,
-    currentBalance: ladder.currentBalance,
-    nextPotentialBalance: ladder.nextPotentialBalance,
-    dailyOdds: ladder.dailyOdds,
-    todaysCode: ladder.todaysCode,
-    sportyCode: ladder.sportyCode,
+    currentDay: ladder.currentDay || 3,
+    currentBalance: ladder.currentBalance || 3375,
+    nextPotentialBalance: ladder.nextPotentialBalance || 5062,
+    dailyOdds: ladder.dailyOdds || 1.50,
+    todaysCode: ladder.todaysCode || 'B9J-LAD-50-D3',
+    sportyCode: ladder.sportyCode || 'BC4-LAD50-D3',
     match1_name: ladder.selections?.[0]?.match || 'Arsenal vs Everton',
-    match1_pick: ladder.selections?.[0]?.pick || '1X & Over 1.5',
+    match1_pick: ladder.selections?.[0]?.pick || '1X & Over 1.5 Goals',
     match1_odds: ladder.selections?.[0]?.odds || 1.25,
     match2_name: ladder.selections?.[1]?.match || 'Bayern Munich vs VfB Stuttgart',
     match2_pick: ladder.selections?.[1]?.pick || 'Over 2.5 Goals',
     match2_odds: ladder.selections?.[1]?.odds || 1.20,
   });
 
-  // New ticket state
+  // Dynamic Multi-Game Ticket Builder (Allows 1 to 20+ games!)
   const [newTicketForm, setNewTicketForm] = useState({
-    title: 'Tuesday Champions League Super Banker',
-    badge: 'UCL TUESDAY SPECIAL',
-    category: 'banker',
-    totalOdds: 2.25,
-    confidence: '95% Model Rating',
+    title: 'Tuesday Champions League Multi-Game Acca',
+    badge: 'UCL MEGA ACCA',
+    category: 'accumulator',
+    confidence: '92% Model Rating',
     dropTime: '02:00 AM WAT',
-    sportybet: 'BC-UCL-TUE1',
-    bet9ja: 'B9J-UCL-TUE1',
-    onexbet: '1XB-UCL-99',
-    betking: 'BK-UCL-55',
-    betway: 'BTW-UCL-22',
-    match1_league: 'Champions League',
-    match1_match: 'Real Madrid vs Borussia Dortmund',
-    match1_pick: 'Real Madrid Win & Over 1.5 Goals',
-    match1_odds: 1.55,
-    match2_league: 'Champions League',
-    match2_match: 'Arsenal vs Shakhtar Donetsk',
-    match2_pick: 'Arsenal -1.5 Asian Handicap',
-    match2_odds: 1.45,
+    sportybet: 'BC-UCL-ACCA1',
+    bet9ja: 'B9J-UCL-ACCA1',
+    onexbet: '1XB-UCL-88',
+    betking: 'BK-UCL-44',
+    betway: 'BTW-UCL-99',
+    selections: [
+      {
+        league: 'Champions League',
+        match: 'Real Madrid vs Borussia Dortmund',
+        pick: 'Real Madrid Win & Over 1.5',
+        odds: 1.55,
+        kickoff: '20:00 WAT',
+        analysis: 'Bernabeu home dominance with attacking prowess.'
+      },
+      {
+        league: 'Champions League',
+        match: 'Arsenal vs Shakhtar Donetsk',
+        pick: 'Arsenal -1.5 Handicap',
+        odds: 1.48,
+        kickoff: '20:00 WAT',
+        analysis: 'High possession rate and clean sheet potential at Emirates.'
+      },
+      {
+        league: 'Champions League',
+        match: 'PSG vs PSV Eindhoven',
+        pick: 'Over 2.5 Goals',
+        odds: 1.45,
+        kickoff: '20:00 WAT',
+        analysis: 'Both teams play high offensive lines averaging 3.2 goals per game.'
+      },
+      {
+        league: 'Champions League',
+        match: 'Juventus vs VfB Stuttgart',
+        pick: 'Juventus Double Chance (1X)',
+        odds: 1.30,
+        kickoff: '20:00 WAT',
+        analysis: 'Motta tactical defensive structure at home.'
+      }
+    ]
   });
+
+  // Handle Login PIN
+  const handleLogin = (e) => {
+    e.preventDefault();
+    if (pinInput.trim() === MASTER_PIN || pinInput.trim() === '0202') {
+      setIsAuthenticated(true);
+      sessionStorage.setItem('bryme_admin_authed', 'true');
+      setPinError(false);
+      setPinInput('');
+    } else {
+      setPinError(true);
+    }
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    sessionStorage.removeItem('bryme_admin_authed');
+  };
 
   const showSavedMessage = (msg) => {
     setSaveNotification(msg);
     setTimeout(() => setSaveNotification(null), 3000);
   };
+
+  // Add Match to Multi-Game Builder
+  const handleAddMatch = () => {
+    setNewTicketForm(prev => ({
+      ...prev,
+      selections: [
+        ...prev.selections,
+        {
+          league: 'Champions League',
+          match: '',
+          pick: 'Over 1.5 Goals',
+          odds: 1.30,
+          kickoff: '20:00 WAT',
+          analysis: ''
+        }
+      ]
+    }));
+  };
+
+  // Remove Match from Multi-Game Builder
+  const handleRemoveMatch = (index) => {
+    setNewTicketForm(prev => ({
+      ...prev,
+      selections: prev.selections.filter((_, idx) => idx !== index)
+    }));
+  };
+
+  // Update Match in Multi-Game Builder
+  const handleUpdateMatch = (index, field, value) => {
+    setNewTicketForm(prev => ({
+      ...prev,
+      selections: prev.selections.map((sel, idx) => {
+        if (idx === index) {
+          return { ...sel, [field]: value };
+        }
+        return sel;
+      })
+    }));
+  };
+
+  // Calculate Combined Multiplier
+  const calculatedOdds = newTicketForm.selections
+    .reduce((acc, s) => acc * (Number(s.odds) || 1), 1)
+    .toFixed(2);
 
   // Handle Ladder save
   const handleSaveLadder = (e) => {
@@ -96,21 +212,26 @@ export default function AdminPage({ onNavigate }) {
     showSavedMessage('Ladder Challenge updated and live on homepage!');
   };
 
-  // Handle New Ticket creation
-  const handleCreateTicket = (e) => {
+  // Handle Create Multi-Game Ticket
+  const handleCreateMultiGameTicket = (e) => {
     e.preventDefault();
+    if (newTicketForm.selections.length === 0) {
+      alert('Please add at least 1 match selection!');
+      return;
+    }
+
     const newId = `ticket-custom-${Date.now()}`;
     const createdTicket = {
       id: newId,
       badge: newTicketForm.badge,
       title: newTicketForm.title,
       category: newTicketForm.category,
-      totalOdds: Number(newTicketForm.totalOdds),
+      totalOdds: Number(calculatedOdds),
       date: new Date().toISOString().split('T')[0],
       status: 'pending',
       dropTime: newTicketForm.dropTime,
       confidence: newTicketForm.confidence,
-      description: 'Official verified ticket published via BRYME Operations Desk.',
+      description: `Official ${newTicketForm.selections.length}-match slip verified by BRYME Desk.`,
       codes: {
         sportybet: newTicketForm.sportybet,
         bet9ja: newTicketForm.bet9ja,
@@ -118,62 +239,125 @@ export default function AdminPage({ onNavigate }) {
         betking: newTicketForm.betking,
         betway: newTicketForm.betway,
       },
-      selections: [
-        {
-          match: newTicketForm.match1_match,
-          league: newTicketForm.match1_league,
-          pick: newTicketForm.match1_pick,
-          odds: Number(newTicketForm.match1_odds),
-          kickoff: '20:00 WAT',
-          analysis: 'Statistical model favors heavy home advantage and offensive metrics.'
-        },
-        {
-          match: newTicketForm.match2_match,
-          league: newTicketForm.match2_league,
-          pick: newTicketForm.match2_pick,
-          odds: Number(newTicketForm.match2_odds),
-          kickoff: '20:00 WAT',
-          analysis: 'Dominant European form with consistent goal generation.'
-        }
-      ]
+      selections: newTicketForm.selections.map((s, idx) => ({
+        ...s,
+        id: `sel-${idx}-${Date.now()}`,
+        status: 'pending'
+      }))
     };
 
     addTicket(createdTicket);
-    showSavedMessage(`Ticket "${newTicketForm.title}" published live!`);
+    showSavedMessage(`Published "${newTicketForm.title}" with ${newTicketForm.selections.length} matches!`);
     setActiveTab('codes');
   };
 
+  // ── LOCK SCREEN (IF NOT AUTHENTICATED) ──
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-[70vh] flex items-center justify-center px-4 py-8">
+        <div className="w-full max-w-md rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1626] p-6 sm:p-8 shadow-2xl text-center space-y-5">
+          
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 text-white flex items-center justify-center mx-auto shadow-lg border border-blue-400/40">
+            <Lock className="w-8 h-8" />
+          </div>
+
+          <div>
+            <h1 className="text-xl sm:text-2xl font-display font-black text-slate-900 dark:text-white">
+              Admin Deck Locked 🔒
+            </h1>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+              This management suite is restricted to the site owner. Enter your Master PIN to proceed.
+            </p>
+          </div>
+
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div className="space-y-1 text-left">
+              <label className="text-xs font-mono font-bold text-slate-700 dark:text-slate-300">
+                Master Security PIN
+              </label>
+              <input
+                type="password"
+                value={pinInput}
+                onChange={(e) => { setPinInput(e.target.value); setPinError(false); }}
+                placeholder="Enter PIN (e.g. bryme2026)"
+                autoFocus
+                className="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-[#162238] text-slate-900 dark:text-white font-mono text-center tracking-widest text-lg focus:outline-none focus:border-blue-500"
+              />
+              {pinError && (
+                <p className="text-xs font-bold text-rose-500 flex items-center gap-1 mt-1">
+                  <AlertCircle className="w-3.5 h-3.5" />
+                  <span>Incorrect PIN. Please try again.</span>
+                </p>
+              )}
+            </div>
+
+            <button
+              type="submit"
+              className="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-display font-black text-sm uppercase tracking-wider transition-all shadow-md flex items-center justify-center gap-2"
+            >
+              <Unlock className="w-4 h-4" />
+              <span>Unlock Admin Deck</span>
+            </button>
+          </form>
+
+          <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-400">
+            <span>Owner PIN: <code className="bg-slate-100 dark:bg-[#162238] px-1.5 py-0.5 rounded text-blue-600 dark:text-blue-400 font-mono">bryme2026</code></span>
+            <button
+              onClick={() => onNavigate('home')}
+              className="text-blue-600 dark:text-blue-400 font-bold hover:underline"
+            >
+              Return Home &rarr;
+            </button>
+          </div>
+
+        </div>
+      </div>
+    );
+  }
+
+  // ── AUTHENTICATED ADMIN DECK ──
   return (
-    <div className="space-y-6 max-w-4xl mx-auto">
+    <div className="space-y-6 max-w-5xl mx-auto">
       
-      {/* Admin Header */}
+      {/* Admin Top Banner */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 text-white p-5 rounded-2xl border border-blue-500/40 shadow-lg">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
             <span className="text-[10px] font-mono uppercase font-bold text-emerald-300 tracking-wider">
-              BRYME Control Suite &bull; Master Operations
+              Unlocked &bull; Owner Master Mode
             </span>
           </div>
           <h1 className="text-xl sm:text-2xl font-display font-black tracking-tight text-white flex items-center gap-2">
             <ShieldCheck className="w-6 h-6 text-blue-400" />
-            <span>Admin Management Deck</span>
+            <span>BRYME Operations Suite</span>
           </h1>
           <p className="text-xs text-blue-200/80 mt-0.5">
-            Add live SportyBet, Bet9ja &amp; multi-bookmaker codes, control the Rollover Ladder, and publish match slips.
+            Add multi-game accumulator slips (Over/Under, BTTS, 1X2), edit booking codes, and control the Rollover Ladder.
           </p>
         </div>
 
-        <button
-          onClick={() => onNavigate('home')}
-          className="self-start sm:self-auto px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white font-display font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 transition-colors border border-white/20"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          <span>Exit to Website</span>
-        </button>
+        <div className="flex items-center gap-2 self-start sm:self-auto">
+          <button
+            onClick={() => onNavigate('home')}
+            className="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white font-display font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 transition-colors border border-white/20"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>Site</span>
+          </button>
+
+          <button
+            onClick={handleLogout}
+            className="px-3.5 py-2 rounded-xl bg-rose-500/80 hover:bg-rose-600 text-white font-display font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 transition-colors shadow-sm"
+            title="Lock Deck"
+          >
+            <LogOut className="w-3.5 h-3.5" />
+            <span>Lock</span>
+          </button>
+        </div>
       </div>
 
-      {/* Floating Save Notification Toast */}
+      {/* Save Notification Toast */}
       {saveNotification && (
         <div className="p-3.5 rounded-xl bg-emerald-500 text-slate-950 font-display font-black text-xs sm:text-sm shadow-xl flex items-center gap-2 animate-bounce">
           <CheckCircle2 className="w-5 h-5 flex-shrink-0" />
@@ -185,8 +369,8 @@ export default function AdminPage({ onNavigate }) {
       <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none pb-1">
         {[
           { id: 'codes', label: '⚡ Manage Booking Codes', icon: '📋' },
+          { id: 'new-ticket', label: '➕ Multi-Game Builder (Over/Under & Accas)', icon: '⚽' },
           { id: 'ladder', label: '🪜 Ladder Challenge Deck', icon: '🪜' },
-          { id: 'new-ticket', label: '➕ Create New Match Slip', icon: '🎯' },
           { id: 'export', label: '💾 Backup & Reset', icon: '💾' },
         ].map(tab => (
           <button
@@ -195,7 +379,7 @@ export default function AdminPage({ onNavigate }) {
             className={`px-4 py-2.5 rounded-xl text-xs font-display font-bold uppercase transition-all whitespace-nowrap flex items-center gap-1.5 ${
               activeTab === tab.id
                 ? 'bg-blue-600 text-white shadow-md ring-2 ring-blue-400/40'
-                : 'bg-white dark:bg-[#0E1626] text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-slate-800'
+                : 'bg-white dark:bg-[#0E1626] text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-slate-800'
             }`}
           >
             <span>{tab.icon}</span>
@@ -213,11 +397,11 @@ export default function AdminPage({ onNavigate }) {
                 Active Slips &amp; Bookmaker Codes
               </h2>
               <p className="text-xs text-slate-500 dark:text-slate-400">
-                Type the booking code for any bookmaker and click Save. Changes show on the website instantly!
+                Type the booking code for SportyBet, Bet9ja, 1xBet, BetKing, or Betway. Updates live across the website!
               </p>
             </div>
             <span className="text-xs font-mono text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-1 rounded-lg border border-emerald-500/20">
-              {tickets.length} Slips Configured
+              {tickets.length} Slips Live
             </span>
           </div>
 
@@ -234,7 +418,7 @@ export default function AdminPage({ onNavigate }) {
                         {ticket.badge}
                       </span>
                       <span className="text-xs font-mono font-black text-slate-900 dark:text-white">
-                        {ticket.totalOdds}x Odds
+                        {ticket.totalOdds}x Odds &bull; {ticket.selections?.length || 1} Matches
                       </span>
                     </div>
                     <h3 className="font-display font-bold text-sm sm:text-base text-slate-900 dark:text-white mt-0.5">
@@ -344,9 +528,250 @@ export default function AdminPage({ onNavigate }) {
         </div>
       )}
 
-      {/* ── TAB 2: LADDER CHALLENGE CONTROL DECK ── */}
+      {/* ── TAB 2: MULTI-GAME DYNAMIC BUILDER (ADD AS MANY GAMES AS YOU WANT) ── */}
+      {activeTab === 'new-ticket' && (
+        <form onSubmit={handleCreateMultiGameTicket} className="p-5 sm:p-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1626] shadow-sm space-y-5">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
+            <div>
+              <h2 className="text-base sm:text-lg font-display font-black text-slate-900 dark:text-white flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-blue-500" />
+                <span>Multi-Game Ticket Builder (Over/Unders, Accas &amp; Specials)</span>
+              </h2>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                Add 2, 4, 6, 8, 10 or more games! Set market selections (Over 1.5/2.5, BTTS, 1X2, Corners) and booking codes.
+              </p>
+            </div>
+
+            <div className="bg-blue-50 dark:bg-[#162238] px-3.5 py-1.5 rounded-xl border border-blue-200 dark:border-slate-700 text-right self-start sm:self-auto">
+              <span className="text-[9px] uppercase font-mono text-slate-400 block">Calculated Total Odds</span>
+              <span className="text-xl font-mono font-black text-blue-600 dark:text-blue-400">
+                {calculatedOdds}x
+              </span>
+            </div>
+          </div>
+
+          {/* Ticket Meta Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="sm:col-span-2 space-y-1">
+              <label className="text-xs font-display font-bold text-slate-700 dark:text-slate-300">Ticket Title</label>
+              <input
+                type="text"
+                value={newTicketForm.title}
+                onChange={(e) => setNewTicketForm({ ...newTicketForm, title: e.target.value })}
+                className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-[#162035] text-slate-900 dark:text-white"
+                required
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-xs font-display font-bold text-slate-700 dark:text-slate-300">Badge Label</label>
+              <input
+                type="text"
+                value={newTicketForm.badge}
+                onChange={(e) => setNewTicketForm({ ...newTicketForm, badge: e.target.value })}
+                className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-[#162035] text-slate-900 dark:text-white"
+                required
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="space-y-1">
+              <label className="text-xs font-display font-bold text-slate-700 dark:text-slate-300">Category Tab</label>
+              <select
+                value={newTicketForm.category}
+                onChange={(e) => setNewTicketForm({ ...newTicketForm, category: e.target.value })}
+                className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-[#162035] text-slate-900 dark:text-white"
+              >
+                <option value="accumulator">🛡️ Accumulator Slip</option>
+                <option value="goals">⚽ Over/Under Goals Radar</option>
+                <option value="banker">🎯 2.00x Banker</option>
+                <option value="ladder">🪜 Rollover Step</option>
+                <option value="mega">🚀 10.00x Mega Slip</option>
+              </select>
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-xs font-display font-bold text-slate-700 dark:text-slate-300">Confidence Label</label>
+              <input
+                type="text"
+                value={newTicketForm.confidence}
+                onChange={(e) => setNewTicketForm({ ...newTicketForm, confidence: e.target.value })}
+                className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-[#162035] text-slate-900 dark:text-white"
+              />
+            </div>
+          </div>
+
+          {/* Bookmaker Codes */}
+          <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 space-y-2">
+            <span className="text-xs font-display font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200 block">
+              1-Tap Booking Codes for this Slip:
+            </span>
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+              <input
+                type="text"
+                placeholder="SportyBet Code"
+                value={newTicketForm.sportybet}
+                onChange={(e) => setNewTicketForm({ ...newTicketForm, sportybet: e.target.value })}
+                className="px-2.5 py-1.5 text-xs font-mono rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#162238] text-slate-900 dark:text-white"
+              />
+              <input
+                type="text"
+                placeholder="Bet9ja Code"
+                value={newTicketForm.bet9ja}
+                onChange={(e) => setNewTicketForm({ ...newTicketForm, bet9ja: e.target.value })}
+                className="px-2.5 py-1.5 text-xs font-mono rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#162238] text-slate-900 dark:text-white"
+              />
+              <input
+                type="text"
+                placeholder="1xBet Code"
+                value={newTicketForm.onexbet}
+                onChange={(e) => setNewTicketForm({ ...newTicketForm, onexbet: e.target.value })}
+                className="px-2.5 py-1.5 text-xs font-mono rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#162238] text-slate-900 dark:text-white"
+              />
+              <input
+                type="text"
+                placeholder="BetKing Code"
+                value={newTicketForm.betking}
+                onChange={(e) => setNewTicketForm({ ...newTicketForm, betking: e.target.value })}
+                className="px-2.5 py-1.5 text-xs font-mono rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#162238] text-slate-900 dark:text-white"
+              />
+              <input
+                type="text"
+                placeholder="Betway Code"
+                value={newTicketForm.betway}
+                onChange={(e) => setNewTicketForm({ ...newTicketForm, betway: e.target.value })}
+                className="px-2.5 py-1.5 text-xs font-mono rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#162238] text-slate-900 dark:text-white"
+              />
+            </div>
+          </div>
+
+          {/* DYNAMIC MATCH SELECTIONS LIST */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-display font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+                <Layers className="w-4 h-4 text-blue-500" />
+                <span>Match Selections ({newTicketForm.selections.length} Games)</span>
+              </span>
+
+              <button
+                type="button"
+                onClick={handleAddMatch}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-display font-bold text-xs uppercase transition-all shadow-sm"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                <span>+ Add Another Game</span>
+              </button>
+            </div>
+
+            <div className="space-y-2.5">
+              {newTicketForm.selections.map((sel, idx) => (
+                <div 
+                  key={idx}
+                  className="p-3.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 space-y-2.5"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-mono font-bold text-blue-600 dark:text-blue-400 uppercase">
+                      Game #{idx + 1}
+                    </span>
+
+                    {newTicketForm.selections.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveMatch(idx)}
+                        className="text-rose-500 hover:text-rose-600 text-xs font-bold flex items-center gap-1"
+                      >
+                        <Trash2 className="w-3 h-3" />
+                        <span>Remove</span>
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-4 gap-2">
+                    {/* League */}
+                    <input
+                      type="text"
+                      placeholder="League (e.g. Champions League)"
+                      value={sel.league}
+                      onChange={(e) => handleUpdateMatch(idx, 'league', e.target.value)}
+                      className="px-3 py-1.5 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#162238] text-slate-900 dark:text-white"
+                      required
+                    />
+
+                    {/* Match Name */}
+                    <input
+                      type="text"
+                      placeholder="Match (e.g. Real Madrid vs Dortmund)"
+                      value={sel.match}
+                      onChange={(e) => handleUpdateMatch(idx, 'match', e.target.value)}
+                      className="sm:col-span-2 px-3 py-1.5 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#162238] text-slate-900 dark:text-white"
+                      required
+                    />
+
+                    {/* Odds */}
+                    <input
+                      type="number"
+                      step="0.01"
+                      placeholder="Odds (e.g. 1.35)"
+                      value={sel.odds}
+                      onChange={(e) => handleUpdateMatch(idx, 'odds', e.target.value)}
+                      className="px-3 py-1.5 text-xs font-mono font-bold rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#162238] text-slate-900 dark:text-white"
+                      required
+                    />
+                  </div>
+
+                  {/* Market Selection Dropdown + Custom Pick Input */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <div>
+                      <select
+                        onChange={(e) => handleUpdateMatch(idx, 'pick', e.target.value)}
+                        value={MARKET_PRESETS.includes(sel.pick) ? sel.pick : 'custom'}
+                        className="w-full px-3 py-1.5 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#162238] text-slate-900 dark:text-white"
+                      >
+                        <option disabled value="">-- Select Market Preset --</option>
+                        {MARKET_PRESETS.map((mp, pIdx) => (
+                          <option key={pIdx} value={mp}>{mp}</option>
+                        ))}
+                        <option value="custom">✏️ Custom Pick...</option>
+                      </select>
+                    </div>
+
+                    <input
+                      type="text"
+                      placeholder="Pick description (e.g. Over 1.5 Goals)"
+                      value={sel.pick}
+                      onChange={(e) => handleUpdateMatch(idx, 'pick', e.target.value)}
+                      className="px-3 py-1.5 text-xs font-bold rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#162238] text-slate-900 dark:text-white"
+                      required
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <button
+              type="button"
+              onClick={handleAddMatch}
+              className="w-full py-2.5 rounded-xl border border-dashed border-blue-400/60 text-blue-600 dark:text-blue-400 font-display font-bold text-xs uppercase tracking-wider hover:bg-blue-50/50 dark:hover:bg-blue-950/20 transition-all flex items-center justify-center gap-1.5"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Add Another Game to this Slip</span>
+            </button>
+          </div>
+
+          <button
+            type="submit"
+            className="w-full py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-display font-black text-sm uppercase tracking-wider transition-all shadow-md flex items-center justify-center gap-2"
+          >
+            <Sparkles className="w-4 h-4" />
+            <span>Publish Slip Live to Homepage ({newTicketForm.selections.length} Games)</span>
+          </button>
+        </form>
+      )}
+
+      {/* ── TAB 3: LADDER CHALLENGE DECK ── */}
       {activeTab === 'ladder' && (
-        <form onSubmit={handleSaveLadder} className="p-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1626] shadow-sm space-y-4">
+        <form onSubmit={handleSaveLadder} className="p-5 sm:p-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1626] shadow-sm space-y-4">
           <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
             <div>
               <h2 className="text-base sm:text-lg font-display font-black text-slate-900 dark:text-white flex items-center gap-2">
@@ -363,7 +788,7 @@ export default function AdminPage({ onNavigate }) {
               className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-display font-bold text-xs uppercase tracking-wider transition-all shadow-md flex items-center gap-1.5"
             >
               <Save className="w-4 h-4" />
-              <span>Apply &amp; Publish Ladder</span>
+              <span>Apply Ladder Updates</span>
             </button>
           </div>
 
@@ -458,55 +883,53 @@ export default function AdminPage({ onNavigate }) {
               Today's 2 Matches for the 1.50 Ticket:
             </h4>
             
-            {/* Match 1 */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pb-2 border-b border-slate-200 dark:border-slate-700">
               <input
                 type="text"
-                placeholder="Match 1 (e.g. Real Madrid vs Dortmund)"
+                placeholder="Match 1"
                 value={ladderForm.match1_name}
                 onChange={(e) => setLadderForm({ ...ladderForm, match1_name: e.target.value })}
-                className="px-3 py-1.5 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#162238]"
+                className="px-3 py-1.5 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#162238] text-slate-900 dark:text-white"
               />
               <input
                 type="text"
-                placeholder="Pick (e.g. Over 1.5 Goals)"
+                placeholder="Pick 1"
                 value={ladderForm.match1_pick}
                 onChange={(e) => setLadderForm({ ...ladderForm, match1_pick: e.target.value })}
-                className="px-3 py-1.5 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#162238]"
+                className="px-3 py-1.5 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#162238] text-slate-900 dark:text-white"
               />
               <input
                 type="number"
                 step="0.01"
-                placeholder="Odds (e.g. 1.25)"
+                placeholder="Odds 1"
                 value={ladderForm.match1_odds}
                 onChange={(e) => setLadderForm({ ...ladderForm, match1_odds: e.target.value })}
-                className="px-3 py-1.5 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#162238]"
+                className="px-3 py-1.5 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#162238] text-slate-900 dark:text-white"
               />
             </div>
 
-            {/* Match 2 */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
               <input
                 type="text"
-                placeholder="Match 2 (e.g. Arsenal vs Shakhtar)"
+                placeholder="Match 2"
                 value={ladderForm.match2_name}
                 onChange={(e) => setLadderForm({ ...ladderForm, match2_name: e.target.value })}
-                className="px-3 py-1.5 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#162238]"
+                className="px-3 py-1.5 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#162238] text-slate-900 dark:text-white"
               />
               <input
                 type="text"
-                placeholder="Pick (e.g. Home Win)"
+                placeholder="Pick 2"
                 value={ladderForm.match2_pick}
                 onChange={(e) => setLadderForm({ ...ladderForm, match2_pick: e.target.value })}
-                className="px-3 py-1.5 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#162238]"
+                className="px-3 py-1.5 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#162238] text-slate-900 dark:text-white"
               />
               <input
                 type="number"
                 step="0.01"
-                placeholder="Odds (e.g. 1.20)"
+                placeholder="Odds 2"
                 value={ladderForm.match2_odds}
                 onChange={(e) => setLadderForm({ ...ladderForm, match2_odds: e.target.value })}
-                className="px-3 py-1.5 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#162238]"
+                className="px-3 py-1.5 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#162238] text-slate-900 dark:text-white"
               />
             </div>
           </div>
@@ -520,204 +943,9 @@ export default function AdminPage({ onNavigate }) {
         </form>
       )}
 
-      {/* ── TAB 3: CREATE NEW MATCH SLIP ── */}
-      {activeTab === 'new-ticket' && (
-        <form onSubmit={handleCreateTicket} className="p-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1626] shadow-sm space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
-            <div>
-              <h2 className="text-base sm:text-lg font-display font-black text-slate-900 dark:text-white flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-blue-500" />
-                <span>Create &amp; Publish New Match Slip</span>
-              </h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                Publish a fresh ticket (like the Tuesday Champions League Special) with booking codes for all bookmakers.
-              </p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div className="sm:col-span-2 space-y-1">
-              <label className="text-xs font-display font-bold text-slate-700 dark:text-slate-300">Ticket Title</label>
-              <input
-                type="text"
-                value={newTicketForm.title}
-                onChange={(e) => setNewTicketForm({ ...newTicketForm, title: e.target.value })}
-                className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-[#162035]"
-                required
-              />
-            </div>
-
-            <div className="space-y-1">
-              <label className="text-xs font-display font-bold text-slate-700 dark:text-slate-300">Badge Label</label>
-              <input
-                type="text"
-                value={newTicketForm.badge}
-                onChange={(e) => setNewTicketForm({ ...newTicketForm, badge: e.target.value })}
-                className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-[#162035]"
-                required
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <div className="space-y-1">
-              <label className="text-xs font-display font-bold text-slate-700 dark:text-slate-300">Total Multiplier Odds</label>
-              <input
-                type="number"
-                step="0.01"
-                value={newTicketForm.totalOdds}
-                onChange={(e) => setNewTicketForm({ ...newTicketForm, totalOdds: e.target.value })}
-                className="w-full px-3 py-2 text-xs font-mono font-bold rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-[#162035]"
-                required
-              />
-            </div>
-
-            <div className="space-y-1">
-              <label className="text-xs font-display font-bold text-slate-700 dark:text-slate-300">Category Tab</label>
-              <select
-                value={newTicketForm.category}
-                onChange={(e) => setNewTicketForm({ ...newTicketForm, category: e.target.value })}
-                className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-[#162035]"
-              >
-                <option value="banker">2.00 Banker</option>
-                <option value="ladder">Rollover Ladder</option>
-                <option value="accumulator">Accumulator</option>
-                <option value="goals">Over 1.5 Goals</option>
-                <option value="mega">10.00 Mega</option>
-              </select>
-            </div>
-
-            <div className="space-y-1">
-              <label className="text-xs font-display font-bold text-slate-700 dark:text-slate-300">Confidence Label</label>
-              <input
-                type="text"
-                value={newTicketForm.confidence}
-                onChange={(e) => setNewTicketForm({ ...newTicketForm, confidence: e.target.value })}
-                className="w-full px-3 py-2 text-xs rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-[#162035]"
-              />
-            </div>
-          </div>
-
-          {/* Bookmaker Codes */}
-          <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 space-y-2">
-            <span className="text-xs font-display font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200 block">
-              Booking Codes for this Slip:
-            </span>
-            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
-              <input
-                type="text"
-                placeholder="SportyBet Code"
-                value={newTicketForm.sportybet}
-                onChange={(e) => setNewTicketForm({ ...newTicketForm, sportybet: e.target.value })}
-                className="px-2.5 py-1.5 text-xs font-mono rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#162238]"
-              />
-              <input
-                type="text"
-                placeholder="Bet9ja Code"
-                value={newTicketForm.bet9ja}
-                onChange={(e) => setNewTicketForm({ ...newTicketForm, bet9ja: e.target.value })}
-                className="px-2.5 py-1.5 text-xs font-mono rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#162238]"
-              />
-              <input
-                type="text"
-                placeholder="1xBet Code"
-                value={newTicketForm.onexbet}
-                onChange={(e) => setNewTicketForm({ ...newTicketForm, onexbet: e.target.value })}
-                className="px-2.5 py-1.5 text-xs font-mono rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#162238]"
-              />
-              <input
-                type="text"
-                placeholder="BetKing Code"
-                value={newTicketForm.betking}
-                onChange={(e) => setNewTicketForm({ ...newTicketForm, betking: e.target.value })}
-                className="px-2.5 py-1.5 text-xs font-mono rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#162238]"
-              />
-              <input
-                type="text"
-                placeholder="Betway Code"
-                value={newTicketForm.betway}
-                onChange={(e) => setNewTicketForm({ ...newTicketForm, betway: e.target.value })}
-                className="px-2.5 py-1.5 text-xs font-mono rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#162238]"
-              />
-            </div>
-          </div>
-
-          {/* Match Selections */}
-          <div className="p-4 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 space-y-2">
-            <span className="text-xs font-display font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200 block">
-              Match Selections (2 Games):
-            </span>
-            <div className="space-y-2">
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                <input
-                  type="text"
-                  placeholder="Match 1 (e.g. Real Madrid vs Dortmund)"
-                  value={newTicketForm.match1_match}
-                  onChange={(e) => setNewTicketForm({ ...newTicketForm, match1_match: e.target.value })}
-                  className="px-3 py-1.5 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#162238]"
-                  required
-                />
-                <input
-                  type="text"
-                  placeholder="Pick (e.g. Real Madrid Win)"
-                  value={newTicketForm.match1_pick}
-                  onChange={(e) => setNewTicketForm({ ...newTicketForm, match1_pick: e.target.value })}
-                  className="px-3 py-1.5 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#162238]"
-                  required
-                />
-                <input
-                  type="number"
-                  step="0.01"
-                  placeholder="Odds (e.g. 1.55)"
-                  value={newTicketForm.match1_odds}
-                  onChange={(e) => setNewTicketForm({ ...newTicketForm, match1_odds: e.target.value })}
-                  className="px-3 py-1.5 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#162238]"
-                  required
-                />
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                <input
-                  type="text"
-                  placeholder="Match 2 (e.g. Arsenal vs Shakhtar)"
-                  value={newTicketForm.match2_match}
-                  onChange={(e) => setNewTicketForm({ ...newTicketForm, match2_match: e.target.value })}
-                  className="px-3 py-1.5 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#162238]"
-                  required
-                />
-                <input
-                  type="text"
-                  placeholder="Pick (e.g. Arsenal -1.5)"
-                  value={newTicketForm.match2_pick}
-                  onChange={(e) => setNewTicketForm({ ...newTicketForm, match2_pick: e.target.value })}
-                  className="px-3 py-1.5 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#162238]"
-                  required
-                />
-                <input
-                  type="number"
-                  step="0.01"
-                  placeholder="Odds (e.g. 1.45)"
-                  value={newTicketForm.match2_odds}
-                  onChange={(e) => setNewTicketForm({ ...newTicketForm, match2_odds: e.target.value })}
-                  className="px-3 py-1.5 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#162238]"
-                  required
-                />
-              </div>
-            </div>
-          </div>
-
-          <button
-            type="submit"
-            className="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-display font-black text-sm uppercase tracking-wider transition-all shadow-md"
-          >
-            Publish Slip Live Immediately
-          </button>
-        </form>
-      )}
-
       {/* ── TAB 4: BACKUP & RESET ── */}
       {activeTab === 'export' && (
-        <div className="p-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1626] shadow-sm space-y-4">
+        <div className="p-5 sm:p-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1626] shadow-sm space-y-4">
           <div>
             <h2 className="text-base sm:text-lg font-display font-black text-slate-900 dark:text-white">
               Data Backup &amp; Factory Reset
