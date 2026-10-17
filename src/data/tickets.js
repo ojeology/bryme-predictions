@@ -699,6 +699,29 @@ export function getTicketsByStatus(status) {
   return TICKETS.filter(t => t.status === status);
 }
 
+import { DAILY_BOOKING_TICKETS } from './bookingTickets';
+
 export function getTicketById(id) {
-  return TICKETS.find(t => t.id === id);
+  const direct = TICKETS.find(t => t.id === id);
+  if (direct) return direct;
+
+  const daily = DAILY_BOOKING_TICKETS.find(t => t.id === id);
+  if (daily) {
+    return {
+      ...daily,
+      bookingCode: daily.codes?.bet9ja || daily.codes?.sportybet || 'BC-BRYME',
+      sportyCode: daily.codes?.sportybet,
+      bet9jaCode: daily.codes?.bet9ja,
+      onexCode: daily.codes?.onexbet,
+      betkingCode: daily.codes?.betking,
+      betwayCode: daily.codes?.betway,
+      marketId: 'match-winner-dc',
+      leagueId: 'epl',
+      region: 'all',
+      punterName: 'BRYME European Desk',
+      publishedAt: `Today at ${daily.dropTime}`
+    };
+  }
+
+  return TICKETS[0];
 }

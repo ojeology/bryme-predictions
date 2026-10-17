@@ -4,10 +4,11 @@ import BookingCodesHub from '../components/BookingCodesHub';
 import StatisticalCheatSheet from '../components/StatisticalCheatSheet';
 import AdPlaceholder from '../components/AdPlaceholder';
 import { WEEKEND_2_ODDS_STATS, WEEKEND_ARCHIVE } from '../data/weekendArchive';
-import { ACTIVE_CHALLENGE } from '../data/ladder';
+import { MARKETS } from '../data/markets';
 import { 
   Trophy, ArrowRight, ShieldCheck, Flame, Sparkles, 
-  TrendingUp, CheckCircle, Clock, Zap, Target, Copy, Check, BarChart2, ChevronDown, ChevronUp
+  TrendingUp, CheckCircle, Clock, Zap, Target, Copy, Check, 
+  BarChart2, ChevronDown, ChevronUp, Layers, Lock, Eye
 } from 'lucide-react';
 
 export default function HomePage({ onNavigate }) {
@@ -21,8 +22,12 @@ export default function HomePage({ onNavigate }) {
     setVoted(true);
   };
 
-  // Grab the latest weekend pick from history for the feature card
-  const latestWeekendPick = WEEKEND_ARCHIVE[0];
+  const highYieldMarkets = [
+    { id: 'over-under-goals', name: '⚽ Over/Under Goals Radar', badge: 'High Hit Rate', picks: '8 Matches Today', desc: 'Over 1.5 & Over 2.5 banker lines for EPL, Bundesliga & Serie A.' },
+    { id: 'match-winner-dc', name: '🛡️ Double Chance & Win Combos', badge: 'Lowest Variance', picks: '6 Banker Matches', desc: 'Home win or draw safety lines across European title contenders.' },
+    { id: 'btts', name: '🎯 Both Teams to Score (BTTS)', badge: '78% Form Rating', picks: '5 Match Slips', desc: 'Both teams found the net in 8/10 previous encounters.' },
+    { id: 'long-shots', name: '🚀 Weekend Long Shots (10x - 50x)', badge: 'Mega Value', picks: '3 Multi-Slips', desc: 'Calculated high-odds speculative accas with minimal stakes.' },
+  ];
 
   return (
     <div className="space-y-6">
@@ -34,7 +39,7 @@ export default function HomePage({ onNavigate }) {
             <div className="flex items-center gap-2 mb-1">
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
               <span className="text-[11px] font-mono uppercase font-bold text-emerald-600 dark:text-emerald-400">
-                Picks Live for Today
+                Picks Live for Today &bull; 02:00 AM WAT Drop
               </span>
             </div>
             <h1 className="text-xl sm:text-2xl font-display font-black tracking-tight text-slate-900 dark:text-white">
@@ -78,6 +83,16 @@ export default function HomePage({ onNavigate }) {
               📋 Codes
             </button>
             <button
+              onClick={() => setActiveTab('markets')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-display font-bold uppercase transition-all ${
+                activeTab === 'markets'
+                  ? 'bg-blue-600 text-white shadow-sm'
+                  : 'bg-slate-100 dark:bg-[#162035] text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
+              }`}
+            >
+              📂 Markets
+            </button>
+            <button
               onClick={() => setActiveTab('weekend')}
               className={`px-3 py-1.5 rounded-xl text-xs font-display font-bold uppercase transition-all ${
                 activeTab === 'weekend'
@@ -91,14 +106,17 @@ export default function HomePage({ onNavigate }) {
         </div>
       </div>
 
-      {/* ── 2. THE SIGNATURE LADDER CHALLENGE (CLEAR & INTUITIVE) ── */}
+      {/* TOP HOME AD SLOT (MONETIZATION) */}
+      <AdPlaceholder label="Top Home Sponsor (Adsterra 728x90 / Banner)" />
+
+      {/* ── 2. THE SIGNATURE LADDER CHALLENGE (INTERACTIVE & CLEAR) ── */}
       {(activeTab === 'all' || activeTab === 'ladder') && (
         <section className="space-y-2">
           <VisibleLadder onNavigate={onNavigate} />
         </section>
       )}
 
-      {/* ── 3. READY-TO-LOAD DAILY BOOKING CODES HUB ── */}
+      {/* ── 3. READY-TO-LOAD DAILY BOOKING CODES HUB (STRATEGIC TEASERS FOR PAGEVIEWS) ── */}
       {(activeTab === 'all' || activeTab === 'codes') && (
         <section className="space-y-3">
           <div className="flex items-center justify-between px-1">
@@ -108,10 +126,10 @@ export default function HomePage({ onNavigate }) {
               </div>
               <div>
                 <h2 className="text-base sm:text-lg font-display font-black text-slate-900 dark:text-white">
-                  Today's Ready Booking Codes
+                  Today's Ready Booking Slips
                 </h2>
                 <p className="text-xs text-slate-500 dark:text-slate-400">
-                  SportyBet &bull; Bet9ja &bull; 1xBet (Dropped daily at 02:00 AM WAT)
+                  Click any slip to reveal full selections, head-to-head analysis &amp; all bookmaker codes
                 </p>
               </div>
             </div>
@@ -129,7 +147,76 @@ export default function HomePage({ onNavigate }) {
         </section>
       )}
 
-      {/* ── 4. WEEKEND 2.00 ODDS BANKER & VERIFIED ACCURACY ── */}
+      {/* ── 4. HIGH-YIELD BETTING MARKETS (STRATEGIC TEASERS: CLICKS -> /market/:id) ── */}
+      {(activeTab === 'all' || activeTab === 'markets') && (
+        <section className="space-y-3">
+          <div className="flex items-center justify-between px-1">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold text-base">
+                📂
+              </div>
+              <div>
+                <h2 className="text-base sm:text-lg font-display font-black text-slate-900 dark:text-white">
+                  High-Yield Betting Markets Directory
+                </h2>
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  Curated statistical angles across European Top 6 Leagues
+                </p>
+              </div>
+            </div>
+
+            <button
+              onClick={() => onNavigate('markets')}
+              className="text-xs font-display font-bold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
+            >
+              <span>All 8 Markets</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {highYieldMarkets.map((m) => (
+              <div
+                key={m.id}
+                onClick={() => onNavigate(`market/${m.id}`)}
+                className="group cursor-pointer p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1626] hover:border-blue-500/60 transition-all shadow-sm hover:shadow-md flex flex-col justify-between"
+              >
+                <div>
+                  <div className="flex items-center justify-between gap-2 mb-1.5">
+                    <span className="text-[10px] uppercase font-mono font-bold px-2 py-0.5 rounded bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-900/40">
+                      {m.badge}
+                    </span>
+                    <span className="text-xs font-mono text-slate-400">
+                      {m.picks}
+                    </span>
+                  </div>
+
+                  <h3 className="font-display font-black text-sm sm:text-base text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                    {m.name}
+                  </h3>
+
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
+                    {m.desc}
+                  </p>
+                </div>
+
+                <div className="mt-3 pt-2.5 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-display font-bold text-blue-600 dark:text-blue-400">
+                  <span className="flex items-center gap-1">
+                    <Eye className="w-3.5 h-3.5" />
+                    <span>View Selections &amp; Odds</span>
+                  </span>
+                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* MID-HOME AD SLOT */}
+      <AdPlaceholder label="Mid-Feed Betting Partner Banner (Adsterra / High-CPM)" />
+
+      {/* ── 5. WEEKEND 2.00 ODDS BANKER & VERIFIED ACCURACY ── */}
       {(activeTab === 'all' || activeTab === 'weekend') && (
         <section className="space-y-3">
           <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1626] p-4 sm:p-5 shadow-sm space-y-4">
@@ -194,11 +281,21 @@ export default function HomePage({ onNavigate }) {
               </div>
             </div>
 
+            {/* Teaser to open dedicated Weekend Slip */}
+            <div className="pt-2 text-right">
+              <button
+                onClick={() => onNavigate('ticket/epl-super-weekend')}
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-display font-bold text-xs uppercase tracking-wider transition-all"
+              >
+                <span>Unlock Weekend 2.00x Slip &amp; Analysis &rarr;</span>
+              </button>
+            </div>
+
           </div>
         </section>
       )}
 
-      {/* ── 5. OPTIONAL EXPANDABLE: STATISTICAL FORM RADARS (REMOVES JAM-PACKED FEEL) ── */}
+      {/* ── 6. OPTIONAL EXPANDABLE: STATISTICAL FORM RADARS (NO CLUTTER) ── */}
       <section className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1626] overflow-hidden shadow-sm">
         <button
           onClick={() => setShowStatsDrawer(!showStatsDrawer)}
@@ -235,7 +332,7 @@ export default function HomePage({ onNavigate }) {
         )}
       </section>
 
-      {/* ── 6. COMMUNITY CONSENSUS MATCH POLL ── */}
+      {/* ── 7. COMMUNITY CONSENSUS MATCH POLL ── */}
       <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1626] p-4 sm:p-5 shadow-sm space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -332,8 +429,6 @@ export default function HomePage({ onNavigate }) {
         )}
       </div>
 
-      {/* ADSTERRA / BETTING PARTNER SLOT */}
-      <AdPlaceholder label="Top Betting Partner Slot (18+ Gamble Responsibly)" />
     </div>
   );
 }
