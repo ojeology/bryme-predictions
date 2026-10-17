@@ -139,6 +139,11 @@ export default function Footer({ onNavigate }) {
                 </button>
               </li>
               <li>
+                <button onClick={() => onNavigate('admin')} className="text-cyan-600 dark:text-cyan-400 font-bold hover:underline transition-colors flex items-center gap-1">
+                  <span>⚡ Admin Operations Deck</span>
+                </button>
+              </li>
+              <li>
                 <button onClick={() => onNavigate('about')} className="hover:text-emerald-500 transition-colors">
                   About BRYME
                 </button>

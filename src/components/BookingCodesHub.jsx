@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { DAILY_BOOKING_TICKETS } from '../data/bookingTickets';
+import { usePredictions } from '../context/PredictionsContext';
 import { 
   Copy, Check, Zap, Flame, ShieldCheck, ChevronRight, 
   Share2, ArrowRight, Trophy, Sparkles, Lock, Unlock, Eye
 } from 'lucide-react';
 
 export default function BookingCodesHub({ onNavigate }) {
+  const { tickets } = usePredictions();
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [copiedId, setCopiedId] = useState(null);
 
@@ -16,7 +17,7 @@ export default function BookingCodesHub({ onNavigate }) {
     setTimeout(() => setCopiedId(null), 2000);
   };
 
-  const filteredTickets = DAILY_BOOKING_TICKETS.filter(t => {
+  const filteredTickets = tickets.filter(t => {
     if (selectedCategory === 'all') return true;
     return t.category === selectedCategory;
   });

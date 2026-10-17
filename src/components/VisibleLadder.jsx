@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { ACTIVE_CHALLENGE, LADDER_CONFIG, PAST_CHALLENGES } from '../data/ladder';
+import { usePredictions } from '../context/PredictionsContext';
+import { LADDER_CONFIG, PAST_CHALLENGES } from '../data/ladder';
 import { 
   Trophy, Shield, CheckCircle2, Flame, Copy, Check, 
   ArrowRight, Sparkles, ChevronDown, ChevronUp, Zap, Info, Clock, Play, Lock, Eye, Calculator
@@ -27,8 +28,9 @@ const ALL_18_STEPS = [
 ];
 
 export default function VisibleLadder({ onNavigate }) {
-  const [selectedDayTab, setSelectedDayTab] = useState(3); // Default to active day 3
-  const [startingStakeMultiplier, setStartingStakeMultiplier] = useState(1); // 1 = ₦1,000, 0.5 = ₦500, 2 = ₦2,000
+  const { ladder } = usePredictions();
+  const [selectedDayTab, setSelectedDayTab] = useState(ladder.currentDay || 3);
+  const [startingStakeMultiplier, setStartingStakeMultiplier] = useState(1);
   const [showFullRoadmap, setShowFullRoadmap] = useState(false);
   const [showRules, setShowRules] = useState(false);
   const [copiedSporty, setCopiedSporty] = useState(false);
@@ -46,13 +48,14 @@ export default function VisibleLadder({ onNavigate }) {
   };
 
   const currentStakeValue = 1000 * startingStakeMultiplier;
-  const currentPurse = Math.round(ACTIVE_CHALLENGE.currentBalance * startingStakeMultiplier);
+  const currentPurse = Math.round((ladder.currentBalance || 3375) * startingStakeMultiplier);
   const day6BankValue = Math.round(5695 * startingStakeMultiplier);
 
   const nearTermSteps = ALL_18_STEPS.slice(0, 6);
-
-  // Selected Day step data
   const selectedStepData = ALL_18_STEPS.find(s => s.day === selectedDayTab) || ALL_18_STEPS[2];
+
+  const sel1 = ladder.selections?.[0] || { match: 'Arsenal vs Everton', league: 'Premier League', pick: '1X & Over 1.5 Goals', odds: 1.25 };
+  const sel2 = ladder.selections?.[1] || { match: 'Bayern vs Stuttgart Selection', league: 'Bundesliga', pick: 'Over 2.5 Goals', odds: 1.20 };
 
   return (
     <div className="space-y-4">
@@ -306,20 +309,20 @@ export default function VisibleLadder({ onNavigate }) {
                 <div className="flex items-center gap-2">
                   {/* Quick Sporty button */}
                   <button
-                    onClick={() => handleCopyCode(ACTIVE_CHALLENGE.sportyCode, 'sporty')}
+                    onClick={() => handleCopyCode(ladder.sportyCode || 'BC4-LAD50-D3', 'sporty')}
                     className="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-[#162238] hover:bg-slate-200 dark:hover:bg-[#1C2A44] text-xs font-mono font-bold text-slate-700 dark:text-slate-200 transition-colors flex items-center gap-1.5"
                   >
                     {copiedSporty ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5 text-slate-400" />}
-                    <span>Sporty: {ACTIVE_CHALLENGE.sportyCode}</span>
+                    <span>Sporty: {ladder.sportyCode || 'BC4-LAD50-D3'}</span>
                   </button>
 
                   {/* Quick Bet9ja button */}
                   <button
-                    onClick={() => handleCopyCode(ACTIVE_CHALLENGE.todaysCode, 'bet9ja')}
+                    onClick={() => handleCopyCode(ladder.todaysCode || 'B9J-LAD-50-D3', 'bet9ja')}
                     className="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-[#162238] hover:bg-slate-200 dark:hover:bg-[#1C2A44] text-xs font-mono font-bold text-slate-700 dark:text-slate-200 transition-colors flex items-center gap-1.5"
                   >
                     {copiedBet9ja ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5 text-slate-400" />}
-                    <span>Bet9ja: {ACTIVE_CHALLENGE.todaysCode}</span>
+                    <span>Bet9ja: {ladder.todaysCode || 'B9J-LAD-50-D3'}</span>
                   </button>
                 </div>
 

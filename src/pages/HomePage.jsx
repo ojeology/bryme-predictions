@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import ChampionsLeagueBanner from '../components/ChampionsLeagueBanner';
 import VisibleLadder from '../components/VisibleLadder';
 import BookingCodesHub from '../components/BookingCodesHub';
 import StatisticalCheatSheet from '../components/StatisticalCheatSheet';
@@ -32,6 +33,9 @@ export default function HomePage({ onNavigate }) {
   return (
     <div className="space-y-6">
       
+      {/* ── 0. TUESDAY CHAMPIONS LEAGUE LAUNCH HYPЕ BANNER ── */}
+      <ChampionsLeagueBanner onNavigate={onNavigate} />
+
       {/* ── 1. WELCOME HERO & QUICK FILTER TABS ── */}
       <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1626] p-4 sm:p-5 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">

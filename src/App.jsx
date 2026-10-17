@@ -4,7 +4,7 @@ import Sidebar from './components/Sidebar';
 import BottomNav from './components/BottomNav';
 import Footer from './components/Footer';
 import SearchModal from './components/SearchModal';
-import { ACTIVE_CHALLENGE } from './data/ladder';
+import { usePredictions } from './context/PredictionsContext';
 import { Sparkles, Clock, Flame, ShieldCheck } from 'lucide-react';
 
 // Pages
@@ -24,10 +24,12 @@ import AboutPage from './pages/AboutPage';
 import EditorialPolicyPage from './pages/EditorialPolicyPage';
 import ResponsibleGamblingPage from './pages/ResponsibleGamblingPage';
 import ContactPage from './pages/ContactPage';
+import AdminPage from './pages/AdminPage';
 
 export default function App() {
   const [currentHash, setCurrentHash] = useState(window.location.hash || '#/');
   const [searchOpen, setSearchOpen] = useState(false);
+  const { ladder } = usePredictions();
 
   useEffect(() => {
     const handleHashChange = () => {
@@ -56,6 +58,8 @@ export default function App() {
       case 'home':
       case '':
         return <HomePage onNavigate={navigate} />;
+      case 'admin':
+        return <AdminPage onNavigate={navigate} />;
       case 'predictions':
         return <PredictionsPage onNavigate={navigate} />;
       case 'markets':
@@ -92,7 +96,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F1F5F9] dark:bg-[#0A0F1D] text-slate-900 dark:text-slate-100 flex flex-col font-sans transition-colors">
+    <div className="min-h-screen bg-[#F1F5F9] dark:bg-[#070B16] text-slate-900 dark:text-slate-100 flex flex-col font-sans transition-colors">
       
       {/* 1. Top Header with Midnight Navy & Navigation */}
       <Header 
@@ -101,31 +105,31 @@ export default function App() {
         onOpenSearch={() => setSearchOpen(true)}
       />
 
-      {/* 2. Live Drop Marquee Ticker (Signature 2:00 AM WAT Tracker) */}
-      <div className="bg-[#080E20] dark:bg-[#050914] border-b border-blue-900/40 text-xs py-1.5 px-3 text-slate-300 overflow-x-auto scrollbar-none">
+      {/* 2. Live Drop Marquee Ticker */}
+      <div className="bg-[#050914] border-b border-blue-900/40 text-xs py-1.5 px-3 text-slate-300 overflow-x-auto scrollbar-none">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-4 text-[11px] font-mono whitespace-nowrap">
           <div className="flex items-center gap-2">
             <span className="flex h-2 w-2 relative">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
             </span>
-            <span className="font-bold text-white">MIDNIGHT DROP 02:00 AM WAT:</span>
-            <span className="text-amber-400 font-bold">Ladder Step 3 (1.50 Odds) LIVE</span>
+            <span className="font-bold text-white uppercase tracking-wider">★ TUESDAY UCL SPECIAL:</span>
+            <span className="text-cyan-300 font-bold">Real Madrid vs Dortmund &bull; 2.45x Banker Live</span>
           </div>
 
           <div className="hidden sm:flex items-center gap-4 text-slate-400">
-            <span>Sporty: <strong className="text-white">{ACTIVE_CHALLENGE.sportyCode}</strong></span>
+            <span>Ladder: <strong className="text-white">Day {ladder.currentDay} (₦{ladder.currentBalance?.toLocaleString()})</strong></span>
             <span>&bull;</span>
-            <span>Bet9ja: <strong className="text-white">{ACTIVE_CHALLENGE.todaysCode}</strong></span>
+            <span>Sporty: <strong className="text-white">{ladder.sportyCode}</strong></span>
             <span>&bull;</span>
-            <span className="text-emerald-400 font-bold">Weekend 2 Odds: 76.9% Hit Rate</span>
+            <span>Bet9ja: <strong className="text-white">{ladder.todaysCode}</strong></span>
           </div>
 
           <button 
-            onClick={() => navigate('results')} 
-            className="text-blue-400 hover:text-blue-300 font-display font-bold uppercase text-[10px] underline ml-auto sm:ml-0"
+            onClick={() => navigate('admin')} 
+            className="text-cyan-400 hover:text-cyan-300 font-display font-bold uppercase text-[10px] underline ml-auto sm:ml-0"
           >
-            Ledger &rarr;
+            Admin Panel &rarr;
           </button>
         </div>
       </div>
@@ -134,7 +138,7 @@ export default function App() {
       <main className="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-6">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           
-          {/* Left Desktop Sidebar (Missing piece restored!) */}
+          {/* Left Desktop Sidebar */}
           <div className="hidden lg:block lg:col-span-4 xl:col-span-3.5 space-y-4">
             <Sidebar currentRoute={mainRoute} onNavigate={navigate} />
           </div>

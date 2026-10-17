@@ -30,6 +30,7 @@ export default function Sidebar({ currentRoute, onNavigate }) {
     { id: 'punters', label: '👑 Tracked African Punters', icon: '⭐' },
     { id: 'markets', label: '📂 Betting Markets Directory', icon: '🗂️' },
     { id: 'bookmakers', label: '📱 Bookmakers & Codes', icon: '🎰' },
+    { id: 'admin', label: '⚡ Admin Control Deck', icon: '🛠️', badge: 'Owner' },
     { id: 'responsible-gambling', label: '🛡️ Responsible Gaming (18+)', icon: '🔒' }
   ];
 
