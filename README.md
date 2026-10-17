@@ -63,3 +63,7 @@ Generates production-optimized static assets in `dist/` and creates `404.html` f
 
 ## 🛡️ Responsible Gambling & Editorial Notice
 Sports betting involves financial risk. You can lose your stake. Never wager money needed for living expenses. Prototype figures are realistic demonstration data.
+
+## Live Deployment Status
+- **GitHub Pages**: [https://ojeology.github.io/bryme-predictions/](https://ojeology.github.io/bryme-predictions/)
+- **Workflow**: Automated GitHub Actions deployment enabled
