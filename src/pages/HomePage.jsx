@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import ChampionsLeagueBanner from '../components/ChampionsLeagueBanner';
 import VisibleLadder from '../components/VisibleLadder';
+import ChampionsLeagueBanner from '../components/ChampionsLeagueBanner';
 import BookingCodesHub from '../components/BookingCodesHub';
 import StatisticalCheatSheet from '../components/StatisticalCheatSheet';
 import AdPlaceholder from '../components/AdPlaceholder';
@@ -9,7 +9,7 @@ import { MARKETS } from '../data/markets';
 import { 
   Trophy, ArrowRight, ShieldCheck, Flame, Sparkles, 
   TrendingUp, CheckCircle, Clock, Zap, Target, Copy, Check, 
-  BarChart2, ChevronDown, ChevronUp, Layers, Lock, Eye
+  BarChart2, ChevronDown, ChevronUp, Layers, Lock, Eye, Shield
 } from 'lucide-react';
 
 export default function HomePage({ onNavigate }) {
@@ -33,114 +33,111 @@ export default function HomePage({ onNavigate }) {
   return (
     <div className="space-y-6">
       
-      {/* ── 0. TUESDAY CHAMPIONS LEAGUE LAUNCH HYPЕ BANNER ── */}
-      <ChampionsLeagueBanner onNavigate={onNavigate} />
+      {/* ── 1. THE MAIN HOOK & IDENTITY: THE ₦1,000 → ₦1,000,000 SPORTYBET ROLLOVER LADDER ── */}
+      <section id="ladder-hero">
+        <VisibleLadder onNavigate={onNavigate} />
+      </section>
 
-      {/* ── 1. WELCOME HERO & QUICK FILTER TABS ── */}
-      <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1626] p-4 sm:p-5 shadow-sm">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      {/* ── 2. QUICK CATEGORY JUMP RIBBON (SPORTY APP FEEL) ── */}
+      <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1626] p-3 sm:p-4 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="flex items-center gap-2">
+          <span className="w-2.5 h-2.5 rounded-full bg-[#00C250] animate-ping"></span>
           <div>
-            <div className="flex items-center gap-2 mb-1">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span className="text-[11px] font-mono uppercase font-bold text-emerald-600 dark:text-emerald-400">
-                Picks Live for Today &bull; 02:00 AM WAT Drop
-              </span>
-            </div>
-            <h1 className="text-xl sm:text-2xl font-display font-black tracking-tight text-slate-900 dark:text-white">
-              BRYME Predictions Hub
-            </h1>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-              African sports intelligence, daily 1-tap booking codes, and the signature 18-step rollover.
+            <span className="text-[11px] font-mono uppercase font-black text-slate-900 dark:text-white">
+              Today's Betting Center &bull; Drop Live
+            </span>
+            <p className="text-[10px] text-slate-500 dark:text-slate-400">
+              Verified 1-tap booking slips for SportyBet, Bet9ja &amp; 1xBet
             </p>
           </div>
+        </div>
 
-          {/* Quick jump pills */}
-          <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none self-start sm:self-auto">
-            <button
-              onClick={() => setActiveTab('all')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-display font-bold uppercase transition-all ${
-                activeTab === 'all'
-                  ? 'bg-blue-600 text-white shadow-sm'
-                  : 'bg-slate-100 dark:bg-[#162035] text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
-              }`}
-            >
-              All Hub
-            </button>
-            <button
-              onClick={() => setActiveTab('ladder')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-display font-bold uppercase transition-all ${
-                activeTab === 'ladder'
-                  ? 'bg-blue-600 text-white shadow-sm'
-                  : 'bg-slate-100 dark:bg-[#162035] text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
-              }`}
-            >
-              🪜 Ladder
-            </button>
-            <button
-              onClick={() => setActiveTab('codes')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-display font-bold uppercase transition-all ${
-                activeTab === 'codes'
-                  ? 'bg-blue-600 text-white shadow-sm'
-                  : 'bg-slate-100 dark:bg-[#162035] text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
-              }`}
-            >
-              📋 Codes
-            </button>
-            <button
-              onClick={() => setActiveTab('markets')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-display font-bold uppercase transition-all ${
-                activeTab === 'markets'
-                  ? 'bg-blue-600 text-white shadow-sm'
-                  : 'bg-slate-100 dark:bg-[#162035] text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
-              }`}
-            >
-              📂 Markets
-            </button>
-            <button
-              onClick={() => setActiveTab('weekend')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-display font-bold uppercase transition-all ${
-                activeTab === 'weekend'
-                  ? 'bg-blue-600 text-white shadow-sm'
-                  : 'bg-slate-100 dark:bg-[#162035] text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
-              }`}
-            >
-              🎯 2 Odds
-            </button>
-          </div>
+        {/* Quick jump pills */}
+        <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none self-start sm:self-auto">
+          <button
+            onClick={() => setActiveTab('all')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-display font-black uppercase transition-all ${
+              activeTab === 'all'
+                ? 'bg-[#E41B13] text-white shadow-md'
+                : 'bg-slate-100 dark:bg-[#162035] text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
+            }`}
+          >
+            🔥 All Slips
+          </button>
+          <button
+            onClick={() => setActiveTab('codes')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-display font-black uppercase transition-all ${
+              activeTab === 'codes'
+                ? 'bg-[#E41B13] text-white shadow-md'
+                : 'bg-slate-100 dark:bg-[#162035] text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
+            }`}
+          >
+            🔴 Sporty Slips
+          </button>
+          <button
+            onClick={() => setActiveTab('ucl')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-display font-black uppercase transition-all ${
+              activeTab === 'ucl'
+                ? 'bg-blue-600 text-white shadow-md'
+                : 'bg-slate-100 dark:bg-[#162035] text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
+            }`}
+          >
+            ⭐ UCL Special
+          </button>
+          <button
+            onClick={() => setActiveTab('markets')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-display font-black uppercase transition-all ${
+              activeTab === 'markets'
+                ? 'bg-blue-600 text-white shadow-md'
+                : 'bg-slate-100 dark:bg-[#162035] text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
+            }`}
+          >
+            📂 Markets
+          </button>
+          <button
+            onClick={() => setActiveTab('weekend')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-display font-black uppercase transition-all ${
+              activeTab === 'weekend'
+                ? 'bg-blue-600 text-white shadow-md'
+                : 'bg-slate-100 dark:bg-[#162035] text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
+            }`}
+          >
+            🎯 2 Odds
+          </button>
         </div>
       </div>
+
+      {/* ── 3. FEATURE MATCH: TUESDAY CHAMPIONS LEAGUE 2.45x BOOSTER ── */}
+      {(activeTab === 'all' || activeTab === 'ucl') && (
+        <section className="space-y-2">
+          <ChampionsLeagueBanner onNavigate={onNavigate} />
+        </section>
+      )}
 
       {/* TOP HOME AD SLOT (MONETIZATION) */}
       <AdPlaceholder label="Top Home Sponsor (Adsterra 728x90 / Banner)" />
 
-      {/* ── 2. THE SIGNATURE LADDER CHALLENGE (INTERACTIVE & CLEAR) ── */}
-      {(activeTab === 'all' || activeTab === 'ladder') && (
-        <section className="space-y-2">
-          <VisibleLadder onNavigate={onNavigate} />
-        </section>
-      )}
-
-      {/* ── 3. READY-TO-LOAD DAILY BOOKING CODES HUB (STRATEGIC TEASERS FOR PAGEVIEWS) ── */}
+      {/* ── 4. READY-TO-LOAD DAILY BOOKING CODES HUB ── */}
       {(activeTab === 'all' || activeTab === 'codes') && (
         <section className="space-y-3">
           <div className="flex items-center justify-between px-1">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-xl bg-blue-600/10 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-base">
-                📋
+              <div className="w-8 h-8 rounded-xl bg-[#E41B13]/10 text-[#E41B13] flex items-center justify-center font-bold text-base">
+                🔴
               </div>
               <div>
                 <h2 className="text-base sm:text-lg font-display font-black text-slate-900 dark:text-white">
-                  Today's Ready Booking Slips
+                  Today's Ready-to-Load Booking Slips
                 </h2>
                 <p className="text-xs text-slate-500 dark:text-slate-400">
-                  Click any slip to reveal full selections, head-to-head analysis &amp; all bookmaker codes
+                  Instant codes for SportyBet &amp; Bet9ja &bull; Click any slip to reveal full selections
                 </p>
               </div>
             </div>
 
             <button
               onClick={() => onNavigate('results')}
-              className="text-xs font-display font-bold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
+              className="text-xs font-display font-bold text-[#E41B13] dark:text-rose-400 hover:underline flex items-center gap-1"
             >
               <span>Past Hit Rate</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -151,12 +148,12 @@ export default function HomePage({ onNavigate }) {
         </section>
       )}
 
-      {/* ── 4. HIGH-YIELD BETTING MARKETS (STRATEGIC TEASERS: CLICKS -> /market/:id) ── */}
+      {/* ── 5. HIGH-YIELD BETTING MARKETS DIRECTORY ── */}
       {(activeTab === 'all' || activeTab === 'markets') && (
         <section className="space-y-3">
           <div className="flex items-center justify-between px-1">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold text-base">
+              <div className="w-8 h-8 rounded-xl bg-blue-600/10 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-base">
                 📂
               </div>
               <div>
@@ -204,12 +201,9 @@ export default function HomePage({ onNavigate }) {
                   </p>
                 </div>
 
-                <div className="mt-3 pt-2.5 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-display font-bold text-blue-600 dark:text-blue-400">
-                  <span className="flex items-center gap-1">
-                    <Eye className="w-3.5 h-3.5" />
-                    <span>View Selections &amp; Odds</span>
-                  </span>
-                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                <div className="pt-3 mt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-blue-600 dark:text-blue-400 font-bold group-hover:translate-x-0.5 transition-transform">
+                  <span>Explore Market Slips</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </div>
               </div>
             ))}
@@ -217,30 +211,22 @@ export default function HomePage({ onNavigate }) {
         </section>
       )}
 
-      {/* MID-HOME AD SLOT */}
-      <AdPlaceholder label="Mid-Feed Betting Partner Banner (Adsterra / High-CPM)" />
-
-      {/* ── 5. WEEKEND 2.00 ODDS BANKER & VERIFIED ACCURACY ── */}
+      {/* ── 6. VERIFIED WEEKEND 2.00x TRACK RECORD ── */}
       {(activeTab === 'all' || activeTab === 'weekend') && (
         <section className="space-y-3">
           <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1626] p-4 sm:p-5 shadow-sm space-y-4">
             
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-black text-lg">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold text-lg">
                   🎯
                 </div>
                 <div>
-                  <div className="flex items-center gap-2">
-                    <h3 className="text-base sm:text-lg font-display font-black text-slate-900 dark:text-white">
-                      Weekend 2.00x Odds Banker
-                    </h3>
-                    <span className="text-[10px] font-mono font-bold bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded">
-                      {WEEKEND_2_ODDS_STATS.accuracyRate}% Accuracy
-                    </span>
-                  </div>
+                  <h3 className="font-display font-black text-sm sm:text-base text-slate-900 dark:text-white">
+                    Verified Weekend 2.00x Audit Record
+                  </h3>
                   <p className="text-xs text-slate-500 dark:text-slate-400">
-                    Calculated on European Top 6 Leagues. Permanent public win/loss record.
+                    Calculated historical performance across 13 recorded weekends. Zero deleted tickets.
                   </p>
                 </div>
               </div>
@@ -299,7 +285,7 @@ export default function HomePage({ onNavigate }) {
         </section>
       )}
 
-      {/* ── 6. OPTIONAL EXPANDABLE: STATISTICAL FORM RADARS (NO CLUTTER) ── */}
+      {/* ── 7. STATISTICAL FORM RADARS (EXPANDABLE) ── */}
       <section className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1626] overflow-hidden shadow-sm">
         <button
           onClick={() => setShowStatsDrawer(!showStatsDrawer)}
@@ -336,7 +322,7 @@ export default function HomePage({ onNavigate }) {
         )}
       </section>
 
-      {/* ── 7. COMMUNITY CONSENSUS MATCH POLL ── */}
+      {/* ── 8. COMMUNITY CONSENSUS MATCH POLL ── */}
       <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1626] p-4 sm:p-5 shadow-sm space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">

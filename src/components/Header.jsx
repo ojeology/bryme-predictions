@@ -4,8 +4,9 @@ import ThemeToggle from './ThemeToggle';
 
 export default function Header({ currentRoute, onNavigate, onOpenSearch }) {
   const topNav = [
-    { id: 'home', label: '🔥 Daily Codes Hub', action: () => onNavigate('home') },
-    { id: 'ladder', label: '🪜 Rollover Ladder', action: () => onNavigate('ladder') },
+    { id: 'home', label: '🔥 ₦1K → ₦1M Ladder', action: () => onNavigate('home'), isHook: true },
+    { id: 'ladder', label: '🪜 18-Step Mountain', action: () => onNavigate('ladder') },
+    { id: 'home', label: '🔴 SportyBet Slips', action: () => onNavigate('home') },
     { id: 'weekend2', label: '🎯 Weekend 2 Odds', action: () => onNavigate('editor-picks') },
     { id: 'results', label: '📊 Verified Results', action: () => onNavigate('results') },
     { id: 'punters', label: '👑 Top Punters', action: () => onNavigate('punters') },
@@ -23,7 +24,7 @@ export default function Header({ currentRoute, onNavigate, onOpenSearch }) {
           onClick={() => onNavigate('home')} 
           className="flex items-center gap-2.5 cursor-pointer select-none"
         >
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 via-indigo-600 to-cyan-500 text-white flex items-center justify-center font-display font-black text-xl shadow-lg border border-cyan-400/40">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#E41B13] via-red-600 to-blue-600 text-white flex items-center justify-center font-display font-black text-xl shadow-lg border border-red-400/40">
             B
           </div>
           <div>
@@ -31,12 +32,12 @@ export default function Header({ currentRoute, onNavigate, onOpenSearch }) {
               <span className="font-display font-black text-xl tracking-tight text-white">
                 BRYME
               </span>
-              <span className="text-[9px] uppercase font-display font-black tracking-wider px-1.5 py-0.5 bg-cyan-500/20 text-cyan-300 border border-cyan-400/30 rounded">
-                PREDICTIONS
+              <span className="text-[9px] uppercase font-display font-black tracking-wider px-1.5 py-0.5 bg-[#E41B13] text-white rounded shadow-sm">
+                ROLLOVER LADDER
               </span>
             </div>
-            <p className="text-[10px] text-slate-300/80 font-medium tracking-tight mt-0.5">
-              African Sports Intelligence &bull; Midnight Drop at 02:00 AM WAT
+            <p className="text-[10px] text-slate-300 font-medium tracking-tight mt-0.5">
+              Africa's #1 Daily ₦1,000 &rarr; ₦1,000,000 Rollover &bull; 02:00 AM WAT Drop
             </p>
           </div>
         </div>
@@ -76,7 +77,7 @@ export default function Header({ currentRoute, onNavigate, onOpenSearch }) {
       {/* Horizontal Shortcuts Ribbon */}
       <div className="bg-[#050914] border-t border-white/[0.06] overflow-x-auto scrollbar-none px-3 py-1.5">
         <div className="max-w-7xl mx-auto flex items-center gap-1.5">
-          {topNav.map((item) => {
+          {topNav.map((item, idx) => {
             const isSelected = 
               (item.id === 'home' && currentRoute === 'home') ||
               (item.id === 'ladder' && currentRoute === 'ladder') ||
@@ -87,10 +88,12 @@ export default function Header({ currentRoute, onNavigate, onOpenSearch }) {
 
             return (
               <button
-                key={item.id}
+                key={idx}
                 onClick={item.action}
                 className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-display font-bold uppercase whitespace-nowrap transition-all ${
-                  isSelected
+                  item.isHook && currentRoute === 'home'
+                    ? 'bg-[#E41B13] text-white shadow-sm ring-1 ring-red-400/50'
+                    : isSelected
                     ? 'bg-blue-600 text-white shadow-sm ring-1 ring-blue-400/50'
                     : 'bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white'
                 }`}
