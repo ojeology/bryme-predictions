@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { usePredictions } from '../context/PredictionsContext';
-import { MARKET_CATEGORIES } from '../data/markets';
+import { MARKETS as FALLBACK_MARKETS, MARKET_CATEGORIES } from '../data/markets';
 import { TICKETS } from '../data/tickets';
 import { 
   Layers, ArrowRight, ShieldCheck, Search, Filter, Percent, 
@@ -14,11 +14,14 @@ export default function MarketsDirectoryPage({ onNavigate }) {
   const [sortBy, setSortBy] = useState('hitRate'); // 'hitRate', 'oddsAsc', 'risk', 'name'
   const [viewMode, setViewMode] = useState('grid'); // 'grid' | 'dense'
 
-  const marketList = markets || [];
+  // Bulletproof fallback ensuring an array always exists
+  const marketList = Array.isArray(markets) && markets.length > 0 ? markets : FALLBACK_MARKETS;
 
   // Filter & Sort
   const processedMarkets = useMemo(() => {
-    let result = marketList.filter(m => {
+    const list = Array.isArray(marketList) ? [...marketList] : [...FALLBACK_MARKETS];
+    let result = list.filter(m => {
+      if (!m) return false;
       if (selectedCategory !== 'all' && m.category !== selectedCategory) return false;
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase();
@@ -34,27 +37,27 @@ export default function MarketsDirectoryPage({ onNavigate }) {
     // Sorting logic
     result.sort((a, b) => {
       if (sortBy === 'hitRate') {
-        const rateA = parseFloat(a.averageHitRate) || 0;
-        const rateB = parseFloat(b.averageHitRate) || 0;
+        const rateA = parseFloat(a?.averageHitRate) || 0;
+        const rateB = parseFloat(b?.averageHitRate) || 0;
         return rateB - rateA;
       }
       if (sortBy === 'name') {
-        return a.name.localeCompare(b.name);
+        return (a?.name || '').localeCompare(b?.name || '');
       }
       if (sortBy === 'oddsAsc') {
-        const oddsA = parseFloat(a.typicalOddsRange) || 1.5;
-        const oddsB = parseFloat(b.typicalOddsRange) || 1.5;
+        const oddsA = parseFloat(a?.typicalOddsRange) || 1.5;
+        const oddsB = parseFloat(b?.typicalOddsRange) || 1.5;
         return oddsA - oddsB;
       }
       if (sortBy === 'risk') {
         const riskOrder = { 'Lowest Risk': 1, 'Low Risk': 2, 'Low-Medium Risk': 3, 'Medium Risk': 4, 'Medium-High Risk': 5, 'High Risk': 6 };
-        return (riskOrder[a.riskLevel] || 3) - (riskOrder[b.riskLevel] || 3);
+        return (riskOrder[a?.riskLevel] || 3) - (riskOrder[b?.riskLevel] || 3);
       }
       return 0;
     });
 
     return result;
-  }, [selectedCategory, searchQuery, sortBy]);
+  }, [marketList, selectedCategory, searchQuery, sortBy]);
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto">

@@ -34,7 +34,6 @@ export default function Sidebar({ currentRoute, onNavigate }) {
     { id: 'results', label: '📊 Results & Hit Rate', icon: '📊', badge: '76.9% Won', isGreen: true },
     { id: 'markets', label: '📂 35+ Markets Database', icon: '🗂️' },
     { id: 'editor-picks', label: '🎯 Weekend 2.00x Banker', icon: '🎯' },
-    { id: 'convert', label: '⚡ Multi-Bookmaker Slips Vault', icon: '⚡' },
     { id: 'ladder', label: '🪜 18-Step Safe Havens', icon: '⛰️' },
     { id: 'weekend-hub', label: '🤝 Consensus Community Hub', icon: '👥' },
     { id: 'bookmakers', label: '📱 Bookmakers & Codes', icon: '🎰' },

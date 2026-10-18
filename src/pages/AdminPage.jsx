@@ -1471,7 +1471,7 @@ export default function AdminPage({ onNavigate }) {
               <button
                 onClick={async () => {
                   try {
-                    const data = { ladder, tickets, codeCatalogue, punters, announcements };
+                    const data = { ladder, tickets, codeCatalogue, punters, announcements, markets };
                     const res = await fetch('/api/state', {
                       method: 'POST',
                       headers: {
@@ -1522,11 +1522,11 @@ export default function AdminPage({ onNavigate }) {
             </p>
 
             <div className="flex items-center gap-3 pt-2">
-              <button
-                onClick={() => {
-                  const data = { ladder, tickets, codeCatalogue, punters, announcements };
-                  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-                  const url = URL.createObjectURL(blob);
+            <button
+              onClick={() => {
+                const data = { ladder, tickets, codeCatalogue, punters, announcements, markets };
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
                   const a = document.createElement('a');
                   a.href = url;
                   a.download = `bryme-full-backup-${new Date().toISOString().slice(0, 10)}.json`;

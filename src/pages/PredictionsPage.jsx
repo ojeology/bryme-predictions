@@ -106,11 +106,10 @@ export default function PredictionsPage({ onNavigate }) {
 
           <div className="flex items-center gap-2 self-start sm:self-auto">
             <button
-              onClick={() => onNavigate('convert')}
-              className="px-3.5 py-2 rounded-xl bg-[#E41B13] hover:bg-[#D01710] text-white font-display font-black text-xs uppercase tracking-wider flex items-center gap-1.5 transition-all shadow-md"
+              onClick={() => onNavigate('punters')}
+              className="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-display font-black text-xs uppercase tracking-wider flex items-center gap-1.5 transition-all shadow-md"
             >
-              <Zap className="w-3.5 h-3.5" />
-              <span>Convert Codes &rarr;</span>
+              <span>👑 Punters Hub &rarr;</span>
             </button>
           </div>
         </div>

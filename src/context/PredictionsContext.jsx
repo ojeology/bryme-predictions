@@ -77,7 +77,11 @@ export function PredictionsProvider({ children }) {
   const [markets, setMarketsState] = useState(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY_MARKETS);
-      return saved ? JSON.parse(saved) : DEFAULT_MARKETS;
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+      return DEFAULT_MARKETS;
     } catch (e) {
       return DEFAULT_MARKETS;
     }
