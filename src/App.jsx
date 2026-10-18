@@ -30,7 +30,7 @@ import ConvertCodesPage from './pages/ConvertCodesPage';
 export default function App() {
   const [currentHash, setCurrentHash] = useState(window.location.hash || '#/');
   const [searchOpen, setSearchOpen] = useState(false);
-  const { ladder } = usePredictions();
+  const { ladder, announcements } = usePredictions();
 
   useEffect(() => {
     const handleHashChange = () => {
@@ -118,8 +118,7 @@ export default function App() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
             </span>
-            <span className="font-bold text-white uppercase tracking-wider">★ TUESDAY UCL SPECIAL:</span>
-            <span className="text-cyan-300 font-bold">Real Madrid vs Dortmund &bull; 2.45x Banker Live</span>
+            <span className="font-bold text-white uppercase tracking-wider">{announcements?.tickerText || '★ TUESDAY UCL SPECIAL: Real Madrid vs Dortmund • 2.45x Banker Live'}</span>
           </div>
 
           <div className="hidden sm:flex items-center gap-4 text-slate-400">

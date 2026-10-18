@@ -4,31 +4,30 @@ import { SUPPORTED_BOOKMAKERS } from '../data/catalogueCodes';
 import { 
   ShieldCheck, Key, Plus, Trash2, Save, RefreshCw, Check, 
   Copy, ArrowLeft, Trophy, Flame, Layers, Lock, Unlock, Sparkles, 
-  CheckCircle2, AlertCircle, LogOut, Edit2, Zap, BookOpen, Clock
+  CheckCircle2, AlertCircle, LogOut, Edit2, Zap, BookOpen, Clock, Users, Megaphone
 } from 'lucide-react';
 
 const MASTER_PIN = 'bryme2026';
 
 const MARKET_PRESETS = [
-  'Over 1.5 Goals',
-  'Over 2.5 Goals',
-  'Under 2.5 Goals',
-  'Under 3.5 Goals',
+  'Over 1.5 Goals High-Frequency Radar',
+  'Over 2.5 Total Goals',
+  'Under 2.5 Defensive Structure',
+  'Under 3.5 Goals Shield',
   'Both Teams to Score (GG)',
   'Both Teams to Score (NG)',
-  'Home Win (1)',
-  'Away Win (2)',
-  'Draw (X)',
-  'Double Chance (1X)',
-  'Double Chance (X2)',
-  'Double Chance (12)',
-  'Home Win & Over 1.5',
-  'Away Win & Over 1.5',
-  'Win Either Half',
+  '1X2 Full-Time Home Win',
+  'Double Chance (1X - Home Win or Draw)',
+  'Double Chance (X2 - Away Win or Draw)',
+  'Double Chance (12 - Anybody Win)',
+  '1X & Over 1.5 Goals Combo',
+  'Home Win & Over 2.5 Goals',
+  'Draw No Bet (DNB)',
+  'To Win Either Half',
   'First Half Over 0.5 Goals',
-  'Corners Over 8.5',
-  'Corners Over 9.5',
-  'Custom Market'
+  'Total Corners Over 8.5',
+  'Total Corners Over 9.5',
+  'Total Cards Over 3.5'
 ];
 
 export default function AdminPage({ onNavigate }) {
@@ -36,6 +35,8 @@ export default function AdminPage({ onNavigate }) {
     ladder, 
     tickets, 
     codeCatalogue,
+    punters,
+    announcements,
     updateTicketCode, 
     updateTicket, 
     addTicket, 
@@ -44,6 +45,12 @@ export default function AdminPage({ onNavigate }) {
     addCatalogueCode,
     updateCatalogueCode,
     deleteCatalogueCode,
+    addPunter,
+    updatePunter,
+    deletePunter,
+    addPunterCode,
+    deletePunterCode,
+    updateAnnouncements,
     resetToDefaults 
   } = usePredictions();
 
@@ -54,23 +61,46 @@ export default function AdminPage({ onNavigate }) {
   const [pinInput, setPinInput] = useState('');
   const [pinError, setPinError] = useState(false);
 
-  const [activeTab, setActiveTab] = useState('catalogue'); // 'catalogue', 'edit-slips', 'ladder', 'new-ticket', 'export'
+  // Active Tab: 'code-hub', 'punters-mgr', 'slips-editor', 'ladder-plan', 'announcements', 'backup'
+  const [activeTab, setActiveTab] = useState('code-hub');
   const [saveNotification, setSaveNotification] = useState(null);
 
-  // ── 1. CATALOGUE FORM STATE ──
-  const [catalogueForm, setCatalogueForm] = useState({
+  const showToast = (message) => {
+    setSaveNotification(message);
+    setTimeout(() => setSaveNotification(null), 3500);
+  };
+
+  // ── 1. CODE HUB FORM STATE ──
+  const [hubCodeForm, setHubCodeForm] = useState({
     bookmaker: 'sportybet',
     code: '',
+    marketType: 'Over 1.5 Goals High-Frequency Radar',
+    gamesCount: 4,
+    totalOdds: '2.40',
     title: '',
-    odds: '2.10',
-    eventsCount: 3,
-    category: 'banker',
-    categoryName: '🎯 2.00x Banker',
-    highlightMatch: '',
     author: 'BRYME Official'
   });
 
-  // ── 2. PREDICTIONS HUB TICKET EDITOR STATE ──
+  // ── 2. NEW PUNTER FORM STATE ──
+  const [newPunterForm, setNewPunterForm] = useState({
+    displayName: '',
+    handle: '',
+    region: 'Nigeria',
+    countryCode: 'NG',
+    specialty: 'European 2.00x Banker Doubles'
+  });
+
+  // ── 3. ASSIGN CODE TO PUNTER FORM STATE ──
+  const [punterCodeForm, setPunterCodeForm] = useState({
+    punterId: punters[0]?.id || 'punter-femi',
+    bookmaker: 'sportybet',
+    code: '',
+    marketType: 'Over 1.5 Goals Radar',
+    gamesCount: 3,
+    totalOdds: '2.15'
+  });
+
+  // ── 4. PREDICTIONS HUB TICKET EDITOR STATE ──
   const [editingTicketId, setEditingTicketId] = useState(tickets[0]?.id || 'ticket-2-odds-banker');
   const activeEditingTicket = tickets.find(t => t.id === editingTicketId) || tickets[0] || {};
 
@@ -83,11 +113,9 @@ export default function AdminPage({ onNavigate }) {
     sportyCode: activeEditingTicket.codes?.sportybet || '',
     bet9jaCode: activeEditingTicket.codes?.bet9ja || '',
     onexbetCode: activeEditingTicket.codes?.onexbet || '',
-    betkingCode: activeEditingTicket.codes?.betking || '',
-    highlightMatch: activeEditingTicket.selections?.[0]?.match || ''
+    betkingCode: activeEditingTicket.codes?.betking || ''
   });
 
-  // Sync ticket form when selecting different ticket
   const handleSelectTicketToEdit = (tId) => {
     setEditingTicketId(tId);
     const sel = tickets.find(t => t.id === tId);
@@ -101,54 +129,36 @@ export default function AdminPage({ onNavigate }) {
         sportyCode: sel.codes?.sportybet || sel.bookingCode || '',
         bet9jaCode: sel.codes?.bet9ja || '',
         onexbetCode: sel.codes?.onexbet || '',
-        betkingCode: sel.codes?.betking || '',
-        highlightMatch: sel.selections?.[0]?.match || ''
+        betkingCode: sel.codes?.betking || ''
       });
     }
   };
 
-  // ── 3. LADDER FORM STATE ──
+  // ── 5. LADDER FORM STATE ──
   const [ladderForm, setLadderForm] = useState({
     currentDay: ladder.currentDay || 4,
     currentBalance: ladder.currentBalance || 3375,
-    nextPotentialBalance: ladder.nextPotentialBalance || 5062,
     dailyOdds: ladder.dailyOdds || 1.50,
     todaysCode: ladder.todaysCode || 'B9J-LAD-50-D4',
     sportyCode: ladder.sportyCode || 'BC4-LAD50-D4',
     status: ladder.status || 'active'
   });
 
-  // ── 4. MULTI-GAME SLIP BUILDER STATE ──
-  const [newSlipForm, setNewSlipForm] = useState({
-    title: '',
-    badge: 'BANKER ACCA',
-    category: 'accumulator',
-    sportyCode: '',
-    bet9jaCode: '',
-    onexbetCode: '',
-    betkingCode: '',
-    betwayCode: '',
-    description: '',
-    confidence: '90% Model Rating',
-    selections: [
-      { id: 1, match: '', league: 'Premier League', kickoff: 'Today 17:30 WAT', pick: 'Over 1.5 Goals', odds: 1.25 },
-      { id: 2, match: '', league: 'Bundesliga', kickoff: 'Today 19:30 WAT', pick: '1X & Over 1.5 Goals', odds: 1.30 }
-    ]
+  // ── 6. ANNOUNCEMENTS FORM STATE ──
+  const [announcementsForm, setAnnouncementsForm] = useState({
+    tickerText: announcements.tickerText || '★ TUESDAY UCL SPECIAL: Real Madrid vs Dortmund • 2.45x Banker Live',
+    dropTimeWAT: announcements.dropTimeWAT || '02:00 AM WAT',
+    showUclBanner: announcements.showUclBanner ?? true
   });
 
-  const showToast = (message) => {
-    setSaveNotification(message);
-    setTimeout(() => setSaveNotification(null), 3000);
-  };
-
-  // ── AUTHENTICATION HANDLERS ──
+  // ── AUTHENTICATION ──
   const handlePinSubmit = (e) => {
     e.preventDefault();
     if (pinInput.trim() === MASTER_PIN) {
       setIsAuthenticated(true);
       sessionStorage.setItem('bryme_admin_authed', 'true');
       setPinError(false);
-      showToast('Admin Deck Unlocked. Welcome, Commander.');
+      showToast('Admin Master Deck Unlocked.');
     } else {
       setPinError(true);
     }
@@ -160,39 +170,85 @@ export default function AdminPage({ onNavigate }) {
     setPinInput('');
   };
 
-  // ── SAVE CATALOGUE CODE ──
-  const handleAddCatalogueCode = (e) => {
+  // ── HANDLERS ──
+  const handleAddHubCode = (e) => {
     e.preventDefault();
-    if (!catalogueForm.code.trim() || !catalogueForm.title.trim()) {
-      alert('Please provide at least a Booking Code and Title.');
+    if (!hubCodeForm.code.trim()) {
+      alert('Please enter a booking code string.');
       return;
     }
 
-    const bookieObj = SUPPORTED_BOOKMAKERS.find(b => b.id === catalogueForm.bookmaker);
+    const bookieObj = SUPPORTED_BOOKMAKERS.find(b => b.id === hubCodeForm.bookmaker);
     addCatalogueCode({
-      ...catalogueForm,
-      odds: parseFloat(catalogueForm.odds) || 2.00,
-      eventsCount: parseInt(catalogueForm.eventsCount, 10) || 3,
-      bookmakerName: bookieObj ? bookieObj.name : catalogueForm.bookmaker,
-      dropTime: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' WAT'
+      bookmaker: hubCodeForm.bookmaker,
+      bookmakerName: bookieObj ? bookieObj.name : hubCodeForm.bookmaker,
+      code: hubCodeForm.code.toUpperCase(),
+      categoryName: hubCodeForm.marketType,
+      title: hubCodeForm.title.trim() || `${hubCodeForm.marketType} (${hubCodeForm.gamesCount} Games)`,
+      odds: parseFloat(hubCodeForm.totalOdds) || 2.00,
+      eventsCount: parseInt(hubCodeForm.gamesCount, 10) || 3,
+      author: hubCodeForm.author || 'Admin Desk'
     });
 
-    setCatalogueForm({
+    setHubCodeForm({
       bookmaker: 'sportybet',
       code: '',
+      marketType: 'Over 1.5 Goals High-Frequency Radar',
+      gamesCount: 4,
+      totalOdds: '2.40',
       title: '',
-      odds: '2.10',
-      eventsCount: 3,
-      category: 'banker',
-      categoryName: '🎯 2.00x Banker',
-      highlightMatch: '',
       author: 'BRYME Official'
     });
 
-    showToast('Code successfully added to the global Catalogue!');
+    showToast('Code successfully published to SportyBet Code Hub & Catalogue!');
   };
 
-  // ── SAVE PREDICTIONS HUB TICKET EDITS ──
+  const handleCreatePunter = (e) => {
+    e.preventDefault();
+    if (!newPunterForm.displayName.trim() || !newPunterForm.handle.trim()) {
+      alert('Please provide punter name and handle.');
+      return;
+    }
+
+    addPunter({
+      ...newPunterForm,
+      countryCode: newPunterForm.region === 'Nigeria' ? 'NG' : newPunterForm.region === 'Kenya' ? 'KE' : 'ZA'
+    });
+
+    setNewPunterForm({
+      displayName: '',
+      handle: '',
+      region: 'Nigeria',
+      countryCode: 'NG',
+      specialty: 'European 2.00x Banker Doubles'
+    });
+
+    showToast(`Punter "${newPunterForm.displayName}" added to directory!`);
+  };
+
+  const handleAssignPunterCode = (e) => {
+    e.preventDefault();
+    if (!punterCodeForm.code.trim()) {
+      alert('Please enter booking code.');
+      return;
+    }
+
+    addPunterCode(punterCodeForm.punterId, {
+      bookmaker: punterCodeForm.bookmaker,
+      code: punterCodeForm.code.toUpperCase(),
+      marketType: punterCodeForm.marketType,
+      gamesCount: parseInt(punterCodeForm.gamesCount, 10) || 3,
+      totalOdds: parseFloat(punterCodeForm.totalOdds) || 2.00
+    });
+
+    setPunterCodeForm({
+      ...punterCodeForm,
+      code: ''
+    });
+
+    showToast('Daily booking code assigned to punter & mirrored to Code Hub!');
+  };
+
   const handleSaveTicketEdits = (e) => {
     e.preventDefault();
     updateTicket(editingTicketId, {
@@ -209,10 +265,9 @@ export default function AdminPage({ onNavigate }) {
       }
     });
 
-    showToast(`Slip "${ticketEditForm.title}" updated successfully!`);
+    showToast(`Ticket "${ticketEditForm.title}" updated live!`);
   };
 
-  // ── SAVE LADDER SETTINGS ──
   const handleSaveLadder = (e) => {
     e.preventDefault();
     updateLadder({
@@ -224,126 +279,17 @@ export default function AdminPage({ onNavigate }) {
       sportyCode: ladderForm.sportyCode,
       status: ladderForm.status
     });
-    showToast('Ladder Challenge state updated across the entire website!');
+    showToast('18-Step Ladder & Savings Plan updated live!');
   };
 
-  // ── ADD ROW TO NEW SLIP ──
-  const handleAddSelectionRow = () => {
-    setNewSlipForm(prev => ({
-      ...prev,
-      selections: [
-        ...prev.selections,
-        {
-          id: Date.now(),
-          match: '',
-          league: 'Premier League',
-          kickoff: 'Today 18:00 WAT',
-          pick: 'Over 1.5 Goals',
-          odds: 1.25
-        }
-      ]
-    }));
-  };
-
-  const handleRemoveSelectionRow = (id) => {
-    if (newSlipForm.selections.length <= 1) {
-      alert('A slip must have at least one match.');
-      return;
-    }
-    setNewSlipForm(prev => ({
-      ...prev,
-      selections: prev.selections.filter(s => s.id !== id)
-    }));
-  };
-
-  const handleSelectionChange = (id, field, value) => {
-    setNewSlipForm(prev => ({
-      ...prev,
-      selections: prev.selections.map(s => {
-        if (s.id === id) {
-          return { ...s, [field]: field === 'odds' ? parseFloat(value) || 1.0 : value };
-        }
-        return s;
-      })
-    }));
-  };
-
-  // Calculated compound odds
-  const calculatedTotalOdds = newSlipForm.selections.reduce((acc, s) => {
-    return acc * (parseFloat(s.odds) || 1.0);
-  }, 1.0).toFixed(2);
-
-  const handleCreateMultiGameTicket = (e) => {
+  const handleSaveAnnouncements = (e) => {
     e.preventDefault();
-    if (!newSlipForm.title.trim()) {
-      alert('Please enter a slip title.');
-      return;
-    }
-
-    const ticketId = `ticket-${Date.now()}`;
-    const newTicket = {
-      id: ticketId,
-      title: newSlipForm.title,
-      badge: newSlipForm.badge,
-      category: newSlipForm.category,
-      riskLevel: parseFloat(calculatedTotalOdds) > 5.0 ? 'High Risk' : 'Medium Risk',
-      totalOdds: parseFloat(calculatedTotalOdds),
-      date: new Date().toISOString().split('T')[0],
-      status: 'pending',
-      dropTime: '02:00 AM WAT',
-      confidence: '92% Model Rating',
-      description: newSlipForm.description || `Verified ${newSlipForm.selections.length}-game accumulator slip.`,
-      codes: {
-        sportybet: newSlipForm.sportyCode || 'BC4-' + Math.floor(1000 + Math.random() * 9000),
-        bet9ja: newSlipForm.bet9jaCode || 'B9J-' + Math.floor(1000 + Math.random() * 9000),
-        onexbet: newSlipForm.onexbetCode,
-        betking: newSlipForm.betkingCode,
-        betway: newSlipForm.betwayCode
-      },
-      selections: newSlipForm.selections.map(s => ({
-        match: s.match || 'Selected Match',
-        league: s.league,
-        kickoff: s.kickoff,
-        pick: s.pick,
-        odds: s.odds
-      }))
-    };
-
-    addTicket(newTicket);
-
-    // Also auto-add to the code catalogue so punters can pick & bounce
-    addCatalogueCode({
-      bookmaker: 'sportybet',
-      bookmakerName: 'SportyBet',
-      code: newSlipForm.sportyCode || 'BC4-' + Math.floor(1000 + Math.random() * 9000),
-      title: newSlipForm.title,
-      odds: parseFloat(calculatedTotalOdds),
-      eventsCount: newSlipForm.selections.length,
-      category: newSlipForm.category,
-      categoryName: newSlipForm.badge,
-      highlightMatch: newSlipForm.selections[0]?.match || '',
-      author: 'Admin'
+    updateAnnouncements({
+      tickerText: announcementsForm.tickerText,
+      dropTimeWAT: announcementsForm.dropTimeWAT,
+      showUclBanner: announcementsForm.showUclBanner
     });
-
-    showToast(`New ${newSlipForm.selections.length}-Game Ticket Published & added to Codes Catalogue!`);
-    
-    // Reset slip form
-    setNewSlipForm({
-      title: '',
-      badge: 'BANKER ACCA',
-      category: 'accumulator',
-      sportyCode: '',
-      bet9jaCode: '',
-      onexbetCode: '',
-      betkingCode: '',
-      betwayCode: '',
-      description: '',
-      confidence: '90% Model Rating',
-      selections: [
-        { id: 1, match: '', league: 'Premier League', kickoff: 'Today 17:30 WAT', pick: 'Over 1.5 Goals', odds: 1.25 },
-        { id: 2, match: '', league: 'Bundesliga', kickoff: 'Today 19:30 WAT', pick: '1X & Over 1.5 Goals', odds: 1.30 }
-      ]
-    });
+    showToast('Site Announcements & Top Marquee updated!');
   };
 
   // ── PIN AUTHENTICATION GATE SCREEN ──
@@ -351,17 +297,16 @@ export default function AdminPage({ onNavigate }) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center px-4 py-12">
         <div className="w-full max-w-md rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1626] p-6 sm:p-8 shadow-2xl text-center space-y-5">
-          
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#E41B13] to-amber-500 text-white flex items-center justify-center mx-auto shadow-lg">
+          <div className="w-16 h-16 rounded-2xl bg-[#E41B13] text-white flex items-center justify-center mx-auto shadow-lg">
             <Lock className="w-8 h-8" />
           </div>
 
           <div>
             <h1 className="text-xl sm:text-2xl font-display font-black text-slate-900 dark:text-white">
-              BRYME Admin Operations Deck
+              BRYME Master Control Deck
             </h1>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-              Restricted Area. Please enter the Owner PIN to manage booking codes, catalogue, and ladder.
+              Restricted to site owner. Enter PIN to manage codes, punters, and slips.
             </p>
           </div>
 
@@ -391,26 +336,22 @@ export default function AdminPage({ onNavigate }) {
               className="w-full py-3 rounded-xl bg-[#E41B13] hover:bg-[#D01710] text-white font-display font-black text-sm uppercase tracking-wider transition-all shadow-md flex items-center justify-center gap-2"
             >
               <Unlock className="w-4 h-4" />
-              <span>Unlock Admin Deck</span>
+              <span>Unlock Master Deck</span>
             </button>
           </form>
 
           <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-400">
-            <span>Owner PIN: <code className="bg-slate-100 dark:bg-[#162238] px-1.5 py-0.5 rounded text-[#E41B13] dark:text-rose-400 font-mono">bryme2026</code></span>
-            <button
-              onClick={() => onNavigate('home')}
-              className="text-[#E41B13] dark:text-rose-400 font-bold hover:underline"
-            >
+            <span>Owner PIN: <code className="bg-slate-100 dark:bg-[#162238] px-1.5 py-0.5 rounded text-[#E41B13] font-mono">bryme2026</code></span>
+            <button onClick={() => onNavigate('home')} className="text-[#E41B13] font-bold hover:underline">
               Return Home &rarr;
             </button>
           </div>
-
         </div>
       </div>
     );
   }
 
-  // ── AUTHENTICATED ADMIN DECK ──
+  // ── AUTHENTICATED MASTER DECK ──
   return (
     <div className="space-y-6 max-w-5xl mx-auto">
       
@@ -420,31 +361,30 @@ export default function AdminPage({ onNavigate }) {
           <div className="flex items-center gap-2 mb-1">
             <span className="w-2.5 h-2.5 rounded-full bg-[#00FF66] animate-ping"></span>
             <span className="text-[10px] font-mono uppercase font-black text-[#00FF66] tracking-wider">
-              Unlocked &bull; Owner Master Mode
+              Unlocked &bull; Owner Full Access Mode
             </span>
           </div>
           <h1 className="text-xl sm:text-2xl font-display font-black tracking-tight text-white flex items-center gap-2">
             <ShieldCheck className="w-6 h-6 text-[#E41B13]" />
-            <span>BRYME Operations Suite</span>
+            <span>BRYME Master Control Deck</span>
           </h1>
           <p className="text-xs text-slate-300 mt-0.5">
-            Manage the Catalogue of Codes, edit Predictions Hub slips, publish multi-game accas, and control the 18-step Rollover.
+            Full site ownership: Add SportyBet codes with event numbers, manage punters &amp; punters daily games, and control all sections.
           </p>
         </div>
 
         <div className="flex items-center gap-2 self-start sm:self-auto">
           <button
-            onClick={() => onNavigate('convert')}
+            onClick={() => onNavigate('home')}
             className="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white font-display font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 transition-colors border border-white/20"
           >
-            <Zap className="w-3.5 h-3.5 text-amber-300" />
-            <span>View Catalogue</span>
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>View Site</span>
           </button>
 
           <button
             onClick={handleLogout}
             className="px-3.5 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-display font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 transition-colors shadow-sm"
-            title="Lock Deck"
           >
             <LogOut className="w-3.5 h-3.5" />
             <span>Lock</span>
@@ -463,11 +403,12 @@ export default function AdminPage({ onNavigate }) {
       {/* Navigation Tabs */}
       <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none pb-1">
         {[
-          { id: 'catalogue', label: '📚 Catalogue of Codes (Vault)', icon: '📚' },
-          { id: 'edit-slips', label: '✏️ Edit Predictions Hub Slips', icon: '📝' },
-          { id: 'new-ticket', label: '➕ Multi-Game Builder', icon: '⚽' },
-          { id: 'ladder', label: '🪜 18-Step Rollover & Savings Plan', icon: '🪜' },
-          { id: 'export', label: '💾 Backup & Reset', icon: '💾' },
+          { id: 'code-hub', label: '🔴 SportyBet Code Hub', icon: '⚡' },
+          { id: 'punters-mgr', label: '👑 Punters & Punters Games', icon: '👥' },
+          { id: 'slips-editor', label: '📝 Edit Predictions Slips', icon: '📋' },
+          { id: 'ladder-plan', label: '🪜 18-Step Rollover & Savings', icon: '🪜' },
+          { id: 'announcements', label: '📢 Ticker & Announcements', icon: '📢' },
+          { id: 'backup', label: '💾 Backup & Reset', icon: '💾' },
         ].map(tab => (
           <button
             key={tab.id}
@@ -484,24 +425,23 @@ export default function AdminPage({ onNavigate }) {
         ))}
       </div>
 
-      {/* ── TAB 1: CATALOGUE OF CODES (VAULT) ── */}
-      {activeTab === 'catalogue' && (
+      {/* ── TAB 1: SPORTYBET CODE HUB & EVENT NUMBERS ── */}
+      {activeTab === 'code-hub' && (
         <div className="space-y-6">
           
-          {/* Add to Catalogue Form */}
-          <form onSubmit={handleAddCatalogueCode} className="p-5 sm:p-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1626] shadow-sm space-y-4">
+          <form onSubmit={handleAddHubCode} className="p-5 sm:p-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1626] shadow-sm space-y-4">
             <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
               <div>
                 <h3 className="font-display font-black text-base text-slate-900 dark:text-white flex items-center gap-2">
                   <Plus className="w-4 h-4 text-[#E41B13]" />
-                  <span>Add Code to Global Catalogue</span>
+                  <span>Publish Code to SportyBet Code Hub</span>
                 </h3>
                 <p className="text-xs text-slate-500 dark:text-slate-400">
-                  Add codes for any bookmaker (SportyBet, Bet9ja, 1xBet, BetKing, MSport, Betway). Shows in the public catalogue &amp; converter feed!
+                  Per your specification: only the code, market type, and number of games are shown so punters pick and bounce.
                 </p>
               </div>
               <span className="text-xs font-mono font-bold text-[#00C250]">
-                {codeCatalogue.length} Codes in Vault
+                {codeCatalogue.length} Codes Active
               </span>
             </div>
 
@@ -511,8 +451,8 @@ export default function AdminPage({ onNavigate }) {
                   1. Bookmaker
                 </label>
                 <select
-                  value={catalogueForm.bookmaker}
-                  onChange={(e) => setCatalogueForm({ ...catalogueForm, bookmaker: e.target.value })}
+                  value={hubCodeForm.bookmaker}
+                  onChange={(e) => setHubCodeForm({ ...hubCodeForm, bookmaker: e.target.value })}
                   className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold"
                 >
                   {SUPPORTED_BOOKMAKERS.map(b => (
@@ -523,102 +463,61 @@ export default function AdminPage({ onNavigate }) {
 
               <div>
                 <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
-                  2. Booking Code String
+                  2. Booking Code
                 </label>
                 <input
                   type="text"
                   required
-                  value={catalogueForm.code}
-                  onChange={(e) => setCatalogueForm({ ...catalogueForm, code: e.target.value.toUpperCase() })}
-                  placeholder="e.g. BC4-98421, B9J-772"
-                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono font-black"
+                  value={hubCodeForm.code}
+                  onChange={(e) => setHubCodeForm({ ...hubCodeForm, code: e.target.value.toUpperCase() })}
+                  placeholder="e.g. BC4-98421, B9J-7721"
+                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono font-black tracking-wider uppercase"
                 />
               </div>
 
               <div>
                 <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
-                  3. Total Odds
+                  3. Number of Games (Events Count)
+                </label>
+                <input
+                  type="number"
+                  min="1"
+                  max="50"
+                  required
+                  value={hubCodeForm.gamesCount}
+                  onChange={(e) => setHubCodeForm({ ...hubCodeForm, gamesCount: e.target.value })}
+                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono font-bold text-center"
+                />
+              </div>
+
+              <div className="sm:col-span-2">
+                <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                  4. Market Type
+                </label>
+                <select
+                  value={hubCodeForm.marketType}
+                  onChange={(e) => setHubCodeForm({ ...hubCodeForm, marketType: e.target.value })}
+                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold"
+                >
+                  {MARKET_PRESETS.map((m, idx) => (
+                    <option key={idx} value={m}>{m}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                  5. Total Odds
                 </label>
                 <input
                   type="number"
                   step="0.01"
                   required
-                  value={catalogueForm.odds}
-                  onChange={(e) => setCatalogueForm({ ...catalogueForm, odds: e.target.value })}
-                  placeholder="e.g. 2.15"
-                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono font-bold"
+                  value={hubCodeForm.totalOdds}
+                  onChange={(e) => setHubCodeForm({ ...hubCodeForm, totalOdds: e.target.value })}
+                  placeholder="e.g. 2.45"
+                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono font-black"
                 />
-              </div>
-
-              <div className="sm:col-span-2">
-                <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
-                  4. Slip Title / Description
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={catalogueForm.title}
-                  onChange={(e) => setCatalogueForm({ ...catalogueForm, title: e.target.value })}
-                  placeholder="e.g. European 5-Fold Over 1.5 Goals Evening Acca"
-                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold"
-                />
-              </div>
-
-              <div>
-                <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
-                  5. Number of Events / Legs
-                </label>
-                <input
-                  type="number"
-                  min="1"
-                  max="40"
-                  value={catalogueForm.eventsCount}
-                  onChange={(e) => setCatalogueForm({ ...catalogueForm, eventsCount: e.target.value })}
-                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono"
-                />
-              </div>
-
-              <div className="sm:col-span-2">
-                <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
-                  6. Highlight Key Match (Optional)
-                </label>
-                <input
-                  type="text"
-                  value={catalogueForm.highlightMatch}
-                  onChange={(e) => setCatalogueForm({ ...catalogueForm, highlightMatch: e.target.value })}
-                  placeholder="e.g. Real Madrid vs Dortmund (Over 2.5)"
-                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
-                />
-              </div>
-
-              <div>
-                <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
-                  7. Category Tag
-                </label>
-                <select
-                  value={catalogueForm.category}
-                  onChange={(e) => {
-                    const catMap = {
-                      ladder: '🪜 Rollover Ladder',
-                      banker: '🎯 2.00x Banker',
-                      accumulator: '🛡️ 5.00x Acca',
-                      goals: '⚽ Over 1.5 Radar',
-                      mega: '🚀 10.00x Mega'
-                    };
-                    setCatalogueForm({
-                      ...catalogueForm,
-                      category: e.target.value,
-                      categoryName: catMap[e.target.value] || 'Verified'
-                    });
-                  }}
-                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
-                >
-                  <option value="ladder">🪜 Rollover Ladder</option>
-                  <option value="banker">🎯 2.00x Banker</option>
-                  <option value="accumulator">🛡️ 5.00x Acca</option>
-                  <option value="goals">⚽ Over 1.5 Radar</option>
-                  <option value="mega">🚀 10.00x Mega</option>
-                </select>
               </div>
             </div>
 
@@ -626,30 +525,26 @@ export default function AdminPage({ onNavigate }) {
               type="submit"
               className="px-5 py-2.5 rounded-xl bg-[#E41B13] hover:bg-[#D01710] text-white font-display font-black text-xs uppercase tracking-wider transition-all shadow-md flex items-center gap-2"
             >
-              <Plus className="w-4 h-4" />
-              <span>Add to Catalogue Vault</span>
+              <Zap className="w-4 h-4 fill-current" />
+              <span>Publish to Code Hub</span>
             </button>
           </form>
 
-          {/* List of All Catalogue Codes */}
+          {/* List of Codes in Hub */}
           <div className="space-y-3">
             <h3 className="font-display font-black text-base text-slate-900 dark:text-white">
-              All {codeCatalogue.length} Booking Codes in Catalogue
+              Active Codes in Hub ({codeCatalogue.length})
             </h3>
 
             <div className="space-y-2">
-              {codeCatalogue.map((c) => (
+              {codeCatalogue.map(c => (
                 <div
                   key={c.id}
                   className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1626] flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-sm"
                 >
                   <div className="flex items-center gap-3">
-                    <span className={`px-2 py-1 rounded text-xs font-display font-black uppercase ${
-                      c.bookmaker === 'sportybet'
-                        ? 'bg-[#E41B13] text-white'
-                        : c.bookmaker === 'bet9ja'
-                        ? 'bg-[#00C250] text-black'
-                        : 'bg-blue-600 text-white'
+                    <span className={`px-2 py-0.5 rounded text-[10px] font-display font-black uppercase ${
+                      c.bookmaker === 'sportybet' ? 'bg-[#E41B13] text-white' : c.bookmaker === 'bet9ja' ? 'bg-[#00C250] text-black font-black' : 'bg-blue-600 text-white'
                     }`}>
                       {c.bookmakerName || c.bookmaker}
                     </span>
@@ -660,14 +555,14 @@ export default function AdminPage({ onNavigate }) {
                           {c.code}
                         </span>
                         <span className="text-xs font-mono font-bold text-amber-500">
-                          {c.odds}x
+                          {c.odds}x Odds
                         </span>
-                        <span className="text-[10px] text-slate-400 font-mono">
-                          ({c.eventsCount} Legs)
+                        <span className="text-xs font-mono text-slate-500 dark:text-slate-400">
+                          &bull; {c.eventsCount} Games
                         </span>
                       </div>
                       <div className="text-xs text-slate-600 dark:text-slate-300 font-medium">
-                        {c.title}
+                        {c.categoryName || c.title}
                       </div>
                     </div>
                   </div>
@@ -676,7 +571,7 @@ export default function AdminPage({ onNavigate }) {
                     <button
                       onClick={() => {
                         navigator.clipboard.writeText(c.code);
-                        showToast(`Copied ${c.code}!`);
+                        showToast(`Copied ${c.code}`);
                       }}
                       className="p-2 rounded-lg bg-slate-100 dark:bg-[#162238] text-slate-700 dark:text-slate-300 hover:text-black dark:hover:text-white transition-colors"
                       title="Copy code"
@@ -686,7 +581,7 @@ export default function AdminPage({ onNavigate }) {
 
                     <button
                       onClick={() => {
-                        if (confirm(`Delete code ${c.code} from catalogue?`)) {
+                        if (confirm(`Delete code ${c.code}?`)) {
                           deleteCatalogueCode(c.id);
                           showToast(`Code ${c.code} deleted.`);
                         }
@@ -705,18 +600,272 @@ export default function AdminPage({ onNavigate }) {
         </div>
       )}
 
-      {/* ── TAB 2: EDIT PREDICTIONS HUB SLIPS ── */}
-      {activeTab === 'edit-slips' && (
+      {/* ── TAB 2: PUNTERS & PUNTERS DAILY GAMES MANAGER ── */}
+      {activeTab === 'punters-mgr' && (
         <div className="space-y-6">
           
-          <div className="p-4 rounded-xl bg-blue-50/60 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-900/40 text-xs text-blue-900 dark:text-blue-200 flex items-start gap-2.5">
-            <Sparkles className="w-4 h-4 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
-            <p>
-              <strong>Fast Punter Flow:</strong> Slips in the Predictions Hub are optimized so punters can pick codes and bounce to SportyBet/Bet9ja to edit legs. You can update titles, odds, and codes for any slip below!
-            </p>
+          {/* Section A: Add New Punter */}
+          <form onSubmit={handleCreatePunter} className="p-5 sm:p-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1626] shadow-sm space-y-4">
+            <h3 className="font-display font-black text-base text-slate-900 dark:text-white flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
+              <Users className="w-4 h-4 text-[#E41B13]" />
+              <span>1. Add New Tracked African Punter</span>
+            </h3>
+
+            <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs">
+              <div>
+                <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                  Punter Display Name
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={newPunterForm.displayName}
+                  onChange={(e) => setNewPunterForm({ ...newPunterForm, displayName: e.target.value })}
+                  placeholder="e.g. Chief Punter Femi"
+                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                  Social Handle / Channel
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={newPunterForm.handle}
+                  onChange={(e) => setNewPunterForm({ ...newPunterForm, handle: e.target.value })}
+                  placeholder="e.g. @femipicks_ng"
+                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                  Country / Region
+                </label>
+                <select
+                  value={newPunterForm.region}
+                  onChange={(e) => setNewPunterForm({ ...newPunterForm, region: e.target.value })}
+                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold"
+                >
+                  <option value="Nigeria">🇳🇬 Nigeria</option>
+                  <option value="Kenya">🇰🇪 Kenya</option>
+                  <option value="Ghana">🇬🇭 Ghana</option>
+                  <option value="South Africa">🇿🇦 South Africa</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                  Specialty Market
+                </label>
+                <input
+                  type="text"
+                  value={newPunterForm.specialty}
+                  onChange={(e) => setNewPunterForm({ ...newPunterForm, specialty: e.target.value })}
+                  placeholder="e.g. Over 1.5 Goals Radar"
+                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
+                />
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              className="px-5 py-2 rounded-xl bg-slate-900 dark:bg-slate-800 hover:bg-[#E41B13] text-white font-display font-black text-xs uppercase tracking-wider transition-all"
+            >
+              + Save Punter to Directory
+            </button>
+          </form>
+
+          {/* Section B: Assign Daily Booking Code to a Punter */}
+          <form onSubmit={handleAssignPunterCode} className="p-5 sm:p-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1626] shadow-sm space-y-4">
+            <h3 className="font-display font-black text-base text-slate-900 dark:text-white flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
+              <Zap className="w-4 h-4 text-[#E41B13]" />
+              <span>2. Add Daily Booking Code for a Punter</span>
+            </h3>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+              <div>
+                <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                  Select Punter
+                </label>
+                <select
+                  value={punterCodeForm.punterId}
+                  onChange={(e) => setPunterCodeForm({ ...punterCodeForm, punterId: e.target.value })}
+                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold"
+                >
+                  {punters.map(p => (
+                    <option key={p.id} value={p.id}>{p.displayName} ({p.region})</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                  Bookmaker
+                </label>
+                <select
+                  value={punterCodeForm.bookmaker}
+                  onChange={(e) => setPunterCodeForm({ ...punterCodeForm, bookmaker: e.target.value })}
+                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold"
+                >
+                  <option value="sportybet">🔴 SportyBet</option>
+                  <option value="bet9ja">🟢 Bet9ja</option>
+                  <option value="1xbet">🔵 1xBet</option>
+                  <option value="betking">👑 BetKing</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                  Booking Code
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={punterCodeForm.code}
+                  onChange={(e) => setPunterCodeForm({ ...punterCodeForm, code: e.target.value.toUpperCase() })}
+                  placeholder="e.g. BC4-FEMI-2OD"
+                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono font-black uppercase"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                  Market Type
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={punterCodeForm.marketType}
+                  onChange={(e) => setPunterCodeForm({ ...punterCodeForm, marketType: e.target.value })}
+                  placeholder="e.g. Over 1.5 Goals Radar"
+                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                  Number of Games (Legs)
+                </label>
+                <input
+                  type="number"
+                  min="1"
+                  max="40"
+                  required
+                  value={punterCodeForm.gamesCount}
+                  onChange={(e) => setPunterCodeForm({ ...punterCodeForm, gamesCount: e.target.value })}
+                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono font-bold text-center"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                  Total Odds
+                </label>
+                <input
+                  type="number"
+                  step="0.01"
+                  required
+                  value={punterCodeForm.totalOdds}
+                  onChange={(e) => setPunterCodeForm({ ...punterCodeForm, totalOdds: e.target.value })}
+                  placeholder="e.g. 2.15"
+                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono font-black"
+                />
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              className="px-5 py-2.5 rounded-xl bg-[#E41B13] hover:bg-[#D01710] text-white font-display font-black text-xs uppercase tracking-wider transition-all shadow-md flex items-center gap-2"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Attach Code to Punter Profile</span>
+            </button>
+          </form>
+
+          {/* Section C: List of All Punters and Active Codes */}
+          <div className="space-y-3">
+            <h3 className="font-display font-black text-base text-slate-900 dark:text-white">
+              All Punters &amp; Daily Slips ({punters.length})
+            </h3>
+
+            <div className="space-y-3">
+              {punters.map(p => (
+                <div
+                  key={p.id}
+                  className="p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1626] shadow-sm space-y-3"
+                >
+                  <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
+                    <div className="flex items-center gap-2">
+                      <span className="font-display font-black text-sm text-slate-900 dark:text-white">
+                        {p.displayName}
+                      </span>
+                      <span className="text-xs font-mono text-slate-400">
+                        {p.handle} &bull; {p.region}
+                      </span>
+                    </div>
+
+                    <button
+                      onClick={() => {
+                        if (confirm(`Delete punter ${p.displayName}?`)) {
+                          deletePunter(p.id);
+                          showToast(`Punter ${p.displayName} removed.`);
+                        }
+                      }}
+                      className="text-xs text-rose-500 hover:text-rose-700 font-bold"
+                    >
+                      Delete Punter ✕
+                    </button>
+                  </div>
+
+                  {/* Punter's Daily Slips */}
+                  <div className="space-y-1.5">
+                    {p.dailyCodes && p.dailyCodes.length > 0 ? (
+                      p.dailyCodes.map(codeItem => (
+                        <div
+                          key={codeItem.id}
+                          className="p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200/80 dark:border-slate-700/80 flex items-center justify-between gap-2 text-xs"
+                        >
+                          <div className="flex items-center gap-2">
+                            <span className="px-1.5 py-0.5 rounded bg-slate-200 dark:bg-[#162238] font-mono font-bold text-[10px] uppercase">
+                              {codeItem.bookmaker}
+                            </span>
+                            <span className="font-mono font-black text-slate-900 dark:text-white">
+                              {codeItem.code}
+                            </span>
+                            <span className="text-slate-500 dark:text-slate-400">
+                              &bull; {codeItem.marketType} ({codeItem.gamesCount} Games @ {codeItem.totalOdds}x)
+                            </span>
+                          </div>
+
+                          <button
+                            onClick={() => {
+                              deletePunterCode(p.id, codeItem.id);
+                              showToast('Code deleted from punter.');
+                            }}
+                            className="text-[10px] text-rose-500 font-bold hover:underline"
+                          >
+                            Remove Code ✕
+                          </button>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-xs text-slate-400 italic">No codes currently attached to this punter.</p>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
 
-          {/* Ticket Picker */}
+        </div>
+      )}
+
+      {/* ── TAB 3: EDIT PREDICTIONS HUB SLIPS ── */}
+      {activeTab === 'slips-editor' && (
+        <div className="space-y-6">
           <div className="space-y-1">
             <label className="block text-xs font-mono uppercase font-bold text-slate-500 dark:text-slate-400">
               Select Ticket to Edit:
@@ -738,9 +887,7 @@ export default function AdminPage({ onNavigate }) {
             </div>
           </div>
 
-          {/* Ticket Edit Form */}
           <form onSubmit={handleSaveTicketEdits} className="p-5 sm:p-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1626] shadow-sm space-y-4">
-            
             <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
               <h3 className="font-display font-black text-base text-slate-900 dark:text-white flex items-center gap-2">
                 <Edit2 className="w-4 h-4 text-[#E41B13]" />
@@ -785,7 +932,6 @@ export default function AdminPage({ onNavigate }) {
                   type="text"
                   value={ticketEditForm.sportyCode}
                   onChange={(e) => setTicketEditForm({ ...ticketEditForm, sportyCode: e.target.value.toUpperCase() })}
-                  placeholder="e.g. BC4-EUR-2ODDS"
                   className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono font-black"
                 />
               </div>
@@ -798,7 +944,6 @@ export default function AdminPage({ onNavigate }) {
                   type="text"
                   value={ticketEditForm.bet9jaCode}
                   onChange={(e) => setTicketEditForm({ ...ticketEditForm, bet9jaCode: e.target.value.toUpperCase() })}
-                  placeholder="e.g. B9J-2OD-SAT01"
                   className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono font-black"
                 />
               </div>
@@ -824,233 +969,34 @@ export default function AdminPage({ onNavigate }) {
               className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-display font-black text-xs uppercase tracking-wider transition-all shadow-md flex items-center gap-2"
             >
               <Save className="w-4 h-4" />
-              <span>Save Ticket Changes</span>
+              <span>Save Slip Updates</span>
             </button>
           </form>
-
         </div>
       )}
 
-      {/* ── TAB 3: DYNAMIC MULTI-GAME BUILDER ── */}
-      {activeTab === 'new-ticket' && (
-        <form onSubmit={handleCreateMultiGameTicket} className="p-5 sm:p-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1626] shadow-sm space-y-5">
-          <div>
-            <h2 className="text-base sm:text-lg font-display font-black text-slate-900 dark:text-white flex items-center gap-2">
-              <Plus className="w-5 h-5 text-[#E41B13]" />
-              <span>Create Multi-Game Accumulator Slip</span>
-            </h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-              Add unlimited games with market presets (Over/Under, BTTS, 1X2, Corners). Odds calculate automatically!
-            </p>
-          </div>
-
-          {/* Header Metadata */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-            <div className="sm:col-span-2">
-              <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
-                Ticket Title
-              </label>
-              <input
-                type="text"
-                required
-                value={newSlipForm.title}
-                onChange={(e) => setNewSlipForm({ ...newSlipForm, title: e.target.value })}
-                placeholder="e.g. European 5-Fold Over 1.5 Goals Mega Acca"
-                className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold"
-              />
-            </div>
-
-            <div>
-              <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
-                Category
-              </label>
-              <select
-                value={newSlipForm.category}
-                onChange={(e) => setNewSlipForm({ ...newSlipForm, category: e.target.value })}
-                className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
-              >
-                <option value="banker">🎯 2.00x Banker</option>
-                <option value="ladder">🪜 Rollover Step</option>
-                <option value="accumulator">🛡️ 5.00x Acca</option>
-                <option value="goals">⚽ Over 1.5 Goals Radar</option>
-                <option value="mega">🚀 10.00x Mega Value</option>
-              </select>
-            </div>
-          </div>
-
-          {/* Bookmaker Codes Bar */}
-          <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-800 space-y-2">
-            <span className="text-[11px] font-mono uppercase font-bold text-slate-500 dark:text-slate-400 block">
-              Multi-Bookmaker Booking Codes (Optional - Or enter at least SportyBet):
-            </span>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
-              <div>
-                <label className="text-[10px] text-[#E41B13] font-bold block">SportyBet</label>
-                <input
-                  type="text"
-                  value={newSlipForm.sportyCode}
-                  onChange={(e) => setNewSlipForm({ ...newSlipForm, sportyCode: e.target.value.toUpperCase() })}
-                  placeholder="e.g. BC4-9842"
-                  className="w-full p-2 rounded-lg bg-white dark:bg-[#162238] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono font-bold text-xs"
-                />
-              </div>
-
-              <div>
-                <label className="text-[10px] text-[#00C250] font-bold block">Bet9ja</label>
-                <input
-                  type="text"
-                  value={newSlipForm.bet9jaCode}
-                  onChange={(e) => setNewSlipForm({ ...newSlipForm, bet9jaCode: e.target.value.toUpperCase() })}
-                  placeholder="e.g. B9J-7721"
-                  className="w-full p-2 rounded-lg bg-white dark:bg-[#162238] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono font-bold text-xs"
-                />
-              </div>
-
-              <div>
-                <label className="text-[10px] text-blue-500 font-bold block">1xBet</label>
-                <input
-                  type="text"
-                  value={newSlipForm.onexbetCode}
-                  onChange={(e) => setNewSlipForm({ ...newSlipForm, onexbetCode: e.target.value.toUpperCase() })}
-                  placeholder="e.g. 1XB-551"
-                  className="w-full p-2 rounded-lg bg-white dark:bg-[#162238] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono font-bold text-xs"
-                />
-              </div>
-
-              <div>
-                <label className="text-[10px] text-amber-500 font-bold block">BetKing</label>
-                <input
-                  type="text"
-                  value={newSlipForm.betkingCode}
-                  onChange={(e) => setNewSlipForm({ ...newSlipForm, betkingCode: e.target.value.toUpperCase() })}
-                  placeholder="e.g. BK-994"
-                  className="w-full p-2 rounded-lg bg-white dark:bg-[#162238] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono font-bold text-xs"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Match Selections Dynamic Rows */}
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-mono font-black uppercase text-slate-700 dark:text-slate-300">
-                Match Selections ({newSlipForm.selections.length} Games)
-              </span>
-              <button
-                type="button"
-                onClick={handleAddSelectionRow}
-                className="px-3 py-1 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-display font-black text-xs uppercase flex items-center gap-1 transition-all"
-              >
-                <Plus className="w-3.5 h-3.5" />
-                <span>Add Game</span>
-              </button>
-            </div>
-
-            <div className="space-y-2.5">
-              {newSlipForm.selections.map((sel, idx) => (
-                <div 
-                  key={sel.id} 
-                  className="p-3 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700/80 space-y-2"
-                >
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="text-[10px] font-mono font-bold text-blue-600 dark:text-blue-400 uppercase">
-                      Game #{idx + 1}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveSelectionRow(sel.id)}
-                      className="text-[10px] font-bold text-rose-500 hover:text-rose-700"
-                    >
-                      Remove ✕
-                    </button>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-12 gap-2 text-xs">
-                    <div className="sm:col-span-5">
-                      <input
-                        type="text"
-                        required
-                        value={sel.match}
-                        onChange={(e) => handleSelectionChange(sel.id, 'match', e.target.value)}
-                        placeholder="e.g. Real Madrid vs Dortmund"
-                        className="w-full p-2 rounded-lg bg-white dark:bg-[#162238] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold"
-                      />
-                    </div>
-
-                    <div className="sm:col-span-4">
-                      <select
-                        value={sel.pick}
-                        onChange={(e) => handleSelectionChange(sel.id, 'pick', e.target.value)}
-                        className="w-full p-2 rounded-lg bg-white dark:bg-[#162238] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold"
-                      >
-                        {MARKET_PRESETS.map((p, pIdx) => (
-                          <option key={pIdx} value={p}>{p}</option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div className="sm:col-span-3">
-                      <input
-                        type="number"
-                        step="0.01"
-                        min="1.01"
-                        required
-                        value={sel.odds}
-                        onChange={(e) => handleSelectionChange(sel.id, 'odds', e.target.value)}
-                        placeholder="Odds e.g. 1.25"
-                        className="w-full p-2 rounded-lg bg-white dark:bg-[#162238] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono font-bold text-center"
-                      />
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Slip Summary & Publish */}
-          <div className="p-4 rounded-xl bg-slate-900 text-white flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div>
-              <span className="text-[10px] font-mono text-slate-400 uppercase block">Combined Accumulator Odds:</span>
-              <span className="text-2xl font-mono font-black text-amber-400">{calculatedTotalOdds}x Odds</span>
-            </div>
-
-            <button
-              type="submit"
-              className="px-6 py-3 rounded-xl bg-[#E41B13] hover:bg-[#D01710] text-white font-display font-black text-xs uppercase tracking-wider transition-all shadow-md"
-            >
-              Publish Slip to Hub &rarr;
-            </button>
-          </div>
-        </form>
-      )}
-
-      {/* ── TAB 4: 18-STEP ROLLOVER & SAVINGS PLAN ── */}
-      {activeTab === 'ladder' && (
+      {/* ── TAB 4: 18-STEP ROLLOVER & CAPITAL SAVINGS PLAN ── */}
+      {activeTab === 'ladder-plan' && (
         <form onSubmit={handleSaveLadder} className="p-5 sm:p-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1626] shadow-sm space-y-5">
-          <div>
-            <h2 className="text-base sm:text-lg font-display font-black text-slate-900 dark:text-white flex items-center gap-2">
-              <Trophy className="w-5 h-5 text-amber-500" />
-              <span>18-Step Rollover &amp; Capital Savings Safety Plan</span>
-            </h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-              Control the active day, bankroll pot, and today's 1-tap SportyBet &amp; Bet9ja codes for the 18-step climb.
-            </p>
-          </div>
-
-          {/* Capital Savings Plan Notice */}
-          <div className="p-3.5 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-300 dark:border-amber-800/80 text-xs text-amber-900 dark:text-amber-200 space-y-1">
-            <strong className="font-bold uppercase tracking-wide block">
-              🛡️ The Capital Savings Safety Plan:
-            </strong>
-            <p>
-              The ladder consists of <strong>18 basic steps</strong>. The savings mechanism at <strong>Day 6 (bank ₦5,695 cash)</strong> and <strong>Day 12 (bank ₦32,434 cash)</strong> is engineered so punters withdraw their initial stake plus pure profit into their bank account, ensuring they never lose it all and play the rest on house money!
-            </p>
+          <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+            <div>
+              <h3 className="font-display font-black text-base text-slate-900 dark:text-white flex items-center gap-2">
+                <Trophy className="w-5 h-5 text-amber-500" />
+                <span>18-Step Rollover &amp; Capital Savings Safety Plan</span>
+              </h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                The ladder is 18 basic steps. The savings mechanism at Day 6 &amp; Day 12 secures pure cash so you never lose it all.
+              </p>
+            </div>
+            <span className="text-xs font-mono font-bold bg-[#E41B13] text-white px-2.5 py-1 rounded-lg">
+              Day {ladderForm.currentDay} / 18
+            </span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
             <div>
               <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
-                Current Active Day (1 to 18)
+                Active Step (1 to 18)
               </label>
               <input
                 type="number"
@@ -1064,7 +1010,7 @@ export default function AdminPage({ onNavigate }) {
 
             <div>
               <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
-                Current Bankroll Purse (₦ NGN)
+                Current Pot Balance (₦ NGN)
               </label>
               <input
                 type="number"
@@ -1083,7 +1029,6 @@ export default function AdminPage({ onNavigate }) {
                 type="text"
                 value={ladderForm.sportyCode}
                 onChange={(e) => setLadderForm({ ...ladderForm, sportyCode: e.target.value.toUpperCase() })}
-                placeholder="e.g. BC4-LAD50-D4"
                 className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono font-black"
               />
             </div>
@@ -1096,7 +1041,6 @@ export default function AdminPage({ onNavigate }) {
                 type="text"
                 value={ladderForm.todaysCode}
                 onChange={(e) => setLadderForm({ ...ladderForm, todaysCode: e.target.value.toUpperCase() })}
-                placeholder="e.g. B9J-LAD-50-D4"
                 className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono font-black"
               />
             </div>
@@ -1112,27 +1056,88 @@ export default function AdminPage({ onNavigate }) {
         </form>
       )}
 
-      {/* ── TAB 5: BACKUP & RESET ── */}
-      {activeTab === 'export' && (
+      {/* ── TAB 5: TICKER & ANNOUNCEMENTS ── */}
+      {activeTab === 'announcements' && (
+        <form onSubmit={handleSaveAnnouncements} className="p-5 sm:p-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1626] shadow-sm space-y-4">
+          <h3 className="font-display font-black text-base text-slate-900 dark:text-white flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
+            <Megaphone className="w-4 h-4 text-[#E41B13]" />
+            <span>Top Marquee Ticker &amp; Midnight Drop Control</span>
+          </h3>
+
+          <div className="space-y-3 text-xs">
+            <div>
+              <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                Marquee Ticker Text (Shown live at the top of every page)
+              </label>
+              <input
+                type="text"
+                value={announcementsForm.tickerText}
+                onChange={(e) => setAnnouncementsForm({ ...announcementsForm, tickerText: e.target.value })}
+                className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                  Midnight Drop Time
+                </label>
+                <input
+                  type="text"
+                  value={announcementsForm.dropTimeWAT}
+                  onChange={(e) => setAnnouncementsForm({ ...announcementsForm, dropTimeWAT: e.target.value })}
+                  placeholder="e.g. 02:00 AM WAT"
+                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                  UCL Feature Banner
+                </label>
+                <select
+                  value={announcementsForm.showUclBanner ? 'yes' : 'no'}
+                  onChange={(e) => setAnnouncementsForm({ ...announcementsForm, showUclBanner: e.target.value === 'yes' })}
+                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold"
+                >
+                  <option value="yes">Visible (Active)</option>
+                  <option value="no">Hidden</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            className="px-5 py-2.5 rounded-xl bg-[#E41B13] hover:bg-[#D01710] text-white font-display font-black text-xs uppercase tracking-wider transition-all shadow-md flex items-center gap-2"
+          >
+            <Save className="w-4 h-4" />
+            <span>Update Announcements</span>
+          </button>
+        </form>
+      )}
+
+      {/* ── TAB 6: BACKUP & FACTORY RESET ── */}
+      {activeTab === 'backup' && (
         <div className="p-5 sm:p-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1626] shadow-sm space-y-4">
-          <h2 className="text-base sm:text-lg font-display font-black text-slate-900 dark:text-white">
-            System Data &amp; Reset
-          </h2>
+          <h3 className="font-display font-black text-base text-slate-900 dark:text-white">
+            Full System Backup &amp; Reset
+          </h3>
           <p className="text-xs text-slate-500 dark:text-slate-400">
-            Export all tickets, ladder state, and codes catalogue as JSON, or reset back to system defaults.
+            Export a complete JSON snapshot of all your custom punters, booking codes, catalogue, and ladder settings.
           </p>
 
           <div className="flex items-center gap-3 pt-2">
             <button
               onClick={() => {
-                const data = { ladder, tickets, codeCatalogue };
+                const data = { ladder, tickets, codeCatalogue, punters, announcements };
                 const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = `bryme-backup-${new Date().toISOString().slice(0, 10)}.json`;
+                a.download = `bryme-full-backup-${new Date().toISOString().slice(0, 10)}.json`;
                 a.click();
-                showToast('JSON backup downloaded!');
+                showToast('Full backup downloaded!');
               }}
               className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white font-display font-bold text-xs uppercase rounded-xl transition-colors"
             >
@@ -1141,14 +1146,14 @@ export default function AdminPage({ onNavigate }) {
 
             <button
               onClick={() => {
-                if (confirm('Are you sure you want to reset all tickets, catalogue, and ladder back to factory defaults?')) {
+                if (confirm('Are you sure you want to reset everything back to factory defaults?')) {
                   resetToDefaults();
                   showToast('Reset to original sample data.');
                 }
               }}
               className="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white font-display font-bold text-xs uppercase rounded-xl transition-colors"
             >
-              Reset to Defaults
+              Reset All to Factory Defaults
             </button>
           </div>
         </div>

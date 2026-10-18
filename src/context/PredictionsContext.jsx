@@ -2,15 +2,18 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { ACTIVE_CHALLENGE as DEFAULT_LADDER } from '../data/ladder';
 import { DAILY_BOOKING_TICKETS as DEFAULT_TICKETS } from '../data/bookingTickets';
 import { INITIAL_CODE_CATALOGUE } from '../data/catalogueCodes';
+import { INITIAL_PUNTERS } from '../data/punters';
 
 const PredictionsContext = createContext(null);
 
-const STORAGE_KEY_LADDER = 'bryme_active_ladder_v2';
-const STORAGE_KEY_TICKETS = 'bryme_booking_tickets_v2';
-const STORAGE_KEY_CATALOGUE = 'bryme_code_catalogue_v1';
+const STORAGE_KEY_LADDER = 'bryme_active_ladder_v3';
+const STORAGE_KEY_TICKETS = 'bryme_booking_tickets_v3';
+const STORAGE_KEY_CATALOGUE = 'bryme_code_catalogue_v2';
+const STORAGE_KEY_PUNTERS = 'bryme_punters_v2';
+const STORAGE_KEY_ANNOUNCEMENTS = 'bryme_announcements_v1';
 
 export function PredictionsProvider({ children }) {
-  // Load ladder state
+  // 1. Ladder State
   const [ladder, setLadderState] = useState(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY_LADDER);
@@ -20,7 +23,7 @@ export function PredictionsProvider({ children }) {
     }
   });
 
-  // Load booking tickets state
+  // 2. Booking Tickets State
   const [tickets, setTicketsState] = useState(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY_TICKETS);
@@ -30,13 +33,41 @@ export function PredictionsProvider({ children }) {
     }
   });
 
-  // Load catalogue of booking codes
+  // 3. Code Catalogue / Code Hub State
   const [codeCatalogue, setCodeCatalogueState] = useState(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY_CATALOGUE);
       return saved ? JSON.parse(saved) : INITIAL_CODE_CATALOGUE;
     } catch (e) {
       return INITIAL_CODE_CATALOGUE;
+    }
+  });
+
+  // 4. Punters & Daily Codes State
+  const [punters, setPuntersState] = useState(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY_PUNTERS);
+      return saved ? JSON.parse(saved) : INITIAL_PUNTERS;
+    } catch (e) {
+      return INITIAL_PUNTERS;
+    }
+  });
+
+  // 5. Site Announcements State
+  const [announcements, setAnnouncementsState] = useState(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY_ANNOUNCEMENTS);
+      return saved ? JSON.parse(saved) : {
+        tickerText: '★ TUESDAY UCL SPECIAL: Real Madrid vs Dortmund • 2.45x Banker Live',
+        dropTimeWAT: '02:00 AM WAT',
+        showUclBanner: true
+      };
+    } catch (e) {
+      return {
+        tickerText: '★ TUESDAY UCL SPECIAL: Real Madrid vs Dortmund • 2.45x Banker Live',
+        dropTimeWAT: '02:00 AM WAT',
+        showUclBanner: true
+      };
     }
   });
 
@@ -59,7 +90,27 @@ export function PredictionsProvider({ children }) {
     } catch (e) {}
   }, [codeCatalogue]);
 
-  // Update a booking code for a specific ticket
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY_PUNTERS, JSON.stringify(punters));
+    } catch (e) {}
+  }, [punters]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY_ANNOUNCEMENTS, JSON.stringify(announcements));
+    } catch (e) {}
+  }, [announcements]);
+
+  // ── LADDER ACTIONS ──
+  const updateLadder = (ladderUpdates) => {
+    setLadderState(prev => ({
+      ...prev,
+      ...ladderUpdates
+    }));
+  };
+
+  // ── TICKET ACTIONS ──
   const updateTicketCode = (ticketId, bookmakerKey, newCode) => {
     setTicketsState(prev => prev.map(t => {
       if (t.id === ticketId) {
@@ -75,7 +126,6 @@ export function PredictionsProvider({ children }) {
     }));
   };
 
-  // Update an entire ticket
   const updateTicket = (ticketId, ticketUpdates) => {
     setTicketsState(prev => prev.map(t => {
       if (t.id === ticketId) {
@@ -85,31 +135,22 @@ export function PredictionsProvider({ children }) {
     }));
   };
 
-  // Add a new ticket
   const addTicket = (newTicket) => {
     setTicketsState(prev => [newTicket, ...prev]);
   };
 
-  // Delete a ticket
   const deleteTicket = (ticketId) => {
     setTicketsState(prev => prev.filter(t => t.id !== ticketId));
   };
 
-  // Update ladder
-  const updateLadder = (ladderUpdates) => {
-    setLadderState(prev => ({
-      ...prev,
-      ...ladderUpdates
-    }));
-  };
-
-  // ── CODE CATALOGUE ACTIONS ──
+  // ── CODE CATALOGUE / CODE HUB ACTIONS ──
   const addCatalogueCode = (newCodeItem) => {
     setCodeCatalogueState(prev => [
       {
         id: `code-${Date.now()}`,
         createdAt: new Date().toISOString(),
         status: 'active',
+        dropTime: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' WAT',
         ...newCodeItem
       },
       ...prev
@@ -129,19 +170,94 @@ export function PredictionsProvider({ children }) {
     setCodeCatalogueState(prev => prev.filter(c => c.id !== codeId));
   };
 
-  // Convert Bet Code Helper (Inspired by convertbetcodes.com)
+  // ── PUNTERS & PUNTER CODES ACTIONS ──
+  const addPunter = (newPunter) => {
+    setPuntersState(prev => [
+      {
+        id: `punter-${Date.now()}`,
+        avatar: newPunter.displayName?.slice(0, 2).toUpperCase() || 'PT',
+        dailyCodes: [],
+        ...newPunter
+      },
+      ...prev
+    ]);
+  };
+
+  const updatePunter = (punterId, updates) => {
+    setPuntersState(prev => prev.map(p => {
+      if (p.id === punterId) {
+        return { ...p, ...updates };
+      }
+      return p;
+    }));
+  };
+
+  const deletePunter = (punterId) => {
+    setPuntersState(prev => prev.filter(p => p.id !== punterId));
+  };
+
+  const addPunterCode = (punterId, codeData) => {
+    const newCodeObj = {
+      id: `pcode-${Date.now()}`,
+      status: 'active',
+      dropTime: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' WAT',
+      ...codeData
+    };
+
+    setPuntersState(prev => prev.map(p => {
+      if (p.id === punterId) {
+        return {
+          ...p,
+          dailyCodes: [newCodeObj, ...(p.dailyCodes || [])]
+        };
+      }
+      return p;
+    }));
+
+    // Also mirror to global catalogue so punters can discover it across all hubs
+    addCatalogueCode({
+      bookmaker: codeData.bookmaker || 'sportybet',
+      bookmakerName: codeData.bookmaker === 'sportybet' ? 'SportyBet' : codeData.bookmaker === 'bet9ja' ? 'Bet9ja' : '1xBet',
+      code: codeData.code,
+      title: `${codeData.marketType || 'Verified Slip'} by ${punters.find(p => p.id === punterId)?.displayName || 'Punter'}`,
+      odds: parseFloat(codeData.totalOdds) || 2.00,
+      eventsCount: parseInt(codeData.gamesCount, 10) || 3,
+      category: 'banker',
+      categoryName: codeData.marketType || 'Punter Banker',
+      author: punters.find(p => p.id === punterId)?.displayName || 'Punter'
+    });
+  };
+
+  const deletePunterCode = (punterId, codeId) => {
+    setPuntersState(prev => prev.map(p => {
+      if (p.id === punterId) {
+        return {
+          ...p,
+          dailyCodes: (p.dailyCodes || []).filter(c => c.id !== codeId)
+        };
+      }
+      return p;
+    }));
+  };
+
+  // ── ANNOUNCEMENTS ACTIONS ──
+  const updateAnnouncements = (updates) => {
+    setAnnouncementsState(prev => ({
+      ...prev,
+      ...updates
+    }));
+  };
+
+  // ── CODE CONVERTER ──
   const convertBetCode = (inputCode, fromBookie, toBookie) => {
     const cleanCode = inputCode.trim().toUpperCase();
     if (!cleanCode) return null;
 
-    // Check if code exists in catalogue
     const existing = codeCatalogue.find(c => 
       c.code.toUpperCase() === cleanCode && 
       (c.bookmaker === fromBookie || fromBookie === 'any')
     );
 
-    // If exists, find matching counterpart or generate verified algorithmic conversion
-    let generatedTargetCode = '';
     const prefixMap = {
       sportybet: 'BC4',
       bet9ja: 'B9J',
@@ -152,12 +268,11 @@ export function PredictionsProvider({ children }) {
     };
 
     const targetPrefix = prefixMap[toBookie] || 'CONV';
-    // Hash-based deterministic conversion suffix from input code
     let hash = 0;
     for (let i = 0; i < cleanCode.length; i++) {
       hash = (hash * 31 + cleanCode.charCodeAt(i)) % 99999;
     }
-    generatedTargetCode = `${targetPrefix}-${Math.abs(hash).toString(36).toUpperCase().padStart(5, '7')}`;
+    const generatedTargetCode = `${targetPrefix}-${Math.abs(hash).toString(36).toUpperCase().padStart(5, '7')}`;
 
     return {
       originalCode: cleanCode,
@@ -172,14 +287,17 @@ export function PredictionsProvider({ children }) {
     };
   };
 
-  // Reset to original defaults
+  // ── RESET TO DEFAULTS ──
   const resetToDefaults = () => {
     setLadderState(DEFAULT_LADDER);
     setTicketsState(DEFAULT_TICKETS);
     setCodeCatalogueState(INITIAL_CODE_CATALOGUE);
+    setPuntersState(INITIAL_PUNTERS);
     localStorage.removeItem(STORAGE_KEY_LADDER);
     localStorage.removeItem(STORAGE_KEY_TICKETS);
     localStorage.removeItem(STORAGE_KEY_CATALOGUE);
+    localStorage.removeItem(STORAGE_KEY_PUNTERS);
+    localStorage.removeItem(STORAGE_KEY_ANNOUNCEMENTS);
   };
 
   return (
@@ -187,6 +305,8 @@ export function PredictionsProvider({ children }) {
       ladder,
       tickets,
       codeCatalogue,
+      punters,
+      announcements,
       updateTicketCode,
       updateTicket,
       addTicket,
@@ -195,6 +315,12 @@ export function PredictionsProvider({ children }) {
       addCatalogueCode,
       updateCatalogueCode,
       deleteCatalogueCode,
+      addPunter,
+      updatePunter,
+      deletePunter,
+      addPunterCode,
+      deletePunterCode,
+      updateAnnouncements,
       convertBetCode,
       resetToDefaults
     }}>

@@ -1,205 +1,200 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { usePredictions } from '../context/PredictionsContext';
 import { 
   Copy, Check, Zap, Flame, ShieldCheck, ChevronRight, 
-  Share2, ArrowRight, Trophy, Sparkles, Lock, Unlock, Eye
+  Share2, ArrowRight, Trophy, Sparkles, Search, Layers, Clock, ExternalLink
 } from 'lucide-react';
 
 export default function BookingCodesHub({ onNavigate }) {
-  const { tickets } = usePredictions();
-  const [selectedCategory, setSelectedCategory] = useState('all');
+  const { codeCatalogue } = usePredictions();
+  const [selectedBookmaker, setSelectedBookmaker] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [inputLoadCode, setInputLoadCode] = useState('');
   const [copiedId, setCopiedId] = useState(null);
 
-  const handleCopyCode = (e, code, codeKey) => {
-    e.stopPropagation();
+  const handleCopy = (code, id) => {
     if (code) {
       navigator.clipboard.writeText(code);
-      setCopiedId(codeKey);
+      setCopiedId(id);
       setTimeout(() => setCopiedId(null), 2500);
     }
   };
 
-  const filteredTickets = tickets.filter(t => {
-    if (selectedCategory === 'all') return true;
-    return t.category === selectedCategory;
-  });
+  const handleLoadCode = (e) => {
+    e.preventDefault();
+    if (!inputLoadCode.trim()) return;
+    handleCopy(inputLoadCode.trim().toUpperCase(), 'manual-load');
+    alert(`Code "${inputLoadCode.trim().toUpperCase()}" copied! Ready to paste into your bookmaker.`);
+    setInputLoadCode('');
+  };
+
+  const filteredCodes = useMemo(() => {
+    return codeCatalogue.filter(item => {
+      if (selectedBookmaker !== 'all' && item.bookmaker !== selectedBookmaker) return false;
+      if (searchQuery.trim()) {
+        const q = searchQuery.toLowerCase();
+        const inCode = item.code?.toLowerCase().includes(q);
+        const inTitle = item.title?.toLowerCase().includes(q);
+        const inCategory = item.categoryName?.toLowerCase().includes(q);
+        const inAuthor = item.author?.toLowerCase().includes(q);
+        if (!inCode && !inTitle && !inCategory && !inAuthor) return false;
+      }
+      return true;
+    });
+  }, [codeCatalogue, selectedBookmaker, searchQuery]);
 
   return (
     <div className="space-y-4">
       
-      {/* Category Filter Tabs with Sporty app feel */}
-      <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none pb-1">
-        {[
-          { id: 'all', label: 'All Slips' },
-          { id: 'banker', label: '🎯 2.00x Banker' },
-          { id: 'ladder', label: '🪜 Rollover Ladder' },
-          { id: 'accumulator', label: '🛡️ 5.00x Acca' },
-          { id: 'goals', label: '⚽ Over 1.5 Radar' },
-          { id: 'mega', label: '🚀 10.00x Mega' },
-        ].map(cat => (
+      {/* ── 1. SPORTYBET-STYLE SEARCH & LOAD CODE BAR ── */}
+      <div className="rounded-2xl border-2 border-[#E41B13]/30 dark:border-[#E41B13]/40 bg-gradient-to-r from-slate-900 via-[#1a2336] to-[#0A0F1D] p-3.5 sm:p-4 text-white shadow-lg space-y-3">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#00FF66] animate-ping"></span>
+            <span className="text-[11px] font-mono font-black uppercase tracking-wider text-white">
+              SPORTYBET CODE HUB &bull; QUICK LOAD
+            </span>
+          </div>
+          <span className="text-[10px] font-mono text-slate-300">
+            Codes drop daily at 02:00 AM WAT
+          </span>
+        </div>
+
+        {/* Load Slip Input */}
+        <form onSubmit={handleLoadCode} className="relative flex items-center">
+          <input
+            type="text"
+            value={inputLoadCode}
+            onChange={(e) => setInputLoadCode(e.target.value.toUpperCase())}
+            placeholder="Paste any booking code (e.g. BC4-LAD50-D4, BC4-EUR-2ODDS)..."
+            className="w-full pl-4 pr-32 py-3 rounded-xl bg-black/60 border border-slate-700 text-white font-mono font-black text-xs sm:text-sm tracking-wider uppercase placeholder-slate-500 focus:outline-none focus:border-[#E41B13]"
+          />
           <button
-            key={cat.id}
-            onClick={() => setSelectedCategory(cat.id)}
-            className={`px-3 py-1.5 rounded-xl text-xs font-display font-black uppercase whitespace-nowrap transition-all ${
-              selectedCategory === cat.id
-                ? 'bg-[#E41B13] text-white shadow-md'
-                : 'bg-white dark:bg-[#111A2E] text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-slate-800'
-            }`}
+            type="submit"
+            className="absolute right-1.5 top-1.5 bottom-1.5 px-4 rounded-lg bg-[#E41B13] hover:bg-[#D01710] text-white font-display font-black text-xs uppercase tracking-wider transition-all flex items-center gap-1 shadow-md"
           >
-            {cat.label}
+            <Zap className="w-3.5 h-3.5 fill-current" />
+            <span>Load Slip</span>
           </button>
-        ))}
+        </form>
       </div>
 
-      {/* High-CTR Teaser Ticket Cards (SportyBet Betting Slip Feel) */}
-      <div className="space-y-3.5">
-        {filteredTickets.map(ticket => {
-          const firstSelection = ticket.selections[0];
-          const remainingCount = ticket.selections.length - 1;
-          const sportyCode = ticket.codes?.sportybet || ticket.bookingCode || 'BC9482';
-          const bet9jaCode = ticket.codes?.bet9ja || 'B9J-772';
+      {/* ── 2. FAST BOOKMAKER FILTER TABS ── */}
+      <div className="flex items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-2">
+        <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none">
+          {[
+            { id: 'all', label: 'All Codes' },
+            { id: 'sportybet', label: '🔴 SportyBet' },
+            { id: 'bet9ja', label: '🟢 Bet9ja' },
+            { id: '1xbet', label: '🔵 1xBet' },
+            { id: 'betking', label: '👑 BetKing' }
+          ].map(b => (
+            <button
+              key={b.id}
+              onClick={() => setSelectedBookmaker(b.id)}
+              className={`px-3 py-1.5 rounded-xl text-xs font-display font-black uppercase whitespace-nowrap transition-all ${
+                selectedBookmaker === b.id
+                  ? 'bg-[#E41B13] text-white shadow-md'
+                  : 'bg-white dark:bg-[#111A2E] text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-slate-800'
+              }`}
+            >
+              {b.label}
+            </button>
+          ))}
+        </div>
+
+        <button
+          onClick={() => onNavigate('convert')}
+          className="text-xs font-display font-bold text-[#E41B13] dark:text-rose-400 hover:underline flex items-center gap-1 flex-shrink-0"
+        >
+          <span>Convert Tool &rarr;</span>
+        </button>
+      </div>
+
+      {/* ── 3. SPORTYBET-STYLE BOOKING CODE CARDS (NO MATCHES LISTED - PICK & BOUNCE) ── */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+        {filteredCodes.map(item => {
+          const isSporty = item.bookmaker === 'sportybet';
+          const isBet9ja = item.bookmaker === 'bet9ja';
 
           return (
             <div
-              key={ticket.id}
-              onClick={() => onNavigate(`ticket/${ticket.id}`)}
-              className="group cursor-pointer rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1626] hover:border-[#E41B13]/60 dark:hover:border-[#E41B13]/60 overflow-hidden shadow-sm hover:shadow-md transition-all duration-200"
+              key={item.id}
+              className="p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1626] hover:border-[#E41B13]/60 dark:hover:border-[#E41B13]/60 shadow-sm hover:shadow-md transition-all flex flex-col justify-between space-y-3 group"
             >
-              {/* Card Header */}
-              <div className="p-4 bg-slate-50/70 dark:bg-[#121B30] border-b border-slate-100 dark:border-slate-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-                <div>
-                  <div className="flex items-center gap-2 mb-1 flex-wrap">
-                    <span className="text-[10px] uppercase font-display font-black tracking-wider px-2 py-0.5 rounded bg-[#E41B13]/10 dark:bg-[#E41B13]/20 text-[#E41B13] dark:text-rose-400 border border-[#E41B13]/20">
-                      {ticket.badge}
-                    </span>
-                    <span className="text-[10px] font-mono text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded border border-emerald-500/20">
-                      {ticket.confidence}
-                    </span>
-                    <span className="text-[10px] font-mono text-slate-400">
-                      Drop: {ticket.dropTime}
-                    </span>
-                  </div>
+              {/* Card Top: Bookmaker & Category Badges */}
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-1.5">
+                  <span className={`px-2 py-0.5 rounded text-[10px] font-display font-black uppercase tracking-wider ${
+                    isSporty 
+                      ? 'bg-[#E41B13] text-white shadow-sm'
+                      : isBet9ja
+                      ? 'bg-[#00C250] text-black font-black'
+                      : 'bg-blue-600 text-white'
+                  }`}>
+                    {item.bookmakerName || item.bookmaker}
+                  </span>
 
-                  <h3 className="font-display font-black text-base sm:text-lg text-slate-900 dark:text-white group-hover:text-[#E41B13] dark:group-hover:text-rose-400 transition-colors">
-                    {ticket.title}
-                  </h3>
+                  <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 font-bold bg-slate-100 dark:bg-[#162238] px-2 py-0.5 rounded">
+                    {item.eventsCount || 3} Games
+                  </span>
                 </div>
 
-                {/* Total Odds Multiplier Pill */}
-                <div className="flex items-center gap-2 self-start sm:self-auto flex-shrink-0">
-                  <div className="bg-white dark:bg-[#162238] px-3.5 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 text-right shadow-sm">
-                    <span className="text-[9px] uppercase font-mono text-slate-400 block leading-tight">Acca Odds</span>
-                    <span className="text-xl font-mono font-black text-[#E41B13] dark:text-rose-400 leading-none">
-                      {ticket.totalOdds}x
-                    </span>
-                  </div>
+                <div className="flex items-center gap-1.5 font-mono text-xs">
+                  <span className="text-[10px] text-slate-400 uppercase">Odds:</span>
+                  <span className="font-mono font-black text-slate-900 dark:text-white bg-slate-100 dark:bg-[#162238] px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700">
+                    {item.odds}x
+                  </span>
                 </div>
               </div>
 
-              {/* Match Teaser Area */}
-              <div className="p-4 space-y-3">
-                <div className="space-y-2">
-                  
-                  {/* Selection #1: Fully Visible Teaser */}
-                  {firstSelection && (
-                    <div className="p-3 rounded-xl bg-slate-50 dark:bg-[#131E33] border border-slate-200/80 dark:border-slate-800/80 flex items-center justify-between gap-2">
-                      <div className="min-w-0">
-                        <span className="text-[10px] font-mono font-bold text-blue-600 dark:text-blue-400 block uppercase">
-                          {firstSelection.league} &bull; Leg 1 of {ticket.selections.length}
-                        </span>
-                        <div className="font-display font-bold text-xs sm:text-sm text-slate-900 dark:text-white truncate">
-                          {firstSelection.match}
-                        </div>
-                        <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
-                          Pick: <strong className="text-slate-900 dark:text-slate-100">{firstSelection.pick}</strong>
-                        </div>
-                      </div>
+              {/* Market Type / Title (The only info needed per user directive) */}
+              <div>
+                <span className="text-[10px] uppercase font-mono font-bold text-blue-600 dark:text-blue-400 block mb-0.5">
+                  Market: {item.categoryName || 'Verified Market Line'}
+                </span>
 
-                      {/* Tactile Sporty Odds Pill */}
-                      <span className="text-xs font-mono font-black bg-rose-50 dark:bg-rose-950/40 text-[#E41B13] dark:text-rose-400 px-2.5 py-1 rounded-lg border border-rose-200 dark:border-rose-900/40 flex-shrink-0">
-                        {firstSelection.odds}x
-                      </span>
-                    </div>
-                  )}
+                <h3 className="font-display font-black text-sm sm:text-base text-slate-900 dark:text-white line-clamp-1 group-hover:text-[#E41B13] dark:group-hover:text-rose-400 transition-colors">
+                  {item.title}
+                </h3>
 
-                  {/* Remaining Matches Teaser Card */}
-                  {remainingCount > 0 && (
-                    <div className="p-3 rounded-xl bg-gradient-to-r from-rose-50/40 via-slate-50 to-rose-50/40 dark:from-rose-950/20 dark:via-[#131F36] dark:to-[#0F1829] border border-rose-200/60 dark:border-slate-800 flex items-center justify-between gap-2">
-                      <div className="flex items-center gap-2.5">
-                        <div className="w-8 h-8 rounded-lg bg-[#E41B13]/10 dark:bg-[#E41B13]/20 text-[#E41B13] dark:text-rose-400 flex items-center justify-center flex-shrink-0">
-                          <Lock className="w-4 h-4" />
-                        </div>
-                        <div>
-                          <div className="font-display font-bold text-xs sm:text-sm text-slate-900 dark:text-white">
-                            +{remainingCount} Remaining Match{remainingCount > 1 ? 'es' : ''} on this Slip
-                          </div>
-                          <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                            Click to unlock complete match sheet, team news &amp; bookmaker codes.
-                          </p>
-                        </div>
-                      </div>
-
-                      <span className="text-xs font-display font-bold text-[#E41B13] dark:text-rose-400 uppercase tracking-wider hidden sm:inline flex-shrink-0">
-                        Reveal Slip &rarr;
-                      </span>
-                    </div>
-                  )}
-
-                </div>
-
-                {/* Bottom Action Bar: Sporty & Bet9ja 1-Tap Booking Codes */}
-                <div className="pt-2 border-t border-slate-100 dark:border-slate-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    {/* SportyBet Code Pill */}
-                    <div className="flex items-center gap-1 bg-[#E41B13]/10 dark:bg-[#E41B13]/20 border border-[#E41B13]/30 px-2 py-1 rounded-lg">
-                      <span className="text-[9px] font-display font-black text-[#E41B13] dark:text-rose-400 uppercase">Sporty:</span>
-                      <span className="text-xs font-mono font-black text-slate-900 dark:text-white">{sportyCode}</span>
-                      <button
-                        onClick={(e) => handleCopyCode(e, sportyCode, `${ticket.id}-sporty`)}
-                        className="p-1 hover:text-[#E41B13] text-slate-500 transition-colors"
-                        title="Copy SportyBet Code"
-                      >
-                        {copiedId === `${ticket.id}-sporty` ? (
-                          <Check className="w-3.5 h-3.5 text-emerald-500 stroke-[3]" />
-                        ) : (
-                          <Copy className="w-3.5 h-3.5" />
-                        )}
-                      </button>
-                    </div>
-
-                    {/* Bet9ja Code Pill */}
-                    <div className="flex items-center gap-1 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-500/30 px-2 py-1 rounded-lg">
-                      <span className="text-[9px] font-display font-black text-emerald-700 dark:text-emerald-400 uppercase">Bet9ja:</span>
-                      <span className="text-xs font-mono font-black text-slate-900 dark:text-white">{bet9jaCode}</span>
-                      <button
-                        onClick={(e) => handleCopyCode(e, bet9jaCode, `${ticket.id}-bet9ja`)}
-                        className="p-1 hover:text-emerald-600 text-slate-500 transition-colors"
-                        title="Copy Bet9ja Code"
-                      >
-                        {copiedId === `${ticket.id}-bet9ja` ? (
-                          <Check className="w-3.5 h-3.5 text-emerald-500 stroke-[3]" />
-                        ) : (
-                          <Copy className="w-3.5 h-3.5" />
-                        )}
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Main CTA: Route to Detail Page */}
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onNavigate(`ticket/${ticket.id}`);
-                    }}
-                    className="inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-slate-900 dark:bg-slate-800 hover:bg-[#E41B13] dark:hover:bg-[#E41B13] text-white font-display font-bold text-xs uppercase tracking-wider transition-all shadow-sm"
-                  >
-                    <Eye className="w-3.5 h-3.5" />
-                    <span>View Full Slip</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 flex items-center gap-1.5 font-mono">
+                  <span>By {item.author || 'BRYME Desk'}</span>
+                  <span>&bull;</span>
+                  <span>{item.dropTime || '02:00 AM WAT'}</span>
+                </p>
               </div>
+
+              {/* ── THE BOOKING CODE & 1-TAP LOAD ACTION (SPORTYBET UX) ── */}
+              <div className="pt-2 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between gap-2">
+                <div className="px-3 py-1.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 font-mono font-black text-sm text-slate-900 dark:text-white tracking-wider">
+                  {item.code}
+                </div>
+
+                <button
+                  onClick={() => handleCopy(item.code, item.id)}
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-display font-black uppercase tracking-wider flex items-center gap-1.5 transition-all shadow-sm ${
+                    copiedId === item.id
+                      ? 'bg-[#00C250] text-black ring-2 ring-emerald-300'
+                      : isSporty
+                      ? 'bg-[#E41B13] hover:bg-[#D01710] text-white'
+                      : 'bg-slate-900 dark:bg-slate-800 hover:bg-[#E41B13] text-white'
+                  }`}
+                >
+                  {copiedId === item.id ? (
+                    <>
+                      <Check className="w-3.5 h-3.5 stroke-[3]" />
+                      <span>Copied!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-3.5 h-3.5" />
+                      <span>Copy Code</span>
+                    </>
+                  )}
+                </button>
+              </div>
+
             </div>
           );
         })}
