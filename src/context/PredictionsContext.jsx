@@ -71,7 +71,48 @@ export function PredictionsProvider({ children }) {
     }
   });
 
-  // Save changes to localStorage
+  // Initial fetch from Cloudflare Edge API on mount
+  useEffect(() => {
+    let isMounted = true;
+    const fetchEdgeState = async () => {
+      try {
+        const res = await fetch('/api/state');
+        if (res.ok) {
+          const json = await res.json();
+          if (json.success && json.data && isMounted) {
+            const remote = json.data;
+            if (remote.ladder) setLadderState(remote.ladder);
+            if (remote.tickets) setTicketsState(remote.tickets);
+            if (remote.codeCatalogue) setCodeCatalogueState(remote.codeCatalogue);
+            if (remote.punters) setPuntersState(remote.punters);
+            if (remote.announcements) setAnnouncementsState(remote.announcements);
+          }
+        }
+      } catch (err) {
+        // Fallback to localStorage or default seeds
+      }
+    };
+
+    fetchEdgeState();
+    return () => { isMounted = false; };
+  }, []);
+
+  // Save changes to localStorage and Cloudflare Edge
+  const syncToCloudflare = async (fullPayload) => {
+    try {
+      await fetch('/api/state', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Admin-Pin': 'bryme2026'
+        },
+        body: JSON.stringify(fullPayload)
+      });
+    } catch (e) {
+      // Offline fallback
+    }
+  };
+
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY_LADDER, JSON.stringify(ladder));
