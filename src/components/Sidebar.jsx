@@ -28,17 +28,17 @@ export default function Sidebar({ currentRoute, onNavigate }) {
   };
 
   const navItems = [
-    { id: 'home', label: '🔥 The Rollover Ladder', icon: '🪜', badge: `Day ${currentDay}`, isFeatured: true },
+    { id: 'home', label: '🔥 The 18-Step Ladder', icon: '🪜', badge: `Day ${currentDay}`, isFeatured: true },
+    { id: 'punters', label: '👑 Tracked African Punters', icon: '👑', badge: 'Daily Codes', isSpecial: true },
+    { id: 'results', label: '📊 Results & Hit Rate', icon: '📊', badge: '76.9% Won', isGreen: true },
     { id: 'convert', label: '⚡ Convert Bet Codes & Vault', icon: '⚡', badge: 'Hot' },
-    { id: 'ladder', label: '🪜 Full 18-Step Mountain', icon: '⛰️' },
-    { id: 'predictions', label: '📋 Pick Codes Hub', icon: '📋' },
+    { id: 'ladder', label: '🪜 18-Step Safe Havens', icon: '⛰️' },
+    { id: 'predictions', label: '📋 Sporty Codes Hub', icon: '📋' },
     { id: 'markets', label: '📂 35+ Markets Database', icon: '🗂️' },
-    { id: 'editor-picks', label: '🎯 Weekend 2.00x Banker', icon: '🎯', badge: '76.9%' },
-    { id: 'results', label: '📊 Verified Results Ledger', icon: '📈' },
-    { id: 'weekend-hub', label: '🤝 Consensus Hub', icon: '👥' },
-    { id: 'punters', label: '👑 Tracked African Punters', icon: '⭐' },
+    { id: 'editor-picks', label: '🎯 Weekend 2.00x Banker', icon: '🎯' },
+    { id: 'weekend-hub', label: '🤝 Consensus Community Hub', icon: '👥' },
     { id: 'bookmakers', label: '📱 Bookmakers & Codes', icon: '🎰' },
-    { id: 'admin', label: '⚡ Admin Control Deck', icon: '🛠️', badge: 'Owner' },
+    { id: 'admin', label: '⚡ Admin Control Deck', icon: '🛠️', badge: 'PIN Locked' },
     { id: 'responsible-gambling', label: '🛡️ Responsible Gaming (18+)', icon: '🔒' }
   ];
 
@@ -147,7 +147,15 @@ export default function Sidebar({ currentRoute, onNavigate }) {
               </div>
               {item.badge && (
                 <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded font-bold ${
-                  isActive ? 'bg-white/20 text-white' : item.isFeatured ? 'bg-[#E41B13] text-white' : 'bg-slate-100 dark:bg-[#1A2438] text-blue-600 dark:text-blue-400'
+                  isActive 
+                    ? 'bg-white/20 text-white' 
+                    : item.isFeatured 
+                    ? 'bg-[#E41B13] text-white' 
+                    : item.isGreen
+                    ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                    : item.isSpecial
+                    ? 'bg-amber-400 text-slate-950 font-black'
+                    : 'bg-slate-100 dark:bg-[#1A2438] text-blue-600 dark:text-blue-400'
                 }`}>
                   {item.badge}
                 </span>

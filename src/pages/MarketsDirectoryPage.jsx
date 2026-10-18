@@ -3,7 +3,7 @@ import { MARKETS, MARKET_CATEGORIES } from '../data/markets';
 import { TICKETS } from '../data/tickets';
 import { 
   Layers, ArrowRight, ShieldCheck, Search, Filter, Percent, 
-  Zap, TrendingUp, Sparkles, LayoutGrid, List, ArrowUpDown, ChevronRight, BarChart2
+  Zap, TrendingUp, Sparkles, LayoutGrid, List, ArrowUpDown, ChevronRight, BarChart2, Users
 } from 'lucide-react';
 
 export default function MarketsDirectoryPage({ onNavigate }) {
@@ -55,6 +55,26 @@ export default function MarketsDirectoryPage({ onNavigate }) {
   return (
     <div className="space-y-6 max-w-5xl mx-auto">
       
+      {/* ── 0. MARKETS & PUNTERS TOP NAVIGATION BAR ── */}
+      <div className="flex items-center gap-2 p-1.5 rounded-2xl bg-slate-200 dark:bg-[#0E1626] border border-slate-300 dark:border-slate-800">
+        <button
+          onClick={() => {}}
+          className="flex-1 py-2 px-3 rounded-xl bg-white dark:bg-[#162238] text-slate-900 dark:text-white font-display font-black text-xs uppercase tracking-wider shadow-sm flex items-center justify-center gap-1.5"
+        >
+          <Layers className="w-4 h-4 text-[#E41B13]" />
+          <span>35+ Football Markets</span>
+        </button>
+
+        <button
+          onClick={() => onNavigate('punters')}
+          className="flex-1 py-2 px-3 rounded-xl bg-transparent hover:bg-white/50 dark:hover:bg-[#162238]/60 text-slate-600 dark:text-slate-300 font-display font-black text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-1.5"
+        >
+          <Users className="w-4 h-4 text-amber-500" />
+          <span>👑 Punters Hub &amp; Daily Codes</span>
+          <span className="text-[9px] px-1.5 py-0.2 rounded bg-amber-400 text-slate-950 font-mono font-bold">HOT</span>
+        </button>
+      </div>
+
       {/* ── 1. CATALOGUE HEADER ── */}
       <div className="border-b border-slate-200 dark:border-slate-800 pb-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -75,13 +95,48 @@ export default function MarketsDirectoryPage({ onNavigate }) {
             </p>
           </div>
 
-          <button
-            onClick={() => onNavigate('predictions')}
-            className="px-3.5 py-2 rounded-xl bg-slate-900 dark:bg-slate-800 hover:bg-[#E41B13] text-white text-xs font-display font-bold uppercase tracking-wider flex items-center gap-1.5 self-start sm:self-auto transition-colors shadow-sm"
-          >
-            <span>Browse Slips Hub</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </button>
+          <div className="flex items-center gap-2 self-start sm:self-auto">
+            <button
+              onClick={() => onNavigate('punters')}
+              className="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-display font-black uppercase tracking-wider flex items-center gap-1.5 transition-colors shadow-sm"
+            >
+              <Users className="w-3.5 h-3.5" />
+              <span>Punters Hub</span>
+            </button>
+
+            <button
+              onClick={() => onNavigate('predictions')}
+              className="px-3.5 py-2 rounded-xl bg-slate-900 dark:bg-slate-800 hover:bg-[#E41B13] text-white text-xs font-display font-bold uppercase tracking-wider flex items-center gap-1.5 transition-colors shadow-sm"
+            >
+              <span>Slips Hub</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* ── PUNTERS SPOTLIGHT CALLOUT IN MARKETS ── */}
+      <div 
+        onClick={() => onNavigate('punters')}
+        className="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-amber-500/10 via-amber-600/5 to-transparent border border-amber-500/30 flex items-center justify-between gap-3 cursor-pointer hover:border-amber-500/60 transition-all shadow-sm group"
+      >
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center font-bold text-lg flex-shrink-0 shadow-md">
+            👑
+          </div>
+          <div>
+            <h4 className="font-display font-black text-xs sm:text-sm text-slate-900 dark:text-white group-hover:text-amber-500 transition-colors flex items-center gap-1.5">
+              <span>Tracked African Punters Hub &bull; Active Daily Codes</span>
+              <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-amber-400 text-slate-950 font-bold">1-TAP LOAD</span>
+            </h4>
+            <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+              Looking for top African analysts using Over 1.5, Double Chance &amp; Corner markets today? Open the Punters Hub directory with verified daily booking codes.
+            </p>
+          </div>
+        </div>
+
+        <div className="p-2 rounded-xl bg-amber-500 text-slate-950 group-hover:translate-x-1 transition-transform flex-shrink-0">
+          <ArrowRight className="w-4 h-4" />
         </div>
       </div>
 

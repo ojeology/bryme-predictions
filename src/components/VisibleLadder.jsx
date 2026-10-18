@@ -2,223 +2,238 @@ import React, { useState } from 'react';
 import { usePredictions } from '../context/PredictionsContext';
 import { 
   Trophy, Shield, CheckCircle2, Flame, Copy, Check, 
-  ArrowRight, Sparkles, ChevronDown, ChevronUp, Zap, Info, Clock, Play, Lock, Eye, Calculator, Share2, ExternalLink
+  ArrowRight, Sparkles, Zap, Clock, ChevronRight, Lock, DollarSign, Wallet
 } from 'lucide-react';
 
-const ALL_18_STEPS = [
-  { day: 1, stake: 1000, odds: 1.50, returnVal: 1500, status: 'won', match: 'Man City vs Fulham (Home Win & O1.5)', league: 'EPL', score: '3-0 FT' },
-  { day: 2, stake: 1500, odds: 1.50, returnVal: 2250, status: 'won', match: 'Inter Milan vs Torino (Over 1.5 Goals)', league: 'Serie A', score: '2-1 FT' },
-  { day: 3, stake: 2250, odds: 1.50, returnVal: 3375, status: 'won', match: 'Real Madrid vs Celta (1X & Over 1.5 Goals)', league: 'La Liga', score: '2-0 FT' },
-  { day: 4, stake: 3375, odds: 1.50, returnVal: 5062, status: 'active', match: 'Arsenal vs Everton + Bayern vs Stuttgart', league: 'EPL / Bundesliga', score: 'TODAY' },
-  { day: 5, stake: 5062, odds: 1.50, returnVal: 7593, status: 'upcoming', match: 'European Sunday Banker Selection', league: 'Top Leagues', score: 'Next' },
-  { day: 6, stake: 7593, odds: 1.50, returnVal: 11390, isMilestone: true, bankAmount: 5695, rollAmount: 5695, status: 'milestone', match: 'MILESTONE: BANK 50% CASH IN HAND', league: 'Safe Haven', score: 'Shield' },
-  { day: 7, stake: 5695, odds: 1.50, returnVal: 8542, status: 'upcoming', league: 'Midweek' },
-  { day: 8, stake: 8542, odds: 1.50, returnVal: 12813, status: 'upcoming', league: 'Midweek' },
-  { day: 9, stake: 12813, odds: 1.50, returnVal: 19220, status: 'upcoming', league: 'Weekend' },
-  { day: 10, stake: 19220, odds: 1.50, returnVal: 28830, status: 'upcoming', league: 'Weekend' },
-  { day: 11, stake: 28830, odds: 1.50, returnVal: 43245, status: 'upcoming', league: 'Midweek' },
-  { day: 12, stake: 43245, odds: 1.50, returnVal: 64868, isMilestone: true, bankAmount: 32434, rollAmount: 32434, status: 'milestone', league: 'Safe Haven' },
-  { day: 13, stake: 32434, odds: 1.50, returnVal: 48651, status: 'upcoming', league: 'Weekend' },
-  { day: 14, stake: 48651, odds: 1.50, returnVal: 72976, status: 'upcoming', league: 'Weekend' },
-  { day: 15, stake: 72976, odds: 1.50, returnVal: 109464, status: 'upcoming', league: 'Midweek' },
-  { day: 16, stake: 109464, odds: 1.50, returnVal: 164196, status: 'upcoming', league: 'Weekend' },
-  { day: 17, stake: 164196, odds: 1.50, returnVal: 246294, status: 'upcoming', league: 'Weekend' },
-  { day: 18, stake: 246294, odds: 1.50, returnVal: 1000000, isPeak: true, status: 'peak', league: 'Jackpot Target' },
+export const LADDER_18_STEPS = [
+  // STAGE 1: FOUNDATION (Steps 1-5)
+  { step: 1, stake: 1000, odds: 1.50, returnVal: 1500, status: 'won', match: 'Man City vs Fulham (Home Win & O1.5)', score: '3-0 FT' },
+  { step: 2, stake: 1500, odds: 1.50, returnVal: 2250, status: 'won', match: 'Inter vs Torino (Over 1.5 Goals)', score: '2-1 FT' },
+  { step: 3, stake: 2250, odds: 1.50, returnVal: 3375, status: 'won', match: 'Real Madrid vs Celta (1X & Over 1.5 Goals)', score: '2-0 FT' },
+  { step: 4, stake: 3375, odds: 1.50, returnVal: 5062, status: 'active', match: 'Arsenal vs Everton + Bayern vs Stuttgart', score: 'TODAY' },
+  { step: 5, stake: 5062, odds: 1.50, returnVal: 7593, status: 'upcoming', match: 'Sunday European Banker Slip', score: 'Next' },
+  
+  // SAFE HAVEN 1: STEP 6
+  { 
+    step: 6, 
+    stake: 7593, 
+    odds: 1.50, 
+    returnVal: 11390, 
+    status: 'milestone',
+    isSafeHaven: true,
+    safeHavenNum: 1,
+    takeProfitAmount: 5695,
+    rollAmount: 5695,
+    takeProfitLabel: 'TAKE ₦5,695 CASH OUT',
+    takeProfitDesc: 'Initial ₦1,000 stake + ₦4,695 pure profit secured in bank. Roll remainder 100% risk-free.'
+  },
+
+  // STAGE 2: COMPOUNDING (Steps 7-11)
+  { step: 7, stake: 5695, odds: 1.50, returnVal: 8542, status: 'upcoming', match: 'Midweek UCL / Europa Banker', score: 'Target' },
+  { step: 8, stake: 8542, odds: 1.50, returnVal: 12813, status: 'upcoming', match: 'Midweek Selection', score: 'Target' },
+  { step: 9, stake: 12813, odds: 1.50, returnVal: 19220, status: 'upcoming', match: 'Weekend Feature Slip', score: 'Target' },
+  { step: 10, stake: 19220, odds: 1.50, returnVal: 28830, status: 'upcoming', match: 'Weekend Feature Slip', score: 'Target' },
+  { step: 11, stake: 28830, odds: 1.50, returnVal: 43245, status: 'upcoming', match: 'European Banker Slip', score: 'Target' },
+
+  // SAFE HAVEN 2: STEP 12
+  { 
+    step: 12, 
+    stake: 43245, 
+    odds: 1.50, 
+    returnVal: 64868, 
+    status: 'milestone',
+    isSafeHaven: true,
+    safeHavenNum: 2,
+    takeProfitAmount: 32434,
+    rollAmount: 32434,
+    takeProfitLabel: 'TAKE ₦32,434 CASH OUT',
+    takeProfitDesc: '32x initial capital banked safely. Final 6 steps rolled on 100% house profit.'
+  },
+
+  // STAGE 3: THE SUMMIT RUSH (Steps 13-17)
+  { step: 13, stake: 32434, odds: 1.50, returnVal: 48651, status: 'upcoming', match: 'Championship / Top Flights', score: 'Target' },
+  { step: 14, stake: 48651, odds: 1.50, returnVal: 72976, status: 'upcoming', match: 'Weekend Mega Slips', score: 'Target' },
+  { step: 15, stake: 72976, odds: 1.50, returnVal: 109464, status: 'upcoming', match: 'Midweek Banker', score: 'Target' },
+  { step: 16, stake: 109464, odds: 1.50, returnVal: 164196, status: 'upcoming', match: 'Top Flight Derby', score: 'Target' },
+  { step: 17, stake: 164196, odds: 1.50, returnVal: 246294, status: 'upcoming', match: 'Penultimate Semi-Final', score: 'Target' },
+
+  // THE ULTIMATE GOAL: STEP 18
+  { 
+    step: 18, 
+    stake: 246294, 
+    odds: 1.50, 
+    returnVal: 1000000, 
+    status: 'summit',
+    isSummit: true,
+    takeProfitAmount: 1000000,
+    takeProfitLabel: '₦1,000,000+ JACKPOT PRIZE',
+    takeProfitDesc: '18 Consecutive Wins Achieved! Total Payout Delivered.'
+  }
 ];
 
 export default function VisibleLadder({ onNavigate }) {
   const { ladder } = usePredictions();
-  const currentLadderDay = ladder?.currentDay || 4;
-  const [selectedDayTab, setSelectedDayTab] = useState(currentLadderDay);
-  const [startingStakeMultiplier, setStartingStakeMultiplier] = useState(1);
-  const [showFullRoadmap, setShowFullRoadmap] = useState(false);
-  const [showRules, setShowRules] = useState(false);
-  const [copiedSporty, setCopiedSporty] = useState(false);
-  const [copiedBet9ja, setCopiedBet9ja] = useState(false);
-  const [activeBookmaker, setActiveBookmaker] = useState('sportybet');
-
+  const currentStep = ladder?.currentDay || 4;
+  const currentPot = ladder?.currentBalance || 3375;
   const sportyCode = ladder?.sportyCode || 'BC4-LAD50-D4';
   const bet9jaCode = ladder?.todaysCode || 'B9J-LAD-50-D4';
-  const currentOdds = ladder?.targetOdds || 1.50;
 
-  const handleCopyCode = (code, type) => {
+  const [copiedSporty, setCopiedSporty] = useState(false);
+  const [copiedBet9ja, setCopiedBet9ja] = useState(false);
+  const [activeCodeTab, setActiveCodeTab] = useState('sporty'); // 'sporty' | 'bet9ja'
+  const [filterView, setFilterView] = useState('all'); // 'all' | 'safehavens'
+
+  const handleCopy = (code, type) => {
     navigator.clipboard.writeText(code);
     if (type === 'sporty') {
       setCopiedSporty(true);
-      setTimeout(() => setCopiedSporty(false), 2500);
+      setTimeout(() => setCopiedSporty(false), 2000);
     } else {
       setCopiedBet9ja(true);
-      setTimeout(() => setCopiedBet9ja(false), 2500);
+      setTimeout(() => setCopiedBet9ja(false), 2000);
     }
   };
 
-  const currentStakeValue = 1000 * startingStakeMultiplier;
-  const currentPurse = Math.round((ladder?.currentBalance || 3375) * startingStakeMultiplier);
-  const potentialWin = Math.round(currentPurse * currentOdds);
-  const day6BankValue = Math.round(5695 * startingStakeMultiplier);
-
-  const selectedStepData = ALL_18_STEPS.find(s => s.day === selectedDayTab) || ALL_18_STEPS[currentLadderDay - 1] || ALL_18_STEPS[3];
-
-  // Default selections for active slip
-  const selections = ladder?.selections && ladder.selections.length > 0 ? ladder.selections : [
-    { match: 'Arsenal vs Everton', league: 'Premier League', kickoff: 'Today 17:30 WAT', pick: '1X & Over 1.5 Goals', odds: 1.25 },
-    { match: 'Bayern Munich vs VfB Stuttgart', league: 'Bundesliga', kickoff: 'Today 19:30 WAT', pick: 'Over 2.5 Goals', odds: 1.20 }
-  ];
+  const wonStepsCount = currentStep - 1;
 
   return (
     <div className="space-y-4">
       
-      {/* ── 1. MAIN SPORTYBET-STYLE LADDER MASTER CARD ── */}
-      <div className="rounded-2xl border-2 border-[#E41B13]/30 dark:border-[#E41B13]/40 bg-white dark:bg-[#0E1626] overflow-hidden shadow-xl transition-all">
+      {/* ── 1. SPORTYBET HERO BANNER ── */}
+      <div className="rounded-2xl border-2 border-[#E41B13] bg-[#0A0F1D] text-white overflow-hidden shadow-2xl relative">
         
-        {/* SPORTYBET SIGNATURE RED HEADER BAR */}
-        <div className="bg-gradient-to-r from-[#D81A12] via-[#E41B13] to-[#B01009] p-4 sm:p-5 text-white relative overflow-hidden shadow-md">
-          {/* Subtle Sporty stadium floodlight effect */}
-          <div className="absolute top-0 right-0 -mr-12 -mt-12 w-56 h-56 rounded-full bg-white/10 blur-2xl pointer-events-none" />
-          <div className="absolute bottom-0 left-1/3 -mb-8 w-40 h-40 rounded-full bg-black/20 blur-xl pointer-events-none" />
+        {/* Glow Effects */}
+        <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 rounded-full bg-[#E41B13]/25 blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-0 -ml-16 -mb-16 w-64 h-64 rounded-full bg-emerald-500/10 blur-3xl pointer-events-none" />
 
-          <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        {/* Top Header Strip */}
+        <div className="bg-gradient-to-r from-[#D81A12] via-[#E41B13] to-[#990A04] px-4 py-3 sm:px-6 sm:py-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5 flex-wrap">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-black/40 text-white font-display font-black text-xs uppercase tracking-wider border border-white/20 shadow-sm">
+              <span className="w-2 h-2 rounded-full bg-[#00FF66] animate-ping" />
+              SPORTYBET ROLLOVER &bull; RUN #50
+            </span>
+            <span className="px-2 py-0.5 rounded bg-black/30 text-amber-300 font-mono font-bold text-xs">
+              STEP {currentStep} OF 18
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2 text-xs font-mono text-white/90">
+            <Clock className="w-3.5 h-3.5 text-amber-300" />
+            <span>Codes Drop Daily at <strong>02:00 AM WAT</strong></span>
+          </div>
+        </div>
+
+        {/* Main Hero Body */}
+        <div className="p-4 sm:p-6 space-y-4">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
             
-            {/* Left: Ladder Brand, Live Stage, & Hook */}
-            <div className="space-y-1.5">
-              <div className="flex items-center gap-2 flex-wrap">
-                {/* Iconic Sporty-Style Pill */}
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-black/35 backdrop-blur-sm border border-white/20 text-white font-display font-black text-[11px] uppercase tracking-wider">
-                  <span className="w-2 h-2 rounded-full bg-[#00FF66] animate-ping"></span>
-                  SPORTYBET ROLLOVER &bull; RUN #50
-                </span>
-
-                <span className="px-2 py-0.5 rounded bg-white/20 text-white font-mono font-bold text-[10px] uppercase">
-                  DAY {currentLadderDay} OF 18
-                </span>
-
-                <span className="text-[11px] font-mono text-white/80 flex items-center gap-1">
-                  <Clock className="w-3 h-3 text-amber-300" />
-                  <span>02:00 AM WAT Midnight Drop</span>
-                </span>
+            {/* Title & Core Concept */}
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <span className="text-2xl sm:text-3xl">🪜</span>
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-display font-black text-white tracking-tight">
+                  The ₦1,000 &rarr; ₦1,000,000 Ladder
+                </h1>
               </div>
 
-              <h2 className="text-2xl sm:text-3xl font-display font-black tracking-tight text-white flex items-center gap-2">
-                <span>The ₦{currentStakeValue.toLocaleString()} &rarr; ₦{(1000000 * startingStakeMultiplier).toLocaleString()} Ladder</span>
-              </h2>
-
-              <p className="text-xs sm:text-sm text-white/90 max-w-xl font-medium leading-relaxed">
-                Compound daily 1.50x banker odds. Reach Day 6 to bank <strong>₦{day6BankValue.toLocaleString()} pure cash</strong> into your pocket to play the rest 100% risk-free.
+              <p className="text-xs sm:text-sm text-slate-300 max-w-xl leading-relaxed">
+                <strong className="text-white">18 consecutive wins is the ultimate goal.</strong> We roll daily 1.50x banker selections with 2 built-in <strong>Safe Haven Cashouts</strong> at Step 6 and Step 12 so you take profit into your pocket along the journey.
               </p>
+
+              {/* Progress Summary Pills */}
+              <div className="flex items-center gap-2 pt-1 flex-wrap text-xs font-mono">
+                <span className="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center gap-1.5 font-bold">
+                  <Check className="w-3.5 h-3.5 stroke-[3]" />
+                  <span>{wonStepsCount} Wins Locked</span>
+                </span>
+
+                <span className="px-2.5 py-1 rounded-lg bg-[#E41B13]/20 text-rose-300 border border-[#E41B13]/30 flex items-center gap-1.5 font-bold">
+                  <Flame className="w-3.5 h-3.5 text-[#E41B13] animate-pulse" />
+                  <span>Step {currentStep} In Play</span>
+                </span>
+
+                <span className="px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/30 flex items-center gap-1.5 font-bold">
+                  <Shield className="w-3.5 h-3.5 text-amber-400" />
+                  <span>2 Profit Lock Milestones</span>
+                </span>
+              </div>
             </div>
 
-            {/* Right: Live Accumulated Pot Scoreboard (Sporty Style) */}
-            <div className="bg-black/40 backdrop-blur-md border border-white/20 rounded-2xl p-3.5 sm:p-4 text-left md:text-right flex-shrink-0 shadow-inner flex flex-row md:flex-col justify-between items-center md:items-end gap-3">
+            {/* Scoreboard Widget */}
+            <div className="bg-black/60 border border-white/15 rounded-2xl p-4 sm:p-5 flex-shrink-0 flex flex-col justify-between gap-3 shadow-inner lg:min-w-[260px]">
               <div>
-                <span className="text-[10px] uppercase font-mono font-bold tracking-wider text-amber-300 block">
+                <span className="text-[10px] font-mono uppercase tracking-wider text-amber-400 block font-bold">
                   Active Bankroll (Pot)
                 </span>
-                <span className="text-2xl sm:text-3xl font-mono font-black text-white tracking-tight block">
-                  ₦{currentPurse.toLocaleString()}
-                </span>
+                <div className="text-3xl sm:text-4xl font-mono font-black text-white tracking-tight mt-0.5">
+                  ₦{currentPot.toLocaleString()}
+                </div>
+                <div className="text-[11px] font-mono text-slate-400 mt-0.5">
+                  Started at ₦1,000 on Step 1
+                </div>
               </div>
 
-              <div className="md:mt-1 pt-1 border-t border-white/10 flex items-center gap-2">
-                <span className="text-[10px] text-white/70 font-mono">Today's Target:</span>
-                <span className="font-mono font-black text-xs px-2 py-0.5 rounded bg-[#00C250] text-black">
-                  ₦{potentialWin.toLocaleString()}
+              <div className="pt-2 border-t border-white/10 flex items-center justify-between text-xs font-mono">
+                <span className="text-slate-400">Step {currentStep} Target:</span>
+                <span className="font-bold text-[#00FF66] bg-[#00FF66]/10 px-2 py-0.5 rounded border border-[#00FF66]/30">
+                  ₦{Math.round(currentPot * 1.5).toLocaleString()}
                 </span>
               </div>
             </div>
 
           </div>
 
-          {/* Sub-Bar: Stake Simulator Pills & Rules Toggle */}
-          <div className="mt-4 pt-3 border-t border-white/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
-            {/* Stake Simulator Options */}
-            <div className="flex items-center gap-1.5 flex-wrap">
-              <span className="text-[11px] font-mono text-white/80 mr-1 flex items-center gap-1">
-                <Calculator className="w-3 h-3 text-amber-300" />
-                <span>Simulate Stake:</span>
+          {/* ── 2. SPORTYBET 1-TAP BOOKING CODE BAR ── */}
+          <div className="pt-3 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white/5 -mx-4 -mb-4 sm:-mx-6 sm:-mb-6 p-4 sm:p-5">
+            
+            {/* Bookmaker Tabs */}
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] uppercase font-mono font-bold text-slate-400 hidden sm:inline">
+                Today's Step {currentStep} Code:
               </span>
-              {[
-                { multiplier: 0.5, label: '₦500' },
-                { multiplier: 1, label: '₦1,000 (Official)' },
-                { multiplier: 2, label: '₦2,000' },
-                { multiplier: 5, label: '₦5,000' },
-              ].map(opt => (
-                <button
-                  key={opt.multiplier}
-                  onClick={() => setStartingStakeMultiplier(opt.multiplier)}
-                  className={`px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold transition-all ${
-                    startingStakeMultiplier === opt.multiplier
-                      ? 'bg-amber-400 text-slate-950 font-black shadow-md ring-2 ring-white/50'
-                      : 'bg-black/30 hover:bg-black/40 text-white border border-white/10'
-                  }`}
-                >
-                  {opt.label}
-                </button>
-              ))}
-            </div>
 
-            {/* Rules Trigger */}
-            <button
-              onClick={() => setShowRules(!showRules)}
-              className="text-[11px] font-display font-bold text-amber-300 hover:text-white transition-colors underline flex items-center gap-1 self-start sm:self-auto"
-            >
-              <Info className="w-3.5 h-3.5" />
-              <span>{showRules ? 'Hide Rollover Rules' : 'How the 1.50x Ladder Works (3 Rules)'}</span>
-            </button>
-          </div>
-
-        </div>
-
-        {/* ── 2. THE SPORTYBET 1-TAP LOAD CODE BAR ── */}
-        <div className="bg-slate-900 text-white p-3 sm:p-4 border-b border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          
-          {/* Bookmaker Selector & Code Display */}
-          <div className="flex items-center gap-2.5 flex-wrap">
-            <span className="text-[10px] uppercase font-mono font-bold text-slate-400">
-              Instant Booking Code:
-            </span>
-
-            {/* SportyBet Tab */}
-            <button
-              onClick={() => setActiveBookmaker('sportybet')}
-              className={`px-2.5 py-1 rounded-lg text-xs font-display font-black uppercase tracking-wider flex items-center gap-1.5 transition-all ${
-                activeBookmaker === 'sportybet'
-                  ? 'bg-[#E41B13] text-white shadow-md'
-                  : 'bg-slate-800 text-slate-400 hover:text-white'
-              }`}
-            >
-              <span>🔴 SportyBet</span>
-            </button>
-
-            {/* Bet9ja Tab */}
-            <button
-              onClick={() => setActiveBookmaker('bet9ja')}
-              className={`px-2.5 py-1 rounded-lg text-xs font-display font-black uppercase tracking-wider flex items-center gap-1.5 transition-all ${
-                activeBookmaker === 'bet9ja'
-                  ? 'bg-[#00C250] text-black shadow-md'
-                  : 'bg-slate-800 text-slate-400 hover:text-white'
-              }`}
-            >
-              <span>🟢 Bet9ja</span>
-            </button>
-
-            {/* Big Monospace Code Display */}
-            <div className="px-3 py-1 rounded-lg bg-black/70 border border-slate-700 font-mono font-black text-sm tracking-wider text-amber-400">
-              {activeBookmaker === 'sportybet' ? sportyCode : bet9jaCode}
-            </div>
-          </div>
-
-          {/* Action Buttons: 1-Tap Copy & Open */}
-          <div className="flex items-center gap-2 self-start sm:self-auto">
-            {activeBookmaker === 'sportybet' ? (
               <button
-                onClick={() => handleCopyCode(sportyCode, 'sporty')}
-                className={`px-3.5 py-1.5 rounded-xl font-display font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 transition-all shadow-md ${
-                  copiedSporty
-                    ? 'bg-[#00C250] text-slate-950 ring-2 ring-emerald-300'
-                    : 'bg-[#E41B13] hover:bg-[#D01710] text-white'
+                onClick={() => setActiveCodeTab('sporty')}
+                className={`px-3 py-1.5 rounded-xl text-xs font-display font-black uppercase tracking-wider flex items-center gap-1.5 transition-all ${
+                  activeCodeTab === 'sporty'
+                    ? 'bg-[#E41B13] text-white shadow-md'
+                    : 'bg-white/10 text-slate-400 hover:text-white'
                 }`}
               >
-                {copiedSporty ? (
+                <span>🔴 SportyBet</span>
+              </button>
+
+              <button
+                onClick={() => setActiveCodeTab('bet9ja')}
+                className={`px-3 py-1.5 rounded-xl text-xs font-display font-black uppercase tracking-wider flex items-center gap-1.5 transition-all ${
+                  activeCodeTab === 'bet9ja'
+                    ? 'bg-[#00C250] text-black shadow-md'
+                    : 'bg-white/10 text-slate-400 hover:text-white'
+                }`}
+              >
+                <span>🟢 Bet9ja</span>
+              </button>
+
+              {/* Code string */}
+              <div className="font-mono font-black text-sm px-3 py-1.5 rounded-xl bg-black border border-white/20 text-amber-300 tracking-wider">
+                {activeCodeTab === 'sporty' ? sportyCode : bet9jaCode}
+              </div>
+            </div>
+
+            {/* Action buttons */}
+            <div className="flex items-center gap-2 self-end sm:self-auto">
+              <button
+                onClick={() => handleCopy(activeCodeTab === 'sporty' ? sportyCode : bet9jaCode, activeCodeTab)}
+                className={`px-4 py-2 rounded-xl text-xs font-display font-black uppercase tracking-wider flex items-center gap-1.5 transition-all shadow-md ${
+                  (activeCodeTab === 'sporty' ? copiedSporty : copiedBet9ja)
+                    ? 'bg-[#00FF66] text-black font-black'
+                    : activeCodeTab === 'sporty'
+                    ? 'bg-[#E41B13] hover:bg-[#D01710] text-white'
+                    : 'bg-[#00C250] hover:bg-[#00B048] text-black font-bold'
+                }`}
+              >
+                {(activeCodeTab === 'sporty' ? copiedSporty : copiedBet9ja) ? (
                   <>
                     <Check className="w-4 h-4 stroke-[3]" />
                     <span>Copied! Ready to Paste</span>
@@ -226,397 +241,362 @@ export default function VisibleLadder({ onNavigate }) {
                 ) : (
                   <>
                     <Copy className="w-4 h-4" />
-                    <span>Copy SportyBet Code</span>
+                    <span>Copy {activeCodeTab === 'sporty' ? 'SportyBet' : 'Bet9ja'} Code</span>
                   </>
                 )}
               </button>
-            ) : (
-              <button
-                onClick={() => handleCopyCode(bet9jaCode, 'bet9ja')}
-                className={`px-3.5 py-1.5 rounded-xl font-display font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 transition-all shadow-md ${
-                  copiedBet9ja
-                    ? 'bg-[#00C250] text-slate-950 ring-2 ring-emerald-300'
-                    : 'bg-[#00C250] hover:bg-[#00B048] text-black'
-                }`}
-              >
-                {copiedBet9ja ? (
-                  <>
-                    <Check className="w-4 h-4 stroke-[3]" />
-                    <span>Copied! Ready to Paste</span>
-                  </>
-                ) : (
-                  <>
-                    <Copy className="w-4 h-4" />
-                    <span>Copy Bet9ja Code</span>
-                  </>
-                )}
-              </button>
-            )}
 
-            <button
-              onClick={() => onNavigate('ticket/ticket-ladder-challenge')}
-              className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white font-display font-bold text-xs transition-colors flex items-center gap-1"
-              title="Open full ticket details"
-            >
-              <span>Full Slip</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
+              <button
+                onClick={() => onNavigate('ticket/ticket-ladder-challenge')}
+                className="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-slate-200 text-xs font-display font-bold uppercase tracking-wider flex items-center gap-1 transition-colors"
+              >
+                <span>Full Slip</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+
           </div>
 
         </div>
+      </div>
 
-        {/* ── EXPANDABLE RULES DRAWER ── */}
-        {showRules && (
-          <div className="p-4 sm:p-5 bg-amber-50/70 dark:bg-[#111A2E] border-b border-slate-200 dark:border-slate-800 transition-all">
-            <h4 className="text-xs font-display font-black uppercase tracking-wider text-slate-900 dark:text-white mb-2.5 flex items-center gap-2">
-              <Shield className="w-4 h-4 text-[#E41B13]" />
-              <span>The 3 Unbreakable Rules of the BRYME Rollover:</span>
-            </h4>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <div className="p-3.5 rounded-xl bg-white dark:bg-[#162238] border border-slate-200 dark:border-slate-700 shadow-sm space-y-1">
-                <div className="flex items-center gap-2">
-                  <span className="w-6 h-6 rounded-lg bg-[#E41B13] text-white font-mono font-black text-xs flex items-center justify-center">1</span>
-                  <div className="font-display font-black text-xs text-slate-900 dark:text-white">Stake ₦1,000 Once</div>
-                </div>
-                <p className="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed">
-                  You only fund your account on Day 1. No continuous deposits or chasing losses.
-                </p>
-              </div>
-
-              <div className="p-3.5 rounded-xl bg-white dark:bg-[#162238] border border-slate-200 dark:border-slate-700 shadow-sm space-y-1">
-                <div className="flex items-center gap-2">
-                  <span className="w-6 h-6 rounded-lg bg-blue-600 text-white font-mono font-black text-xs flex items-center justify-center">2</span>
-                  <div className="font-display font-black text-xs text-slate-900 dark:text-white">Roll Daily 1.50x Odds</div>
-                </div>
-                <p className="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed">
-                  Every midnight at 02:00 AM, yesterday's returns roll entirely into 1 high-probability safety slip.
-                </p>
-              </div>
-
-              <div className="p-3.5 rounded-xl bg-white dark:bg-[#162238] border border-emerald-500/50 shadow-sm space-y-1">
-                <div className="flex items-center gap-2">
-                  <span className="w-6 h-6 rounded-lg bg-[#00C250] text-black font-mono font-black text-xs flex items-center justify-center">3</span>
-                  <div className="font-display font-black text-xs text-emerald-600 dark:text-emerald-400">The Savings Safety Plan (Never Lose It All)</div>
-                </div>
-                <p className="text-[11px] text-slate-600 dark:text-slate-300 leading-relaxed">
-                  The ladder is 18 basic steps. At Day 6 (₦11,390), immediately withdraw <strong>₦5,695 cash</strong> to your pocket! You have recovered your ₦1,000 + ₦4,695 profit. At Day 12, bank another ₦32,434. You never lose it all!
-                </p>
-              </div>
+      {/* ── 3. THE COMPLETE 18-PLACE LADDER BOARD ── */}
+      <div className="bg-white dark:bg-[#0E1626] border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 shadow-sm space-y-4">
+        
+        {/* Board Header & Filter Pills */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-3">
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#00FF66] animate-ping" />
+              <h2 className="text-lg sm:text-xl font-display font-black text-slate-900 dark:text-white">
+                The 18-Step Consecutive Wins Board
+              </h2>
             </div>
-          </div>
-        )}
-
-        {/* ── 3. WHO WANTS TO BE A MILLIONAIRE: RUNGS STEPPER ── */}
-        <div className="p-3 sm:p-4 bg-slate-50 dark:bg-[#0A101D] border-b border-slate-200 dark:border-slate-800">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-[10px] uppercase font-mono font-black tracking-wider text-slate-500 dark:text-slate-400">
-              Interactive Ladder Mountain (Click any Day to view target &amp; slip):
-            </span>
-            <span className="text-[11px] font-mono font-bold text-[#E41B13] dark:text-rose-400">
-              Run Progress: {((currentLadderDay / 18) * 100).toFixed(0)}%
-            </span>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              Every step from ₦1,000 stake to ₦1,000,000 Jackpot Crown &bull; With 2 Take-Profit Safe Havens
+            </p>
           </div>
 
-          {/* Stepper Rung Horizontal Ribbon */}
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
-            {ALL_18_STEPS.slice(0, 10).map((step) => {
-              const isWon = step.day < currentLadderDay;
-              const isActive = step.day === currentLadderDay;
-              const isSelected = selectedDayTab === step.day;
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setFilterView('all')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-display font-bold uppercase transition-all ${
+                filterView === 'all'
+                  ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 shadow-sm'
+                  : 'bg-slate-100 dark:bg-[#162238] text-slate-600 dark:text-slate-400'
+              }`}
+            >
+              All 18 Steps
+            </button>
+            <button
+              onClick={() => setFilterView('safehavens')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-display font-bold uppercase transition-all flex items-center gap-1.5 ${
+                filterView === 'safehavens'
+                  ? 'bg-amber-500 text-slate-950 font-black shadow-sm'
+                  : 'bg-slate-100 dark:bg-[#162238] text-amber-600 dark:text-amber-400'
+              }`}
+            >
+              <Shield className="w-3.5 h-3.5" />
+              <span>Safe Havens Only</span>
+            </button>
+          </div>
+        </div>
+
+        {/* ── 18-STEP PROGRESS METER ── */}
+        <div className="p-3 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-800 space-y-1.5">
+          <div className="flex items-center justify-between text-xs font-mono">
+            <span className="text-slate-600 dark:text-slate-400 font-bold">18 Consecutive Wins Goal:</span>
+            <span className="text-[#E41B13] dark:text-rose-400 font-black">
+              Step {currentStep} Active &bull; {((wonStepsCount / 18) * 100).toFixed(0)}% Done
+            </span>
+          </div>
+
+          <div className="h-3 w-full bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden flex">
+            {Array.from({ length: 18 }).map((_, idx) => {
+              const stepNum = idx + 1;
+              const isWon = stepNum < currentStep;
+              const isActive = stepNum === currentStep;
+              const isMilestone = stepNum === 6 || stepNum === 12;
+              const isSummit = stepNum === 18;
 
               return (
-                <button
-                  key={step.day}
-                  onClick={() => setSelectedDayTab(step.day)}
-                  className={`flex-shrink-0 px-2.5 py-1.5 rounded-xl text-left border transition-all ${
-                    isSelected
-                      ? 'ring-2 ring-[#E41B13] bg-white dark:bg-[#162238] border-[#E41B13] shadow-md'
-                      : isWon
-                      ? 'bg-emerald-50 dark:bg-emerald-950/30 border-emerald-500/30 text-emerald-700 dark:text-emerald-300'
+                <div
+                  key={idx}
+                  className={`flex-1 border-r border-black/20 transition-all ${
+                    isWon
+                      ? 'bg-emerald-500'
                       : isActive
-                      ? 'bg-[#E41B13]/10 dark:bg-[#E41B13]/20 border-[#E41B13] text-[#E41B13] dark:text-rose-300'
-                      : step.isMilestone
-                      ? 'bg-amber-50 dark:bg-amber-950/30 border-amber-400/50 text-amber-800 dark:text-amber-300'
-                      : 'bg-white dark:bg-[#121B2F] border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400'
+                      ? 'bg-[#E41B13] animate-pulse'
+                      : isMilestone
+                      ? 'bg-amber-400/50'
+                      : isSummit
+                      ? 'bg-yellow-400/40'
+                      : 'bg-transparent'
                   }`}
-                >
-                  <div className="flex items-center gap-1 text-[9px] font-mono font-bold uppercase">
-                    <span>Day {step.day}</span>
-                    {isWon && <Check className="w-3 h-3 text-emerald-500 stroke-[3]" />}
-                    {isActive && <Flame className="w-3 h-3 text-[#E41B13] animate-pulse" />}
-                    {step.isMilestone && <Shield className="w-3 h-3 text-amber-500" />}
-                  </div>
-                  <div className="font-mono font-black text-xs text-slate-900 dark:text-white">
-                    ₦{Math.round(step.returnVal * startingStakeMultiplier).toLocaleString()}
-                  </div>
-                </button>
+                  title={`Step ${stepNum}`}
+                />
               );
             })}
+          </div>
 
-            <button
-              onClick={() => setShowFullRoadmap(!showFullRoadmap)}
-              className="flex-shrink-0 px-2.5 py-1.5 rounded-xl border border-dashed border-slate-300 dark:border-slate-700 bg-transparent text-[11px] font-display font-bold text-blue-600 dark:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800"
-            >
-              + All 18 Days &rarr;
-            </button>
+          <div className="flex items-center justify-between text-[10px] font-mono text-slate-500 dark:text-slate-400 pt-0.5">
+            <span>₦1,000 (Day 1)</span>
+            <span className="text-amber-500 font-bold">🛡️ Step 6: Bank ₦5.6K</span>
+            <span className="text-amber-500 font-bold">🛡️ Step 12: Bank ₦32.4K</span>
+            <span className="text-[#00C250] font-bold">🏆 Step 18: ₦1,000,000</span>
           </div>
         </div>
 
-        {/* ── 4. THE SPORTYBET ACCUMULATOR BET SLIP (TODAY'S SELECTIONS) ── */}
-        <div className="p-4 sm:p-5 space-y-4">
-          
-          {/* Slip Header Banner */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#00C250] animate-ping"></span>
-                <h3 className="font-display font-black text-base sm:text-lg text-slate-900 dark:text-white flex items-center gap-2">
-                  <span>Day {selectedStepData.day} Official Slip Selections</span>
-                  {selectedStepData.day === currentLadderDay && (
-                    <span className="px-2 py-0.5 rounded text-[10px] font-mono font-black uppercase bg-[#E41B13] text-white">
-                      LIVE IN PLAY
-                    </span>
-                  )}
-                  {selectedStepData.day < currentLadderDay && (
-                    <span className="px-2 py-0.5 rounded text-[10px] font-mono font-black uppercase bg-[#00C250] text-black">
-                      PASSED ✅
-                    </span>
-                  )}
-                </h3>
-              </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                Target Odds: <strong className="text-blue-600 dark:text-blue-400 font-bold">{selectedStepData.odds.toFixed(2)}x</strong> &bull; Calculated Stake: <strong className="text-slate-900 dark:text-white">₦{Math.round(selectedStepData.stake * startingStakeMultiplier).toLocaleString()}</strong>
-              </p>
-            </div>
+        {/* ── 18 STEPS LIST & CARDS ── */}
+        <div className="space-y-2.5">
+          {LADDER_18_STEPS.map((step) => {
+            const isWon = step.step < currentStep;
+            const isActive = step.step === currentStep;
+            const isUpcoming = step.step > currentStep;
 
-            <div className="flex items-center gap-2 self-start sm:self-auto">
-              <span className="text-xs font-mono font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-700">
-                2 Matches Acca
-              </span>
-              <span className="text-xs font-mono font-black bg-blue-50 dark:bg-blue-950/80 text-blue-600 dark:text-blue-400 px-2.5 py-1 rounded-lg border border-blue-300/40">
-                {currentOdds.toFixed(2)}x Odds
-              </span>
-            </div>
-          </div>
+            if (filterView === 'safehavens' && !step.isSafeHaven && !step.isSummit) {
+              return null;
+            }
 
-          {/* Matches List (Styled in Authentic SportyBet Betslip Market Format) */}
-          {selectedStepData.day === currentLadderDay ? (
-            <div className="space-y-3">
-              {selections.map((sel, idx) => (
-                <div 
-                  key={idx}
-                  className="p-3.5 sm:p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-[#121B30] hover:border-slate-300 dark:hover:border-slate-700 transition-all shadow-sm"
-                >
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                    
-                    {/* Left: Match, League & Kickoff */}
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#E41B13] dark:text-rose-400 bg-rose-50 dark:bg-rose-950/40 px-2 py-0.5 rounded border border-rose-200 dark:border-rose-900/40">
-                          {sel.league || 'European Top Flight'}
-                        </span>
-                        <span className="text-[11px] font-mono text-slate-400 flex items-center gap-1">
-                          <Clock className="w-3 h-3" />
-                          <span>{sel.kickoff || 'Today 18:00 WAT'}</span>
-                        </span>
+            return (
+              <React.Fragment key={step.step}>
+                
+                {/* SAFE HAVEN CALLOUT HEADER BANNER (SEPARATING STAGES) */}
+                {step.step === 6 && (
+                  <div className="p-3 sm:p-4 rounded-xl bg-gradient-to-r from-amber-500/15 via-amber-600/10 to-transparent border-2 border-amber-500/40 my-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-sm">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-lg bg-amber-500 text-slate-950 flex items-center justify-center font-bold text-sm flex-shrink-0">
+                        🛡️
                       </div>
-
-                      <div className="font-display font-black text-sm sm:text-base text-slate-900 dark:text-white">
-                        {sel.match}
-                      </div>
-
-                      <div className="text-xs text-slate-500 dark:text-slate-400">
-                        Market Selection: <strong className="text-slate-900 dark:text-slate-200">{sel.pick}</strong>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-display font-black text-amber-500 uppercase tracking-wider">
+                            SAFE HAVEN #1 &bull; CASH OUT MILESTONE
+                          </span>
+                          <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-amber-400 text-slate-950 font-bold">
+                            5.7x PROFIT SECURED
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-700 dark:text-slate-300 mt-0.5 font-medium">
+                          <strong>Take ₦5,695 pure cash out</strong> straight to your bank! Recover your starting ₦1,000 + ₦4,695 profit. Roll remainder risk-free.
+                        </p>
                       </div>
                     </div>
+                    <span className="text-xs font-mono font-bold text-amber-500 bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/30 self-start sm:self-auto">
+                      Bank: ₦5,695 Cash
+                    </span>
+                  </div>
+                )}
 
-                    {/* Right: Tactile SportyBet Odds Selection Button */}
-                    <div className="flex items-center gap-2 self-start sm:self-auto flex-shrink-0">
-                      <div className="flex items-center rounded-xl overflow-hidden border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#1A253D] shadow-sm">
-                        <div className="px-3 py-2 text-xs font-display font-bold text-slate-700 dark:text-slate-300 border-r border-slate-200 dark:border-slate-700">
-                          {sel.pick.length > 18 ? sel.pick.slice(0, 16) + '...' : sel.pick}
+                {step.step === 12 && (
+                  <div className="p-3 sm:p-4 rounded-xl bg-gradient-to-r from-amber-500/15 via-amber-600/10 to-transparent border-2 border-amber-500/40 my-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-sm">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-lg bg-amber-500 text-slate-950 flex items-center justify-center font-bold text-sm flex-shrink-0">
+                        🛡️
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-display font-black text-amber-500 uppercase tracking-wider">
+                            SAFE HAVEN #2 &bull; HUGE CAPITAL LOCK
+                          </span>
+                          <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-amber-400 text-slate-950 font-bold">
+                            32x CAPITAL BANKED
+                          </span>
                         </div>
-                        <div className="px-3 py-2 text-xs font-mono font-black text-[#E41B13] dark:text-rose-400 bg-rose-50/50 dark:bg-rose-950/30">
-                          {sel.odds ? Number(sel.odds).toFixed(2) : '1.25'}
-                        </div>
+                        <p className="text-xs text-slate-700 dark:text-slate-300 mt-0.5 font-medium">
+                          <strong>Take ₦32,434 cash out</strong> to your bank account! You have banked 32x your initial capital. The final 6 steps roll completely on house profit!
+                        </p>
                       </div>
                     </div>
-
+                    <span className="text-xs font-mono font-bold text-amber-500 bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/30 self-start sm:self-auto">
+                      Bank: ₦32,434 Cash
+                    </span>
                   </div>
-                </div>
-              ))}
+                )}
 
-              {/* BETSLIP RECEIPT SUMMARY BOX (SPORTY STYLE) */}
-              <div className="p-4 rounded-xl bg-gradient-to-br from-slate-900 to-slate-950 text-white border border-slate-800 space-y-3 shadow-lg">
-                <div className="flex items-center justify-between border-b border-white/10 pb-2.5">
-                  <span className="text-xs font-display font-bold uppercase text-slate-400">
-                    SportyBet Accumulator Receipt
-                  </span>
-                  <span className="text-xs font-mono font-bold text-[#00C250]">
-                    ● Verified Active
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-mono">
-                  <div>
-                    <span className="text-[10px] text-slate-400 block uppercase">Total Odds</span>
-                    <span className="text-base font-black text-amber-300">{currentOdds.toFixed(2)}x</span>
+                {step.step === 18 && (
+                  <div className="p-3.5 sm:p-4 rounded-xl bg-gradient-to-r from-emerald-500/20 via-yellow-500/15 to-transparent border-2 border-yellow-500/50 my-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-md">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-yellow-400 to-amber-600 text-slate-950 flex items-center justify-center font-black text-lg flex-shrink-0 shadow-md">
+                        🏆
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-display font-black text-yellow-500 dark:text-yellow-400 uppercase tracking-wider">
+                            STEP 18 &bull; THE SUMMIT JACKPOT
+                          </span>
+                          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500 text-slate-950 font-black">
+                            18 WINS GOAL
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-700 dark:text-slate-300 mt-0.5 font-medium">
+                          18 consecutive wins completed! Full <strong>₦1,000,000+ payout</strong> achieved from a single ₦1,000 starting stake.
+                        </p>
+                      </div>
+                    </div>
+                    <span className="text-base font-mono font-black text-[#00FF66] bg-black/60 px-3 py-1.5 rounded-xl border border-emerald-500/40 self-start sm:self-auto">
+                      ₦1,000,000+
+                    </span>
                   </div>
-                  <div>
-                    <span className="text-[10px] text-slate-400 block uppercase">Rollover Stake</span>
-                    <span className="text-base font-black text-white">₦{currentPurse.toLocaleString()}</span>
-                  </div>
-                  <div>
-                    <span className="text-[10px] text-slate-400 block uppercase">Potential Win</span>
-                    <span className="text-base font-black text-[#00C250]">₦{potentialWin.toLocaleString()}</span>
-                  </div>
-                  <div>
-                    <span className="text-[10px] text-slate-400 block uppercase">Net Profit</span>
-                    <span className="text-base font-black text-cyan-300">+₦{(potentialWin - currentPurse).toLocaleString()}</span>
-                  </div>
-                </div>
+                )}
 
-                {/* 1-Tap Load Codes Footer */}
-                <div className="pt-2 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-[11px] font-mono text-slate-400">Ready Codes:</span>
-                    <button
-                      onClick={() => handleCopyCode(sportyCode, 'sporty')}
-                      className="px-2.5 py-1 rounded bg-[#E41B13] hover:bg-[#D01710] text-white font-mono font-bold text-xs flex items-center gap-1 transition-all"
-                    >
-                      <span>Sporty: {sportyCode}</span>
-                      {copiedSporty ? <Check className="w-3.5 h-3.5 text-emerald-300" /> : <Copy className="w-3.5 h-3.5" />}
-                    </button>
-                    <button
-                      onClick={() => handleCopyCode(bet9jaCode, 'bet9ja')}
-                      className="px-2.5 py-1 rounded bg-[#00C250] hover:bg-[#00B048] text-black font-mono font-bold text-xs flex items-center gap-1 transition-all"
-                    >
-                      <span>Bet9ja: {bet9jaCode}</span>
-                      {copiedBet9ja ? <Check className="w-3.5 h-3.5 text-black" /> : <Copy className="w-3.5 h-3.5" />}
-                    </button>
-                  </div>
-
-                  <button
-                    onClick={() => onNavigate('ticket/ticket-ladder-challenge')}
-                    className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-display font-bold text-xs uppercase tracking-wider transition-all shadow-md"
-                  >
-                    <Eye className="w-3.5 h-3.5" />
-                    <span>View Dedicated Ticket Page &rarr;</span>
-                  </button>
-                </div>
-              </div>
-
-            </div>
-          ) : (
-            /* PREVIOUS WON DAYS OR FUTURE STAGE CARD */
-            <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#111A2E] p-4 sm:p-5 space-y-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2.5">
-                  <span className={`w-8 h-8 rounded-xl flex items-center justify-center font-mono font-black text-xs ${
-                    selectedStepData.status === 'won'
-                      ? 'bg-emerald-500 text-white'
-                      : selectedStepData.isMilestone
-                      ? 'bg-amber-500 text-slate-950'
-                      : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
-                  }`}>
-                    D{selectedStepData.day}
-                  </span>
-                  <div>
-                    <h4 className="font-display font-black text-sm sm:text-base text-slate-900 dark:text-white">
-                      Day {selectedStepData.day} &bull; {selectedStepData.match}
-                    </h4>
-                    <p className="text-xs text-slate-500 dark:text-slate-400">
-                      Calculated Stake: ₦{Math.round(selectedStepData.stake * startingStakeMultiplier).toLocaleString()} &bull; Payout: <strong className="text-emerald-600 dark:text-emerald-400">₦{Math.round(selectedStepData.returnVal * startingStakeMultiplier).toLocaleString()}</strong>
-                    </p>
-                  </div>
-                </div>
-
-                <span className={`text-xs font-mono font-bold px-2.5 py-1 rounded-lg ${
-                  selectedStepData.status === 'won'
-                    ? 'bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400'
-                    : selectedStepData.isMilestone
-                    ? 'bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-400'
-                    : 'bg-slate-200 dark:bg-slate-800 text-slate-500'
-                }`}>
-                  {selectedStepData.score}
-                </span>
-              </div>
-
-              {selectedStepData.isMilestone && (
-                <div className="p-3.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800/80 text-xs text-amber-900 dark:text-amber-200 space-y-1">
-                  <div className="font-bold uppercase tracking-wide flex items-center gap-1.5 text-amber-700 dark:text-amber-400">
-                    <Shield className="w-4 h-4" />
-                    <span>Day 6 Safe Haven Rule Activated</span>
-                  </div>
-                  <p>
-                    At Day 6, exactly 50% (₦{day6BankValue.toLocaleString()}) is banked to cash profit directly into your pocket. The remaining 50% (₦{day6BankValue.toLocaleString()}) rolls into Day 7.
-                  </p>
-                </div>
-              )}
-
-              <div className="pt-2 flex items-center justify-between">
-                <button
-                  onClick={() => setSelectedDayTab(currentLadderDay)}
-                  className="text-xs font-display font-bold text-[#E41B13] dark:text-rose-400 hover:underline flex items-center gap-1"
-                >
-                  &larr; Return to Today's Active Day {currentLadderDay} Slip
-                </button>
-
-                <button
-                  onClick={() => onNavigate('ladder')}
-                  className="text-xs font-display font-bold text-blue-600 dark:text-blue-400 hover:underline inline-flex items-center gap-1"
-                >
-                  <span>Full Ledger History &rarr;</span>
-                </button>
-              </div>
-            </div>
-          )}
-
-        </div>
-
-        {/* ── EXPANDABLE: FULL 18-DAY COMPLETE PROGRESSION ── */}
-        <div className="px-4 sm:px-5 pb-5">
-          <div className="text-center pt-2 border-t border-slate-100 dark:border-slate-800">
-            <button
-              onClick={() => setShowFullRoadmap(!showFullRoadmap)}
-              className="inline-flex items-center gap-1.5 text-xs font-display font-bold text-blue-600 dark:text-blue-400 hover:underline py-1.5 px-3 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-950/40 transition-colors"
-            >
-              <span>{showFullRoadmap ? '▲ Collapse 18-Day Mountain' : `▼ Inspect Complete 18-Day Progression to ₦${(1000000 * startingStakeMultiplier).toLocaleString()}`}</span>
-            </button>
-          </div>
-
-          {showFullRoadmap && (
-            <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 pt-2">
-              {ALL_18_STEPS.map((s) => (
+                {/* THE INDIVIDUAL STEP ROW */}
                 <div
-                  key={s.day}
-                  onClick={() => setSelectedDayTab(s.day)}
-                  className={`p-2.5 rounded-xl border text-left text-xs cursor-pointer transition-all hover:scale-[1.02] ${
-                    s.day < currentLadderDay
-                      ? 'bg-emerald-50/60 dark:bg-emerald-950/30 border-emerald-500/30'
-                      : s.day === currentLadderDay
-                      ? 'bg-[#E41B13] text-white border-[#E41B13] shadow-md'
-                      : s.isMilestone
-                      ? 'bg-amber-50 dark:bg-amber-950/30 border-amber-500/40 text-slate-900 dark:text-white'
-                      : s.isPeak
-                      ? 'bg-amber-500/10 border-amber-400 text-amber-950 dark:text-amber-200'
-                      : 'bg-slate-50 dark:bg-[#121B2F] border-slate-200 dark:border-slate-800 text-slate-500'
+                  className={`p-3 sm:p-3.5 rounded-xl border transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
+                    isActive
+                      ? 'bg-rose-50/80 dark:bg-[#181D2E] border-2 border-[#E41B13] shadow-md ring-2 ring-red-500/20'
+                      : isWon
+                      ? 'bg-emerald-50/50 dark:bg-[#0B151F] border-emerald-500/30'
+                      : step.isSafeHaven
+                      ? 'bg-amber-50/50 dark:bg-[#161C26] border-amber-500/40'
+                      : step.isSummit
+                      ? 'bg-yellow-50/50 dark:bg-[#1B1B26] border-yellow-500/40'
+                      : 'bg-white dark:bg-[#101726] border-slate-200 dark:border-slate-800'
                   }`}
                 >
-                  <div className="font-mono text-[10px] uppercase font-bold mb-0.5 flex items-center justify-between">
-                    <span>Day {s.day}</span>
-                    <span>{s.day < currentLadderDay ? '✅' : s.day === currentLadderDay ? '🔥' : s.isMilestone ? '🛡️' : s.isPeak ? '👑' : ''}</span>
+                  {/* Left: Step indicator, Name, and Match */}
+                  <div className="flex items-center gap-3">
+                    
+                    {/* Step Number Badge */}
+                    <div
+                      className={`w-9 h-9 rounded-xl flex items-center justify-center font-mono font-black text-xs flex-shrink-0 ${
+                        isWon
+                          ? 'bg-emerald-500 text-slate-950 shadow-sm'
+                          : isActive
+                          ? 'bg-[#E41B13] text-white shadow-md animate-pulse'
+                          : step.isSafeHaven
+                          ? 'bg-amber-500 text-slate-950'
+                          : step.isSummit
+                          ? 'bg-yellow-400 text-slate-950 font-black'
+                          : 'bg-slate-100 dark:bg-[#1A2438] text-slate-500 dark:text-slate-400'
+                      }`}
+                    >
+                      {isWon ? <Check className="w-5 h-5 stroke-[3]" /> : step.step < 10 ? `0${step.step}` : step.step}
+                    </div>
+
+                    <div>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="font-display font-black text-xs sm:text-sm text-slate-900 dark:text-white">
+                          STEP {step.step}
+                        </span>
+
+                        {isWon && (
+                          <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 flex items-center gap-1">
+                            <Check className="w-3 h-3 stroke-[3]" />
+                            <span>WON &bull; {step.score}</span>
+                          </span>
+                        )}
+
+                        {isActive && (
+                          <span className="text-[10px] font-mono font-black px-2 py-0.5 rounded bg-[#E41B13] text-white flex items-center gap-1 shadow-sm">
+                            <Flame className="w-3 h-3 text-amber-300 animate-pulse" />
+                            <span>TODAY'S SELECTION</span>
+                          </span>
+                        )}
+
+                        {step.isSafeHaven && (
+                          <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/30 flex items-center gap-1">
+                            <Shield className="w-3 h-3" />
+                            <span>Safe Haven #{step.safeHavenNum}</span>
+                          </span>
+                        )}
+
+                        {step.isSummit && (
+                          <span className="text-[10px] font-mono font-black px-2 py-0.5 rounded bg-yellow-400 text-slate-950 flex items-center gap-1">
+                            <Trophy className="w-3 h-3" />
+                            <span>JACKPOT GOAL</span>
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="text-xs text-slate-600 dark:text-slate-300 mt-0.5 flex items-center gap-2">
+                        <span>{step.match || 'Selected European Banker'}</span>
+                        <span className="text-slate-400 font-mono text-[11px]">&bull; {step.odds.toFixed(2)}x Odds</span>
+                      </div>
+                    </div>
+
                   </div>
-                  <div className="font-mono font-black">
-                    ₦{Math.round(s.returnVal * startingStakeMultiplier).toLocaleString()}
+
+                  {/* Right: Stake & Return Values */}
+                  <div className="flex items-center justify-between sm:justify-end gap-4 border-t sm:border-t-0 pt-2 sm:pt-0 border-slate-100 dark:border-slate-800">
+                    
+                    <div className="text-left sm:text-right font-mono">
+                      <div className="text-[10px] text-slate-400 uppercase">
+                        Stake &rarr; Payout
+                      </div>
+                      <div className="flex items-center gap-1 text-xs sm:text-sm">
+                        <span className="text-slate-500">₦{step.stake.toLocaleString()}</span>
+                        <span className="text-slate-400">&rarr;</span>
+                        <strong className={`font-black ${
+                          isActive 
+                            ? 'text-[#E41B13] dark:text-rose-400 text-sm sm:text-base' 
+                            : isWon 
+                            ? 'text-emerald-600 dark:text-emerald-400' 
+                            : 'text-slate-900 dark:text-white'
+                        }`}>
+                          ₦{step.returnVal.toLocaleString()}
+                        </strong>
+                      </div>
+                    </div>
+
+                    {/* Active Step Quick Action Button */}
+                    {isActive ? (
+                      <button
+                        onClick={() => handleCopy(sportyCode, 'sporty')}
+                        className={`px-3 py-1.5 rounded-xl text-xs font-display font-black uppercase tracking-wider flex items-center gap-1 transition-all ${
+                          copiedSporty
+                            ? 'bg-[#00FF66] text-black'
+                            : 'bg-[#E41B13] hover:bg-[#D01710] text-white shadow-md'
+                        }`}
+                      >
+                        {copiedSporty ? (
+                          <>
+                            <Check className="w-3.5 h-3.5 stroke-[3]" />
+                            <span>Copied</span>
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="w-3.5 h-3.5" />
+                            <span>Copy Code</span>
+                          </>
+                        )}
+                      </button>
+                    ) : isWon ? (
+                      <div className="w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-500 flex items-center justify-center font-bold">
+                        <Check className="w-4 h-4 stroke-[3]" />
+                      </div>
+                    ) : (
+                      <div className="w-7 h-7 rounded-full bg-slate-100 dark:bg-[#162238] text-slate-400 flex items-center justify-center">
+                        <Lock className="w-3.5 h-3.5" />
+                      </div>
+                    )}
+
                   </div>
                 </div>
-              ))}
-            </div>
-          )}
+
+              </React.Fragment>
+            );
+          })}
+        </div>
+
+        {/* Board Bottom Footer */}
+        <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-slate-600 dark:text-slate-300 font-medium">
+          <div className="flex items-center gap-2">
+            <Shield className="w-4 h-4 text-emerald-500 flex-shrink-0" />
+            <span>Strict Capital Protection: Start with ₦1,000 once. Bank profits at Step 6 &amp; Step 12. Never chase losses.</span>
+          </div>
+
+          <button
+            onClick={() => onNavigate('ticket/ticket-ladder-challenge')}
+            className="px-3.5 py-1.5 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-display font-black uppercase tracking-wider text-xs flex items-center gap-1.5 self-start sm:self-auto shadow-sm"
+          >
+            <span>View Today's Match Analysis</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </button>
         </div>
 
       </div>
+
     </div>
   );
 }

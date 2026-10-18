@@ -5,7 +5,7 @@ import BottomNav from './components/BottomNav';
 import Footer from './components/Footer';
 import SearchModal from './components/SearchModal';
 import { usePredictions } from './context/PredictionsContext';
-import { Sparkles, Clock, Flame, ShieldCheck } from 'lucide-react';
+import { Sparkles, Clock, Flame, ShieldCheck, X } from 'lucide-react';
 
 // Pages
 import HomePage from './pages/HomePage';
@@ -30,11 +30,13 @@ import ConvertCodesPage from './pages/ConvertCodesPage';
 export default function App() {
   const [currentHash, setCurrentHash] = useState(window.location.hash || '#/');
   const [searchOpen, setSearchOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const { ladder, announcements } = usePredictions();
 
   useEffect(() => {
     const handleHashChange = () => {
       setCurrentHash(window.location.hash || '#/');
+      setSidebarOpen(false);
       window.scrollTo(0, 0);
     };
 
@@ -43,6 +45,7 @@ export default function App() {
   }, []);
 
   const navigate = (path) => {
+    setSidebarOpen(false);
     const cleanPath = path.startsWith('#') ? path : `#/${path.replace(/^\//, '')}`;
     window.location.hash = cleanPath;
   };
@@ -108,6 +111,7 @@ export default function App() {
         currentRoute={mainRoute} 
         onNavigate={navigate} 
         onOpenSearch={() => setSearchOpen(true)}
+        onOpenSidebar={() => setSidebarOpen(true)}
       />
 
       {/* 2. Live Drop Marquee Ticker */}
@@ -142,26 +146,70 @@ export default function App() {
       <main className="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-6">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           
-          {/* Left Desktop Sidebar */}
-          <div className="hidden lg:block lg:col-span-4 xl:col-span-3.5 space-y-4">
-            <Sidebar currentRoute={mainRoute} onNavigate={navigate} />
+          {/* Left Desktop Sticky Sidebar */}
+          <div className="hidden lg:block lg:col-span-4 xl:col-span-3 space-y-4">
+            <div className="sticky top-20">
+              <Sidebar currentRoute={mainRoute} onNavigate={navigate} />
+            </div>
           </div>
 
           {/* Main Content Workspace */}
-          <div className="lg:col-span-8 xl:col-span-8.5 space-y-6">
+          <div className="lg:col-span-8 xl:col-span-9 space-y-6">
             {renderContent()}
           </div>
 
         </div>
       </main>
 
-      {/* 4. Footer */}
+      {/* 4. Slide-in Mobile & Tablet Sidebar Drawer */}
+      {sidebarOpen && (
+        <div className="fixed inset-0 z-50 lg:hidden flex">
+          {/* Backdrop */}
+          <div 
+            onClick={() => setSidebarOpen(false)} 
+            className="fixed inset-0 bg-black/70 backdrop-blur-sm transition-opacity"
+          />
+
+          {/* Drawer Content */}
+          <div className="relative w-full max-w-xs sm:max-w-sm bg-[#0E1626] text-white h-full overflow-y-auto p-4 shadow-2xl flex flex-col justify-between z-10 border-r border-slate-800">
+            <div>
+              <div className="flex items-center justify-between pb-3 border-b border-slate-800 mb-4">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-lg bg-[#E41B13] text-white flex items-center justify-center font-black">
+                    B
+                  </div>
+                  <div>
+                    <h3 className="font-display font-black text-sm tracking-wide">BRYME PREDICTIONS</h3>
+                    <p className="text-[10px] text-slate-400 font-mono">18-Step Rollover Suite</p>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => setSidebarOpen(false)}
+                  className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-slate-300"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              <Sidebar currentRoute={mainRoute} onNavigate={(path) => { setSidebarOpen(false); navigate(path); }} />
+            </div>
+
+            <div className="pt-4 border-t border-slate-800 text-[10px] text-slate-500 text-center font-mono">
+              Strictly 18+ Only &bull; Play Responsibly
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 5. Footer */}
       <Footer onNavigate={navigate} />
 
-      {/* 5. Mobile Bottom Navigation Bar */}
+      {/* 6. Mobile Bottom Navigation Bar */}
       <BottomNav 
         currentRoute={mainRoute} 
         onNavigate={navigate} 
+        onOpenSidebar={() => setSidebarOpen(true)}
       />
 
       {/* 6. Instant Search Modal */}

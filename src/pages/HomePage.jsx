@@ -9,7 +9,7 @@ import { MARKETS } from '../data/markets';
 import { 
   Trophy, ArrowRight, ShieldCheck, Flame, Sparkles, 
   TrendingUp, CheckCircle, Clock, Zap, Target, Copy, Check, 
-  BarChart2, ChevronDown, ChevronUp, Layers, Lock, Eye, Shield
+  BarChart2, ChevronDown, ChevronUp, Layers, Lock, Eye, Shield, Users
 } from 'lucide-react';
 
 export default function HomePage({ onNavigate }) {
@@ -62,7 +62,7 @@ export default function HomePage({ onNavigate }) {
                 : 'bg-slate-100 dark:bg-[#162035] text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
             }`}
           >
-            🔥 All Slips
+            🔥 All
           </button>
           <button
             onClick={() => setActiveTab('codes')}
@@ -72,7 +72,21 @@ export default function HomePage({ onNavigate }) {
                 : 'bg-slate-100 dark:bg-[#162035] text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
             }`}
           >
-            🔴 Sporty Slips
+            🔴 Sporty Codes
+          </button>
+          <button
+            onClick={() => onNavigate('punters')}
+            className="px-3 py-1.5 rounded-xl text-xs font-display font-black uppercase transition-all bg-amber-500/15 hover:bg-amber-500 text-amber-600 dark:text-amber-400 hover:text-slate-950 border border-amber-500/30 flex items-center gap-1"
+          >
+            <Users className="w-3.5 h-3.5" />
+            <span>👑 Punters Hub</span>
+          </button>
+          <button
+            onClick={() => onNavigate('results')}
+            className="px-3 py-1.5 rounded-xl text-xs font-display font-black uppercase transition-all bg-emerald-500/15 hover:bg-emerald-500 text-emerald-600 dark:text-emerald-400 hover:text-slate-950 border border-emerald-500/30 flex items-center gap-1"
+          >
+            <BarChart2 className="w-3.5 h-3.5" />
+            <span>📊 Results (77% Won)</span>
           </button>
           <button
             onClick={() => setActiveTab('ucl')}
@@ -85,12 +99,8 @@ export default function HomePage({ onNavigate }) {
             ⭐ UCL Special
           </button>
           <button
-            onClick={() => setActiveTab('markets')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-display font-black uppercase transition-all ${
-              activeTab === 'markets'
-                ? 'bg-blue-600 text-white shadow-md'
-                : 'bg-slate-100 dark:bg-[#162035] text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
-            }`}
+            onClick={() => onNavigate('markets')}
+            className="px-3 py-1.5 rounded-xl text-xs font-display font-black uppercase transition-all bg-slate-100 dark:bg-[#162035] text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
           >
             📂 Markets
           </button>
@@ -130,16 +140,16 @@ export default function HomePage({ onNavigate }) {
                   Today's Ready-to-Load Booking Slips
                 </h2>
                 <p className="text-xs text-slate-500 dark:text-slate-400">
-                  Instant codes for SportyBet &amp; Bet9ja &bull; Click any slip to reveal full selections
+                  Instant codes for SportyBet &amp; Bet9ja &bull; 1-tap copy action
                 </p>
               </div>
             </div>
 
             <button
-              onClick={() => onNavigate('results')}
+              onClick={() => onNavigate('predictions')}
               className="text-xs font-display font-bold text-[#E41B13] dark:text-rose-400 hover:underline flex items-center gap-1"
             >
-              <span>Past Hit Rate</span>
+              <span>View All Slips</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
           </div>
@@ -147,6 +157,136 @@ export default function HomePage({ onNavigate }) {
           <BookingCodesHub onNavigate={onNavigate} />
         </section>
       )}
+
+      {/* ── 4.5. LIVE RESULTS & ACCURACY LEDGER (HIGH VISIBILITY) ── */}
+      <section className="rounded-2xl border-2 border-emerald-500/30 bg-white dark:bg-[#0E1626] p-4 sm:p-5 shadow-sm space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-3">
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-xl bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold text-lg flex-shrink-0">
+              📊
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h3 className="font-display font-black text-base sm:text-lg text-slate-900 dark:text-white">
+                  Verified Results &amp; Win Ledger
+                </h3>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-bold">
+                  {WEEKEND_2_ODDS_STATS.accuracyRate}% WIN RATE
+                </span>
+              </div>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                Every ticket settled publicly before kickoff. Real scores, no hidden losses.
+              </p>
+            </div>
+          </div>
+
+          <button
+            onClick={() => onNavigate('results')}
+            className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-display font-black text-xs uppercase tracking-wider flex items-center gap-1.5 self-start sm:self-auto transition-all shadow-sm"
+          >
+            <span>Full Results Archive</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </button>
+        </div>
+
+        {/* 4 Quick Stat Badges */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 font-mono">
+          <div className="p-3 rounded-xl bg-emerald-50/50 dark:bg-[#121B2F] border border-emerald-500/20">
+            <span className="text-[10px] text-slate-400 uppercase block">Accuracy</span>
+            <span className="text-xl font-black text-emerald-600 dark:text-emerald-400">
+              {WEEKEND_2_ODDS_STATS.accuracyRate}%
+            </span>
+          </div>
+
+          <div className="p-3 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200/60 dark:border-slate-800">
+            <span className="text-[10px] text-slate-400 uppercase block">Record</span>
+            <span className="text-xl font-black text-blue-600 dark:text-blue-400">
+              {WEEKEND_2_ODDS_STATS.won}W - {WEEKEND_2_ODDS_STATS.lost}L
+            </span>
+          </div>
+
+          <div className="p-3 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200/60 dark:border-slate-800">
+            <span className="text-[10px] text-slate-400 uppercase block">Profit Units</span>
+            <span className="text-xl font-black text-amber-500">
+              {WEEKEND_2_ODDS_STATS.roiUnits}
+            </span>
+          </div>
+
+          <div className="p-3 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200/60 dark:border-slate-800">
+            <span className="text-[10px] text-slate-400 uppercase block">Win Streak</span>
+            <span className="text-xl font-black text-[#00C250]">
+              {WEEKEND_2_ODDS_STATS.currentStreak} in a Row 🔥
+            </span>
+          </div>
+        </div>
+
+        {/* Recent Settled Tickets List */}
+        <div className="space-y-2">
+          {WEEKEND_ARCHIVE.slice(1, 4).map((ticket, idx) => (
+            <div
+              key={idx}
+              onClick={() => onNavigate('results')}
+              className="p-3 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200/80 dark:border-slate-800 hover:border-emerald-500/50 cursor-pointer transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-2"
+            >
+              <div className="flex items-center gap-2.5">
+                <span className="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold text-xs flex-shrink-0">
+                  ✓
+                </span>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="font-display font-black text-xs sm:text-sm text-slate-900 dark:text-white">
+                      {ticket.title}
+                    </span>
+                    <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-emerald-500 text-slate-950 font-bold uppercase">
+                      WON
+                    </span>
+                  </div>
+                  <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                    {ticket.selections.map(s => `${s.match} (${s.score})`).join(' • ')}
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3 self-end sm:self-auto font-mono text-xs">
+                <span className="font-bold text-emerald-600 dark:text-emerald-400">{ticket.targetOdds}x Odds</span>
+                <span className="text-slate-400 text-[11px]">{ticket.dateRange}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── 4.8. TRACKED AFRICAN PUNTERS DIRECTORY SPOTLIGHT ── */}
+      <section 
+        onClick={() => onNavigate('punters')}
+        className="rounded-2xl border border-amber-500/40 bg-gradient-to-r from-amber-500/10 via-[#131C2E] to-[#0E1626] p-4 sm:p-5 shadow-sm cursor-pointer hover:border-amber-500/80 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4 group"
+      >
+        <div className="flex items-center gap-3.5">
+          <div className="w-11 h-11 rounded-2xl bg-amber-500 text-slate-950 flex items-center justify-center text-xl font-bold flex-shrink-0 shadow-lg group-hover:scale-105 transition-transform">
+            👑
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="font-display font-black text-sm sm:text-base text-slate-900 dark:text-white group-hover:text-amber-400 transition-colors">
+                Tracked African Punters &amp; Daily Booking Codes
+              </span>
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-400 text-slate-950 font-black">
+                UPDATED
+              </span>
+            </div>
+            <p className="text-xs text-slate-600 dark:text-slate-300 mt-0.5">
+              Browse top African tipsters &bull; Clean daily booking codes with event counts, total odds &amp; 1-tap copy
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 self-start sm:self-auto">
+          <button className="px-3.5 py-2 rounded-xl bg-amber-500 group-hover:bg-amber-400 text-slate-950 font-display font-black text-xs uppercase tracking-wider flex items-center gap-1.5 transition-colors shadow-md">
+            <span>Explore Punters Hub</span>
+            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+          </button>
+        </div>
+      </section>
 
       {/* ── 5. HIGH-YIELD BETTING MARKETS DIRECTORY ── */}
       {(activeTab === 'all' || activeTab === 'markets') && (
