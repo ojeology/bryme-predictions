@@ -18,6 +18,20 @@ function jsonResponse(data, status = 200) {
   });
 }
 
+function getKvBinding(env) {
+  if (!env) return null;
+  if (env.BRYME_KV) return env.BRYME_KV;
+  if (env.bryme_kv) return env.bryme_kv;
+  if (env.KV) return env.KV;
+  // Automatically detect any bound KV instance
+  for (const key of Object.keys(env)) {
+    if (key !== 'ASSETS' && env[key] && typeof env[key].get === 'function' && typeof env[key].put === 'function') {
+      return env[key];
+    }
+  }
+  return null;
+}
+
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
@@ -44,6 +58,8 @@ export default {
 async function handleApiRequest(request, env, url) {
   const path = url.pathname.replace(/\/$/, '');
   const method = request.method;
+  const kv = getKvBinding(env);
+  const detectedKeys = env ? Object.keys(env).filter(k => k !== 'ASSETS') : [];
 
   // 1. Health check
   if (path === '/api/health') {
@@ -51,15 +67,16 @@ async function handleApiRequest(request, env, url) {
       status: 'healthy',
       platform: 'Cloudflare Worker with Static Assets',
       timestamp: new Date().toISOString(),
-      kvConnected: Boolean(env && env.BRYME_KV)
+      kvConnected: Boolean(kv),
+      bindingsFound: detectedKeys
     });
   }
 
   // 2. Global State API (/api/state)
   if (path === '/api/state') {
     if (method === 'GET') {
-      if (env.BRYME_KV) {
-        const state = await env.BRYME_KV.get('bryme_global_state', { type: 'json' });
+      if (kv) {
+        const state = await kv.get('bryme_global_state', { type: 'json' });
         if (state) {
           return jsonResponse({ success: true, source: 'cloudflare-kv', data: state });
         }
@@ -77,8 +94,8 @@ async function handleApiRequest(request, env, url) {
         return jsonResponse({ success: false, error: 'Unauthorized: Invalid Admin PIN' }, 401);
       }
       const payload = await request.json();
-      if (env.BRYME_KV) {
-        await env.BRYME_KV.put('bryme_global_state', JSON.stringify(payload));
+      if (kv) {
+        await kv.put('bryme_global_state', JSON.stringify(payload));
         return jsonResponse({
           success: true,
           message: 'Global state synced to Cloudflare KV edge successfully',
@@ -87,7 +104,8 @@ async function handleApiRequest(request, env, url) {
       }
       return jsonResponse({
         success: true,
-        warning: 'BRYME_KV binding not configured yet in Cloudflare.',
+        warning: 'KV binding not configured yet in Cloudflare.',
+        detectedBindings: detectedKeys,
         payloadReceived: true
       });
     }
@@ -96,8 +114,8 @@ async function handleApiRequest(request, env, url) {
   // 3. Markets API (/api/markets)
   if (path === '/api/markets') {
     if (method === 'GET') {
-      if (env.BRYME_KV) {
-        const markets = await env.BRYME_KV.get('bryme_markets', { type: 'json' });
+      if (kv) {
+        const markets = await kv.get('bryme_markets', { type: 'json' });
         if (markets) {
           return jsonResponse({ success: true, source: 'cloudflare-kv', markets });
         }
@@ -111,19 +129,19 @@ async function handleApiRequest(request, env, url) {
         return jsonResponse({ success: false, error: 'Unauthorized: Invalid Admin PIN' }, 401);
       }
       const payload = await request.json();
-      if (env.BRYME_KV) {
-        await env.BRYME_KV.put('bryme_markets', JSON.stringify(payload.markets || payload));
+      if (kv) {
+        await kv.put('bryme_markets', JSON.stringify(payload.markets || payload));
         return jsonResponse({ success: true, message: 'Markets updated successfully in Cloudflare KV' });
       }
-      return jsonResponse({ success: true, warning: 'BRYME_KV binding not found' });
+      return jsonResponse({ success: true, warning: 'KV binding not found' });
     }
   }
 
   // 4. Ladder API (/api/ladder)
   if (path === '/api/ladder') {
     if (method === 'GET') {
-      if (env.BRYME_KV) {
-        const ladder = await env.BRYME_KV.get('bryme_ladder', { type: 'json' });
+      if (kv) {
+        const ladder = await kv.get('bryme_ladder', { type: 'json' });
         if (ladder) {
           return jsonResponse({ success: true, data: ladder });
         }
@@ -137,8 +155,8 @@ async function handleApiRequest(request, env, url) {
         return jsonResponse({ success: false, error: 'Unauthorized: Invalid Admin PIN' }, 401);
       }
       const ladderData = await request.json();
-      if (env.BRYME_KV) {
-        await env.BRYME_KV.put('bryme_ladder', JSON.stringify(ladderData));
+      if (kv) {
+        await kv.put('bryme_ladder', JSON.stringify(ladderData));
       }
       return jsonResponse({ success: true, data: ladderData });
     }
@@ -147,8 +165,8 @@ async function handleApiRequest(request, env, url) {
   // 5. Codes Hub API (/api/codes)
   if (path === '/api/codes') {
     if (method === 'GET') {
-      if (env.BRYME_KV) {
-        const codes = await env.BRYME_KV.get('bryme_codes', { type: 'json' });
+      if (kv) {
+        const codes = await kv.get('bryme_codes', { type: 'json' });
         if (codes) {
           return jsonResponse({ success: true, data: codes });
         }
@@ -162,8 +180,8 @@ async function handleApiRequest(request, env, url) {
         return jsonResponse({ success: false, error: 'Unauthorized: Invalid Admin PIN' }, 401);
       }
       const payload = await request.json();
-      if (env.BRYME_KV) {
-        await env.BRYME_KV.put('bryme_codes', JSON.stringify(payload));
+      if (kv) {
+        await kv.put('bryme_codes', JSON.stringify(payload));
       }
       return jsonResponse({ success: true, count: payload?.length || 0 });
     }
@@ -172,8 +190,8 @@ async function handleApiRequest(request, env, url) {
   // 6. Punters API (/api/punters)
   if (path === '/api/punters') {
     if (method === 'GET') {
-      if (env.BRYME_KV) {
-        const punters = await env.BRYME_KV.get('bryme_punters', { type: 'json' });
+      if (kv) {
+        const punters = await kv.get('bryme_punters', { type: 'json' });
         if (punters) {
           return jsonResponse({ success: true, data: punters });
         }
@@ -187,8 +205,8 @@ async function handleApiRequest(request, env, url) {
         return jsonResponse({ success: false, error: 'Unauthorized: Invalid Admin PIN' }, 401);
       }
       const puntersData = await request.json();
-      if (env.BRYME_KV) {
-        await env.BRYME_KV.put('bryme_punters', JSON.stringify(puntersData));
+      if (kv) {
+        await kv.put('bryme_punters', JSON.stringify(puntersData));
       }
       return jsonResponse({ success: true, data: puntersData });
     }

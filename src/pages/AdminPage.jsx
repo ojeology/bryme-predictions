@@ -1502,7 +1502,8 @@ export default function AdminPage({ onNavigate }) {
                   try {
                     const res = await fetch('/api/health');
                     const json = await res.json();
-                    showToast(`API: ${json.status.toUpperCase()} (KV: ${json.kvConnected ? 'Connected' : 'Pending'})`);
+                    const bindingsMsg = json.bindingsFound?.length ? ` [Bindings: ${json.bindingsFound.join(', ')}]` : '';
+                    showToast(`API: ${json.status.toUpperCase()} (KV: ${json.kvConnected ? 'Connected' : 'Pending'})${bindingsMsg}`);
                   } catch (e) {
                     showToast('Local Edge ready. Connect in Cloudflare Dashboard.');
                   }
