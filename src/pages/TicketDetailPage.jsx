@@ -4,7 +4,7 @@ import { MARKETS } from '../data/markets';
 import { usePredictions } from '../context/PredictionsContext';
 import StatusBadge from '../components/StatusBadge';
 import TicketCard from '../components/TicketCard';
-import AdPlaceholder from '../components/AdPlaceholder';
+import AdBanner from '../components/AdBanner';
 import { 
   ArrowLeft, Copy, Check, Share2, ExternalLink, ShieldAlert, 
   Calendar, Layers, Trophy, AlertCircle, Info, Hash, Zap, ArrowRight
@@ -76,7 +76,7 @@ export default function TicketDetailPage({ ticketId, onNavigate }) {
       </div>
 
       {/* TOP HIGH-RPM AD SLOT */}
-      <AdPlaceholder label="Top Betting Partner Banner (Adsterra / High-CPM Slot)" />
+      <AdBanner slot="top-banner" label="Sponsored Partner" />
 
       {/* Main Ticket Card */}
       <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1626] p-5 sm:p-6 space-y-4 shadow-sm">
@@ -283,6 +283,12 @@ export default function TicketDetailPage({ ticketId, onNavigate }) {
           ))}
         </div>
       </div>
+
+      {/* MID-PAGE 300x250 BANNER */}
+      <AdBanner slot="300x250" label="Sponsored 300x250 Banner" />
+
+      {/* BOTTOM NATIVE RECOMMENDATIONS */}
+      <AdBanner slot="native" label="Recommended for You" />
 
     </div>
   );

@@ -3,7 +3,7 @@ import { usePredictions } from '../context/PredictionsContext';
 import { MARKETS as FALLBACK_MARKETS } from '../data/markets';
 import { TICKETS } from '../data/tickets';
 import TicketCard from '../components/TicketCard';
-import AdPlaceholder from '../components/AdPlaceholder';
+import AdBanner from '../components/AdBanner';
 import { ArrowLeft, Layers, Info, CheckCircle2, Percent, ShieldCheck, Flame } from 'lucide-react';
 
 export default function MarketDetailPage({ marketId, slug, onNavigate }) {
@@ -28,7 +28,7 @@ export default function MarketDetailPage({ marketId, slug, onNavigate }) {
       </div>
 
       {/* TOP AD SLOT */}
-      <AdPlaceholder label="Sponsored Betting Partner Banner (Adsterra / High-CPM Slot)" />
+      <AdBanner slot="top-banner" label="Sponsored Betting Partner Banner" />
 
       {/* Market Header */}
       <div className="bg-white dark:bg-[#0E1626] border border-slate-200 dark:border-slate-800 rounded-2xl p-5 sm:p-6 space-y-4 shadow-sm">
@@ -147,8 +147,11 @@ export default function MarketDetailPage({ marketId, slug, onNavigate }) {
         )}
       </div>
 
-      {/* BOTTOM AD SLOT */}
-      <AdPlaceholder label="Bottom Partner Banner (Adsterra / Partner)" />
+      {/* MID-PAGE 300x250 BANNER */}
+      <AdBanner slot="300x250" label="Sponsored 300x250 Banner" />
+
+      {/* BOTTOM NATIVE ADSTERRA RECOMMENDATIONS */}
+      <AdBanner slot="native" label="Recommended for You" />
 
     </div>
   );

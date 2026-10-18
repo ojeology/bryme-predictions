@@ -5,6 +5,7 @@ import {
 import VisibleLadder from '../components/VisibleLadder';
 import CurrencyCalculator from '../components/CurrencyCalculator';
 import StatusBadge from '../components/StatusBadge';
+import AdBanner from '../components/AdBanner';
 import { 
   Trophy, ShieldAlert, Copy, Check, TrendingUp, Info, 
   AlertTriangle, DollarSign, ArrowRight, Clock, Target, Calendar, Zap
@@ -276,6 +277,12 @@ export default function LadderPage({ onNavigate }) {
           </table>
         </div>
       </div>
+
+      {/* MID-PAGE 300x250 BANNER */}
+      <AdBanner slot="300x250" label="Sponsored 300x250 Banner" />
+
+      {/* BOTTOM NATIVE RECOMMENDATIONS */}
+      <AdBanner slot="native" label="Recommended for You" />
 
     </div>
   );

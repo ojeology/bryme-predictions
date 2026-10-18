@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { usePredictions } from '../context/PredictionsContext';
 import { MARKETS } from '../data/markets';
 import TicketCard from '../components/TicketCard';
+import AdBanner from '../components/AdBanner';
 import { 
   Filter, X, RotateCcw, Flame, Zap, ArrowRight, Copy, Check, 
   Search, LayoutGrid, List, SlidersHorizontal, ArrowUpDown, ChevronRight
@@ -240,6 +241,9 @@ export default function PredictionsPage({ onNavigate }) {
         <span className="text-[#00C250] font-bold">● 1-Tap Pick &amp; Bounce Ready</span>
       </div>
 
+      {/* TOP ADSTERRA / MONETAG PLACEMENT */}
+      <AdBanner slot="top-banner" label="Sponsored Betting Partner" />
+
       {/* ── 3. CATALOGUE ITEMS (GRID VIEW) ── */}
       {viewMode === 'grid' && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -345,6 +349,12 @@ export default function PredictionsPage({ onNavigate }) {
           </button>
         </div>
       )}
+
+      {/* MID-PAGE 300x250 BANNER */}
+      <AdBanner slot="300x250" label="Sponsored 300x250 Banner" />
+
+      {/* BOTTOM NATIVE ADSTERRA RECOMMENDATIONS */}
+      <AdBanner slot="native" label="Recommended for You" />
 
     </div>
   );

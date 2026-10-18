@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { usePredictions } from '../context/PredictionsContext';
+import AdBanner from '../components/AdBanner';
 import { 
   Users, Copy, Check, ShieldCheck, ExternalLink, Zap, 
   ArrowRight, Sparkles, Filter, Search, Award
@@ -105,6 +106,9 @@ export default function PuntersPage({ onNavigate }) {
         </div>
 
       </div>
+
+      {/* TOP SPONSOR BANNER */}
+      <AdBanner slot="top-banner" label="Sponsored Partner" />
 
       {/* ── 3. PUNTERS CARDS LIST WITH DAILY BOOKING CODES ── */}
       <div className="space-y-4">
@@ -238,6 +242,12 @@ export default function PuntersPage({ onNavigate }) {
           </div>
         ))}
       </div>
+
+      {/* MID-PAGE 300x250 BANNER */}
+      <AdBanner slot="300x250" label="Sponsored 300x250 Banner" />
+
+      {/* BOTTOM NATIVE ADSTERRA RECOMMENDATIONS */}
+      <AdBanner slot="native" label="Recommended for You" />
 
     </div>
   );

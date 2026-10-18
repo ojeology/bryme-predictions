@@ -3,6 +3,7 @@ import { TICKETS, LEAGUES_DATA } from '../data/tickets';
 import { WEEKEND_2_ODDS_STATS, WEEKEND_ARCHIVE } from '../data/weekendArchive';
 import { ACTIVE_CHALLENGE, PAST_CHALLENGES } from '../data/ladder';
 import StatusBadge from '../components/StatusBadge';
+import AdBanner from '../components/AdBanner';
 import { 
   CheckSquare, Filter, RotateCcw, Search, TrendingUp, 
   CheckCircle, XCircle, AlertCircle, Clock, ShieldCheck, 
@@ -507,6 +508,12 @@ export default function ResultsArchivePage({ onNavigate }) {
           </div>
         </div>
       )}
+
+      {/* MID-PAGE 300x250 BANNER */}
+      <AdBanner slot="300x250" label="Sponsored 300x250 Banner" />
+
+      {/* BOTTOM NATIVE RECOMMENDATIONS */}
+      <AdBanner slot="native" label="Recommended for You" />
 
     </div>
   );

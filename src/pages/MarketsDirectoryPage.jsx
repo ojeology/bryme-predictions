@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { usePredictions } from '../context/PredictionsContext';
 import { MARKETS as FALLBACK_MARKETS, MARKET_CATEGORIES } from '../data/markets';
 import { TICKETS } from '../data/tickets';
+import AdBanner from '../components/AdBanner';
 import { 
   Layers, ArrowRight, ShieldCheck, Search, Filter, Percent, 
   Zap, TrendingUp, Sparkles, LayoutGrid, List, ArrowUpDown, ChevronRight, BarChart2, Users
@@ -121,6 +122,9 @@ export default function MarketsDirectoryPage({ onNavigate }) {
           </div>
         </div>
       </div>
+
+      {/* TOP SPONSOR BANNER */}
+      <AdBanner slot="top-banner" label="Sponsored Partner" />
 
       {/* ── PUNTERS SPOTLIGHT CALLOUT IN MARKETS ── */}
       <div 
@@ -370,6 +374,12 @@ export default function MarketsDirectoryPage({ onNavigate }) {
           ))}
         </div>
       )}
+
+      {/* MID-PAGE 300x250 BANNER */}
+      <AdBanner slot="300x250" label="Sponsored 300x250 Banner" />
+
+      {/* BOTTOM NATIVE RECOMMENDATIONS */}
+      <AdBanner slot="native" label="Recommended for You" />
 
     </div>
   );
