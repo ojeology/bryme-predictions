@@ -145,4 +145,30 @@
     <changefreq>weekly</changefreq>
     <priority>0.75</priority>
   </url>
+
+  <!-- Betting Academy & High-Traffic Strategy Guides -->
+  <url>
+    <loc>https://predictions.thebryme.com/#/articles</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://predictions.thebryme.com/#/article/arbitrage-betting-guide-nigeria-africa</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://predictions.thebryme.com/#/article/18-step-rollover-mathematical-strategy</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://predictions.thebryme.com/#/article/asian-handicap-vs-european-handicap-guide</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
 </urlset>
