@@ -1,10 +1,11 @@
 import React from 'react';
-import { Trophy, Users, BarChart2, Layers, Menu } from 'lucide-react';
+import { Trophy, Users, BarChart2, Layers, Flame } from 'lucide-react';
 
-export default function BottomNav({ currentRoute, onNavigate, onOpenSidebar }) {
+export default function BottomNav({ currentRoute, onNavigate }) {
   const items = [
     { id: 'home', label: '18-Ladder', icon: Trophy, hasPulse: true },
     { id: 'punters', label: 'Punters', icon: Users },
+    { id: 'predictions', label: 'Code Hub', icon: Flame },
     { id: 'markets', label: 'Markets', icon: Layers },
     { id: 'results', label: 'Results', icon: BarChart2 },
   ];
@@ -40,17 +41,6 @@ export default function BottomNav({ currentRoute, onNavigate, onOpenSidebar }) {
             </button>
           );
         })}
-
-        {/* Menu / Sidebar button on mobile */}
-        <button
-          onClick={onOpenSidebar}
-          className="flex flex-col items-center justify-center flex-1 h-full py-1 text-slate-400 hover:text-white transition-all"
-        >
-          <Menu className="w-5 h-5 stroke-2" />
-          <span className="text-[10px] mt-1 font-display uppercase tracking-wider font-semibold">
-            Menu
-          </span>
-        </button>
       </div>
     </nav>
   );

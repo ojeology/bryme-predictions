@@ -51,6 +51,10 @@ export default function AdminPage({ onNavigate }) {
     addPunterCode,
     deletePunterCode,
     updateAnnouncements,
+    markets,
+    addMarket,
+    updateMarket,
+    deleteMarket,
     resetToDefaults 
   } = usePredictions();
 
@@ -61,13 +65,75 @@ export default function AdminPage({ onNavigate }) {
   const [pinInput, setPinInput] = useState('');
   const [pinError, setPinError] = useState(false);
 
-  // Active Tab: 'code-hub', 'punters-mgr', 'slips-editor', 'ladder-plan', 'announcements', 'backup'
+  // Active Tab: 'code-hub', 'markets-mgr', 'punters-mgr', 'slips-editor', 'ladder-plan', 'announcements', 'backup'
   const [activeTab, setActiveTab] = useState('code-hub');
   const [saveNotification, setSaveNotification] = useState(null);
 
   const showToast = (message) => {
     setSaveNotification(message);
     setTimeout(() => setSaveNotification(null), 3500);
+  };
+
+  // ── MARKETS FORM STATE ──
+  const [marketForm, setMarketForm] = useState({
+    name: '',
+    shortName: '',
+    category: 'goals',
+    badge: 'High Hit Rate (78%)',
+    riskLevel: 'Low Risk',
+    typicalOddsRange: '1.25 - 1.45',
+    averageHitRate: '78%',
+    description: '',
+    tacticalTip: ''
+  });
+  const [editingMarketId, setEditingMarketId] = useState(null);
+  const [marketSearch, setMarketSearch] = useState('');
+
+  const handleMarketSubmit = (e) => {
+    e.preventDefault();
+    if (!marketForm.name.trim()) return;
+
+    if (editingMarketId) {
+      updateMarket(editingMarketId, marketForm);
+      showToast('Market successfully updated in 35+ Catalogue!');
+      setEditingMarketId(null);
+    } else {
+      const slug = marketForm.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+      addMarket({
+        ...marketForm,
+        slug,
+        id: slug
+      });
+      showToast('New market published to 35+ Catalogue!');
+    }
+
+    setMarketForm({
+      name: '',
+      shortName: '',
+      category: 'goals',
+      badge: 'High Hit Rate (78%)',
+      riskLevel: 'Low Risk',
+      typicalOddsRange: '1.25 - 1.45',
+      averageHitRate: '78%',
+      description: '',
+      tacticalTip: ''
+    });
+  };
+
+  const handleStartEditMarket = (market) => {
+    setEditingMarketId(market.id || market.slug);
+    setMarketForm({
+      name: market.name,
+      shortName: market.shortName || market.name,
+      category: market.category || 'goals',
+      badge: market.badge || 'Popular Market',
+      riskLevel: market.riskLevel || 'Medium Risk',
+      typicalOddsRange: market.typicalOddsRange || '1.30 - 1.80',
+      averageHitRate: market.averageHitRate || '70%',
+      description: market.description || '',
+      tacticalTip: market.tacticalTip || ''
+    });
+    window.scrollTo({ top: 400, behavior: 'smooth' });
   };
 
   // ── 1. CODE HUB FORM STATE ──
@@ -403,12 +469,13 @@ export default function AdminPage({ onNavigate }) {
       {/* Navigation Tabs */}
       <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none pb-1">
         {[
-          { id: 'code-hub', label: '🔴 SportyBet Code Hub', icon: '⚡' },
+          { id: 'code-hub', label: '📋 BRYME Code Hub', icon: '⚡' },
+          { id: 'markets-mgr', label: '📂 35+ Markets Manager', icon: '📂' },
           { id: 'punters-mgr', label: '👑 Punters & Punters Games', icon: '👥' },
           { id: 'slips-editor', label: '📝 Edit Predictions Slips', icon: '📋' },
           { id: 'ladder-plan', label: '🪜 18-Step Rollover & Savings', icon: '🪜' },
           { id: 'announcements', label: '📢 Ticker & Announcements', icon: '📢' },
-          { id: 'backup', label: '💾 Backup & Reset', icon: '💾' },
+          { id: 'backup', label: '💾 Cloudflare Sync & Backup', icon: '💾' },
         ].map(tab => (
           <button
             key={tab.id}
@@ -425,7 +492,7 @@ export default function AdminPage({ onNavigate }) {
         ))}
       </div>
 
-      {/* ── TAB 1: SPORTYBET CODE HUB & EVENT NUMBERS ── */}
+      {/* ── TAB 1: BRYME CODE HUB & EVENT NUMBERS ── */}
       {activeTab === 'code-hub' && (
         <div className="space-y-6">
           
@@ -434,7 +501,7 @@ export default function AdminPage({ onNavigate }) {
               <div>
                 <h3 className="font-display font-black text-base text-slate-900 dark:text-white flex items-center gap-2">
                   <Plus className="w-4 h-4 text-[#E41B13]" />
-                  <span>Publish Code to SportyBet Code Hub</span>
+                  <span>Publish Code to BRYME Code Hub</span>
                 </h3>
                 <p className="text-xs text-slate-500 dark:text-slate-400">
                   Per your specification: only the code, market type, and number of games are shown so punters pick and bounce.
@@ -594,6 +661,272 @@ export default function AdminPage({ onNavigate }) {
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+
+        </div>
+      )}
+
+      {/* ── TAB: 35+ MARKETS ENCYCLOPAEDIA MANAGER ── */}
+      {activeTab === 'markets-mgr' && (
+        <div className="space-y-6">
+          
+          {/* Section A: Add / Edit Market Form */}
+          <form onSubmit={handleMarketSubmit} className="p-5 sm:p-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1626] shadow-sm space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+              <div>
+                <h3 className="font-display font-black text-base text-slate-900 dark:text-white flex items-center gap-2">
+                  <Plus className="w-4 h-4 text-[#E41B13]" />
+                  <span>{editingMarketId ? `Edit Market: ${marketForm.name}` : 'Add New Football Betting Market'}</span>
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                  Full control over hit rates, tactical tips, risk profiles, and typical odds across the 35+ betting markets database.
+                </p>
+              </div>
+
+              {editingMarketId && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEditingMarketId(null);
+                    setMarketForm({
+                      name: '',
+                      shortName: '',
+                      category: 'goals',
+                      badge: 'High Hit Rate (78%)',
+                      riskLevel: 'Low Risk',
+                      typicalOddsRange: '1.25 - 1.45',
+                      averageHitRate: '78%',
+                      description: '',
+                      tacticalTip: ''
+                    });
+                  }}
+                  className="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-[#162238] text-slate-600 dark:text-slate-300 text-xs font-bold font-mono"
+                >
+                  Cancel Edit
+                </button>
+              )}
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+              <div className="sm:col-span-2">
+                <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                  Market Full Name
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={marketForm.name}
+                  onChange={(e) => setMarketForm({ ...marketForm, name: e.target.value })}
+                  placeholder="e.g. 1st Half Over 0.5 Goals"
+                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                  Category
+                </label>
+                <select
+                  value={marketForm.category}
+                  onChange={(e) => setMarketForm({ ...marketForm, category: e.target.value })}
+                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold"
+                >
+                  <option value="goals">⚽ Goals &amp; Totals</option>
+                  <option value="outcomes">🛡️ 1X2 &amp; Double Chance</option>
+                  <option value="btts">🎯 Both Teams to Score (GG/NG)</option>
+                  <option value="combos">⚡ Combos &amp; Multi-Lines</option>
+                  <option value="halves">⏱️ Half-Time &amp; Intervals</option>
+                  <option value="specials">🚩 Corners &amp; Cards</option>
+                  <option value="handicaps">⚖️ Handicaps &amp; Spreads</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                  Average Hit Rate %
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={marketForm.averageHitRate}
+                  onChange={(e) => setMarketForm({ ...marketForm, averageHitRate: e.target.value })}
+                  placeholder="e.g. 78.5%"
+                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono font-black text-emerald-600 dark:text-emerald-400"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                  Typical Odds Range
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={marketForm.typicalOddsRange}
+                  onChange={(e) => setMarketForm({ ...marketForm, typicalOddsRange: e.target.value })}
+                  placeholder="e.g. 1.25 - 1.45"
+                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono font-bold"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                  Risk Level
+                </label>
+                <select
+                  value={marketForm.riskLevel}
+                  onChange={(e) => setMarketForm({ ...marketForm, riskLevel: e.target.value })}
+                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold"
+                >
+                  <option value="Lowest Risk">Lowest Risk</option>
+                  <option value="Low Risk">Low Risk</option>
+                  <option value="Low-Medium Risk">Low-Medium Risk</option>
+                  <option value="Medium Risk">Medium Risk</option>
+                  <option value="Medium-High Risk">Medium-High Risk</option>
+                  <option value="High Risk">High Risk</option>
+                </select>
+              </div>
+
+              <div className="sm:col-span-3">
+                <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                  Badge / Tagline
+                </label>
+                <input
+                  type="text"
+                  value={marketForm.badge}
+                  onChange={(e) => setMarketForm({ ...marketForm, badge: e.target.value })}
+                  placeholder="e.g. High Hit Rate (79%), Core Rollover Bedrock"
+                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold"
+                />
+              </div>
+
+              <div className="sm:col-span-3">
+                <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                  Tactical Tip / Statistical Angle
+                </label>
+                <textarea
+                  rows={2}
+                  value={marketForm.tacticalTip}
+                  onChange={(e) => setMarketForm({ ...marketForm, tacticalTip: e.target.value })}
+                  placeholder="e.g. Best leveraged on teams averaging over 2.8 match goals with high-pressing transitions."
+                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
+                />
+              </div>
+
+              <div className="sm:col-span-3">
+                <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                  Description &amp; Settlement Rules
+                </label>
+                <textarea
+                  rows={2}
+                  value={marketForm.description}
+                  onChange={(e) => setMarketForm({ ...marketForm, description: e.target.value })}
+                  placeholder="Explain exactly how the bet is settled as WIN or LOSS in 90 minutes."
+                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white"
+                />
+              </div>
+            </div>
+
+            <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-end gap-3">
+              <button
+                type="submit"
+                className="px-5 py-2.5 bg-[#E41B13] hover:bg-[#D01710] text-white font-display font-black text-xs uppercase tracking-wider rounded-xl transition-all shadow-md flex items-center gap-1.5"
+              >
+                <span>{editingMarketId ? 'Save Market Changes' : 'Publish Market to 35+ Catalogue'}</span>
+                <CheckCircle2 className="w-4 h-4" />
+              </button>
+            </div>
+          </form>
+
+          {/* Section B: All Catalogued Markets with Search, Edit & Delete */}
+          <div className="p-5 sm:p-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1626] shadow-sm space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-3">
+              <div>
+                <h3 className="font-display font-black text-base text-slate-900 dark:text-white">
+                  All Catalogued Football Markets ({markets?.length || 0})
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  Click 'Edit' to update hit rates, odds ranges, or tips. Changes apply platform-wide immediately.
+                </p>
+              </div>
+
+              {/* Search Box */}
+              <div className="relative min-w-[240px]">
+                <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  value={marketSearch}
+                  onChange={(e) => setMarketSearch(e.target.value)}
+                  placeholder="Search markets..."
+                  className="w-full pl-9 pr-3 py-1.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-xs text-slate-900 dark:text-white"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2.5">
+              {(markets || [])
+                .filter(m => {
+                  if (!marketSearch.trim()) return true;
+                  const q = marketSearch.toLowerCase();
+                  return m.name?.toLowerCase().includes(q) || m.category?.toLowerCase().includes(q) || m.description?.toLowerCase().includes(q);
+                })
+                .map((m, idx) => (
+                  <div
+                    key={m.id || m.slug || idx}
+                    className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#121B2F] flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition-all"
+                  >
+                    <div className="min-w-0 space-y-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="font-display font-black text-sm text-slate-900 dark:text-white">
+                          {m.name}
+                        </span>
+                        <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-blue-100 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 font-bold">
+                          {m.category}
+                        </span>
+                        <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 font-black border border-emerald-500/30">
+                          {m.averageHitRate || '70%'} Hit
+                        </span>
+                        <span className="text-[10px] font-mono text-slate-400">
+                          Odds: {m.typicalOddsRange || '1.30 - 1.80'}
+                        </span>
+                      </div>
+                      <p className="text-xs text-slate-600 dark:text-slate-400 line-clamp-1">
+                        {m.description || m.tacticalTip}
+                      </p>
+                    </div>
+
+                    <div className="flex items-center gap-2 self-end sm:self-auto flex-shrink-0">
+                      <button
+                        onClick={() => handleStartEditMarket(m)}
+                        className="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-display font-bold text-xs transition-colors"
+                      >
+                        Edit Market
+                      </button>
+
+                      <button
+                        onClick={() => onNavigate(`market/${m.id || m.slug}`)}
+                        className="p-1.5 rounded-xl bg-slate-200 dark:bg-[#1A2438] text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
+                        title="View Public Market Page"
+                      >
+                        <ExternalLink className="w-3.5 h-3.5" />
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          if (confirm(`Are you sure you want to delete market "${m.name}"?`)) {
+                            deleteMarket(m.id || m.slug);
+                            showToast(`Market "${m.name}" deleted.`);
+                          }
+                        }}
+                        className="p-1.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 hover:bg-rose-100"
+                        title="Delete Market"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
             </div>
           </div>
 

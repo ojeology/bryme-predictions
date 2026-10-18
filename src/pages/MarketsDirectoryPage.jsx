@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
-import { MARKETS, MARKET_CATEGORIES } from '../data/markets';
+import { usePredictions } from '../context/PredictionsContext';
+import { MARKET_CATEGORIES } from '../data/markets';
 import { TICKETS } from '../data/tickets';
 import { 
   Layers, ArrowRight, ShieldCheck, Search, Filter, Percent, 
@@ -7,14 +8,17 @@ import {
 } from 'lucide-react';
 
 export default function MarketsDirectoryPage({ onNavigate }) {
+  const { markets } = usePredictions();
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('hitRate'); // 'hitRate', 'oddsAsc', 'risk', 'name'
   const [viewMode, setViewMode] = useState('grid'); // 'grid' | 'dense'
 
+  const marketList = markets || [];
+
   // Filter & Sort
   const processedMarkets = useMemo(() => {
-    let result = MARKETS.filter(m => {
+    let result = marketList.filter(m => {
       if (selectedCategory !== 'all' && m.category !== selectedCategory) return false;
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase();
@@ -84,7 +88,7 @@ export default function MarketsDirectoryPage({ onNavigate }) {
                 BETTING ENCYCLOPAEDIA
               </span>
               <span className="text-xs font-mono font-bold text-slate-500 dark:text-slate-400">
-                {MARKETS.length} Markets Catalogued
+                {marketList.length} Markets Catalogued
               </span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-display font-black text-slate-900 dark:text-white">
@@ -207,8 +211,8 @@ export default function MarketsDirectoryPage({ onNavigate }) {
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none border-t border-slate-100 dark:border-slate-800/80 pt-2.5">
           {MARKET_CATEGORIES.map(cat => {
             const count = cat.id === 'all' 
-              ? MARKETS.length 
-              : MARKETS.filter(m => m.category === cat.id).length;
+              ? marketList.length 
+              : marketList.filter(m => m.category === cat.id).length;
 
             return (
               <button
@@ -235,7 +239,7 @@ export default function MarketsDirectoryPage({ onNavigate }) {
 
       {/* Catalogue Meta Counter */}
       <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 font-mono px-1">
-        <span>Catalogued: {processedMarkets.length} of {MARKETS.length} Markets</span>
+        <span>Catalogued: {processedMarkets.length} of {marketList.length} Markets</span>
         <span className="text-[#00C250] font-bold">● High Hit Rate Index Verified</span>
       </div>
 

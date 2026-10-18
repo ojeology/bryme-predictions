@@ -29,13 +29,13 @@ export default function Sidebar({ currentRoute, onNavigate }) {
 
   const navItems = [
     { id: 'home', label: '🔥 The 18-Step Ladder', icon: '🪜', badge: `Day ${currentDay}`, isFeatured: true },
-    { id: 'punters', label: '👑 Tracked African Punters', icon: '👑', badge: 'Daily Codes', isSpecial: true },
+    { id: 'predictions', label: '📋 BRYME Code Hub', icon: '📋', badge: 'Daily Codes', isFeatured: true },
+    { id: 'punters', label: '👑 Tracked African Punters', icon: '👑', badge: 'Hot', isSpecial: true },
     { id: 'results', label: '📊 Results & Hit Rate', icon: '📊', badge: '76.9% Won', isGreen: true },
-    { id: 'convert', label: '⚡ Convert Bet Codes & Vault', icon: '⚡', badge: 'Hot' },
-    { id: 'ladder', label: '🪜 18-Step Safe Havens', icon: '⛰️' },
-    { id: 'predictions', label: '📋 Sporty Codes Hub', icon: '📋' },
     { id: 'markets', label: '📂 35+ Markets Database', icon: '🗂️' },
     { id: 'editor-picks', label: '🎯 Weekend 2.00x Banker', icon: '🎯' },
+    { id: 'convert', label: '⚡ Multi-Bookmaker Slips Vault', icon: '⚡' },
+    { id: 'ladder', label: '🪜 18-Step Safe Havens', icon: '⛰️' },
     { id: 'weekend-hub', label: '🤝 Consensus Community Hub', icon: '👥' },
     { id: 'bookmakers', label: '📱 Bookmakers & Codes', icon: '🎰' },
     { id: 'admin', label: '⚡ Admin Control Deck', icon: '🛠️', badge: 'PIN Locked' },

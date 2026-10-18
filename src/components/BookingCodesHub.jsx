@@ -56,7 +56,7 @@ export default function BookingCodesHub({ onNavigate }) {
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-[#00FF66] animate-ping"></span>
             <span className="text-[11px] font-mono font-black uppercase tracking-wider text-white">
-              SPORTYBET CODE HUB &bull; QUICK LOAD
+              BRYME CODE HUB &bull; QUICK LOAD
             </span>
           </div>
           <span className="text-[10px] font-mono text-slate-300">

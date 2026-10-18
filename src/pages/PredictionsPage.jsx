@@ -8,7 +8,7 @@ import {
 } from 'lucide-react';
 
 export default function PredictionsPage({ onNavigate }) {
-  const { tickets, codeCatalogue } = usePredictions();
+  const { tickets, codeCatalogue, triggerCopyModal } = usePredictions();
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedBookmaker, setSelectedBookmaker] = useState('all');
   const [selectedStatus, setSelectedStatus] = useState('all');
@@ -17,10 +17,14 @@ export default function PredictionsPage({ onNavigate }) {
   const [viewMode, setViewMode] = useState('grid'); // 'grid' | 'dense'
   const [copiedId, setCopiedId] = useState(null);
 
-  const handleCopyCode = (e, code, id) => {
+  const handleCopyCode = (e, code, id, bookmaker = 'SportyBet', odds = '2.00', title = 'Banker Slip') => {
     e.stopPropagation();
     if (code) {
-      navigator.clipboard.writeText(code);
+      if (triggerCopyModal) {
+        triggerCopyModal(code, bookmaker, title, odds);
+      } else {
+        navigator.clipboard.writeText(code);
+      }
       setCopiedId(id);
       setTimeout(() => setCopiedId(null), 2500);
     }
@@ -89,11 +93,11 @@ export default function PredictionsPage({ onNavigate }) {
             <div className="flex items-center gap-2 mb-1">
               <span className="w-2.5 h-2.5 rounded-full bg-[#E41B13] animate-ping"></span>
               <span className="text-[10px] font-mono uppercase font-black text-[#E41B13] dark:text-rose-400 tracking-wider">
-                BET SLIP CATALOGUE &bull; MIDNIGHT DROP 02:00 AM WAT
+                BRYME CODE HUB &bull; MIDNIGHT DROP 02:00 AM WAT
               </span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-display font-black text-slate-900 dark:text-white">
-              Daily Betting Slips Catalogue
+              BRYME Code Hub &amp; Daily Slips
             </h1>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-2xl">
               Curated daily slips catalogued by odds tier and bookmaker. Pick your booking code in 1 tap, bounce to SportyBet or Bet9ja, and edit your legs.

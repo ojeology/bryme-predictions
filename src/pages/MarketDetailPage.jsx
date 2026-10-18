@@ -1,14 +1,17 @@
 import React from 'react';
-import { MARKETS } from '../data/markets';
+import { usePredictions } from '../context/PredictionsContext';
+import { MARKETS as FALLBACK_MARKETS } from '../data/markets';
 import { TICKETS } from '../data/tickets';
 import TicketCard from '../components/TicketCard';
 import AdPlaceholder from '../components/AdPlaceholder';
 import { ArrowLeft, Layers, Info, CheckCircle2, Percent, ShieldCheck, Flame } from 'lucide-react';
 
 export default function MarketDetailPage({ marketId, slug, onNavigate }) {
+  const { markets } = usePredictions();
   const currentKey = marketId || slug;
-  const market = MARKETS.find(m => m.id === currentKey || m.slug === currentKey) || MARKETS[0];
-  const tickets = TICKETS.filter(t => t.marketId === market.id);
+  const marketList = markets && markets.length > 0 ? markets : FALLBACK_MARKETS;
+  const market = marketList.find(m => m.id === currentKey || m.slug === currentKey) || marketList[0];
+  const tickets = TICKETS.filter(t => t.marketId === market?.id);
 
   return (
     <div className="space-y-6">

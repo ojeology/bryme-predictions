@@ -3,6 +3,7 @@ import { ACTIVE_CHALLENGE as DEFAULT_LADDER } from '../data/ladder';
 import { DAILY_BOOKING_TICKETS as DEFAULT_TICKETS } from '../data/bookingTickets';
 import { INITIAL_CODE_CATALOGUE } from '../data/catalogueCodes';
 import { INITIAL_PUNTERS } from '../data/punters';
+import { MARKETS as DEFAULT_MARKETS } from '../data/markets';
 
 const PredictionsContext = createContext(null);
 
@@ -11,6 +12,7 @@ const STORAGE_KEY_TICKETS = 'bryme_booking_tickets_v3';
 const STORAGE_KEY_CATALOGUE = 'bryme_code_catalogue_v2';
 const STORAGE_KEY_PUNTERS = 'bryme_punters_v2';
 const STORAGE_KEY_ANNOUNCEMENTS = 'bryme_announcements_v1';
+const STORAGE_KEY_MARKETS = 'bryme_markets_v2';
 
 export function PredictionsProvider({ children }) {
   // 1. Ladder State
@@ -71,7 +73,17 @@ export function PredictionsProvider({ children }) {
     }
   });
 
-  // 6. Global Copy Success Modal State (High CTR & Viral Share)
+  // 6. Markets Encyclopaedia State (Fully Editable via Admin)
+  const [markets, setMarketsState] = useState(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY_MARKETS);
+      return saved ? JSON.parse(saved) : DEFAULT_MARKETS;
+    } catch (e) {
+      return DEFAULT_MARKETS;
+    }
+  });
+
+  // 7. Global Copy Success Modal State (High CTR & Viral Share)
   const [copyModal, setCopyModal] = useState({
     isOpen: false,
     code: '',
@@ -112,6 +124,7 @@ export function PredictionsProvider({ children }) {
             if (remote.codeCatalogue) setCodeCatalogueState(remote.codeCatalogue);
             if (remote.punters) setPuntersState(remote.punters);
             if (remote.announcements) setAnnouncementsState(remote.announcements);
+            if (remote.markets) setMarketsState(remote.markets);
           }
         }
       } catch (err) {
@@ -168,6 +181,12 @@ export function PredictionsProvider({ children }) {
       localStorage.setItem(STORAGE_KEY_ANNOUNCEMENTS, JSON.stringify(announcements));
     } catch (e) {}
   }, [announcements]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY_MARKETS, JSON.stringify(markets));
+    } catch (e) {}
+  }, [markets]);
 
   // ── LADDER ACTIONS ──
   const updateLadder = (ladderUpdates) => {
@@ -315,6 +334,43 @@ export function PredictionsProvider({ children }) {
     }));
   };
 
+  // ── MARKETS ACTIONS (FULL ADMIN EDITABILITY) ──
+  const addMarket = (newMarket) => {
+    const marketId = newMarket.slug || `market-${Date.now()}`;
+    setMarketsState(prev => [
+      {
+        id: marketId,
+        slug: marketId,
+        name: newMarket.name || 'New Market',
+        shortName: newMarket.shortName || newMarket.name,
+        category: newMarket.category || 'goals',
+        badge: newMarket.badge || 'Popular Market',
+        riskLevel: newMarket.riskLevel || 'Medium Risk',
+        typicalOddsRange: newMarket.typicalOddsRange || '1.30 - 1.80',
+        averageHitRate: newMarket.averageHitRate || '70%',
+        description: newMarket.description || '',
+        tacticalTip: newMarket.tacticalTip || '',
+        bestLeagues: ['English Premier League', 'Spanish La Liga', 'Italian Serie A'],
+        bookmakerSupport: ['SportyBet', 'Bet9ja', '1xBet', 'BetKing'],
+        ...newMarket
+      },
+      ...prev
+    ]);
+  };
+
+  const updateMarket = (marketId, updates) => {
+    setMarketsState(prev => prev.map(m => {
+      if (m.id === marketId || m.slug === marketId) {
+        return { ...m, ...updates };
+      }
+      return m;
+    }));
+  };
+
+  const deleteMarket = (marketId) => {
+    setMarketsState(prev => prev.filter(m => m.id !== marketId && m.slug !== marketId));
+  };
+
   // ── CODE CONVERTER ──
   const convertBetCode = (inputCode, fromBookie, toBookie) => {
     const cleanCode = inputCode.trim().toUpperCase();
@@ -360,11 +416,13 @@ export function PredictionsProvider({ children }) {
     setTicketsState(DEFAULT_TICKETS);
     setCodeCatalogueState(INITIAL_CODE_CATALOGUE);
     setPuntersState(INITIAL_PUNTERS);
+    setMarketsState(DEFAULT_MARKETS);
     localStorage.removeItem(STORAGE_KEY_LADDER);
     localStorage.removeItem(STORAGE_KEY_TICKETS);
     localStorage.removeItem(STORAGE_KEY_CATALOGUE);
     localStorage.removeItem(STORAGE_KEY_PUNTERS);
     localStorage.removeItem(STORAGE_KEY_ANNOUNCEMENTS);
+    localStorage.removeItem(STORAGE_KEY_MARKETS);
   };
 
   return (
@@ -374,6 +432,10 @@ export function PredictionsProvider({ children }) {
       codeCatalogue,
       punters,
       announcements,
+      markets,
+      addMarket,
+      updateMarket,
+      deleteMarket,
       copyModal,
       triggerCopyModal,
       closeCopyModal,
