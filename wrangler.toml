@@ -1,7 +1,0 @@
-name = "bryme-predictions"
-compatibility_date = "2024-10-01"
-pages_build_output_dir = "dist"
-
-[[kv_namespaces]]
-binding = "BRYME_KV"
-id = "BRYME_KV"
