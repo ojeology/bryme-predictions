@@ -6,10 +6,10 @@ export default function Header({ currentRoute, onNavigate, onOpenSearch, onOpenS
   const topNav = [
     { id: 'home', label: '🔥 ₦1K → ₦1M Ladder', action: () => onNavigate('home'), isHook: true },
     { id: 'predictions', label: '📋 BRYME Code Hub', action: () => onNavigate('predictions'), badge: 'Daily' },
+    { id: 'articles', label: '📚 Academy (Arbing)', action: () => onNavigate('articles'), badge: 'Guides' },
     { id: 'punters', label: '👑 Punters Hub', action: () => onNavigate('punters'), badge: 'Codes' },
     { id: 'markets', label: '📂 35+ Markets DB', action: () => onNavigate('markets') },
     { id: 'results', label: '📊 Results (77% Won)', action: () => onNavigate('results'), isResults: true },
-    { id: 'editor-picks', label: '🎯 Weekend 2 Odds', action: () => onNavigate('editor-picks') },
   ];
 
   return (

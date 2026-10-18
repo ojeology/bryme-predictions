@@ -59,6 +59,11 @@ export default function Footer({ onNavigate }) {
                   Markets
                 </button>
               </li>
+              <li>
+                <button onClick={() => onNavigate('articles')} className="hover:text-cyan-400 transition-colors font-bold text-cyan-400">
+                  📚 Betting Academy (Arbing)
+                </button>
+              </li>
             </ul>
           </div>
 

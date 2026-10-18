@@ -30,6 +30,7 @@ export default function Sidebar({ currentRoute, onNavigate }) {
   const navItems = [
     { id: 'home', label: '🔥 The 18-Step Ladder', icon: '🪜', badge: `Day ${currentDay}`, isFeatured: true },
     { id: 'predictions', label: '📋 BRYME Code Hub', icon: '📋', badge: 'Daily Codes', isFeatured: true },
+    { id: 'articles', label: '📚 Betting Academy (Arbing)', icon: '📚', badge: 'Guides', isSpecial: true },
     { id: 'punters', label: '👑 Tracked African Punters', icon: '👑', badge: 'Hot', isSpecial: true },
     { id: 'results', label: '📊 Results & Hit Rate', icon: '📊', badge: '76.9% Won', isGreen: true },
     { id: 'markets', label: '📂 35+ Markets Database', icon: '🗂️' },

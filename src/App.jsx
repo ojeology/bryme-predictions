@@ -27,12 +27,31 @@ import ResponsibleGamblingPage from './pages/ResponsibleGamblingPage';
 import ContactPage from './pages/ContactPage';
 import AdminPage from './pages/AdminPage';
 import ConvertCodesPage from './pages/ConvertCodesPage';
+import ArticlesPage from './pages/ArticlesPage';
+import ArticleDetailPage from './pages/ArticleDetailPage';
 
 export default function App() {
   const [currentHash, setCurrentHash] = useState(window.location.hash || '#/');
   const [searchOpen, setSearchOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { ladder, announcements, copyModal, closeCopyModal } = usePredictions();
+  const { ladder, announcements, copyModal, closeCopyModal, adSettings } = usePredictions();
+
+  // Inject Monetag / Adsterra Global Header Scripts dynamically
+  useEffect(() => {
+    if (adSettings?.monetagScript) {
+      const srcMatch = adSettings.monetagScript.match(/src=["']([^"']+)["']/i);
+      if (srcMatch && srcMatch[1]) {
+        // Prevent duplicate injection
+        const existing = document.querySelector(`script[src="${srcMatch[1]}"]`);
+        if (!existing) {
+          const s = document.createElement('script');
+          s.src = srcMatch[1];
+          s.async = true;
+          document.head.appendChild(s);
+        }
+      }
+    }
+  }, [adSettings?.monetagScript]);
 
   useEffect(() => {
     const handleHashChange = () => {
@@ -89,6 +108,12 @@ export default function App() {
       case 'home':
       case '':
         return <HomePage onNavigate={navigate} />;
+      case 'articles':
+      case 'academy':
+      case 'guides':
+        return <ArticlesPage onNavigate={navigate} />;
+      case 'article':
+        return <ArticleDetailPage slug={param} onNavigate={navigate} />;
       case 'admin':
         return <AdminPage onNavigate={navigate} />;
       case 'convert':

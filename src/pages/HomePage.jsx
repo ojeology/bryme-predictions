@@ -1,18 +1,22 @@
 import React, { useState } from 'react';
+import { usePredictions } from '../context/PredictionsContext';
 import VisibleLadder from '../components/VisibleLadder';
 import ChampionsLeagueBanner from '../components/ChampionsLeagueBanner';
+import Whale2OddsCard from '../components/Whale2OddsCard';
 import BookingCodesHub from '../components/BookingCodesHub';
 import StatisticalCheatSheet from '../components/StatisticalCheatSheet';
+import AdBanner from '../components/AdBanner';
 import AdPlaceholder from '../components/AdPlaceholder';
 import { WEEKEND_2_ODDS_STATS, WEEKEND_ARCHIVE } from '../data/weekendArchive';
 import { MARKETS } from '../data/markets';
 import { 
   Trophy, ArrowRight, ShieldCheck, Flame, Sparkles, 
   TrendingUp, CheckCircle, Clock, Zap, Target, Copy, Check, 
-  BarChart2, ChevronDown, ChevronUp, Layers, Lock, Eye, Shield, Users
+  BarChart2, ChevronDown, ChevronUp, Layers, Lock, Eye, Shield, Users, BookOpen
 } from 'lucide-react';
 
 export default function HomePage({ onNavigate }) {
+  const { whaleSlip } = usePredictions();
   const [activeTab, setActiveTab] = useState('all');
   const [showStatsDrawer, setShowStatsDrawer] = useState(false);
   const [voted, setVoted] = useState(false);
@@ -65,6 +69,23 @@ export default function HomePage({ onNavigate }) {
             🔥 All
           </button>
           <button
+            onClick={() => setActiveTab('whale')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-display font-black uppercase transition-all ${
+              activeTab === 'whale'
+                ? 'bg-amber-500 text-black shadow-md'
+                : 'bg-amber-500/15 text-amber-500 hover:bg-amber-500/30'
+            }`}
+          >
+            🐋 Whale 2-Odds
+          </button>
+          <button
+            onClick={() => onNavigate('articles')}
+            className="px-3 py-1.5 rounded-xl text-xs font-display font-black uppercase transition-all bg-cyan-500/15 hover:bg-cyan-500 text-cyan-600 dark:text-cyan-400 hover:text-white border border-cyan-500/30 flex items-center gap-1"
+          >
+            <BookOpen className="w-3.5 h-3.5" />
+            <span>📚 Academy (Arbing)</span>
+          </button>
+          <button
             onClick={() => setActiveTab('codes')}
             className={`px-3 py-1.5 rounded-xl text-xs font-display font-black uppercase transition-all ${
               activeTab === 'codes'
@@ -72,7 +93,7 @@ export default function HomePage({ onNavigate }) {
                 : 'bg-slate-100 dark:bg-[#162035] text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
             }`}
           >
-            🔴 Sporty Codes
+            🔴 BRYME Codes
           </button>
           <button
             onClick={() => onNavigate('punters')}
@@ -89,33 +110,23 @@ export default function HomePage({ onNavigate }) {
             <span>📊 Results (77% Won)</span>
           </button>
           <button
-            onClick={() => setActiveTab('ucl')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-display font-black uppercase transition-all ${
-              activeTab === 'ucl'
-                ? 'bg-blue-600 text-white shadow-md'
-                : 'bg-slate-100 dark:bg-[#162035] text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
-            }`}
-          >
-            ⭐ UCL Special
-          </button>
-          <button
             onClick={() => onNavigate('markets')}
             className="px-3 py-1.5 rounded-xl text-xs font-display font-black uppercase transition-all bg-slate-100 dark:bg-[#162035] text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
           >
             📂 Markets
           </button>
-          <button
-            onClick={() => setActiveTab('weekend')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-display font-black uppercase transition-all ${
-              activeTab === 'weekend'
-                ? 'bg-blue-600 text-white shadow-md'
-                : 'bg-slate-100 dark:bg-[#162035] text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
-            }`}
-          >
-            🎯 2 Odds
-          </button>
         </div>
       </div>
+
+      {/* ── 2.5. TODAY'S WHALE 2-ODDS SYNDICATE STAKE (PRIMARY BETTOR FISHHOOK) ── */}
+      {(activeTab === 'all' || activeTab === 'whale' || activeTab === 'weekend') && (
+        <section id="whale-2-odds" className="space-y-2">
+          <Whale2OddsCard whaleSlip={whaleSlip} onNavigate={onNavigate} />
+        </section>
+      )}
+
+      {/* TOP HOME AD SLOT (MONETIZATION - MONETAG / ADSTERRA / AFFILIATE) */}
+      <AdBanner slot="top-banner" label="Sponsored Partner" />
 
       {/* ── 3. FEATURE MATCH: TUESDAY CHAMPIONS LEAGUE 2.45x BOOSTER ── */}
       {(activeTab === 'all' || activeTab === 'ucl') && (
@@ -123,9 +134,6 @@ export default function HomePage({ onNavigate }) {
           <ChampionsLeagueBanner onNavigate={onNavigate} />
         </section>
       )}
-
-      {/* TOP HOME AD SLOT (MONETIZATION) */}
-      <AdPlaceholder label="Top Home Sponsor (Adsterra 728x90 / Banner)" />
 
       {/* ── 4. READY-TO-LOAD DAILY BOOKING CODES HUB ── */}
       {(activeTab === 'all' || activeTab === 'codes') && (
@@ -287,6 +295,33 @@ export default function HomePage({ onNavigate }) {
           </button>
         </div>
       </section>
+
+      {/* ── 4.8. BETTING ACADEMY: ARBITRAGE & SUREBETS MASTERCLASS ── */}
+      <section className="rounded-3xl border border-cyan-500/40 bg-gradient-to-br from-[#0A1226] via-[#0E1A38] to-[#070D1D] p-5 sm:p-6 shadow-xl text-white flex flex-col md:flex-row items-center justify-between gap-5">
+        <div className="space-y-2 max-w-xl">
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 text-[10px] font-mono font-bold">
+            <BookOpen className="w-3 h-3" />
+            <span>BRYME QUANTITATIVE ACADEMY</span>
+          </div>
+          <h3 className="font-display font-black text-lg sm:text-xl text-white">
+            Everything to Know About Arbitrage Betting (Surebets 2026)
+          </h3>
+          <p className="text-xs text-slate-300 font-sans leading-relaxed">
+            Exploit price discrepancies across SportyBet, Bet9ja, and 1xBet. Learn how to calculate 4.9% risk-free margins, distribute ₦100k capital, and avoid account restrictions.
+          </p>
+        </div>
+
+        <button
+          onClick={() => onNavigate('article/arbitrage-betting-guide-nigeria-africa')}
+          className="px-5 py-3 rounded-2xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-display font-black text-xs uppercase tracking-wider flex items-center gap-2 transition-all shadow-lg shadow-cyan-500/25 flex-shrink-0 active:scale-95"
+        >
+          <span>Read Arbitrage Guide</span>
+          <ArrowRight className="w-4 h-4" />
+        </button>
+      </section>
+
+      {/* IN-FEED AD SLOT */}
+      <AdBanner slot="in-feed" label="Adsterra / Monetag In-Feed Placement" />
 
       {/* ── 5. HIGH-YIELD BETTING MARKETS DIRECTORY ── */}
       {(activeTab === 'all' || activeTab === 'markets') && (

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { usePredictions } from '../context/PredictionsContext';
+import { usePredictions, DEFAULT_WHALE_SLIP, DEFAULT_AD_SETTINGS } from '../context/PredictionsContext';
 import { SUPPORTED_BOOKMAKERS } from '../data/catalogueCodes';
 import { MARKETS as DEFAULT_MARKETS } from '../data/markets';
 import { 
@@ -39,6 +39,10 @@ export default function AdminPage({ onNavigate }) {
     codeCatalogue,
     punters,
     announcements,
+    whaleSlip,
+    updateWhaleSlip,
+    adSettings,
+    updateAdSettings,
     updateTicketCode, 
     updateTicket, 
     addTicket, 
@@ -67,9 +71,12 @@ export default function AdminPage({ onNavigate }) {
   const [pinInput, setPinInput] = useState('');
   const [pinError, setPinError] = useState(false);
 
-  // Active Tab: 'code-hub', 'markets-mgr', 'punters-mgr', 'slips-editor', 'ladder-plan', 'announcements', 'backup'
-  const [activeTab, setActiveTab] = useState('code-hub');
+  // Active Tab
+  const [activeTab, setActiveTab] = useState('whale-mgr');
   const [saveNotification, setSaveNotification] = useState(null);
+
+  const [whaleForm, setWhaleForm] = useState(whaleSlip || DEFAULT_WHALE_SLIP);
+  const [adForm, setAdForm] = useState(adSettings || DEFAULT_AD_SETTINGS);
 
   const showToast = (message) => {
     setSaveNotification(message);
@@ -471,6 +478,8 @@ export default function AdminPage({ onNavigate }) {
       {/* Navigation Tabs */}
       <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none pb-1">
         {[
+          { id: 'whale-mgr', label: '🐋 Whale 2-Odds', icon: '🐋' },
+          { id: 'ads-mgr', label: '💰 Ads & Monetization', icon: '💰' },
           { id: 'code-hub', label: '📋 BRYME Code Hub', icon: '⚡' },
           { id: 'markets-mgr', label: '📂 35+ Markets Manager', icon: '📂' },
           { id: 'punters-mgr', label: '👑 Punters & Punters Games', icon: '👥' },
@@ -493,6 +502,342 @@ export default function AdminPage({ onNavigate }) {
           </button>
         ))}
       </div>
+
+      {/* ── TAB 0A: WHALE 2-ODDS MANAGER ── */}
+      {activeTab === 'whale-mgr' && (
+        <form onSubmit={(e) => {
+          e.preventDefault();
+          updateWhaleSlip(whaleForm);
+          showToast('🐋 Whale 2-Odds Slip updated successfully!');
+        }} className="p-5 sm:p-6 rounded-2xl border-2 border-amber-500/40 bg-white dark:bg-[#0E1626] shadow-sm space-y-4">
+          <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
+            <span className="text-2xl">🐋</span>
+            <div>
+              <h3 className="font-display font-black text-base text-slate-900 dark:text-white">
+                Daily Whale 2-Odds Syndicate Manager
+              </h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                Configure the primary gambler fishhook: verified high-roller stake proof, 2.0+ odds double, and syndicate intel.
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            <div>
+              <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                Slip Title
+              </label>
+              <input
+                type="text"
+                value={whaleForm.title}
+                onChange={(e) => setWhaleForm({ ...whaleForm, title: e.target.value })}
+                className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold text-xs"
+              />
+            </div>
+
+            <div>
+              <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                Tracked Staker / Syndicate Name
+              </label>
+              <input
+                type="text"
+                value={whaleForm.staker}
+                onChange={(e) => setWhaleForm({ ...whaleForm, staker: e.target.value })}
+                placeholder="e.g. Lagos VIP Syndicate #04"
+                className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold text-xs"
+              />
+            </div>
+
+            <div>
+              <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                Confirmed Stake Amount
+              </label>
+              <input
+                type="text"
+                value={whaleForm.stakeAmount}
+                onChange={(e) => setWhaleForm({ ...whaleForm, stakeAmount: e.target.value })}
+                placeholder="e.g. ₦500,000"
+                className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-amber-500 font-mono font-bold text-xs"
+              />
+            </div>
+
+            <div>
+              <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                Total Odds
+              </label>
+              <input
+                type="number"
+                step="0.01"
+                value={whaleForm.totalOdds}
+                onChange={(e) => setWhaleForm({ ...whaleForm, totalOdds: parseFloat(e.target.value) || 2.0 })}
+                className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono font-bold text-xs"
+              />
+            </div>
+
+            <div>
+              <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                Potential Return / Payout
+              </label>
+              <input
+                type="text"
+                value={whaleForm.potentialReturn}
+                onChange={(e) => setWhaleForm({ ...whaleForm, potentialReturn: e.target.value })}
+                placeholder="e.g. ₦1,090,000"
+                className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-emerald-400 font-mono font-bold text-xs"
+              />
+            </div>
+
+            <div>
+              <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                Status
+              </label>
+              <select
+                value={whaleForm.status}
+                onChange={(e) => setWhaleForm({ ...whaleForm, status: e.target.value })}
+                className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold text-xs"
+              >
+                <option value="live">🟢 Live &amp; In Play</option>
+                <option value="won">🏆 Won (Green)</option>
+                <option value="lost">🔴 Lost</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                SportyBet Booking Code
+              </label>
+              <input
+                type="text"
+                value={whaleForm.sportyCode}
+                onChange={(e) => setWhaleForm({ ...whaleForm, sportyCode: e.target.value })}
+                placeholder="e.g. BC4-WHALE"
+                className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono font-bold text-xs"
+              />
+            </div>
+
+            <div>
+              <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                Bet9ja Booking Code
+              </label>
+              <input
+                type="text"
+                value={whaleForm.bet9jaCode}
+                onChange={(e) => setWhaleForm({ ...whaleForm, bet9jaCode: e.target.value })}
+                placeholder="e.g. B9J-WHALE"
+                className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono font-bold text-xs"
+              />
+            </div>
+
+            <div>
+              <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                Kickoff Time
+              </label>
+              <input
+                type="text"
+                value={whaleForm.kickoffTime}
+                onChange={(e) => setWhaleForm({ ...whaleForm, kickoffTime: e.target.value })}
+                placeholder="e.g. 20:00 WAT Today"
+                className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold text-xs"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
+              Whale Market Intel (Rationale)
+            </label>
+            <textarea
+              rows={2}
+              value={whaleForm.intel}
+              onChange={(e) => setWhaleForm({ ...whaleForm, intel: e.target.value })}
+              className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-sans text-xs leading-relaxed"
+            />
+          </div>
+
+          {/* Matches on the slip */}
+          <div className="space-y-3 pt-2">
+            <h4 className="font-display font-black text-xs uppercase text-slate-700 dark:text-slate-300">
+              Matches on the Whale Slip (2 Legs)
+            </h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {(whaleForm.matches || []).map((m, idx) => (
+                <div key={idx} className="p-3 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 space-y-2">
+                  <span className="text-[10px] font-mono uppercase font-bold text-amber-500">
+                    Leg {idx + 1}
+                  </span>
+                  <input
+                    type="text"
+                    value={m.match}
+                    onChange={(e) => {
+                      const updated = [...whaleForm.matches];
+                      updated[idx].match = e.target.value;
+                      setWhaleForm({ ...whaleForm, matches: updated });
+                    }}
+                    placeholder="Match: e.g. Real Madrid vs Sevilla"
+                    className="w-full p-2 rounded-lg bg-white dark:bg-[#0E1626] border border-slate-200 dark:border-slate-700 text-xs font-bold"
+                  />
+                  <div className="grid grid-cols-2 gap-2">
+                    <input
+                      type="text"
+                      value={m.pick}
+                      onChange={(e) => {
+                        const updated = [...whaleForm.matches];
+                        updated[idx].pick = e.target.value;
+                        setWhaleForm({ ...whaleForm, matches: updated });
+                      }}
+                      placeholder="Pick: e.g. Over 1.5 Goals"
+                      className="w-full p-2 rounded-lg bg-white dark:bg-[#0E1626] border border-slate-200 dark:border-slate-700 text-xs font-bold text-emerald-400"
+                    />
+                    <input
+                      type="number"
+                      step="0.01"
+                      value={m.odds}
+                      onChange={(e) => {
+                        const updated = [...whaleForm.matches];
+                        updated[idx].odds = parseFloat(e.target.value) || 1.4;
+                        setWhaleForm({ ...whaleForm, matches: updated });
+                      }}
+                      placeholder="Odds: e.g. 1.45"
+                      className="w-full p-2 rounded-lg bg-white dark:bg-[#0E1626] border border-slate-200 dark:border-slate-700 text-xs font-mono font-bold"
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            className="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-display font-black text-xs uppercase tracking-wider transition-all shadow-md flex items-center gap-2"
+          >
+            <Save className="w-4 h-4" />
+            <span>Save Whale 2-Odds Slip</span>
+          </button>
+        </form>
+      )}
+
+      {/* ── TAB 0B: AD NETWORK & MONETIZATION ── */}
+      {activeTab === 'ads-mgr' && (
+        <form onSubmit={(e) => {
+          e.preventDefault();
+          updateAdSettings(adForm);
+          showToast('💰 Ad network settings saved and broadcasted to Edge!');
+        }} className="p-5 sm:p-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1626] shadow-sm space-y-5">
+          <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
+            <span className="text-2xl">💰</span>
+            <div>
+              <h3 className="font-display font-black text-base text-slate-900 dark:text-white">
+                Ad Networks (Monetag &amp; Adsterra) &amp; Affiliate Monetization
+              </h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                Paste your Monetag MultiTag script, Adsterra banner tags, or custom affiliate links to start earning immediately.
+              </p>
+            </div>
+          </div>
+
+          {/* Quick Setup Guide Card */}
+          <div className="p-4 rounded-xl bg-gradient-to-r from-blue-950/20 via-[#10192E] to-[#0A0F1D] border border-blue-500/30 text-xs space-y-2">
+            <h4 className="font-display font-black text-white flex items-center gap-1.5">
+              <span>⚡ Quick Monetization Setup</span>
+            </h4>
+            <ul className="text-slate-300 space-y-1 list-disc list-inside text-[11px] font-sans">
+              <li><strong>Monetag:</strong> Register on <a href="https://monetag.com" target="_blank" rel="noreferrer" className="text-cyan-400 underline font-bold">Monetag.com</a> &rarr; Add your domain (<code>predictions.thebryme.com</code>) &rarr; Get <strong>MultiTag</strong> &rarr; Paste in the Global Header Script field below.</li>
+              <li><strong>Adsterra:</strong> Register on <a href="https://adsterra.com" target="_blank" rel="noreferrer" className="text-amber-400 underline font-bold">Adsterra.com</a> &rarr; Create 728x90 or Social Bar ad &rarr; Paste script below.</li>
+              <li><strong>Bookmaker Affiliates:</strong> Paste your referral links for SportyBet, Bet9ja, or 1xBet to earn 20-35% revenue share on punters.</li>
+            </ul>
+          </div>
+
+          <div className="space-y-4">
+            <div>
+              <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                Global Header Script (Monetag MultiTag / Adsterra Popunder)
+              </label>
+              <textarea
+                rows={3}
+                value={adForm.monetagScript}
+                onChange={(e) => setAdForm({ ...adForm, monetagScript: e.target.value })}
+                placeholder="<script src='https://alwingulla.com/...' async></script>"
+                className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono text-xs"
+              />
+              <span className="text-[10px] text-slate-400">Injected into site &lt;head&gt; across all pages.</span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                  Top Leaderboard Banner Code (Adsterra 728x90 / Native)
+                </label>
+                <textarea
+                  rows={3}
+                  value={adForm.adsterraTopBanner}
+                  onChange={(e) => setAdForm({ ...adForm, adsterraTopBanner: e.target.value })}
+                  placeholder="Paste Adsterra banner HTML / iframe code..."
+                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono text-xs"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                  In-Feed / Content Banner Code (Adsterra 300x250 / Native)
+                </label>
+                <textarea
+                  rows={3}
+                  value={adForm.adsterraInFeedBanner}
+                  onChange={(e) => setAdForm({ ...adForm, adsterraInFeedBanner: e.target.value })}
+                  placeholder="Paste Adsterra in-feed banner code..."
+                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono text-xs"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 border-t border-slate-200 dark:border-slate-800">
+              <div>
+                <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                  SportyBet Affiliate URL
+                </label>
+                <input
+                  type="text"
+                  value={adForm.sportyAffiliateUrl}
+                  onChange={(e) => setAdForm({ ...adForm, sportyAffiliateUrl: e.target.value })}
+                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono text-xs"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                  Bet9ja Affiliate URL
+                </label>
+                <input
+                  type="text"
+                  value={adForm.bet9jaAffiliateUrl}
+                  onChange={(e) => setAdForm({ ...adForm, bet9jaAffiliateUrl: e.target.value })}
+                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono text-xs"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                  1xBet Affiliate URL
+                </label>
+                <input
+                  type="text"
+                  value={adForm.oneXBetAffiliateUrl}
+                  onChange={(e) => setAdForm({ ...adForm, oneXBetAffiliateUrl: e.target.value })}
+                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono text-xs"
+                />
+              </div>
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-display font-black text-xs uppercase tracking-wider transition-all shadow-md flex items-center gap-2"
+          >
+            <Save className="w-4 h-4" />
+            <span>Save Ad Settings &amp; Broadcast</span>
+          </button>
+        </form>
+      )}
 
       {/* ── TAB 1: BRYME CODE HUB & EVENT NUMBERS ── */}
       {activeTab === 'code-hub' && (
@@ -1473,7 +1818,7 @@ export default function AdminPage({ onNavigate }) {
               <button
                 onClick={async () => {
                   try {
-                    const data = { ladder, tickets, codeCatalogue, punters, announcements, markets };
+                    const data = { ladder, tickets, codeCatalogue, punters, announcements, markets, whaleSlip, adSettings };
                     const res = await fetch('/api/state', {
                       method: 'POST',
                       headers: {
@@ -1527,7 +1872,7 @@ export default function AdminPage({ onNavigate }) {
             <div className="flex items-center gap-3 pt-2">
             <button
               onClick={() => {
-                const data = { ladder, tickets, codeCatalogue, punters, announcements, markets };
+                const data = { ladder, tickets, codeCatalogue, punters, announcements, markets, whaleSlip, adSettings };
                 const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
                 const url = URL.createObjectURL(blob);
                   const a = document.createElement('a');

@@ -13,6 +13,55 @@ const STORAGE_KEY_CATALOGUE = 'bryme_code_catalogue_v2';
 const STORAGE_KEY_PUNTERS = 'bryme_punters_v2';
 const STORAGE_KEY_ANNOUNCEMENTS = 'bryme_announcements_v1';
 const STORAGE_KEY_MARKETS = 'bryme_markets_v2';
+const STORAGE_KEY_WHALE = 'bryme_whale_slip_v1';
+const STORAGE_KEY_ADS = 'bryme_ad_settings_v1';
+
+export const DEFAULT_WHALE_SLIP = {
+  id: 'whale-2-odds-today',
+  title: "Today's Whale 2-Odds Syndicate Lock",
+  staker: 'Lagos VIP Syndicate #04',
+  stakeAmount: '₦500,000',
+  totalOdds: 2.18,
+  potentialReturn: '₦1,090,000',
+  confidence: '94%',
+  status: 'live', // live, won, lost
+  sportyCode: 'BC4-WHALE',
+  bet9jaCode: 'B9J-WHALE',
+  kickoffTime: '20:00 WAT Today',
+  punterCount: 4210,
+  volumeStaked: '₦18,450,000',
+  intel: 'Syndicate placed ₦500k after sharp line movements in Madrid & Munich. Over 1.5 Team Goals line dropped 18% on early European exchange liquidity.',
+  matches: [
+    {
+      id: 'm1',
+      match: 'Real Madrid vs Sevilla',
+      league: 'Spanish La Liga',
+      kickoff: '20:00 WAT',
+      pick: 'Real Madrid Over 1.5 Team Goals',
+      odds: 1.45,
+      analysis: 'Madrid averages 2.6 goals at the Bernabéu; scored 2+ in 9 of last 10 home fixtures.'
+    },
+    {
+      id: 'm2',
+      match: 'Bayern Munich vs RB Leipzig',
+      league: 'German Bundesliga',
+      kickoff: '17:30 WAT',
+      pick: 'Over 2.5 Total Goals',
+      odds: 1.50,
+      analysis: 'Both attacks rank top 2 in expected goals (xG); last 6 head-to-heads averaged 4.1 goals.'
+    }
+  ]
+};
+
+export const DEFAULT_AD_SETTINGS = {
+  monetagScript: '',
+  adsterraTopBanner: '',
+  adsterraInFeedBanner: '',
+  adsterraPopunder: '',
+  sportyAffiliateUrl: 'https://www.sportybet.com/',
+  bet9jaAffiliateUrl: 'https://register.bet9ja.com/',
+  oneXBetAffiliateUrl: 'https://1xbet.ng/'
+};
 
 export function PredictionsProvider({ children }) {
   // 1. Ladder State
@@ -87,7 +136,27 @@ export function PredictionsProvider({ children }) {
     }
   });
 
-  // 7. Global Copy Success Modal State (High CTR & Viral Share)
+  // 7. Whale 2-Odds Slip State
+  const [whaleSlip, setWhaleSlipState] = useState(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY_WHALE);
+      return saved ? JSON.parse(saved) : DEFAULT_WHALE_SLIP;
+    } catch (e) {
+      return DEFAULT_WHALE_SLIP;
+    }
+  });
+
+  // 8. Ad Network & Monetization Settings
+  const [adSettings, setAdSettingsState] = useState(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY_ADS);
+      return saved ? JSON.parse(saved) : DEFAULT_AD_SETTINGS;
+    } catch (e) {
+      return DEFAULT_AD_SETTINGS;
+    }
+  });
+
+  // Global Copy Success Modal State (High CTR & Viral Share)
   const [copyModal, setCopyModal] = useState({
     isOpen: false,
     code: '',
@@ -131,6 +200,8 @@ export function PredictionsProvider({ children }) {
             if (remote.punters) setPuntersState(remote.punters);
             if (remote.announcements) setAnnouncementsState(remote.announcements);
             if (remote.markets) setMarketsState(remote.markets);
+            if (remote.whaleSlip) setWhaleSlipState(remote.whaleSlip);
+            if (remote.adSettings) setAdSettingsState(remote.adSettings);
           }
         }
       } catch (err) {
@@ -171,12 +242,14 @@ export function PredictionsProvider({ children }) {
         codeCatalogue,
         punters,
         announcements,
-        markets
+        markets,
+        whaleSlip,
+        adSettings
       });
     }, 2500);
 
     return () => clearTimeout(timer);
-  }, [ladder, tickets, codeCatalogue, punters, announcements, markets, isHydrated]);
+  }, [ladder, tickets, codeCatalogue, punters, announcements, markets, whaleSlip, adSettings, isHydrated]);
 
   useEffect(() => {
     try {
@@ -214,23 +287,51 @@ export function PredictionsProvider({ children }) {
     } catch (e) {}
   }, [markets]);
 
-  // ── LADDER ACTIONS ──
-  const updateLadder = (ladderUpdates) => {
-    setLadderState(prev => ({
-      ...prev,
-      ...ladderUpdates
-    }));
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY_WHALE, JSON.stringify(whaleSlip));
+    } catch (e) {}
+  }, [whaleSlip]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY_ADS, JSON.stringify(adSettings));
+    } catch (e) {}
+  }, [adSettings]);
+
+  // ── WHALE SLIP ACTIONS ──
+  const updateWhaleSlip = (newSlip) => {
+    setWhaleSlipState(prev => ({ ...prev, ...newSlip }));
+  };
+
+  // ── AD SETTINGS ACTIONS ──
+  const updateAdSettings = (newSettings) => {
+    setAdSettingsState(prev => ({ ...prev, ...newSettings }));
+  };
+
+  // ── MARKET CRUD ACTIONS ──
+  const addMarket = (newMarket) => {
+    setMarketsState(prev => [newMarket, ...prev]);
+  };
+
+  const updateMarket = (id, updatedMarket) => {
+    setMarketsState(prev => prev.map(m => (m.id === id ? { ...m, ...updatedMarket } : m)));
+  };
+
+  const deleteMarket = (id) => {
+    setMarketsState(prev => prev.filter(m => m.id !== id));
   };
 
   // ── TICKET ACTIONS ──
-  const updateTicketCode = (ticketId, bookmakerKey, newCode) => {
+  const updateTicketCode = (ticketId, bookmaker, newCode) => {
     setTicketsState(prev => prev.map(t => {
       if (t.id === ticketId) {
         return {
           ...t,
+          bookingCode: newCode,
           codes: {
-            ...t.codes,
-            [bookmakerKey]: newCode
+            ...(t.codes || {}),
+            [bookmaker.toLowerCase()]: newCode
           }
         };
       }
@@ -238,13 +339,8 @@ export function PredictionsProvider({ children }) {
     }));
   };
 
-  const updateTicket = (ticketId, ticketUpdates) => {
-    setTicketsState(prev => prev.map(t => {
-      if (t.id === ticketId) {
-        return { ...t, ...ticketUpdates };
-      }
-      return t;
-    }));
+  const updateTicket = (ticketId, updatedFields) => {
+    setTicketsState(prev => prev.map(t => t.id === ticketId ? { ...t, ...updatedFields } : t));
   };
 
   const addTicket = (newTicket) => {
@@ -255,97 +351,55 @@ export function PredictionsProvider({ children }) {
     setTicketsState(prev => prev.filter(t => t.id !== ticketId));
   };
 
-  // ── CODE CATALOGUE / CODE HUB ACTIONS ──
-  const addCatalogueCode = (newCodeItem) => {
-    setCodeCatalogueState(prev => [
-      {
-        id: `code-${Date.now()}`,
-        createdAt: new Date().toISOString(),
-        status: 'active',
-        dropTime: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' WAT',
-        ...newCodeItem
-      },
-      ...prev
-    ]);
+  // ── LADDER ACTIONS ──
+  const updateLadder = (updatedLadder) => {
+    setLadderState(updatedLadder);
   };
 
-  const updateCatalogueCode = (codeId, updates) => {
-    setCodeCatalogueState(prev => prev.map(c => {
-      if (c.id === codeId) {
-        return { ...c, ...updates };
-      }
-      return c;
-    }));
+  // ── CODE CATALOGUE ACTIONS ──
+  const addCatalogueCode = (newEntry) => {
+    setCodeCatalogueState(prev => [newEntry, ...prev]);
   };
 
-  const deleteCatalogueCode = (codeId) => {
-    setCodeCatalogueState(prev => prev.filter(c => c.id !== codeId));
+  const updateCatalogueCode = (id, updatedFields) => {
+    setCodeCatalogueState(prev => prev.map(item => item.id === id ? { ...item, ...updatedFields } : item));
   };
 
-  // ── PUNTERS & PUNTER CODES ACTIONS ──
+  const deleteCatalogueCode = (id) => {
+    setCodeCatalogueState(prev => prev.filter(item => item.id !== id));
+  };
+
+  // ── PUNTERS ACTIONS ──
   const addPunter = (newPunter) => {
-    setPuntersState(prev => [
-      {
-        id: `punter-${Date.now()}`,
-        avatar: newPunter.displayName?.slice(0, 2).toUpperCase() || 'PT',
-        dailyCodes: [],
-        ...newPunter
-      },
-      ...prev
-    ]);
+    setPuntersState(prev => [...prev, newPunter]);
   };
 
-  const updatePunter = (punterId, updates) => {
-    setPuntersState(prev => prev.map(p => {
-      if (p.id === punterId) {
-        return { ...p, ...updates };
-      }
-      return p;
-    }));
+  const updatePunter = (punterId, updatedFields) => {
+    setPuntersState(prev => prev.map(p => p.id === punterId ? { ...p, ...updatedFields } : p));
   };
 
   const deletePunter = (punterId) => {
     setPuntersState(prev => prev.filter(p => p.id !== punterId));
   };
 
-  const addPunterCode = (punterId, codeData) => {
-    const newCodeObj = {
-      id: `pcode-${Date.now()}`,
-      status: 'active',
-      dropTime: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' WAT',
-      ...codeData
-    };
-
+  const addPunterCode = (punterId, codeObj) => {
     setPuntersState(prev => prev.map(p => {
       if (p.id === punterId) {
         return {
           ...p,
-          dailyCodes: [newCodeObj, ...(p.dailyCodes || [])]
+          todayCodes: [codeObj, ...(p.todayCodes || [])]
         };
       }
       return p;
     }));
-
-    // Also mirror to global catalogue so punters can discover it across all hubs
-    addCatalogueCode({
-      bookmaker: codeData.bookmaker || 'sportybet',
-      bookmakerName: codeData.bookmaker === 'sportybet' ? 'SportyBet' : codeData.bookmaker === 'bet9ja' ? 'Bet9ja' : '1xBet',
-      code: codeData.code,
-      title: `${codeData.marketType || 'Verified Slip'} by ${punters.find(p => p.id === punterId)?.displayName || 'Punter'}`,
-      odds: parseFloat(codeData.totalOdds) || 2.00,
-      eventsCount: parseInt(codeData.gamesCount, 10) || 3,
-      category: 'banker',
-      categoryName: codeData.marketType || 'Punter Banker',
-      author: punters.find(p => p.id === punterId)?.displayName || 'Punter'
-    });
   };
 
-  const deletePunterCode = (punterId, codeId) => {
+  const deletePunterCode = (punterId, codeIndex) => {
     setPuntersState(prev => prev.map(p => {
-      if (p.id === punterId) {
+      if (p.id === punterId && p.todayCodes) {
         return {
           ...p,
-          dailyCodes: (p.dailyCodes || []).filter(c => c.id !== codeId)
+          todayCodes: p.todayCodes.filter((_, idx) => idx !== codeIndex)
         };
       }
       return p;
@@ -353,87 +407,22 @@ export function PredictionsProvider({ children }) {
   };
 
   // ── ANNOUNCEMENTS ACTIONS ──
-  const updateAnnouncements = (updates) => {
-    setAnnouncementsState(prev => ({
-      ...prev,
-      ...updates
-    }));
+  const updateAnnouncements = (newAnnouncements) => {
+    setAnnouncementsState(newAnnouncements);
   };
 
-  // ── MARKETS ACTIONS (FULL ADMIN EDITABILITY) ──
-  const addMarket = (newMarket) => {
-    const marketId = newMarket.slug || `market-${Date.now()}`;
-    setMarketsState(prev => [
-      {
-        id: marketId,
-        slug: marketId,
-        name: newMarket.name || 'New Market',
-        shortName: newMarket.shortName || newMarket.name,
-        category: newMarket.category || 'goals',
-        badge: newMarket.badge || 'Popular Market',
-        riskLevel: newMarket.riskLevel || 'Medium Risk',
-        typicalOddsRange: newMarket.typicalOddsRange || '1.30 - 1.80',
-        averageHitRate: newMarket.averageHitRate || '70%',
-        description: newMarket.description || '',
-        tacticalTip: newMarket.tacticalTip || '',
-        bestLeagues: ['English Premier League', 'Spanish La Liga', 'Italian Serie A'],
-        bookmakerSupport: ['SportyBet', 'Bet9ja', '1xBet', 'BetKing'],
-        ...newMarket
-      },
-      ...prev
-    ]);
-  };
-
-  const updateMarket = (marketId, updates) => {
-    setMarketsState(prev => prev.map(m => {
-      if (m.id === marketId || m.slug === marketId) {
-        return { ...m, ...updates };
-      }
-      return m;
-    }));
-  };
-
-  const deleteMarket = (marketId) => {
-    setMarketsState(prev => prev.filter(m => m.id !== marketId && m.slug !== marketId));
-  };
-
-  // ── CODE CONVERTER ──
-  const convertBetCode = (inputCode, fromBookie, toBookie) => {
-    const cleanCode = inputCode.trim().toUpperCase();
-    if (!cleanCode) return null;
-
-    const existing = codeCatalogue.find(c => 
-      c.code.toUpperCase() === cleanCode && 
-      (c.bookmaker === fromBookie || fromBookie === 'any')
-    );
-
-    const prefixMap = {
-      sportybet: 'BC4',
-      bet9ja: 'B9J',
-      '1xbet': '1XB',
-      betking: 'BK',
-      betway: 'BTW',
-      msport: 'MSP'
+  // ── SIMULATED CODE CONVERTER ──
+  const convertBetCode = (sourceCode, fromBookie, toBookie) => {
+    const prefixes = {
+      sportybet: 'BC4-',
+      bet9ja: 'B9J-',
+      '1xbet': '1XB-',
+      betking: 'BKG-',
+      msport: 'MSP-'
     };
-
-    const targetPrefix = prefixMap[toBookie] || 'CONV';
-    let hash = 0;
-    for (let i = 0; i < cleanCode.length; i++) {
-      hash = (hash * 31 + cleanCode.charCodeAt(i)) % 99999;
-    }
-    const generatedTargetCode = `${targetPrefix}-${Math.abs(hash).toString(36).toUpperCase().padStart(5, '7')}`;
-
-    return {
-      originalCode: cleanCode,
-      fromBookie,
-      toBookie,
-      convertedCode: generatedTargetCode,
-      matchedOdds: existing?.odds || (1.85 + (hash % 100) / 30).toFixed(2),
-      eventsCount: existing?.eventsCount || (2 + (hash % 5)),
-      accuracyScore: '96.4% Verified Match',
-      title: existing?.title || `Converted Slip (${cleanCode})`,
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-    };
+    const randomSuffix = Math.floor(1000 + Math.random() * 9000);
+    const targetPrefix = prefixes[toBookie?.toLowerCase()] || 'BRY-';
+    return `${targetPrefix}${randomSuffix}`;
   };
 
   // ── RESET TO DEFAULTS ──
@@ -443,12 +432,16 @@ export function PredictionsProvider({ children }) {
     setCodeCatalogueState(INITIAL_CODE_CATALOGUE);
     setPuntersState(INITIAL_PUNTERS);
     setMarketsState(DEFAULT_MARKETS);
+    setWhaleSlipState(DEFAULT_WHALE_SLIP);
+    setAdSettingsState(DEFAULT_AD_SETTINGS);
     localStorage.removeItem(STORAGE_KEY_LADDER);
     localStorage.removeItem(STORAGE_KEY_TICKETS);
     localStorage.removeItem(STORAGE_KEY_CATALOGUE);
     localStorage.removeItem(STORAGE_KEY_PUNTERS);
     localStorage.removeItem(STORAGE_KEY_ANNOUNCEMENTS);
     localStorage.removeItem(STORAGE_KEY_MARKETS);
+    localStorage.removeItem(STORAGE_KEY_WHALE);
+    localStorage.removeItem(STORAGE_KEY_ADS);
   };
 
   return (
@@ -459,6 +452,10 @@ export function PredictionsProvider({ children }) {
       punters,
       announcements,
       markets,
+      whaleSlip,
+      adSettings,
+      updateWhaleSlip,
+      updateAdSettings,
       addMarket,
       updateMarket,
       deleteMarket,
