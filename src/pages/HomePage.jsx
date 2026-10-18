@@ -166,6 +166,9 @@ export default function HomePage({ onNavigate }) {
         </section>
       )}
 
+      {/* MID-PAGE ADSTERRA 300x250 BANNER SLOT */}
+      <AdBanner slot="300x250" label="Adsterra 300x250 Banner" />
+
       {/* ── 4.5. LIVE RESULTS & ACCURACY LEDGER (HIGH VISIBILITY) ── */}
       <section className="rounded-2xl border-2 border-emerald-500/30 bg-white dark:bg-[#0E1626] p-4 sm:p-5 shadow-sm space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-3">
@@ -320,8 +323,8 @@ export default function HomePage({ onNavigate }) {
         </button>
       </section>
 
-      {/* IN-FEED AD SLOT */}
-      <AdBanner slot="in-feed" label="Adsterra / Monetag In-Feed Placement" />
+      {/* IN-FEED NATIVE ADSTERRA SLOT */}
+      <AdBanner slot="native" label="Adsterra Native Recommendation" />
 
       {/* ── 5. HIGH-YIELD BETTING MARKETS DIRECTORY ── */}
       {(activeTab === 'all' || activeTab === 'markets') && (

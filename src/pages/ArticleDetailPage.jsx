@@ -121,8 +121,8 @@ export default function ArticleDetailPage({ slug, onNavigate }) {
               dangerouslySetInnerHTML={{ __html: article.contentHtml }}
             />
 
-            {/* In-Article Ad Placement */}
-            <AdBanner slot="in-feed" label="Adsterra / Monetag In-Article Slot" />
+            {/* In-Article Adsterra Placement */}
+            <AdBanner slot="300x250" label="Adsterra Sponsored 300x250" />
 
             {/* Tags Ribbon */}
             <div className="pt-6 border-t border-slate-200 dark:border-slate-800 flex flex-wrap items-center gap-2">

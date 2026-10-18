@@ -162,8 +162,8 @@ export default function ArticlesPage({ onNavigate }) {
         ))}
       </div>
 
-      {/* In-feed Ad Banner Slot */}
-      <AdBanner slot="in-feed" label="Adsterra / Monetag In-Feed Placement" />
+      {/* In-feed Adsterra Native Slot */}
+      <AdBanner slot="native" label="Adsterra Native Recommendation" />
 
     </div>
   );

@@ -1,45 +1,58 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { usePredictions } from '../context/PredictionsContext';
-import { Sparkles, ArrowRight, ShieldCheck, Flame, ExternalLink } from 'lucide-react';
+import { ExternalLink } from 'lucide-react';
 
 export default function AdBanner({ 
-  slot = 'in-feed', // 'top-banner', 'in-feed', 'sidebar'
-  format = 'responsive',
+  slot = 'native', // 'native', '300x250', 'top-banner', 'affiliate'
   label = 'Sponsored Partner'
 }) {
   const { adSettings } = usePredictions() || {};
-  const containerRef = useRef(null);
 
-  const customHtml = slot === 'top-banner' 
-    ? adSettings?.adsterraTopBanner 
-    : adSettings?.adsterraInFeedBanner;
-
-  // If Admin has pasted a real Adsterra or Monetag script/HTML, inject it safely
   useEffect(() => {
-    if (customHtml && containerRef.current) {
-      containerRef.current.innerHTML = customHtml;
-      // Execute any script tags inside the injected HTML
-      const scripts = containerRef.current.getElementsByTagName('script');
-      for (let i = 0; i < scripts.length; i++) {
-        const script = document.createElement('script');
-        if (scripts[i].src) {
-          script.src = scripts[i].src;
-        } else {
-          script.text = scripts[i].text;
-        }
-        document.body.appendChild(script);
+    if (slot === 'native') {
+      const scriptId = 'adsterra-native-invoke';
+      if (!document.getElementById(scriptId)) {
+        const s = document.createElement('script');
+        s.id = scriptId;
+        s.async = true;
+        s.setAttribute('data-cfasync', 'false');
+        s.src = 'https://pl31906596.profitableratecpmnetwork.com/ba5346dfe9401702b67d9eed042588a6/invoke.js';
+        document.body.appendChild(s);
       }
     }
-  }, [customHtml]);
+  }, [slot]);
 
-  // If custom ad code is present, render container
-  if (customHtml) {
+  // If slot is 300x250 banner
+  if (slot === '300x250') {
     return (
       <div className="w-full my-4 flex flex-col items-center justify-center">
-        <span className="text-[10px] font-mono uppercase text-slate-400 mb-1">
+        <span className="text-[10px] font-mono uppercase text-slate-400 mb-1.5">
           {label} &bull; 18+ Gamble Responsibly
         </span>
-        <div ref={containerRef} className="w-full max-w-4xl flex justify-center overflow-hidden" />
+        <div className="w-[300px] h-[250px] rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-[#0E1626] flex items-center justify-center shadow-lg">
+          <iframe
+            title="Adsterra 300x250 Banner"
+            srcDoc="<!DOCTYPE html><html><head><style>body{margin:0;padding:0;display:flex;justify-content:center;align-items:center;background:#0E1626;}</style></head><body><script>atOptions = {'key' : '11ac205462771f33be54f6bbe7b6c2b5','format' : 'iframe','height' : 250,'width' : 300,'params' : {}};</script><script src='https://www.highrevenueformat.com/11ac205462771f33be54f6bbe7b6c2b5/invoke.js'></script></body></html>"
+            width="300"
+            height="250"
+            style={{ border: 'none', overflow: 'hidden' }}
+            scrolling="no"
+          />
+        </div>
+      </div>
+    );
+  }
+
+  // If slot is native banner
+  if (slot === 'native') {
+    return (
+      <div className="w-full my-4 flex flex-col items-center justify-center">
+        <span className="text-[10px] font-mono uppercase text-slate-400 mb-1.5">
+          {label} &bull; 18+ Gamble Responsibly
+        </span>
+        <div className="w-full max-w-4xl min-h-[90px] rounded-2xl p-2 bg-white/40 dark:bg-[#0E1626]/80 border border-slate-200 dark:border-slate-800 flex justify-center items-center overflow-hidden">
+          <div id="container-ba5346dfe9401702b67d9eed042588a6" className="w-full flex justify-center" />
+        </div>
       </div>
     );
   }
