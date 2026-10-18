@@ -104,7 +104,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F1F5F9] dark:bg-[#070B16] text-slate-900 dark:text-slate-100 flex flex-col font-sans transition-colors">
+    <div className="min-h-screen bg-[#F1F5F9] dark:bg-[#070B16] text-slate-900 dark:text-slate-100 flex flex-col font-sans transition-colors overflow-x-hidden w-full max-w-full">
       
       {/* 1. Top Header with Midnight Navy & Navigation */}
       <Header 

@@ -185,7 +185,7 @@ export default function VisibleLadder({ onNavigate }) {
           </div>
 
           {/* ── 2. SPORTYBET 1-TAP BOOKING CODE BAR ── */}
-          <div className="pt-3 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white/5 -mx-4 -mb-4 sm:-mx-6 sm:-mb-6 p-4 sm:p-5">
+          <div className="mt-4 pt-3 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white/5 rounded-xl p-3 sm:p-4">
             
             {/* Bookmaker Tabs */}
             <div className="flex items-center gap-2">

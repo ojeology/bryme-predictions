@@ -1,12 +1,12 @@
 import React from 'react';
-import { Trophy, Users, BarChart2, Zap, Menu } from 'lucide-react';
+import { Trophy, Users, BarChart2, Layers, Menu } from 'lucide-react';
 
 export default function BottomNav({ currentRoute, onNavigate, onOpenSidebar }) {
   const items = [
     { id: 'home', label: '18-Ladder', icon: Trophy, hasPulse: true },
     { id: 'punters', label: 'Punters', icon: Users },
+    { id: 'markets', label: 'Markets', icon: Layers },
     { id: 'results', label: 'Results', icon: BarChart2 },
-    { id: 'convert', label: 'Convert', icon: Zap },
   ];
 
   return (
