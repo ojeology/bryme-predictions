@@ -6,14 +6,18 @@ import {
 } from 'lucide-react';
 
 export default function PuntersPage({ onNavigate }) {
-  const { punters } = usePredictions();
+  const { punters, triggerCopyModal } = usePredictions();
   const [selectedRegion, setSelectedRegion] = useState('all');
   const [copiedCodeId, setCopiedCodeId] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
 
-  const handleCopy = (code, id) => {
+  const handleCopy = (code, id, bookmaker = 'SportyBet', odds = '', title = 'Punter Slip') => {
     if (code) {
-      navigator.clipboard.writeText(code);
+      if (triggerCopyModal) {
+        triggerCopyModal(code, bookmaker, title, odds);
+      } else {
+        navigator.clipboard.writeText(code);
+      }
       setCopiedCodeId(id);
       setTimeout(() => setCopiedCodeId(null), 2500);
     }
@@ -198,7 +202,7 @@ export default function PuntersPage({ onNavigate }) {
                           </div>
 
                           <button
-                            onClick={() => handleCopy(codeItem.code, codeItem.id)}
+                            onClick={() => handleCopy(codeItem.code, codeItem.id, isSporty ? 'SportyBet' : isBet9ja ? 'Bet9ja' : '1xBet', codeItem.totalOdds, `${punter.displayName}'s ${codeItem.marketType}`)}
                             className={`px-3 py-1.5 rounded-xl text-xs font-display font-black uppercase tracking-wider flex items-center gap-1.5 transition-all ${
                               copiedCodeId === codeItem.id
                                 ? 'bg-[#00C250] text-black font-bold ring-2 ring-emerald-300'

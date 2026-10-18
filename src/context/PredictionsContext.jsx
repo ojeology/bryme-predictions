@@ -71,6 +71,32 @@ export function PredictionsProvider({ children }) {
     }
   });
 
+  // 6. Global Copy Success Modal State (High CTR & Viral Share)
+  const [copyModal, setCopyModal] = useState({
+    isOpen: false,
+    code: '',
+    bookmaker: '',
+    title: '',
+    odds: ''
+  });
+
+  const triggerCopyModal = (code, bookmaker = 'SportyBet', title = 'Banker Slip', odds = '') => {
+    if (code) {
+      navigator.clipboard.writeText(code);
+      setCopyModal({
+        isOpen: true,
+        code,
+        bookmaker,
+        title,
+        odds
+      });
+    }
+  };
+
+  const closeCopyModal = () => {
+    setCopyModal(prev => ({ ...prev, isOpen: false }));
+  };
+
   // Initial fetch from Cloudflare Edge API on mount
   useEffect(() => {
     let isMounted = true;
@@ -348,6 +374,9 @@ export function PredictionsProvider({ children }) {
       codeCatalogue,
       punters,
       announcements,
+      copyModal,
+      triggerCopyModal,
+      closeCopyModal,
       updateTicketCode,
       updateTicket,
       addTicket,

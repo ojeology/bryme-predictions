@@ -4,6 +4,7 @@ import Sidebar from './components/Sidebar';
 import BottomNav from './components/BottomNav';
 import Footer from './components/Footer';
 import SearchModal from './components/SearchModal';
+import CopySuccessModal from './components/CopySuccessModal';
 import { usePredictions } from './context/PredictionsContext';
 import { Sparkles, Clock, Flame, ShieldCheck, X } from 'lucide-react';
 
@@ -31,7 +32,7 @@ export default function App() {
   const [currentHash, setCurrentHash] = useState(window.location.hash || '#/');
   const [searchOpen, setSearchOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { ladder, announcements } = usePredictions();
+  const { ladder, announcements, copyModal, closeCopyModal } = usePredictions();
 
   useEffect(() => {
     const handleHashChange = () => {
@@ -55,6 +56,32 @@ export default function App() {
   const segments = rawRoute.split('/');
   const mainRoute = segments[0] || 'home';
   const param = segments[1] || '';
+
+  // Dynamic SEO Page Title for Google indexing and search snippets
+  useEffect(() => {
+    const titles = {
+      home: 'BRYME Predictions | Daily SportyBet Booking Codes & 18-Step Rollover Ladder',
+      ladder: '18-Step Rollover Mountain & Safe Haven Milestones | BRYME Predictions',
+      predictions: 'SportyBet & Bet9ja Booking Codes Hub | BRYME Predictions',
+      punters: 'Tracked African Punters Directory & Daily Slips | BRYME Predictions',
+      convert: 'Convert Bet Codes (SportyBet, Bet9ja, 1xBet, BetKing) | BRYME',
+      markets: '35+ Football Betting Markets Catalogue & Hit Rates | BRYME',
+      results: 'Verified Results Ledger (76.9% Win Rate) | BRYME Predictions',
+      'editor-picks': 'Weekend 2.00x European Banker Double | BRYME Predictions',
+      'weekend-hub': 'African Punters Consensus Hub & Match Polls | BRYME',
+      admin: 'Admin Management Deck | BRYME Predictions'
+    };
+
+    if (titles[mainRoute]) {
+      document.title = titles[mainRoute];
+    } else if (mainRoute === 'punter' && param) {
+      document.title = `${param.replace('punter-', '').toUpperCase()} Daily Booking Codes | BRYME Predictions`;
+    } else if (mainRoute === 'ticket' && param) {
+      document.title = `Banker Slip Selections & Odds Breakdown | BRYME Predictions`;
+    } else if (mainRoute === 'market' && param) {
+      document.title = `${param.toUpperCase()} Football Market Statistics & Rules | BRYME`;
+    }
+  }, [mainRoute, param]);
 
   // Render appropriate view based on route
   const renderContent = () => {
@@ -212,11 +239,21 @@ export default function App() {
         onOpenSidebar={() => setSidebarOpen(true)}
       />
 
-      {/* 6. Instant Search Modal */}
+      {/* 7. Instant Search Modal */}
       <SearchModal 
         isOpen={searchOpen} 
         onClose={() => setSearchOpen(false)} 
         onNavigate={navigate} 
+      />
+
+      {/* 8. Global High-Converting Copy & Viral Share Modal */}
+      <CopySuccessModal
+        isOpen={copyModal?.isOpen}
+        onClose={closeCopyModal}
+        code={copyModal?.code}
+        bookmaker={copyModal?.bookmaker}
+        title={copyModal?.title}
+        odds={copyModal?.odds}
       />
 
     </div>

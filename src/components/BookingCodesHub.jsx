@@ -6,15 +6,19 @@ import {
 } from 'lucide-react';
 
 export default function BookingCodesHub({ onNavigate }) {
-  const { codeCatalogue } = usePredictions();
+  const { codeCatalogue, triggerCopyModal } = usePredictions();
   const [selectedBookmaker, setSelectedBookmaker] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [inputLoadCode, setInputLoadCode] = useState('');
   const [copiedId, setCopiedId] = useState(null);
 
-  const handleCopy = (code, id) => {
+  const handleCopy = (code, id, bookmaker = 'SportyBet', odds = '', title = 'Banker Acca') => {
     if (code) {
-      navigator.clipboard.writeText(code);
+      if (triggerCopyModal) {
+        triggerCopyModal(code, bookmaker, title, odds);
+      } else {
+        navigator.clipboard.writeText(code);
+      }
       setCopiedId(id);
       setTimeout(() => setCopiedId(null), 2500);
     }
@@ -23,8 +27,8 @@ export default function BookingCodesHub({ onNavigate }) {
   const handleLoadCode = (e) => {
     e.preventDefault();
     if (!inputLoadCode.trim()) return;
-    handleCopy(inputLoadCode.trim().toUpperCase(), 'manual-load');
-    alert(`Code "${inputLoadCode.trim().toUpperCase()}" copied! Ready to paste into your bookmaker.`);
+    const cleanCode = inputLoadCode.trim().toUpperCase();
+    handleCopy(cleanCode, 'manual-load', 'SportyBet', '2.00', 'Manual Loaded Slip');
     setInputLoadCode('');
   };
 
@@ -172,7 +176,7 @@ export default function BookingCodesHub({ onNavigate }) {
                 </div>
 
                 <button
-                  onClick={() => handleCopy(item.code, item.id)}
+                  onClick={() => handleCopy(item.code, item.id, item.bookmakerName || item.bookmaker, item.odds, item.title)}
                   className={`px-3.5 py-1.5 rounded-xl text-xs font-display font-black uppercase tracking-wider flex items-center gap-1.5 transition-all shadow-sm ${
                     copiedId === item.id
                       ? 'bg-[#00C250] text-black ring-2 ring-emerald-300'

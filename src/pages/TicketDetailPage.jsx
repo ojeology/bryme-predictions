@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { TICKETS, getTicketById } from '../data/tickets';
 import { MARKETS } from '../data/markets';
+import { usePredictions } from '../context/PredictionsContext';
 import StatusBadge from '../components/StatusBadge';
 import TicketCard from '../components/TicketCard';
 import AdPlaceholder from '../components/AdPlaceholder';
@@ -10,6 +11,7 @@ import {
 } from 'lucide-react';
 
 export default function TicketDetailPage({ ticketId, onNavigate }) {
+  const { triggerCopyModal } = usePredictions();
   const [copiedCodeKey, setCopiedCodeKey] = useState(null);
   const [copiedLink, setCopiedLink] = useState(false);
 
@@ -21,7 +23,11 @@ export default function TicketDetailPage({ ticketId, onNavigate }) {
 
   const handleCopy = (code, key) => {
     if (code) {
-      navigator.clipboard.writeText(code);
+      if (triggerCopyModal) {
+        triggerCopyModal(code, key === 'sporty' ? 'SportyBet' : key === 'bet9ja' ? 'Bet9ja' : '1xBet', ticket.title, ticket.totalOdds);
+      } else {
+        navigator.clipboard.writeText(code);
+      }
       setCopiedCodeKey(key);
       setTimeout(() => setCopiedCodeKey(null), 2000);
     }

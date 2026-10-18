@@ -72,7 +72,7 @@ export const LADDER_18_STEPS = [
 ];
 
 export default function VisibleLadder({ onNavigate }) {
-  const { ladder } = usePredictions();
+  const { ladder, triggerCopyModal } = usePredictions();
   const currentStep = ladder?.currentDay || 4;
   const currentPot = ladder?.currentBalance || 3375;
   const sportyCode = ladder?.sportyCode || 'BC4-LAD50-D4';
@@ -84,7 +84,11 @@ export default function VisibleLadder({ onNavigate }) {
   const [filterView, setFilterView] = useState('all'); // 'all' | 'safehavens'
 
   const handleCopy = (code, type) => {
-    navigator.clipboard.writeText(code);
+    if (triggerCopyModal) {
+      triggerCopyModal(code, type === 'sporty' ? 'SportyBet' : 'Bet9ja', `Rollover Step ${currentStep}`, '1.50');
+    } else {
+      navigator.clipboard.writeText(code);
+    }
     if (type === 'sporty') {
       setCopiedSporty(true);
       setTimeout(() => setCopiedSporty(false), 2000);

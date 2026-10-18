@@ -1,13 +1,14 @@
 import React, { useState, useMemo } from 'react';
 import { usePredictions } from '../context/PredictionsContext';
 import { SUPPORTED_BOOKMAKERS } from '../data/catalogueCodes';
+import AdPlaceholder from '../components/AdPlaceholder';
 import { 
   Zap, Copy, Check, ArrowRight, ArrowLeftRight, Search, 
   Filter, Sparkles, ShieldCheck, Flame, RefreshCw, ExternalLink
 } from 'lucide-react';
 
 export default function ConvertCodesPage({ onNavigate }) {
-  const { codeCatalogue, convertBetCode } = usePredictions();
+  const { codeCatalogue, convertBetCode, triggerCopyModal } = usePredictions();
 
   // Converter State
   const [inputCode, setInputCode] = useState('');
@@ -32,7 +33,7 @@ export default function ConvertCodesPage({ onNavigate }) {
       const res = convertBetCode(inputCode, fromBookie, toBookie);
       setConversionResult(res);
       setIsConverting(false);
-    }, 400);
+    }, 600);
   };
 
   const handleSwapBookies = () => {
@@ -44,7 +45,16 @@ export default function ConvertCodesPage({ onNavigate }) {
 
   const handleCopy = (text, type, id = null) => {
     if (text) {
-      navigator.clipboard.writeText(text);
+      if (triggerCopyModal) {
+        triggerCopyModal(
+          text, 
+          type === 'converted' ? toBookie : 'SportyBet', 
+          conversionResult?.title || 'Converted Code', 
+          conversionResult?.matchedOdds || '2.00'
+        );
+      } else {
+        navigator.clipboard.writeText(text);
+      }
       if (type === 'converted') {
         setCopiedConverted(true);
         setTimeout(() => setCopiedConverted(false), 2500);
@@ -246,6 +256,9 @@ export default function ConvertCodesPage({ onNavigate }) {
         )}
 
       </div>
+
+      {/* MID-CONVERTER HIGH-RPM AD SLOT */}
+      <AdPlaceholder label="Middle Converter Sponsor (728x90 / Native Feed)" />
 
       {/* ── 3. LIVE BOOKING CODES CATALOGUE & FEED ── */}
       <div className="space-y-4">
