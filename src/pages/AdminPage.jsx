@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { usePredictions } from '../context/PredictionsContext';
 import { SUPPORTED_BOOKMAKERS } from '../data/catalogueCodes';
+import { MARKETS as DEFAULT_MARKETS } from '../data/markets';
 import { 
   ShieldCheck, Key, Plus, Trash2, Save, RefreshCw, Check, 
   Copy, ArrowLeft, Trophy, Flame, Layers, Lock, Unlock, Sparkles, 
-  CheckCircle2, AlertCircle, LogOut, Edit2, Zap, BookOpen, Clock, Users, Megaphone
+  CheckCircle2, AlertCircle, LogOut, Edit2, Zap, BookOpen, Clock, Users, Megaphone,
+  Search, ExternalLink
 } from 'lucide-react';
 
 const MASTER_PIN = 'bryme2026';
@@ -865,7 +867,7 @@ export default function AdminPage({ onNavigate }) {
             </div>
 
             <div className="space-y-2.5">
-              {(markets || [])
+              {(Array.isArray(markets) && markets.length > 0 ? markets : DEFAULT_MARKETS)
                 .filter(m => {
                   if (!marketSearch.trim()) return true;
                   const q = marketSearch.toLowerCase();
