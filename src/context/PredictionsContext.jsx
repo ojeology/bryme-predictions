@@ -113,6 +113,8 @@ export function PredictionsProvider({ children }) {
     setCopyModal(prev => ({ ...prev, isOpen: false }));
   };
 
+  const [isHydrated, setIsHydrated] = useState(false);
+
   // Initial fetch from Cloudflare Edge API on mount
   useEffect(() => {
     let isMounted = true;
@@ -133,6 +135,8 @@ export function PredictionsProvider({ children }) {
         }
       } catch (err) {
         // Fallback to localStorage or default seeds
+      } finally {
+        if (isMounted) setIsHydrated(true);
       }
     };
 
@@ -140,10 +144,10 @@ export function PredictionsProvider({ children }) {
     return () => { isMounted = false; };
   }, []);
 
-  // Save changes to localStorage and Cloudflare Edge
+  // Save changes to Cloudflare Edge
   const syncToCloudflare = async (fullPayload) => {
     try {
-      await fetch('/api/state', {
+      const res = await fetch('/api/state', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -151,10 +155,28 @@ export function PredictionsProvider({ children }) {
         },
         body: JSON.stringify(fullPayload)
       });
+      return await res.json();
     } catch (e) {
-      // Offline fallback
+      return { success: false, error: e.message };
     }
   };
+
+  // Debounced auto-sync to Cloudflare Edge KV whenever state is updated
+  useEffect(() => {
+    if (!isHydrated) return;
+    const timer = setTimeout(() => {
+      syncToCloudflare({
+        ladder,
+        tickets,
+        codeCatalogue,
+        punters,
+        announcements,
+        markets
+      });
+    }, 2500);
+
+    return () => clearTimeout(timer);
+  }, [ladder, tickets, codeCatalogue, punters, announcements, markets, isHydrated]);
 
   useEffect(() => {
     try {
@@ -458,6 +480,7 @@ export function PredictionsProvider({ children }) {
       deletePunterCode,
       updateAnnouncements,
       convertBetCode,
+      syncToCloudflare,
       resetToDefaults
     }}>
       {children}
