@@ -790,10 +790,14 @@ function parseMarketCommand(rawText) {
     code = b9Match[1].toUpperCase();
     bookmaker = 'bet9ja';
   } else {
-    const sMatch = text.match(/\b([A-Z0-9]{6})\b/i);
-    const ignored = new Set(['MARKET', 'SPORTS', 'TICKET', 'BANKER', 'SOCCER', 'TODAY', 'BETTING']);
-    if (sMatch && !ignored.has(sMatch[1].toUpperCase()) && /[0-9]/.test(sMatch[1]) && /[A-Z]/.test(sMatch[1])) {
-      code = sMatch[1].toUpperCase();
+    const ignored = new Set(['MARKET', 'OVER15', 'OVER25', 'SPORTS', 'TICKET', 'BANKER', 'SOCCER', 'TODAY', 'BETTING']);
+    const allMatches = text.match(/\b([A-Z0-9]{6})\b/gi) || [];
+    for (const m of allMatches) {
+      const up = m.toUpperCase();
+      if (!ignored.has(up) && /[0-9]/.test(up) && /[A-Z]/.test(up)) {
+        code = up;
+        break;
+      }
     }
   }
 
