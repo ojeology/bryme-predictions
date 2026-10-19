@@ -40,6 +40,16 @@ export const BOOKMAKERS = [
     accentColor: '#3B82F6'
   },
   {
+    id: '22bet',
+    name: '22Bet Nigeria',
+    country: 'Nigeria / Global',
+    currency: 'NGN (₦)',
+    codeFormat: 'e.g. 22B-78901',
+    description: 'Premier sportsbook featuring 100% up to ₦207,500 welcome bonus, quick crypto & bank withdrawals, and deep European markets.',
+    badgeColor: 'bg-teal-950 text-teal-400 border-teal-800',
+    accentColor: '#0F766E'
+  },
+  {
     id: 'fortebet',
     name: 'Fortebet',
     country: 'Uganda / East Africa',

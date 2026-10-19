@@ -71,7 +71,8 @@ export const DEFAULT_AD_SETTINGS = {
   bet9jaAffiliateUrl: 'https://register.bet9ja.com/',
   oneXBetAffiliateUrl: 'https://1xbet.ng/',
   msportAffiliateUrl: 'https://www.msport.com/',
-  betkingAffiliateUrl: 'https://www.betking.com/'
+  betkingAffiliateUrl: 'https://www.betking.com/',
+  twentyTwoBetAffiliateUrl: 'https://22bet.ng/'
 };
 
 export function PredictionsProvider({ children }) {

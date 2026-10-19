@@ -56,6 +56,18 @@ async function syncKV() {
     markets: MARKETS,
     whaleSlip: DEFAULT_WHALE_SLIP,
     syndicateArchive: SYNDICATE_ARCHIVE,
+    adSettings: {
+      monetagScript: '',
+      adsterraTopBanner: '',
+      adsterraInFeedBanner: '',
+      adsterraPopunder: '',
+      sportyAffiliateUrl: 'https://www.sportybet.com/',
+      bet9jaAffiliateUrl: 'https://register.bet9ja.com/',
+      oneXBetAffiliateUrl: 'https://1xbet.ng/',
+      msportAffiliateUrl: 'https://www.msport.com/',
+      betkingAffiliateUrl: 'https://www.betking.com/',
+      twentyTwoBetAffiliateUrl: 'https://22bet.ng/'
+    },
     announcements: {
       tickerText: '★ TUESDAY UCL SPECIAL: Real Madrid vs Dortmund • 2.45x Banker Live',
       dropTimeWAT: '02:00 AM WAT',

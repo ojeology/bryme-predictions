@@ -14,6 +14,8 @@ export default function CopySuccessModal({ isOpen, onClose, code, bookmaker, tit
     ? 'Bet9ja' 
     : bLower.includes('msport')
     ? 'MSport'
+    : bLower.includes('22bet')
+    ? '22Bet'
     : bLower.includes('1x')
     ? '1xBet'
     : bLower.includes('king')
@@ -26,6 +28,8 @@ export default function CopySuccessModal({ isOpen, onClose, code, bookmaker, tit
     ? (adSettings?.bet9jaAffiliateUrl || 'https://register.bet9ja.com/')
     : bLower.includes('msport')
     ? (adSettings?.msportAffiliateUrl || 'https://www.msport.com/')
+    : bLower.includes('22bet')
+    ? (adSettings?.twentyTwoBetAffiliateUrl || 'https://22bet.ng/')
     : bLower.includes('1x')
     ? (adSettings?.oneXBetAffiliateUrl || 'https://1xbet.ng/')
     : bLower.includes('king')

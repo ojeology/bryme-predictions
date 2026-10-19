@@ -1062,6 +1062,19 @@ export default function AdminPage({ onNavigate }) {
 
               <div>
                 <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                  22Bet.ng Affiliate URL / Tracking Link
+                </label>
+                <input
+                  type="text"
+                  value={adForm.twentyTwoBetAffiliateUrl || ''}
+                  onChange={(e) => setAdForm({ ...adForm, twentyTwoBetAffiliateUrl: e.target.value })}
+                  placeholder="https://22bet.ng/?tag=YOUR_CODE or https://refpa.top/..."
+                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-teal-400 font-mono text-xs"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
                   BetKing Affiliate URL
                 </label>
                 <input

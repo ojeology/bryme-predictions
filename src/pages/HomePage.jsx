@@ -47,6 +47,7 @@ export default function HomePage({ onNavigate }) {
 
   const getBookmakerUrl = (bName) => {
     const b = (bName || '').toLowerCase();
+    if (b.includes('22bet')) return adSettings?.twentyTwoBetAffiliateUrl || 'https://22bet.ng/?ref=bryme';
     if (b.includes('1x')) return adSettings?.oneXBetAffiliateUrl || 'https://1xbet.ng/?bf=bryme';
     if (b.includes('msport')) return adSettings?.msportAffiliateUrl || 'https://www.msport.com/?ref=bryme';
     if (b.includes('bet9ja')) return adSettings?.bet9jaAffiliateUrl || 'https://register.bet9ja.com/?promocode=bryme';
@@ -56,6 +57,19 @@ export default function HomePage({ onNavigate }) {
 
   // Emerging bookmakers bonus roster
   const emergingBookmakers = [
+    {
+      id: '22bet',
+      name: '22Bet Nigeria',
+      bonus: '100% Welcome Bonus',
+      maxAmount: 'Up to ₦207,500',
+      badge: 'TOP WELCOME PACK',
+      badgeBg: 'bg-teal-600 text-white',
+      accent: 'border-teal-500/50 hover:border-teal-400',
+      description: 'Massive 100% sports welcome bonus up to ₦207,500 with high European odds, deep Asian handicaps, and weekly reload bonuses.',
+      promoCode: '22_BRYME',
+      perk: 'Deep alternative Asian totals & fast payouts',
+      url: adSettings?.twentyTwoBetAffiliateUrl || 'https://22bet.ng/?ref=bryme'
+    },
     {
       id: '1xbet',
       name: '1xBet Nigeria',
