@@ -26,11 +26,10 @@ export const DAILY_BOOKING_TICKETS = [
     confidence: '95% Model Rating',
     description: 'Our flagship low-variance double targeting high-frequency European domestic fixtures.',
     codes: {
-      sportybet: 'BC4-EUR-2ODDS',
-      bet9ja: 'B9J-2OD-SAT01',
-      onexbet: '1XB-EUR-9902',
-      betking: 'BK-EUR-4412',
-      betway: 'BTW-2OD-881'
+      sportybet: 'Q7S287',
+      footballcom: 'Q7S287',
+      bet9ja: '5WGQKM6',
+      onexbet: '23PUC'
     },
     selections: [
       {
@@ -66,10 +65,8 @@ export const DAILY_BOOKING_TICKETS = [
     codes: {
       sportybet: 'Q7S287',
       footballcom: 'Q7S287',
-      bet9ja: 'B9J-LAD-50-D4',
-      onexbet: '1XB-LAD-504',
-      betking: 'BK-LAD-504',
-      betway: 'BTW-LAD-504'
+      bet9ja: '5WGQKM6',
+      onexbet: '23PUC'
     },
     selections: [
       {
@@ -104,10 +101,7 @@ export const DAILY_BOOKING_TICKETS = [
     description: '22-selection mixed options jackpot slip covering double chance, corner lines, and card margins.',
     codes: {
       sportybet: 'U1G51J',
-      footballcom: 'U1G51J',
-      bet9ja: 'B9J-7000-MIX',
-      onexbet: '1XB-7000-MIX',
-      betking: 'BK-7000-MIX'
+      footballcom: 'U1G51J'
     },
     selections: [
       {
@@ -134,10 +128,7 @@ export const DAILY_BOOKING_TICKETS = [
     description: 'Pure Over 2.5 Total Goals multi-slip across high expected-goals European matches.',
     codes: {
       sportybet: 'TZ01SR',
-      footballcom: 'TZ01SR',
-      bet9ja: 'B9J-O25-2694',
-      onexbet: '1XB-O25-2694',
-      betking: 'BK-O25-2694'
+      footballcom: 'TZ01SR'
     },
     selections: [
       {
@@ -164,10 +155,7 @@ export const DAILY_BOOKING_TICKETS = [
     description: '18-fold pure home straight win (1X2 Home) accumulator across European fortresses.',
     codes: {
       sportybet: 'U0VB59',
-      footballcom: 'U0VB59',
-      bet9ja: 'B9J-HOME-2335',
-      onexbet: '1XB-HOME-2335',
-      betking: 'BK-HOME-2335'
+      footballcom: 'U0VB59'
     },
     selections: [
       {
@@ -194,10 +182,7 @@ export const DAILY_BOOKING_TICKETS = [
     description: 'Strategically balanced Over/Under totals slip taking low-line overs and tight-match unders.',
     codes: {
       sportybet: 'G0320Z',
-      footballcom: 'G0320Z',
-      bet9ja: 'B9J-OU-860',
-      onexbet: '1XB-OU-860',
-      betking: 'BK-OU-860'
+      footballcom: 'G0320Z'
     },
     selections: [
       {
@@ -224,10 +209,7 @@ export const DAILY_BOOKING_TICKETS = [
     description: 'Massive 24-fold 1X2 match winner ticket targeting outright winners across matchdays.',
     codes: {
       sportybet: 'TZUMDQ',
-      footballcom: 'TZUMDQ',
-      bet9ja: 'B9J-1X2-365',
-      onexbet: '1XB-1X2-365',
-      betking: 'BK-1X2-365'
+      footballcom: 'TZUMDQ'
     },
     selections: [
       {
@@ -254,10 +236,7 @@ export const DAILY_BOOKING_TICKETS = [
     description: '14-fold banker slip backing tournament favourites to score at least 1 goal (Team Over 0.5).',
     codes: {
       sportybet: 'QM7NWD',
-      footballcom: 'QM7NWD',
-      bet9ja: 'B9J-UEL-298',
-      onexbet: '1XB-UEL-298',
-      betking: 'BK-UEL-298'
+      footballcom: 'QM7NWD'
     },
     selections: [
       {
@@ -283,11 +262,9 @@ export const DAILY_BOOKING_TICKETS = [
     confidence: '82% Model Rating',
     description: 'Disciplined 4-game accumulator across England, Spain, Germany, and France.',
     codes: {
-      sportybet: 'BC4-5OD-SAFE',
-      bet9ja: 'B9J-5OD-SAFE',
-      onexbet: '1XB-5OD-SAFE',
-      betking: 'BK-5OD-SAFE',
-      betway: 'BTW-5OD-SAFE'
+      sportybet: 'W6XDM5',
+      footballcom: 'W6XDM5',
+      bet9ja: '5WFVHMQ'
     },
     selections: [
       {
@@ -337,11 +314,9 @@ export const DAILY_BOOKING_TICKETS = [
     confidence: '90% Model Rating',
     description: '4 fixtures where both teams combine for a >90% seasonal Over 1.5 hit rate.',
     codes: {
-      sportybet: 'BC4-O15-RADAR',
-      bet9ja: 'B9J-O15-RADAR',
-      onexbet: '1XB-O15-RADAR',
-      betking: 'BK-O15-RADAR',
-      betway: 'BTW-O15-RADAR'
+      sportybet: 'TZ01SR',
+      footballcom: 'TZ01SR',
+      bet9ja: '5WGQPQ3'
     },
     selections: [
       {
@@ -391,11 +366,9 @@ export const DAILY_BOOKING_TICKETS = [
     confidence: '70% Model Rating',
     description: 'Carefully curated weekend accumulator combining European form teams for maximum multiplier return.',
     codes: {
-      sportybet: 'BC4-10OD-MEGA',
-      bet9ja: 'B9J-10OD-MEGA',
-      onexbet: '1XB-10OD-MEGA',
-      betking: 'BK-10OD-MEGA',
-      betway: 'BTW-10OD-MEGA'
+      sportybet: 'PZ6US6',
+      footballcom: 'PZ6US6',
+      bet9ja: '5WGM3NM'
     },
     selections: [
       {

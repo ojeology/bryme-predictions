@@ -224,8 +224,8 @@ export default function AdminPage({ onNavigate }) {
     currentDay: ladder.currentDay || 4,
     currentBalance: ladder.currentBalance || 3375,
     dailyOdds: ladder.dailyOdds || 1.50,
-    todaysCode: ladder.todaysCode || 'B9J-LAD-50-D4',
-    sportyCode: ladder.sportyCode || 'BC4-LAD50-D4',
+    todaysCode: ladder.todaysCode || '5WGQKM6',
+    sportyCode: ladder.sportyCode || 'Q7S287',
     status: ladder.status || 'active'
   });
 
@@ -732,7 +732,7 @@ export default function AdminPage({ onNavigate }) {
                 type="text"
                 value={whaleForm.sportyCode}
                 onChange={(e) => setWhaleForm({ ...whaleForm, sportyCode: e.target.value })}
-                placeholder="e.g. BC4-WHALE"
+                placeholder="e.g. Q7S287"
                 className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono font-bold text-xs"
               />
             </div>
@@ -745,7 +745,7 @@ export default function AdminPage({ onNavigate }) {
                 type="text"
                 value={whaleForm.bet9jaCode}
                 onChange={(e) => setWhaleForm({ ...whaleForm, bet9jaCode: e.target.value })}
-                placeholder="e.g. B9J-WHALE"
+                placeholder="e.g. 5WGQKM6"
                 className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono font-bold text-xs"
               />
             </div>
@@ -868,8 +868,8 @@ export default function AdminPage({ onNavigate }) {
                   netProfit: whaleForm.status === 'won' ? '+₦590,000' : '-₦500,000',
                   status: whaleForm.status || 'won',
                   settledScore: 'FT Settled',
-                  sportyCode: whaleForm.sportyCode || 'BC4-WHALE',
-                  bet9jaCode: whaleForm.bet9jaCode || 'B9J-WHALE',
+                  sportyCode: whaleForm.sportyCode || "Q7S287",
+                  bet9jaCode: whaleForm.bet9jaCode || "5WGQKM6",
                   intel: whaleForm.intel || 'Settled run recorded in historical ledger.',
                   matches: (whaleForm.matches || []).map(m => ({
                     match: m.match,
@@ -1143,7 +1143,7 @@ export default function AdminPage({ onNavigate }) {
                   required
                   value={hubCodeForm.code}
                   onChange={(e) => setHubCodeForm({ ...hubCodeForm, code: e.target.value.toUpperCase() })}
-                  placeholder="e.g. BC4-98421, B9J-7721"
+                  placeholder="e.g. Q7S287, 5WGQPQ3"
                   className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono font-black tracking-wider uppercase"
                 />
               </div>
@@ -1286,7 +1286,7 @@ export default function AdminPage({ onNavigate }) {
                   <span>1. Add Live Booking Slip to Football Market</span>
                 </h3>
                 <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                  Attach active codes (e.g. YEYEY, 47 Odds, SportyBet) directly to Over 1.5 Goals, Double Chance, or any market.
+                  Attach active codes (e.g. Q7S287, 47 Odds, SportyBet) directly to Over 1.5 Goals, Double Chance, or any market.
                 </p>
               </div>
 
@@ -1323,6 +1323,7 @@ export default function AdminPage({ onNavigate }) {
                   className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold"
                 >
                   <option value="sportybet">🔴 SportyBet</option>
+                  <option value="footballcom">🟢 Football.com</option>
                   <option value="1xbet">🔵 1xBet</option>
                   <option value="msport">🟢 MSport</option>
                   <option value="bet9ja">🟡 Bet9ja</option>
@@ -1339,7 +1340,7 @@ export default function AdminPage({ onNavigate }) {
                   required
                   value={marketCodeForm.code}
                   onChange={(e) => setMarketCodeForm({ ...marketCodeForm, code: e.target.value.toUpperCase() })}
-                  placeholder="e.g. YEYEY"
+                  placeholder="e.g. Q7S287"
                   className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono font-black uppercase text-base tracking-wider"
                 />
               </div>
@@ -1902,7 +1903,7 @@ export default function AdminPage({ onNavigate }) {
                   required
                   value={punterCodeForm.code}
                   onChange={(e) => setPunterCodeForm({ ...punterCodeForm, code: e.target.value.toUpperCase() })}
-                  placeholder="e.g. BC4-FEMI-2OD"
+                  placeholder="e.g. Q7S287"
                   className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono font-black uppercase"
                 />
               </div>

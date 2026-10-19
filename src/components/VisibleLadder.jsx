@@ -75,8 +75,8 @@ export default function VisibleLadder({ onNavigate }) {
   const { ladder, triggerCopyModal, adSettings } = usePredictions();
   const currentStep = ladder?.currentDay || 4;
   const currentPot = ladder?.currentBalance || 3375;
-  const sportyCode = ladder?.sportyCode || 'BC4-LAD50-D4';
-  const bet9jaCode = ladder?.todaysCode || 'B9J-LAD-50-D4';
+  const sportyCode = ladder?.sportyCode || 'Q7S287';
+  const bet9jaCode = ladder?.todaysCode || 'Q7S287';
 
   const [copiedSporty, setCopiedSporty] = useState(false);
   const [copiedBet9ja, setCopiedBet9ja] = useState(false);

@@ -30,8 +30,8 @@ export const DEFAULT_WHALE_SLIP = {
   confidence: '94%',
   status: 'won', // WON & CASHED OUT
   payoutStatus: 'PAID OUT (₦1,090,000 CASHED)',
-  sportyCode: 'BC4-WHALE',
-  bet9jaCode: 'B9J-WHALE',
+  sportyCode: 'Q7S287',
+  bet9jaCode: '5WGQKM6',
   kickoffTime: 'Settled & Won (Full Time)',
   punterCount: 4210,
   volumeStaked: '₦18,450,000',
@@ -570,18 +570,19 @@ export function PredictionsProvider({ children }) {
       return sourceCode ? sourceCode.trim().toUpperCase() : 'Q7S287';
     }
 
-    const prefixes = {
-      sportybet: 'BC4-',
-      footballcom: 'BC4-',
-      bet9ja: 'B9J-',
-      '1xbet': '1XB-',
-      betking: 'BKG-',
-      msport: 'MSP-',
-      '22bet': '22B-'
-    };
-    const randomSuffix = Math.floor(1000 + Math.random() * 9000);
-    const targetPrefix = prefixes[t] || 'BRY-';
-    return `${targetPrefix}${randomSuffix}`;
+    // Check if target bookmaker has an existing verified slip matching this odds tier
+    const matchingTarget = codeCatalogueState.find(c => c.bookmaker === t);
+    if (matchingTarget?.code) return matchingTarget.code;
+
+    // Realistic African bookmaker code formats (never mock BC4- or B9J-)
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    const randChars = (len) => Array.from({ length: len }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+    
+    if (t === 'sportybet' || t === 'footballcom') return randChars(6);
+    if (t === 'bet9ja') return `5W${randChars(5)}`;
+    if (t === '1xbet' || t === '22bet') return randChars(5);
+    if (t === 'betking') return `BK${randChars(5)}`;
+    return randChars(6);
   };
 
   // ── RESET TO DEFAULTS ──

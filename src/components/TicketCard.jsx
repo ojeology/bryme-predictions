@@ -7,8 +7,8 @@ export default function TicketCard({ ticket, onNavigate }) {
   const [copiedBet9ja, setCopiedBet9ja] = useState(false);
   const [copiedGeneral, setCopiedGeneral] = useState(false);
 
-  const sportyCode = ticket.codes?.sportybet || (ticket.bookmaker?.toLowerCase() === 'sportybet' ? ticket.bookingCode : null) || ticket.bookingCode || 'BC4-9921';
-  const bet9jaCode = ticket.codes?.bet9ja || (ticket.bookmaker?.toLowerCase() === 'bet9ja' ? ticket.bookingCode : null) || 'B9J-4412';
+  const sportyCode = ticket.codes?.sportybet || (ticket.bookmaker?.toLowerCase() === 'sportybet' ? ticket.bookingCode : null) || ticket.bookingCode || 'Q7S287';
+  const bet9jaCode = ticket.codes?.bet9ja || (ticket.bookmaker?.toLowerCase() === 'bet9ja' ? ticket.bookingCode : null) || '5WGQKM6';
 
   const handleCopyCode = (e, code, type) => {
     e.stopPropagation();

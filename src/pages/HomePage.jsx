@@ -31,8 +31,8 @@ export default function HomePage({ onNavigate }) {
   const targetPot = Math.round(currentPot * dailyOdds);
   const sportyLadderCode = ladder?.sportyCode || 'Q7S287';
   const footballLadderCode = ladder?.footballCode || sportyLadderCode;
-  const bet9jaLadderCode = ladder?.todaysCode || 'B9J-LAD-50-D4';
-  const oneXBetLadderCode = '1XB-LAD50-D4';
+  const bet9jaLadderCode = ladder?.todaysCode || '5WGQKM6';
+  const oneXBetLadderCode = '23PUC';
 
   // Ensure Mr banks is strictly pinned first
   const sortedPunters = (punters || []).slice().sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));

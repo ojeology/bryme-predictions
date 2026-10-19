@@ -30,8 +30,8 @@ export const WEEKEND_ARCHIVE = [
     title: 'Weekend 42: European Heavyweight Clash Double',
     targetOdds: 2.07,
     status: 'pending',
-    bookingCode: 'B9J-WK42-EUR',
-    sportyCode: 'BC4-WK42-EUR',
+    bookingCode: 'B9-WK42-EUR',
+    sportyCode: 'SP-WK42-EUR',
     punter: 'BRYME European Desk',
     selections: [
       {
@@ -63,8 +63,8 @@ export const WEEKEND_ARCHIVE = [
     title: 'Weekend 41: EPL & La Liga Champions Double',
     targetOdds: 2.08,
     status: 'won',
-    bookingCode: 'B9J-WK41-WIN',
-    sportyCode: 'BC4-WK41-WIN',
+    bookingCode: 'B9-WK41-WIN',
+    sportyCode: 'SP-WK41-WIN',
     punter: 'BRYME European Desk',
     selections: [
       {
@@ -96,8 +96,8 @@ export const WEEKEND_ARCHIVE = [
     title: 'Weekend 40: Premier League Away Anchor & Serie A Goals',
     targetOdds: 2.04,
     status: 'won',
-    bookingCode: 'B9J-WK40-WIN',
-    sportyCode: 'BC4-WK40-WIN',
+    bookingCode: 'B9-WK40-WIN',
+    sportyCode: 'SP-WK40-WIN',
     punter: 'BRYME European Desk',
     selections: [
       {
@@ -129,8 +129,8 @@ export const WEEKEND_ARCHIVE = [
     title: 'Weekend 39: Bundesliga Topspiel & English North Bank',
     targetOdds: 2.12,
     status: 'won',
-    bookingCode: 'B9J-WK39-WIN',
-    sportyCode: 'BC4-WK39-WIN',
+    bookingCode: 'B9-WK39-WIN',
+    sportyCode: 'SP-WK39-WIN',
     punter: 'BRYME European Desk',
     selections: [
       {
@@ -162,8 +162,8 @@ export const WEEKEND_ARCHIVE = [
     title: 'Weekend 38: Bernabéu Fortress & Turin Derby Stalemate',
     targetOdds: 1.98,
     status: 'lost',
-    bookingCode: 'B9J-WK38-LST',
-    sportyCode: 'BC4-WK38-LST',
+    bookingCode: 'B9-WK38-LST',
+    sportyCode: 'SP-WK38-LST',
     punter: 'BRYME European Desk',
     selections: [
       {
@@ -195,8 +195,8 @@ export const WEEKEND_ARCHIVE = [
     title: 'Weekend 37: North London Derby & Anoeta Expedition',
     targetOdds: 2.05,
     status: 'won',
-    bookingCode: 'B9J-WK37-WIN',
-    sportyCode: 'BC4-WK37-WIN',
+    bookingCode: 'B9-WK37-WIN',
+    sportyCode: 'SP-WK37-WIN',
     punter: 'BRYME European Desk',
     selections: [
       {
@@ -228,8 +228,8 @@ export const WEEKEND_ARCHIVE = [
     title: 'Weekend 36: Old Trafford Classic & Bundesliga Fireworks',
     targetOdds: 2.15,
     status: 'won',
-    bookingCode: 'B9J-WK36-WIN',
-    sportyCode: 'BC4-WK36-WIN',
+    bookingCode: 'B9-WK36-WIN',
+    sportyCode: 'SP-WK36-WIN',
     punter: 'BRYME European Desk',
     selections: [
       {
@@ -261,8 +261,8 @@ export const WEEKEND_ARCHIVE = [
     title: 'Weekend 35: Villa Park Test & Bernabéu Routine',
     targetOdds: 2.02,
     status: 'won',
-    bookingCode: 'B9J-WK35-WIN',
-    sportyCode: 'BC4-WK35-WIN',
+    bookingCode: 'B9-WK35-WIN',
+    sportyCode: 'SP-WK35-WIN',
     punter: 'BRYME European Desk',
     selections: [
       {
@@ -294,8 +294,8 @@ export const WEEKEND_ARCHIVE = [
     title: 'Weekend 34: Opening Weekend Premier League & Balearic Trip',
     targetOdds: 2.09,
     status: 'lost',
-    bookingCode: 'B9J-WK34-LST',
-    sportyCode: 'BC4-WK34-LST',
+    bookingCode: 'B9-WK34-LST',
+    sportyCode: 'SP-WK34-LST',
     punter: 'BRYME European Desk',
     selections: [
       {

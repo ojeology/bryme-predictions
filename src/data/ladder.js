@@ -75,7 +75,7 @@ export const ACTIVE_CHALLENGE = {
       stake: 1000,
       payout: 1500,
       result: 'won',
-      code: 'B9J-LAD-50-D1',
+      code: 'Q7S281',
       summary: 'Leverkusen 1X + Inter Milan Over 1.5 Goals'
     },
     {
@@ -85,7 +85,7 @@ export const ACTIVE_CHALLENGE = {
       stake: 1500,
       payout: 2250,
       result: 'won',
-      code: 'B9J-LAD-50-D2',
+      code: 'Q7S283',
       summary: 'Barcelona Over 1.5 Team Goals + PSG Win or Draw'
     },
     {
@@ -95,7 +95,7 @@ export const ACTIVE_CHALLENGE = {
       stake: 2250,
       payout: 3375,
       result: 'won',
-      code: 'B9J-LAD-50-D3',
+      code: 'Q7S285',
       summary: 'Arsenal 1X & Over 1.5 + Bayern vs Stuttgart Over 2.5'
     },
     {
@@ -122,7 +122,7 @@ export const PAST_CHALLENGES = [
     stakeLost: 1500,
     bankedAmount: 0,
     netReturn: -1000,
-    finalCode: 'B9J-LAD-49-D2',
+    finalCode: '5WGM49D',
     fatalMatch: 'Monaco vs Lille (Ended 0-0, Under 1.5 goals failed pick)'
   },
   {
@@ -135,7 +135,7 @@ export const PAST_CHALLENGES = [
     stakeLost: 7593,
     bankedAmount: 0,
     netReturn: -1000,
-    finalCode: 'B9J-LAD-48-D5',
+    finalCode: '5WGM48D',
     fatalMatch: 'Real Sociedad vs Atletico Madrid (Lost on late 90+4 penalty)'
   },
   {
@@ -148,7 +148,7 @@ export const PAST_CHALLENGES = [
     stakeLost: 5695,
     bankedAmount: 5695,
     netReturn: 4695, // 5695 banked - 1000 start stake = +4695 NGN profit secured!
-    finalCode: 'B9J-LAD-47-D7',
+    finalCode: '5WGM47D',
     fatalMatch: 'Day 7 selection failed, but Day 6 50% milestone (₦5,695) was successfully banked.'
   },
   {
@@ -161,7 +161,7 @@ export const PAST_CHALLENGES = [
     stakeLost: 2250,
     bankedAmount: 0,
     netReturn: -1000,
-    finalCode: 'B9J-LAD-46-D3',
+    finalCode: '5WGM46D',
     fatalMatch: 'Aston Villa vs Wolves (Over 1.5 Goals failed)'
   },
   {
@@ -174,7 +174,7 @@ export const PAST_CHALLENGES = [
     stakeLost: 1000,
     bankedAmount: 0,
     netReturn: -1000,
-    finalCode: 'B9J-LAD-45-D1',
+    finalCode: '5WGM45D',
     fatalMatch: 'Chelsea vs Gent (Surprise 0-0 half-time line)'
   },
   {
@@ -187,7 +187,7 @@ export const PAST_CHALLENGES = [
     stakeLost: 5062,
     bankedAmount: 0,
     netReturn: -1000,
-    finalCode: 'B9J-LAD-44-D4',
+    finalCode: '5WGM44D',
     fatalMatch: 'Juventus vs Napoli (Ended 0-0)'
   },
   {
@@ -200,7 +200,7 @@ export const PAST_CHALLENGES = [
     stakeLost: 0,
     bankedAmount: 5695,
     netReturn: 4695,
-    finalCode: 'B9J-LAD-43-D6',
+    finalCode: '5WGM43D',
     fatalMatch: 'Voluntary bank executed at Day 6 close.'
   },
   {
@@ -213,7 +213,7 @@ export const PAST_CHALLENGES = [
     stakeLost: 1500,
     bankedAmount: 0,
     netReturn: -1000,
-    finalCode: 'B9J-LAD-42-D2',
+    finalCode: '5WGM42D',
     fatalMatch: 'Porto vs Sporting Lisbon (Red card derailment)'
   }
 ];

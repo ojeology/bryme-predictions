@@ -176,7 +176,7 @@ export default function ConvertCodesPage({ onNavigate }) {
                 type="text"
                 value={inputCode}
                 onChange={(e) => setInputCode(e.target.value)}
-                placeholder="e.g. BC4-LAD50-D4, BC4-EUR-2ODDS, 3DCXCQS..."
+                placeholder="e.g. Q7S287, PZ6US6, 5WGQPQ3, TZUMDQ..."
                 className="w-full p-3.5 pr-32 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono font-black text-sm tracking-wider uppercase focus:outline-none focus:border-[#E41B13]"
               />
 

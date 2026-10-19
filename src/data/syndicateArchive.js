@@ -32,8 +32,8 @@ export const SYNDICATE_ARCHIVE = [
     netProfit: '+₦590,000',
     status: 'won',
     settledScore: '2-1 FT & 3-2 FT',
-    sportyCode: 'BC4-WHALE',
-    bet9jaCode: 'B9J-WHALE',
+    sportyCode: 'Q7S287',
+    bet9jaCode: '5WGQKM6',
     intel: 'Syndicate placed ₦500k following sharp European liquidity drops. Madrid Over 1.5 Team Goals and Bayern Over 2.5 Goals landed before full time.',
     matches: [
       {
@@ -66,8 +66,8 @@ export const SYNDICATE_ARCHIVE = [
     netProfit: '+₦515,000',
     status: 'won',
     settledScore: '5-1 FT & 3-2 FT',
-    sportyCode: 'BC4-WHALE-06',
-    bet9jaCode: 'B9J-WHALE-06',
+    sportyCode: 'Q7S287-06',
+    bet9jaCode: '5WGQKM6-06',
     intel: 'Barcelona dominated with 5 goals against Sevilla while Inter Milan sealed 3 goals at the San Siro.',
     matches: [
       {
@@ -100,8 +100,8 @@ export const SYNDICATE_ARCHIVE = [
     netProfit: '-₦500,000',
     status: 'lost',
     settledScore: '3-1 FT & 2-2 FT',
-    sportyCode: 'BC4-WHALE-05',
-    bet9jaCode: 'B9J-WHALE-05',
+    sportyCode: 'Q7S287-05',
+    bet9jaCode: '5WGQKM6-05',
     intel: 'Arsenal comfortably beat Southampton 3-1, but Leverkusen conceded a 90th-minute penalty resulting in an unexpected 2-2 draw. Transparent loss cataloged.',
     matches: [
       {
@@ -134,8 +134,8 @@ export const SYNDICATE_ARCHIVE = [
     netProfit: '+₦550,000',
     status: 'won',
     settledScore: '4-2 FT & 3-1 FT',
-    sportyCode: 'BC4-WHALE-04',
-    bet9jaCode: 'B9J-WHALE-04',
+    sportyCode: 'Q7S287-04',
+    bet9jaCode: '5WGQKM6-04',
     intel: 'Cole Palmer scored 4 goals in the first half for Chelsea, clearing the line within 40 minutes. PSG controlled Rennes.',
     matches: [
       {
@@ -168,8 +168,8 @@ export const SYNDICATE_ARCHIVE = [
     netProfit: '+₦550,000',
     status: 'won',
     settledScore: '4-1 FT & 5-0 FT',
-    sportyCode: 'BC4-WHALE-03',
-    bet9jaCode: 'B9J-WHALE-03',
+    sportyCode: 'Q7S287-03',
+    bet9jaCode: '5WGQKM6-03',
     intel: 'Massive margin victories: Real Madrid put 4 past Espanyol, and Bayern scored 5 unanswered in Bremen.',
     matches: [
       {
@@ -202,8 +202,8 @@ export const SYNDICATE_ARCHIVE = [
     netProfit: '+₦505,000',
     status: 'won',
     settledScore: '2-1 FT & 4-0 FT',
-    sportyCode: 'BC4-WHALE-02',
-    bet9jaCode: 'B9J-WHALE-02',
+    sportyCode: 'Q7S287-02',
+    bet9jaCode: '5WGQKM6-02',
     intel: 'Haaland brace secured Man City win; Milan scored 4 within the first 30 minutes against Venezia.',
     matches: [
       {
@@ -236,8 +236,8 @@ export const SYNDICATE_ARCHIVE = [
     netProfit: '+₦515,000',
     status: 'won',
     settledScore: '1-3 FT & 5-0 FT',
-    sportyCode: 'BC4-WHALE-01',
-    bet9jaCode: 'B9J-WHALE-01',
+    sportyCode: 'Q7S287-01',
+    bet9jaCode: '5WGQKM6-01',
     intel: 'Italy shocked France in a 4-goal thriller; Germany dismantled Hungary with 5 goals in Düsseldorf.',
     matches: [
       {

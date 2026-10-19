@@ -70,7 +70,7 @@ export default function BookingCodesHub({ onNavigate }) {
             type="text"
             value={inputLoadCode}
             onChange={(e) => setInputLoadCode(e.target.value.toUpperCase())}
-            placeholder="Paste any booking code (e.g. BC4-LAD50-D4, BC4-EUR-2ODDS)..."
+            placeholder="Paste any booking code (e.g. Q7S287, PZ6US6, 5WGQPQ3)..."
             className="w-full pl-4 pr-32 py-3 rounded-xl bg-black/60 border border-slate-700 text-white font-mono font-black text-xs sm:text-sm tracking-wider uppercase placeholder-slate-500 focus:outline-none focus:border-[#E41B13]"
           />
           <button

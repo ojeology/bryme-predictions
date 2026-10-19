@@ -15,7 +15,7 @@ export const EDITOR_PICKS = {
     status: 'pending',
     date: '2026-10-17',
     bookmaker: 'Bet9ja',
-    bookingCode: 'B9J-ED-SAT01',
+    bookingCode: '5WFVHMQ',
     confidenceTag: 'Lowest-Risk Selections',
     selections: [
       {
@@ -47,7 +47,7 @@ export const EDITOR_PICKS = {
     status: 'pending',
     date: '2026-10-18',
     bookmaker: 'SportyBet',
-    bookingCode: 'BC4-ED-SUN02',
+    bookingCode: 'Q7S287',
     confidenceTag: 'Lowest-Risk Selections',
     selections: [
       {

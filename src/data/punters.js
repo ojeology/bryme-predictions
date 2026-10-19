@@ -23,22 +23,32 @@ export const INITIAL_PUNTERS = [
       {
         id: 'pcode-mb-01',
         bookmaker: 'sportybet',
-        code: 'BC4-BANKS-2OD',
-        marketType: 'Whale Banker 2-Odds (Double Chance & Over 1.5)',
+        code: 'Q7S287',
+        marketType: 'Rollover Step 4 Signature Banker (SportyBet)',
         gamesCount: 2,
-        totalOdds: 2.15,
+        totalOdds: 1.54,
         status: 'active',
-        dropTime: '02:00 AM WAT'
+        dropTime: '11:00 AM WAT'
+      },
+      {
+        id: 'pcode-mb-01-fb',
+        bookmaker: 'footballcom',
+        code: 'Q7S287',
+        marketType: 'Rollover Step 4 Signature Banker (Football.com)',
+        gamesCount: 2,
+        totalOdds: 1.54,
+        status: 'active',
+        dropTime: '11:00 AM WAT'
       },
       {
         id: 'pcode-mb-02',
-        bookmaker: 'bet9ja',
-        code: 'B9J-BANKS-2OD',
-        marketType: 'Whale Banker 2-Odds (Double Chance & Over 1.5)',
-        gamesCount: 2,
-        totalOdds: 2.10,
+        bookmaker: 'sportybet',
+        code: 'TZUMDQ',
+        marketType: '24 Folds 365-Odds 1X2 Win Markets',
+        gamesCount: 24,
+        totalOdds: 365.00,
         status: 'active',
-        dropTime: '02:00 AM WAT'
+        dropTime: 'Live Today'
       }
     ]
   },
@@ -75,26 +85,6 @@ export const INITIAL_PUNTERS = [
         totalOdds: 10000.00,
         status: 'active',
         dropTime: 'Live Today'
-      },
-      {
-        id: 'pcode-tm-01',
-        bookmaker: 'sportybet',
-        code: 'BC4-TALL-O15',
-        marketType: 'Over 1.5 Goals High-Frequency Radar',
-        gamesCount: 4,
-        totalOdds: 2.45,
-        status: 'active',
-        dropTime: '02:00 AM WAT'
-      },
-      {
-        id: 'pcode-tm-02',
-        bookmaker: 'bet9ja',
-        code: 'B9J-TALL-O15',
-        marketType: 'Over 1.5 Goals High-Frequency Radar',
-        gamesCount: 4,
-        totalOdds: 2.40,
-        status: 'active',
-        dropTime: '02:00 AM WAT'
       }
     ]
   },
@@ -172,8 +162,8 @@ export const INITIAL_PUNTERS = [
     region: 'Nigeria',
     countryCode: 'NG',
     avatar: 'DZ',
-    specialty: 'Corner Markets & Goal Interval Strategy',
-    bio: 'Statistical deep-diver on alternative betting markets: Over 8.5 Corners, Cards, and first-half goal momentum.',
+    specialty: 'Goal Lines & European Radar Strategy',
+    bio: 'Statistical deep-diver on alternative betting markets: Over 2.5 Goals, first-half goal momentum, and clean strikes.',
     winStreak: '8 Wins',
     hitRate: '82%',
     verified: true,
@@ -181,12 +171,22 @@ export const INITIAL_PUNTERS = [
       {
         id: 'pcode-dz-01',
         bookmaker: 'sportybet',
-        code: 'BC4-ZEH-CORN',
-        marketType: 'Total Corners Over 8.5 & 9.5 Radar',
-        gamesCount: 3,
-        totalOdds: 2.65,
+        code: 'TZ01SR',
+        marketType: 'Over 2.5 Goals Radar (2,694 Odds)',
+        gamesCount: 22,
+        totalOdds: 2694.00,
         status: 'active',
-        dropTime: '02:00 AM WAT'
+        dropTime: 'Live Today'
+      },
+      {
+        id: 'pcode-dz-01-fb',
+        bookmaker: 'footballcom',
+        code: 'TZ01SR',
+        marketType: 'Over 2.5 Goals Radar (Football.com)',
+        gamesCount: 22,
+        totalOdds: 2694.00,
+        status: 'active',
+        dropTime: 'Live Today'
       }
     ]
   },
@@ -207,22 +207,22 @@ export const INITIAL_PUNTERS = [
       {
         id: 'pcode-bo-01',
         bookmaker: 'sportybet',
-        code: 'BC4-BOSSO-1X',
-        marketType: 'Double Chance (1X/X2) Fortress Acca',
-        gamesCount: 3,
-        totalOdds: 2.10,
+        code: 'QDW2NJ',
+        marketType: 'Double Chance & Both Teams To Score (68,000 Odds)',
+        gamesCount: 22,
+        totalOdds: 68000.00,
         status: 'active',
-        dropTime: '02:00 AM WAT'
+        dropTime: 'Live Today'
       },
       {
-        id: 'pcode-bo-02',
-        bookmaker: 'bet9ja',
-        code: 'B9J-BOSSO-1X',
-        marketType: 'Double Chance (1X/X2) Fortress Acca',
-        gamesCount: 3,
-        totalOdds: 2.05,
+        id: 'pcode-bo-01-fb',
+        bookmaker: 'footballcom',
+        code: 'QDW2NJ',
+        marketType: 'Double Chance & GG (Football.com)',
+        gamesCount: 22,
+        totalOdds: 68000.00,
         status: 'active',
-        dropTime: '02:00 AM WAT'
+        dropTime: 'Live Today'
       }
     ]
   },
@@ -339,12 +339,22 @@ export const INITIAL_PUNTERS = [
       {
         id: 'pcode-mw-01',
         bookmaker: 'sportybet',
-        code: 'BC4-WANTED-VAL',
-        marketType: 'Value Odds Exploitation (Draw No Bet & Goals)',
-        gamesCount: 3,
-        totalOdds: 2.50,
+        code: 'QM7NWD',
+        marketType: 'Europa League & Conference League Overround Slip',
+        gamesCount: 16,
+        totalOdds: 298.00,
         status: 'active',
-        dropTime: '02:00 AM WAT'
+        dropTime: 'Live Today'
+      },
+      {
+        id: 'pcode-mw-01-fb',
+        bookmaker: 'footballcom',
+        code: 'QM7NWD',
+        marketType: 'Europa & Conference League Slip (Football.com)',
+        gamesCount: 16,
+        totalOdds: 298.00,
+        status: 'active',
+        dropTime: 'Live Today'
       }
     ]
   },
@@ -365,12 +375,22 @@ export const INITIAL_PUNTERS = [
       {
         id: 'pcode-jf-01',
         bookmaker: 'sportybet',
-        code: 'BC4-JAY-ROLL',
-        marketType: 'Rollover Banker 1.50x Edge',
+        code: 'Q7S287',
+        marketType: 'Rollover Step 4 Capital Edge',
         gamesCount: 2,
-        totalOdds: 1.55,
+        totalOdds: 1.54,
         status: 'active',
-        dropTime: '02:00 AM WAT'
+        dropTime: 'Live Today'
+      },
+      {
+        id: 'pcode-jf-01-fb',
+        bookmaker: 'footballcom',
+        code: 'Q7S287',
+        marketType: 'Rollover Step 4 Capital Edge (Football.com)',
+        gamesCount: 2,
+        totalOdds: 1.54,
+        status: 'active',
+        dropTime: 'Live Today'
       }
     ]
   },
@@ -382,7 +402,7 @@ export const INITIAL_PUNTERS = [
     region: 'Nigeria',
     countryCode: 'NG',
     avatar: 'MB',
-    specialty: 'EPL & La Liga Both Teams to Score (GG)',
+    specialty: 'EPL & European Both Teams to Score (GG)',
     bio: 'Focus on defensive vulnerabilities and high attacking conversion rates across European top flights.',
     winStreak: '5 Wins',
     hitRate: '78%',
@@ -391,12 +411,22 @@ export const INITIAL_PUNTERS = [
       {
         id: 'pcode-mbayo-01',
         bookmaker: 'sportybet',
-        code: 'BC4-BAYO-BTTS',
-        marketType: 'Both Teams to Score (BTTS / GG)',
-        gamesCount: 2,
-        totalOdds: 2.25,
+        code: 'W6XDM5',
+        marketType: 'Both Teams to Score (BTTS / GG Only)',
+        gamesCount: 8,
+        totalOdds: 148.00,
         status: 'active',
-        dropTime: '02:00 AM WAT'
+        dropTime: 'Live Today'
+      },
+      {
+        id: 'pcode-mbayo-01-fb',
+        bookmaker: 'footballcom',
+        code: 'W6XDM5',
+        marketType: 'Both Teams to Score GG (Football.com)',
+        gamesCount: 8,
+        totalOdds: 148.00,
+        status: 'active',
+        dropTime: 'Live Today'
       }
     ]
   },
@@ -408,8 +438,8 @@ export const INITIAL_PUNTERS = [
     region: 'Nigeria',
     countryCode: 'NG',
     avatar: 'TF',
-    specialty: 'Asian Handicap & Draw No Bet Specials',
-    bio: 'Eliminating the draw with quarter handicaps (+0.25, -0.75) and push-refund protections.',
+    specialty: 'Home Straight Wins & Safe Shields',
+    bio: 'Heavy dominance on home venues and tactical push-refund protections.',
     winStreak: '6 Wins',
     hitRate: '80%',
     verified: true,
@@ -417,12 +447,22 @@ export const INITIAL_PUNTERS = [
       {
         id: 'pcode-tf-01',
         bookmaker: 'sportybet',
-        code: 'BC4-FIGHT-AH',
-        marketType: 'Asian Handicap & DNB Safe Shield',
-        gamesCount: 2,
-        totalOdds: 2.05,
+        code: 'U0VB59',
+        marketType: 'Home Straight Wins Monster Accumulator',
+        gamesCount: 30,
+        totalOdds: 2335.00,
         status: 'active',
-        dropTime: '02:00 AM WAT'
+        dropTime: 'Live Today'
+      },
+      {
+        id: 'pcode-tf-01-fb',
+        bookmaker: 'footballcom',
+        code: 'U0VB59',
+        marketType: 'Home Straight Wins Monster (Football.com)',
+        gamesCount: 30,
+        totalOdds: 2335.00,
+        status: 'active',
+        dropTime: 'Live Today'
       }
     ]
   },

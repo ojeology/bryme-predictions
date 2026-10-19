@@ -142,20 +142,20 @@ export default function ChampionsLeagueBanner({ onNavigate }) {
 
             {/* SportyBet */}
             <button
-              onClick={() => handleCopy('BC-UCL-TUE1', 'sporty')}
+              onClick={() => handleCopy('TZUMDQ', 'sporty')}
               className="px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-700 text-white font-mono font-bold text-xs transition-all flex items-center gap-1 shadow-sm"
             >
               {copiedSporty ? <Check className="w-3.5 h-3.5 text-white" /> : <Copy className="w-3.5 h-3.5 text-white/80" />}
-              <span>Sporty: BC-UCL-TUE1</span>
+              <span>Sporty: TZUMDQ</span>
             </button>
 
             {/* Bet9ja */}
             <button
-              onClick={() => handleCopy('B9J-UCL-TUE1', 'bet9ja')}
+              onClick={() => handleCopy('5WGQKM6', 'bet9ja')}
               className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-mono font-bold text-xs transition-all flex items-center gap-1 shadow-sm"
             >
               {copiedBet9ja ? <Check className="w-3.5 h-3.5 text-white" /> : <Copy className="w-3.5 h-3.5 text-white/80" />}
-              <span>Bet9ja: B9J-UCL-TUE1</span>
+              <span>Bet9ja: 5WGQKM6</span>
             </button>
           </div>
 

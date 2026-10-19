@@ -295,8 +295,8 @@ export default function PredictionsPage({ onNavigate }) {
       {viewMode === 'dense' && (
         <div className="space-y-2">
           {filteredTickets.map((ticket, idx) => {
-            const sportyCode = ticket.codes?.sportybet || ticket.bookingCode || 'BC4-9921';
-            const bet9jaCode = ticket.codes?.bet9ja || 'B9J-4412';
+            const sportyCode = ticket.codes?.sportybet || ticket.bookingCode || 'Q7S287';
+            const bet9jaCode = ticket.codes?.bet9ja || '5WGQKM6';
 
             return (
               <div

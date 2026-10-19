@@ -11,8 +11,8 @@ export default function Sidebar({ currentRoute, onNavigate }) {
   const [copiedSporty, setCopiedSporty] = useState(false);
   const [copiedBet9ja, setCopiedBet9ja] = useState(false);
 
-  const sportyCode = ladder?.sportyCode || 'BC4-LAD50-D4';
-  const bet9jaCode = ladder?.todaysCode || 'B9J-LAD-50-D4';
+  const sportyCode = ladder?.sportyCode || 'Q7S287';
+  const bet9jaCode = ladder?.todaysCode || 'Q7S287';
   const currentDay = ladder?.currentDay || 4;
   const currentBalance = ladder?.currentBalance || 3375;
 
