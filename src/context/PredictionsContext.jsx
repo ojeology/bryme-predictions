@@ -26,31 +26,36 @@ export const DEFAULT_WHALE_SLIP = {
   totalOdds: 2.18,
   potentialReturn: '₦1,090,000',
   confidence: '94%',
-  status: 'live', // live, won, lost
+  status: 'won', // WON & CASHED OUT
+  payoutStatus: 'PAID OUT (₦1,090,000 CASHED)',
   sportyCode: 'BC4-WHALE',
   bet9jaCode: 'B9J-WHALE',
-  kickoffTime: '20:00 WAT Today',
+  kickoffTime: 'Settled & Won (Full Time)',
   punterCount: 4210,
   volumeStaked: '₦18,450,000',
-  intel: 'Syndicate placed ₦500k after sharp line movements in Madrid & Munich. Over 1.5 Team Goals line dropped 18% on early European exchange liquidity.',
+  intel: 'SYNDICATE BET WON & PAID OUT! Both Real Madrid Over 1.5 Team Goals (2-1 FT) and Bayern Munich vs RB Leipzig Over 2.5 Goals (3-2 FT) cashed cleanly before full time delivering ₦1,090,000 total payout. Next Whale 2-Odds game drops for the next match cycle.',
   matches: [
     {
       id: 'm1',
-      match: 'Real Madrid vs Sevilla',
+      match: 'Real Madrid vs Sevilla (2-1 FT)',
       league: 'Spanish La Liga',
-      kickoff: '20:00 WAT',
+      kickoff: 'Full Time',
       pick: 'Real Madrid Over 1.5 Team Goals',
       odds: 1.45,
-      analysis: 'Madrid averages 2.6 goals at the Bernabéu; scored 2+ in 9 of last 10 home fixtures.'
+      status: 'won',
+      resultScore: '2-1 FT (WON)',
+      analysis: 'Madrid dominated with 18 shots; 2-1 final score crossed the 1.5 team goal mark in minute 64.'
     },
     {
       id: 'm2',
-      match: 'Bayern Munich vs RB Leipzig',
+      match: 'Bayern Munich vs RB Leipzig (3-2 FT)',
       league: 'German Bundesliga',
-      kickoff: '17:30 WAT',
+      kickoff: 'Full Time',
       pick: 'Over 2.5 Total Goals',
       odds: 1.50,
-      analysis: 'Both attacks rank top 2 in expected goals (xG); last 6 head-to-heads averaged 4.1 goals.'
+      status: 'won',
+      resultScore: '3-2 FT (WON)',
+      analysis: 'Explosive 5-goal thriller sealed the Over 2.5 line by the 52nd minute.'
     }
   ]
 };

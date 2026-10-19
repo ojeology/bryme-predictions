@@ -78,10 +78,17 @@ export default function Whale2OddsCard({ whaleSlip, onNavigate }) {
               <span className="text-[11px] font-mono uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-black border border-amber-500/40">
                 WHALE 2-ODDS SYNDICATE
               </span>
-              <span className="text-[11px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-bold flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
-                LIVE &bull; {slip.confidence} EDGE
-              </span>
+              {slip.status === 'won' ? (
+                <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-full bg-emerald-500 text-slate-950 font-black flex items-center gap-1 shadow-md">
+                  <Check className="w-3.5 h-3.5 stroke-[3]" />
+                  <span>WON &amp; PAID OUT (₦1,090,000)</span>
+                </span>
+              ) : (
+                <span className="text-[11px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-bold flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                  LIVE &bull; {slip.confidence} EDGE
+                </span>
+              )}
             </div>
             <h3 className="font-display font-black text-lg sm:text-2xl text-white mt-1">
               {slip.title}
@@ -174,61 +181,76 @@ export default function Whale2OddsCard({ whaleSlip, onNavigate }) {
 
       {/* Whale Intel Note */}
       {slip.intel && (
-        <div className="p-3.5 rounded-2xl bg-amber-500/5 border border-amber-500/20 text-xs text-slate-300 relative z-10 space-y-1">
-          <div className="flex items-center gap-1.5 text-amber-400 font-display font-black text-xs uppercase tracking-wider">
+        <div className={`p-3.5 rounded-2xl ${
+          slip.status === 'won' 
+            ? 'bg-emerald-500/10 border border-emerald-500/30 text-emerald-200' 
+            : 'bg-amber-500/5 border border-amber-500/20 text-slate-300'
+        } text-xs relative z-10 space-y-1`}>
+          <div className="flex items-center gap-1.5 font-display font-black text-xs uppercase tracking-wider text-emerald-400">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>Whale Market Intel</span>
+            <span>{slip.status === 'won' ? 'Syndicate Payout Verified' : 'Whale Market Intel'}</span>
           </div>
-          <p className="leading-relaxed text-[11px] text-slate-300 font-sans">
+          <p className="leading-relaxed text-[11px] font-sans">
             {slip.intel}
           </p>
         </div>
       )}
 
       {/* 1-Tap Booking Action Bar */}
-      <div className="pt-2 flex flex-col sm:flex-row items-center gap-3 relative z-10">
-        <button
-          onClick={() => handleCopy(slip.sportyCode, 'sporty')}
-          className={`flex-1 w-full py-3 px-4 rounded-xl font-display font-black text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-lg ${
-            copiedSporty
-              ? 'bg-emerald-600 text-white shadow-emerald-600/30'
-              : 'bg-gradient-to-r from-[#E41B13] to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white shadow-rose-900/40 active:scale-[0.98]'
-          }`}
-        >
-          {copiedSporty ? (
-            <>
-              <Check className="w-4 h-4" />
-              <span>SportyBet Code Copied!</span>
-            </>
-          ) : (
-            <>
-              <Copy className="w-4 h-4" />
-              <span>Copy SportyBet Code: {slip.sportyCode}</span>
-            </>
-          )}
-        </button>
+      {slip.status === 'won' ? (
+        <div className="p-4 rounded-2xl bg-emerald-950/40 border-2 border-emerald-500/40 text-center space-y-2 relative z-10">
+          <div className="flex items-center justify-center gap-2 text-emerald-400 font-display font-black text-sm uppercase tracking-wider">
+            <span>🎉 ₦1,090,000 Payout Cashed Successfully</span>
+          </div>
+          <p className="text-xs text-slate-300">
+            Both legs landed cleanly before full time. The next high-stake Whale 2-Odds syndicate lock is compiling and will drop before next kickoff.
+          </p>
+        </div>
+      ) : (
+        <div className="pt-2 flex flex-col sm:flex-row items-center gap-3 relative z-10">
+          <button
+            onClick={() => handleCopy(slip.sportyCode, 'sporty')}
+            className={`flex-1 w-full py-3 px-4 rounded-xl font-display font-black text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-lg ${
+              copiedSporty
+                ? 'bg-emerald-600 text-white shadow-emerald-600/30'
+                : 'bg-gradient-to-r from-[#E41B13] to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white shadow-rose-900/40 active:scale-[0.98]'
+            }`}
+          >
+            {copiedSporty ? (
+              <>
+                <Check className="w-4 h-4" />
+                <span>SportyBet Code Copied!</span>
+              </>
+            ) : (
+              <>
+                <Copy className="w-4 h-4" />
+                <span>Copy SportyBet Code: {slip.sportyCode}</span>
+              </>
+            )}
+          </button>
 
-        <button
-          onClick={() => handleCopy(slip.bet9jaCode, 'bet9ja')}
-          className={`flex-1 w-full py-3 px-4 rounded-xl font-display font-black text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-lg ${
-            copiedBet9ja
-              ? 'bg-emerald-600 text-white shadow-emerald-600/30'
-              : 'bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white shadow-emerald-900/40 active:scale-[0.98]'
-          }`}
-        >
-          {copiedBet9ja ? (
-            <>
-              <Check className="w-4 h-4" />
-              <span>Bet9ja Code Copied!</span>
-            </>
-          ) : (
-            <>
-              <Copy className="w-4 h-4" />
-              <span>Copy Bet9ja Code: {slip.bet9jaCode}</span>
-            </>
-          )}
-        </button>
-      </div>
+          <button
+            onClick={() => handleCopy(slip.bet9jaCode, 'bet9ja')}
+            className={`flex-1 w-full py-3 px-4 rounded-xl font-display font-black text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-lg ${
+              copiedBet9ja
+                ? 'bg-emerald-600 text-white shadow-emerald-600/30'
+                : 'bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white shadow-emerald-900/40 active:scale-[0.98]'
+            }`}
+          >
+            {copiedBet9ja ? (
+              <>
+                <Check className="w-4 h-4" />
+                <span>Bet9ja Code Copied!</span>
+              </>
+            ) : (
+              <>
+                <Copy className="w-4 h-4" />
+                <span>Copy Bet9ja Code: {slip.bet9jaCode}</span>
+              </>
+            )}
+          </button>
+        </div>
+      )}
 
     </div>
   );
