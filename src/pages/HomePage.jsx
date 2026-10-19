@@ -1,86 +1,465 @@
 import React, { useState } from 'react';
 import { usePredictions } from '../context/PredictionsContext';
-import VisibleLadder from '../components/VisibleLadder';
-import Whale2OddsCard from '../components/Whale2OddsCard';
-import BookingCodesHub from '../components/BookingCodesHub';
 import AdBanner from '../components/AdBanner';
 import { WEEKEND_2_ODDS_STATS } from '../data/weekendArchive';
+import { LADDER_18_STEPS } from '../components/VisibleLadder';
 import { 
   Trophy, ArrowRight, ShieldCheck, Flame, Sparkles, 
   TrendingUp, CheckCircle, Clock, Zap, Target, Copy, Check, 
   BarChart2, ChevronDown, ChevronUp, Layers, Lock, Eye, Shield, 
-  Users, BookOpen, ExternalLink, Award, AlertCircle
+  Users, BookOpen, ExternalLink, Award, AlertCircle, Gift, DollarSign,
+  Smartphone, Wallet, ArrowUpRight, Star
 } from 'lucide-react';
 
 export default function HomePage({ onNavigate }) {
-  const { whaleSlip, punters, marketCodes, triggerCopyModal, adSettings } = usePredictions();
-  const [copiedPunterCode, setCopiedPunterCode] = useState(null);
-  const [activeCodeCategory, setActiveCodeCategory] = useState('all');
+  const { 
+    whaleSlip, 
+    punters, 
+    ladder, 
+    marketCodes, 
+    triggerCopyModal, 
+    adSettings 
+  } = usePredictions();
 
-  // Enforce Mr banks pinned first
+  const [copiedCode, setCopiedCode] = useState(null);
+  const [selectedBookieTab, setSelectedBookieTab] = useState('sporty'); // 'sporty' | 'bet9ja' | '1xbet'
+  const [activeMarketFilter, setActiveMarketFilter] = useState('all');
+
+  const currentStep = ladder?.currentDay || 4;
+  const currentPot = ladder?.currentBalance || 3375;
+  const targetPot = Math.round(currentPot * 1.5);
+  const sportyLadderCode = ladder?.sportyCode || 'BC4-LAD50-D4';
+  const bet9jaLadderCode = ladder?.todaysCode || 'B9J-LAD-50-D4';
+  const oneXBetLadderCode = '1XB-LAD50-D4';
+
+  // Ensure Mr banks is strictly pinned first
   const sortedPunters = (punters || []).slice().sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
 
-  const handleCopyPunterCode = (punter, codeItem) => {
-    const bName = codeItem.bookmaker?.toUpperCase() || 'SportyBet';
+  const handleCopy = (code, bookmaker = 'SportyBet', title = 'Banker Slip', odds = '') => {
     if (triggerCopyModal) {
-      triggerCopyModal(codeItem.code, bName, `${punter.displayName}'s ${codeItem.marketType || 'Slip'}`, codeItem.totalOdds);
+      triggerCopyModal(code, bookmaker, title, odds);
     } else {
-      navigator.clipboard.writeText(codeItem.code);
+      navigator.clipboard.writeText(code);
     }
-    setCopiedPunterCode(codeItem.code);
-    setTimeout(() => setCopiedPunterCode(null), 2500);
+    setCopiedCode(code);
+    setTimeout(() => setCopiedCode(null), 2500);
   };
 
   const getBookmakerUrl = (bName) => {
     const b = (bName || '').toLowerCase();
-    if (b.includes('sporty')) return adSettings?.sportyAffiliateUrl || 'https://www.sportybet.com/ng/';
-    if (b.includes('bet9ja')) return adSettings?.bet9jaAffiliateUrl || 'https://register.bet9ja.com/';
-    if (b.includes('msport')) return adSettings?.msportAffiliateUrl || 'https://www.msport.com/';
-    if (b.includes('1x')) return adSettings?.oneXBetAffiliateUrl || 'https://1xbet.ng/';
-    if (b.includes('king')) return adSettings?.betkingAffiliateUrl || 'https://www.betking.com/';
+    if (b.includes('1x')) return adSettings?.oneXBetAffiliateUrl || 'https://1xbet.ng/?bf=bryme';
+    if (b.includes('msport')) return adSettings?.msportAffiliateUrl || 'https://www.msport.com/?ref=bryme';
+    if (b.includes('bet9ja')) return adSettings?.bet9jaAffiliateUrl || 'https://register.bet9ja.com/?promocode=bryme';
+    if (b.includes('king')) return adSettings?.betkingAffiliateUrl || 'https://www.betking.com/?aff=bryme';
     return adSettings?.sportyAffiliateUrl || 'https://www.sportybet.com/ng/';
   };
+
+  // Emerging bookmakers bonus roster
+  const emergingBookmakers = [
+    {
+      id: '1xbet',
+      name: '1xBet Nigeria',
+      bonus: '300% Welcome Bonus',
+      maxAmount: 'Up to ₦145,600',
+      badge: 'TOP VALUE',
+      badgeBg: 'bg-blue-600 text-white',
+      accent: 'border-blue-500/50 hover:border-blue-400',
+      description: 'Exclusive 300% first deposit bonus + highest odds payout on football corners, cards, and combo accumulators.',
+      promoCode: 'BRYMEVIP',
+      perk: 'Lowest 5x accumulator wagering requirement',
+      url: adSettings?.oneXBetAffiliateUrl || 'https://1xbet.ng/?bf=bryme'
+    },
+    {
+      id: 'msport',
+      name: 'MSport Nigeria',
+      bonus: '₦500,000 Welcome Pack',
+      maxAmount: '₦500,000 Vouchers',
+      badge: 'FAST CASHOUT',
+      badgeBg: 'bg-amber-500 text-black',
+      accent: 'border-amber-500/50 hover:border-amber-400',
+      description: 'Instant Nigerian bank payouts in under 60 seconds + ₦500,000 in free betting vouchers upon registration.',
+      promoCode: 'AUTO-APPLIED',
+      perk: 'Fastest mobile app with super odds boosts',
+      url: adSettings?.msportAffiliateUrl || 'https://www.msport.com/?ref=bryme'
+    },
+    {
+      id: 'betking',
+      name: 'BetKing',
+      bonus: '₦100,000 FreeBet',
+      maxAmount: '100% Risk-Free',
+      badge: 'RISK-FREE',
+      badgeBg: 'bg-purple-600 text-white',
+      accent: 'border-purple-500/50 hover:border-purple-400',
+      description: '100% money-back risk-free bet if your first ticket cuts + 300% accumulator multiplier bonus.',
+      promoCode: 'KINGVIP',
+      perk: 'Huge multi-match accumulator boosters',
+      url: adSettings?.betkingAffiliateUrl || 'https://www.betking.com/?aff=bryme'
+    },
+    {
+      id: 'bet9ja',
+      name: 'Bet9ja',
+      bonus: '100% Sportsbook Match',
+      maxAmount: 'Up to ₦100,000',
+      badge: 'NIGERIA #1',
+      badgeBg: 'bg-[#00C250] text-black',
+      accent: 'border-emerald-500/50 hover:border-emerald-400',
+      description: 'The household name for Nigerian punters. Solid weekend liquidity and instant retail/online code loading.',
+      promoCode: 'BET9JABRYME',
+      perk: 'Over 100,000 retail shops nationwide',
+      url: adSettings?.bet9jaAffiliateUrl || 'https://register.bet9ja.com/?promocode=bryme'
+    }
+  ];
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto">
       
-      {/* ── 1. HIGH-ENERGY LIVE VIP TICKER ── */}
-      <div className="bg-gradient-to-r from-slate-900 via-[#18233C] to-[#0A0F1D] border border-amber-500/30 rounded-2xl p-3 sm:p-3.5 shadow-lg flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-white">
-        <div className="flex items-center gap-2.5 flex-wrap">
-          <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#E41B13] text-white font-display font-black text-[11px] uppercase tracking-wider shadow-sm animate-pulse">
-            <span className="w-2 h-2 rounded-full bg-[#00FF66] animate-ping" />
-            LIVE DROPS 02:00 AM WAT
-          </span>
-          <span className="text-xs font-mono text-slate-300 font-bold">
-            🔥 Over <strong>14,800+</strong> Punters In Play Today
-          </span>
-          <span className="hidden md:inline text-xs font-mono text-amber-400 font-bold">
-            &bull; Verified 86.4% Accuracy
-          </span>
-        </div>
+      {/* ── 1. REAL-TIME LIVE VIP RADAR MARQUEE ── */}
+      <div className="bg-gradient-to-r from-[#0C1222] via-[#162035] to-[#0A0F1D] border-2 border-amber-500/40 rounded-2xl p-3 sm:p-4 shadow-xl text-white overflow-hidden relative">
+        <div className="absolute top-0 right-0 -mr-10 -mt-10 w-32 h-32 rounded-full bg-amber-500/10 blur-2xl pointer-events-none" />
+        
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 relative z-10">
+          <div className="flex items-center gap-2.5 flex-wrap">
+            <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#E41B13] text-white font-display font-black text-[11px] uppercase tracking-wider shadow-md animate-pulse">
+              <span className="w-2 h-2 rounded-full bg-[#00FF66] animate-ping" />
+              LIVE WAT MIDNIGHT DROPS
+            </span>
+            <span className="text-xs font-mono font-bold text-slate-200">
+              ⚡ <strong>14,850+</strong> Punters Active Now &bull; <span className="text-[#00FF66]">86.4% Hit Rate</span>
+            </span>
+          </div>
 
-        <div className="flex items-center gap-2 text-xs font-mono text-slate-400 self-end sm:self-auto">
-          <span>Jackpot Rollover Goal:</span>
-          <strong className="text-[#00FF66] font-black bg-[#00FF66]/10 px-2 py-0.5 rounded border border-[#00FF66]/30">
-            ₦1,000,000
-          </strong>
+          <div className="flex items-center gap-3 text-xs font-mono text-slate-300 self-end sm:self-auto">
+            <span>Rollover Target:</span>
+            <span className="px-2.5 py-0.5 rounded bg-[#00FF66]/15 text-[#00FF66] font-black border border-[#00FF66]/30">
+              ₦1,000,000 JACKPOT
+            </span>
+          </div>
         </div>
       </div>
 
-      {/* ── 2. THE DUAL HERO FISHHOOK: BRYME ROLLOVER & WHALE 2-ODDS ── */}
-      <section className="space-y-4">
-        <VisibleLadder onNavigate={onNavigate} />
+      {/* ── 2. HERO SECTION: THE DUAL CONVICTION FISHHOOK ── */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        
+        {/* CARD A: 🪜 BRYME 18-STEP ROLLOVER CHALLENGE */}
+        <div className="rounded-3xl border-2 border-[#E41B13] bg-gradient-to-b from-[#141C30] via-[#0E1626] to-[#080C17] text-white p-5 sm:p-6 shadow-2xl relative overflow-hidden flex flex-col justify-between space-y-4">
+          <div className="absolute top-0 right-0 -mr-16 -mt-16 w-52 h-52 rounded-full bg-[#E41B13]/25 blur-3xl pointer-events-none" />
+          
+          <div className="space-y-3 relative z-10">
+            {/* Header Badge */}
+            <div className="flex items-center justify-between gap-2">
+              <span className="px-3 py-1 rounded-full bg-[#E41B13] text-white font-display font-black text-xs uppercase tracking-wider shadow-sm flex items-center gap-1.5">
+                <Flame className="w-3.5 h-3.5 fill-current" />
+                <span>BRYME 18-STEP ROLLOVER</span>
+              </span>
+              <span className="px-2.5 py-0.5 rounded-lg bg-white/10 font-mono font-black text-xs text-amber-300 border border-white/15">
+                STEP {currentStep} OF 18
+              </span>
+            </div>
+
+            {/* Title & Core Value Proposition */}
+            <div>
+              <h2 className="text-2xl sm:text-3xl font-display font-black tracking-tight text-white">
+                ₦1,000 &rarr; ₦1,000,000
+              </h2>
+              <p className="text-xs text-slate-300 mt-1 leading-relaxed">
+                Compound daily 1.50x banker lines with 2 built-in <strong>Safe Haven Cashouts</strong> at Step 6 &amp; Step 12 to secure guaranteed profits in your bank account!
+              </p>
+            </div>
+
+            {/* Pot Stats Box */}
+            <div className="grid grid-cols-2 gap-2 p-3 rounded-2xl bg-black/50 border border-white/10 font-mono">
+              <div>
+                <span className="text-[10px] text-slate-400 uppercase block font-bold">Current Pot Stake</span>
+                <span className="text-xl sm:text-2xl font-black text-white">₦{currentPot.toLocaleString()}</span>
+              </div>
+              <div className="text-right">
+                <span className="text-[10px] text-slate-400 uppercase block font-bold">Step {currentStep} Payout</span>
+                <span className="text-xl sm:text-2xl font-black text-[#00FF66]">₦{targetPot.toLocaleString()}</span>
+              </div>
+            </div>
+
+            {/* Today's Selections Box */}
+            <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 space-y-1.5 text-xs">
+              <div className="flex items-center justify-between text-[10px] font-mono font-bold text-amber-400 uppercase">
+                <span>Today's Step {currentStep} Banker Pick:</span>
+                <span>Odds: 1.50x</span>
+              </div>
+              <div className="font-display font-black text-sm text-white">
+                Arsenal vs Everton (1X &amp; O1.5) + Bayern vs Stuttgart (O2.5 Goals)
+              </div>
+              <div className="text-[11px] text-slate-400 font-mono">
+                European Top Flights &bull; Consecutively backtested high-xG momentum
+              </div>
+            </div>
+
+            {/* 1-Tap Booking Codes Bar */}
+            <div className="space-y-2 pt-1">
+              <div className="flex items-center gap-1.5 text-xs font-mono">
+                <button
+                  onClick={() => setSelectedBookieTab('sporty')}
+                  className={`px-2.5 py-1 rounded-lg font-bold uppercase transition-all ${
+                    selectedBookieTab === 'sporty' ? 'bg-[#E41B13] text-white shadow-sm' : 'bg-white/10 text-slate-400'
+                  }`}
+                >
+                  SportyBet
+                </button>
+                <button
+                  onClick={() => setSelectedBookieTab('1xbet')}
+                  className={`px-2.5 py-1 rounded-lg font-bold uppercase transition-all ${
+                    selectedBookieTab === '1xbet' ? 'bg-blue-600 text-white shadow-sm' : 'bg-white/10 text-slate-400'
+                  }`}
+                >
+                  1xBet (300% Bonus)
+                </button>
+                <button
+                  onClick={() => setSelectedBookieTab('bet9ja')}
+                  className={`px-2.5 py-1 rounded-lg font-bold uppercase transition-all ${
+                    selectedBookieTab === 'bet9ja' ? 'bg-[#00C250] text-black shadow-sm' : 'bg-white/10 text-slate-400'
+                  }`}
+                >
+                  Bet9ja
+                </button>
+              </div>
+
+              {/* Code Display + 1-Tap Copy */}
+              <div className="p-3 rounded-xl bg-black border border-white/15 flex items-center justify-between gap-2">
+                <div>
+                  <span className="text-[9px] uppercase font-mono font-bold text-slate-400 block">
+                    {selectedBookieTab === 'sporty' ? 'SportyBet' : selectedBookieTab === '1xbet' ? '1xBet' : 'Bet9ja'} Code
+                  </span>
+                  <span className="font-mono font-black text-lg text-amber-300 tracking-wider">
+                    {selectedBookieTab === 'sporty' ? sportyLadderCode : selectedBookieTab === '1xbet' ? oneXBetLadderCode : bet9jaLadderCode}
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-1.5">
+                  <button
+                    onClick={() => handleCopy(
+                      selectedBookieTab === 'sporty' ? sportyLadderCode : selectedBookieTab === '1xbet' ? oneXBetLadderCode : bet9jaLadderCode,
+                      selectedBookieTab === 'sporty' ? 'SportyBet' : selectedBookieTab === '1xbet' ? '1xBet' : 'Bet9ja',
+                      `Rollover Step ${currentStep}`,
+                      '1.50'
+                    )}
+                    className="px-3 py-2 rounded-xl bg-[#E41B13] hover:bg-[#D01710] text-white font-display font-black text-xs uppercase tracking-wider flex items-center gap-1 shadow-md transition-all"
+                  >
+                    {copiedCode === (selectedBookieTab === 'sporty' ? sportyLadderCode : selectedBookieTab === '1xbet' ? oneXBetLadderCode : bet9jaLadderCode) ? (
+                      <>
+                        <Check className="w-4 h-4 stroke-[3]" />
+                        <span>Copied!</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-4 h-4" />
+                        <span>Copy Code</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Action Row */}
+          <div className="pt-2 border-t border-white/10 flex items-center justify-between text-xs">
+            <span className="font-mono text-emerald-400 font-bold flex items-center gap-1">
+              <ShieldCheck className="w-4 h-4" />
+              <span>Step 6 Safe Haven: ₦5,695 Banked</span>
+            </span>
+
+            <button
+              onClick={() => onNavigate('ticket/ticket-ladder-challenge')}
+              className="text-[#E41B13] dark:text-rose-400 font-display font-black uppercase tracking-wider flex items-center gap-1 hover:underline"
+            >
+              <span>Full 18-Step Board &rarr;</span>
+            </button>
+          </div>
+        </div>
+
+        {/* CARD B: 🐋 TODAY'S WHALE 2-ODDS SYNDICATE STAKE */}
+        <div className="rounded-3xl border-2 border-amber-500/70 bg-gradient-to-b from-[#1C1808] via-[#101422] to-[#0A0D18] text-white p-5 sm:p-6 shadow-2xl relative overflow-hidden flex flex-col justify-between space-y-4">
+          <div className="absolute top-0 right-0 -mr-16 -mt-16 w-52 h-52 rounded-full bg-amber-500/20 blur-3xl pointer-events-none" />
+
+          <div className="space-y-3 relative z-10">
+            {/* Header Badge */}
+            <div className="flex items-center justify-between gap-2">
+              <span className="px-3 py-1 rounded-full bg-amber-500 text-slate-950 font-display font-black text-xs uppercase tracking-wider shadow-md flex items-center gap-1.5">
+                <Star className="w-3.5 h-3.5 fill-current" />
+                <span>TODAY'S WHALE 2-ODDS LOCK</span>
+              </span>
+              <span className="px-2.5 py-0.5 rounded-lg bg-emerald-500/20 text-[#00FF66] font-mono font-black text-xs border border-emerald-500/40">
+                94% CONFIDENCE
+              </span>
+            </div>
+
+            {/* Title & Syndicate Big Numbers */}
+            <div>
+              <div className="flex items-center gap-2">
+                <h2 className="text-2xl sm:text-3xl font-display font-black tracking-tight text-white">
+                  ₦500,000 Syndicate Stake
+                </h2>
+              </div>
+              <p className="text-xs text-slate-300 mt-1 leading-relaxed">
+                Backed by <strong>Lagos VIP Syndicate #04</strong>. ₦500,000 real cash deployed on European exchange liquidity drops before kick-off!
+              </p>
+            </div>
+
+            {/* Odds & Return Box */}
+            <div className="grid grid-cols-2 gap-2 p-3 rounded-2xl bg-black/50 border border-amber-500/20 font-mono">
+              <div>
+                <span className="text-[10px] text-amber-400 uppercase block font-bold">Total Banker Odds</span>
+                <span className="text-xl sm:text-2xl font-black text-amber-300">2.18x Odds</span>
+              </div>
+              <div className="text-right">
+                <span className="text-[10px] text-slate-400 uppercase block font-bold">Payout Return</span>
+                <span className="text-xl sm:text-2xl font-black text-[#00FF66]">₦1,090,000</span>
+              </div>
+            </div>
+
+            {/* Whale Match Selections */}
+            <div className="space-y-2 text-xs">
+              <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between">
+                <div>
+                  <div className="font-bold text-white">Real Madrid vs Sevilla</div>
+                  <div className="text-[10px] text-slate-400">Pick: Madrid Over 1.5 Team Goals</div>
+                </div>
+                <span className="font-mono font-bold text-amber-400">1.45x</span>
+              </div>
+
+              <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between">
+                <div>
+                  <div className="font-bold text-white">Bayern Munich vs RB Leipzig</div>
+                  <div className="text-[10px] text-slate-400">Pick: Over 2.5 Total Goals</div>
+                </div>
+                <span className="font-mono font-bold text-amber-400">1.50x</span>
+              </div>
+            </div>
+
+            {/* 1-Tap Booking Code Display */}
+            <div className="p-3 rounded-xl bg-black border border-amber-500/30 flex items-center justify-between gap-2">
+              <div>
+                <span className="text-[9px] uppercase font-mono font-bold text-slate-400 block">
+                  SportyBet &amp; Bet9ja Code
+                </span>
+                <span className="font-mono font-black text-lg text-[#00FF66] tracking-wider select-all">
+                  BC4-WHALE
+                </span>
+              </div>
+
+              <button
+                onClick={() => handleCopy('BC4-WHALE', 'SportyBet', "Today's Whale 2-Odds Lock", '2.18')}
+                className="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-display font-black text-xs uppercase tracking-wider flex items-center gap-1 shadow-md transition-all"
+              >
+                {copiedCode === 'BC4-WHALE' ? (
+                  <>
+                    <Check className="w-4 h-4 stroke-[3]" />
+                    <span>Copied!</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-4 h-4" />
+                    <span>Copy Whale Code</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+
+          {/* Action Row */}
+          <div className="pt-2 border-t border-white/10 flex items-center justify-between text-xs">
+            <span className="font-mono text-amber-400 text-[11px]">
+              Drop Time: 20:00 WAT Kickoff
+            </span>
+
+            <a
+              href={getBookmakerUrl('1xbet')}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-amber-400 hover:underline font-display font-bold flex items-center gap-1 text-xs"
+            >
+              <span>Load on 1xBet (300% Bonus)</span>
+              <ExternalLink className="w-3.5 h-3.5" />
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+      {/* ── 3. EXCLUSIVE EMERGING BOOKMAKERS & WELCOME BONUSES VAULT ── */}
+      <section className="space-y-3">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-500 flex items-center justify-center font-bold text-lg">
+              🎁
+            </div>
+            <div>
+              <h2 className="text-lg sm:text-xl font-display font-black text-slate-900 dark:text-white flex items-center gap-2">
+                <span>Top Emerging Bookmakers &amp; Free Bet Bonuses</span>
+                <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-500 text-[10px] font-mono font-bold">
+                  HIGH PAYOUTS
+                </span>
+              </h2>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                Already have SportyBet? Register on these emerging platforms to unlock up to <strong>300% Welcome Deposit Bonuses</strong> and lower wagering conditions.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* 4 Emerging Bookmaker Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+          {emergingBookmakers.map(bookie => (
+            <div
+              key={bookie.id}
+              className={`rounded-2xl border-2 ${bookie.accent} bg-white dark:bg-[#0E1626] p-4 flex flex-col justify-between gap-3 shadow-md hover:shadow-xl transition-all relative overflow-hidden group`}
+            >
+              <div className="space-y-2">
+                <div className="flex items-center justify-between gap-1">
+                  <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-black uppercase tracking-wider ${bookie.badgeBg}`}>
+                    {bookie.badge}
+                  </span>
+                  <span className="text-[10px] font-mono text-slate-400">
+                    Promo: <strong className="text-slate-900 dark:text-white">{bookie.promoCode}</strong>
+                  </span>
+                </div>
+
+                <div>
+                  <h3 className="font-display font-black text-base text-slate-900 dark:text-white">
+                    {bookie.name}
+                  </h3>
+                  <div className="text-xs font-mono font-bold text-[#E41B13] dark:text-rose-400">
+                    {bookie.bonus} ({bookie.maxAmount})
+                  </div>
+                </div>
+
+                <p className="text-xs text-slate-600 dark:text-slate-300 line-clamp-3 leading-relaxed">
+                  {bookie.description}
+                </p>
+
+                <div className="p-2 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200/80 dark:border-slate-800 text-[11px] font-mono text-emerald-600 dark:text-emerald-400 font-bold">
+                  ✓ {bookie.perk}
+                </div>
+              </div>
+
+              <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
+                <a
+                  href={bookie.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-[#E41B13] to-red-700 hover:from-red-600 hover:to-red-800 text-white font-display font-black text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-md transition-all group-hover:scale-[1.02]"
+                >
+                  <span>Claim Bonus &amp; Register</span>
+                  <ArrowUpRight className="w-4 h-4" />
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
       </section>
 
-      {/* ── 3. TODAY'S WHALE 2-ODDS SYNDICATE STAKE (HIGH CONVICTION) ── */}
-      <section id="whale-2-odds">
-        <Whale2OddsCard whaleSlip={whaleSlip} onNavigate={onNavigate} />
-      </section>
+      {/* TOP HOME AD SLOT (MONETIZATION - MONETAG / ADSTERRA) */}
+      <AdBanner slot="top-banner" label="Sponsored Betting Partner Banner" />
 
-      {/* TOP HOME AD SLOT (MONETIZATION - MONETAG / ADSTERRA / AFFILIATE) */}
-      <AdBanner slot="top-banner" label="Sponsored Betting Partner" />
-
-      {/* ── 4. VIP PUNTERS HALL OF FAME (FEATURING MR BANKS 📌 PINNED MASTER) ── */}
+      {/* ── 4. VIP PUNTERS ROSTER: FEATURING MR BANKS 📌 PINNED MASTER ── */}
       <section className="space-y-3">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
           <div className="flex items-center gap-2">
@@ -89,10 +468,10 @@ export default function HomePage({ onNavigate }) {
             </span>
             <div>
               <h2 className="text-lg sm:text-xl font-display font-black text-slate-900 dark:text-white flex items-center gap-2">
-                <span>Tracked African Punters &amp; Daily Slips</span>
+                <span>Official Tracked African Punters</span>
               </h2>
               <p className="text-xs text-slate-500 dark:text-slate-400">
-                Official verified analysts across Nigeria &bull; 1-tap copy today's active booking code
+                Independent tracking of Nigeria's recognized betting analysts &bull; 1-tap copy active slips
               </p>
             </div>
           </div>
@@ -101,16 +480,16 @@ export default function HomePage({ onNavigate }) {
             onClick={() => onNavigate('punters')}
             className="px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-display font-black text-xs uppercase tracking-wider transition-all shadow-sm flex items-center gap-1.5 self-start sm:self-auto"
           >
-            <span>All 11 Punters &rarr;</span>
+            <span>View All 11 Punters &rarr;</span>
           </button>
         </div>
 
-        {/* Punters Showcase Grid */}
+        {/* Punters Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
           {sortedPunters.slice(0, 6).map((punter) => {
             const isPinned = punter.pinned;
             const primaryCode = punter.dailyCodes && punter.dailyCodes[0];
-            const isCopied = primaryCode && copiedPunterCode === primaryCode.code;
+            const isCopied = primaryCode && copiedCode === primaryCode.code;
 
             return (
               <div
@@ -183,7 +562,7 @@ export default function HomePage({ onNavigate }) {
                       </span>
 
                       <button
-                        onClick={() => handleCopyPunterCode(punter, primaryCode)}
+                        onClick={() => handleCopy(primaryCode.code, primaryCode.bookmaker, `${punter.displayName}'s Slip`, primaryCode.totalOdds)}
                         className={`px-3 py-1.5 rounded-lg text-xs font-display font-black uppercase tracking-wider flex items-center gap-1 transition-all ${
                           isCopied 
                             ? 'bg-[#00FF66] text-slate-950' 
@@ -207,7 +586,7 @@ export default function HomePage({ onNavigate }) {
                     onClick={() => onNavigate(`punter/${punter.id}`)}
                     className="text-xs font-display font-bold text-[#E41B13] dark:text-rose-400 hover:underline flex items-center gap-1"
                   >
-                    <span>View Punter Profile &amp; Slips</span>
+                    <span>Inspect Profile &amp; Slips</span>
                     <ArrowRight className="w-3 h-3" />
                   </button>
 
@@ -230,121 +609,128 @@ export default function HomePage({ onNavigate }) {
       </section>
 
       {/* MID-PAGE ADSTERRA 300x250 BANNER SLOT */}
-      <AdBanner slot="300x250" label="Adsterra 300x250 Banner" />
+      <AdBanner slot="300x250" label="Sponsored 300x250 Banner" />
 
-      {/* ── 5. READY-TO-LOAD BOOKING SLIPS HUB ── */}
-      <section className="space-y-3">
-        <div className="flex items-center justify-between px-1">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-xl bg-[#E41B13]/10 text-[#E41B13] flex items-center justify-center font-bold text-base">
-              🔴
-            </div>
-            <div>
-              <h2 className="text-base sm:text-lg font-display font-black text-slate-900 dark:text-white">
-                Today's Ready-to-Load Booking Slips
-              </h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                Instant codes for SportyBet, Bet9ja &amp; 1xBet &bull; 1-tap copy
-              </p>
-            </div>
-          </div>
-
-          <button
-            onClick={() => onNavigate('predictions')}
-            className="text-xs font-display font-bold text-[#E41B13] dark:text-rose-400 hover:underline flex items-center gap-1"
-          >
-            <span>View All Slips</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </button>
-        </div>
-
-        <BookingCodesHub onNavigate={onNavigate} />
-      </section>
-
-      {/* ── 6. 35+ HIGH-YIELD FOOTBALL MARKETS DIRECTORY PREVIEW ── */}
+      {/* ── 5. LIVE BOOKING CODES VAULT (OVER 1.5, DOUBLE CHANCE, BTTS) ── */}
       <section className="space-y-3 bg-white dark:bg-[#0E1626] border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 shadow-sm">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
           <div className="flex items-center gap-2">
-            <span className="text-lg">📂</span>
+            <span className="text-lg">⚡</span>
             <div>
               <h3 className="font-display font-black text-base text-slate-900 dark:text-white">
-                35+ Football Markets Slips Vault
+                Featured High-Odds Market Slips
               </h3>
               <p className="text-xs text-slate-500 dark:text-slate-400">
-                Explore preloaded codes organized by betting market: Over 1.5 Goals, Double Chance, BTTS, Corners
+                Ready-to-load slips with odds, bookmaker, and 1-tap copy
               </p>
             </div>
           </div>
 
-          <button
-            onClick={() => onNavigate('markets')}
-            className="text-xs font-display font-bold text-[#E41B13] dark:text-rose-400 hover:underline flex items-center gap-1 self-start sm:self-auto"
-          >
-            <span>Browse All 35+ Markets &rarr;</span>
-          </button>
+          <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none self-start sm:self-auto">
+            {['all', 'over-15-goals', 'double-chance', 'both-teams-to-score'].map(cat => (
+              <button
+                key={cat}
+                onClick={() => setActiveMarketFilter(cat)}
+                className={`px-3 py-1 rounded-xl text-xs font-mono font-bold uppercase transition-all ${
+                  activeMarketFilter === cat
+                    ? 'bg-[#E41B13] text-white shadow-sm'
+                    : 'bg-slate-100 dark:bg-[#162238] text-slate-600 dark:text-slate-400 hover:text-white'
+                }`}
+              >
+                {cat === 'all' ? 'All Slips' : cat.replace(/-/g, ' ')}
+              </button>
+            ))}
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-1">
-          {[
-            { id: 'over-15-goals', name: '⚽ Over 1.5 Total Goals', hit: '79.4%', slips: '4 Slips', desc: 'Codes like YEYEY (47x), YEYEU (197x), YEYEYE (92x)' },
-            { id: 'over-25-goals', name: '🔥 Over 2.5 Total Goals', hit: '58.2%', slips: '2 Slips', desc: 'High xG European league surge (Bundesliga & Eredivisie)' },
-            { id: 'double-chance', name: '🛡️ Double Chance (1X/X2)', hit: '84.0%', slips: '2 Slips', desc: 'Unbeaten home fortress and giant protection lines' },
-            { id: 'both-teams-to-score', name: '🎯 Both Teams to Score (GG)', hit: '72.0%', slips: '2 Slips', desc: 'Premier League & Serie A attacking collisions' },
-          ].map(m => (
-            <div
-              key={m.id}
-              onClick={() => onNavigate(`market/${m.id}`)}
-              className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#121B2F] hover:border-amber-500/60 cursor-pointer transition-all space-y-2 group"
-            >
-              <div className="flex items-center justify-between">
-                <span className="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-500 font-mono font-bold text-[10px]">
-                  {m.hit} Hit Rate
-                </span>
-                <span className="px-2 py-0.5 rounded bg-[#E41B13]/10 text-[#E41B13] font-mono font-bold text-[10px]">
-                  {m.slips}
-                </span>
-              </div>
+        {/* Market codes list */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 pt-1">
+          {(marketCodes || [])
+            .filter(c => activeMarketFilter === 'all' || c.marketId === activeMarketFilter)
+            .map(codeItem => {
+              const isCopied = copiedCode === codeItem.code;
+              const bookieUrl = getBookmakerUrl(codeItem.bookmaker);
 
-              <div>
-                <h4 className="font-display font-black text-sm text-slate-900 dark:text-white group-hover:text-[#E41B13] transition-colors">
-                  {m.name}
-                </h4>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 line-clamp-2">
-                  {m.desc}
-                </p>
-              </div>
+              return (
+                <div
+                  key={codeItem.id}
+                  className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#121B2F] flex flex-col justify-between gap-2.5 transition-all hover:border-amber-500/50"
+                >
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-between">
+                      <span className={`px-2 py-0.5 rounded text-[10px] font-display font-black uppercase ${
+                        codeItem.bookmaker === 'sportybet' ? 'bg-[#E41B13] text-white' : codeItem.bookmaker === '1xbet' ? 'bg-blue-600 text-white' : 'bg-amber-500 text-black'
+                      }`}>
+                        {codeItem.bookmakerName || codeItem.bookmaker}
+                      </span>
+                      <span className="font-mono font-black text-amber-500 text-xs">
+                        {codeItem.odds}x Odds
+                      </span>
+                    </div>
 
-              <div className="text-[11px] font-bold text-[#E41B13] dark:text-rose-400 flex items-center gap-1 pt-1">
-                <span>Inspect Codes &rarr;</span>
-              </div>
-            </div>
-          ))}
+                    <div className="font-mono font-black text-base text-slate-900 dark:text-white tracking-wider select-all pt-1">
+                      {codeItem.code}
+                    </div>
+
+                    <div className="text-xs font-bold text-slate-700 dark:text-slate-300 line-clamp-1">
+                      {codeItem.title || 'Market Slip'}
+                    </div>
+
+                    <div className="text-[11px] font-mono text-slate-400">
+                      {codeItem.eventsCount || 4} Legs &bull; {codeItem.dropTime || '02:00 AM WAT'}
+                    </div>
+                  </div>
+
+                  <div className="pt-2 border-t border-slate-200 dark:border-slate-800 flex items-center gap-2">
+                    <button
+                      onClick={() => handleCopy(codeItem.code, codeItem.bookmaker, codeItem.title, codeItem.odds)}
+                      className={`flex-1 py-1.5 px-3 rounded-lg text-xs font-display font-black uppercase tracking-wider flex items-center justify-center gap-1 transition-all ${
+                        isCopied ? 'bg-[#00FF66] text-slate-950' : 'bg-[#E41B13] hover:bg-[#D01710] text-white shadow-sm'
+                      }`}
+                    >
+                      {isCopied ? <Check className="w-3.5 h-3.5 stroke-[3]" /> : <Copy className="w-3.5 h-3.5" />}
+                      <span>{isCopied ? 'Copied' : 'Copy Code'}</span>
+                    </button>
+
+                    <a
+                      href={bookieUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="py-1.5 px-3 rounded-lg bg-slate-200 dark:bg-[#162238] hover:bg-slate-300 dark:hover:bg-[#1f2d4a] text-slate-800 dark:text-slate-200 font-display font-bold text-xs uppercase tracking-wider flex items-center gap-1 transition-colors"
+                    >
+                      <span>Load</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  </div>
+                </div>
+              );
+            })}
         </div>
       </section>
 
-      {/* ── 7. BETTING ACADEMY: ARBITRAGE SUREBETS CALLOUT ── */}
-      <section className="rounded-2xl border-2 border-cyan-500/40 bg-gradient-to-r from-cyan-950/20 via-[#0E1626] to-[#0A0F1D] p-5 shadow-lg space-y-3">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold text-xl flex-shrink-0">
+      {/* ── 6. BETTING ACADEMY: ARBITRAGE SUREBETS BANNER ── */}
+      <section className="rounded-3xl border-2 border-cyan-500/40 bg-gradient-to-r from-cyan-950/25 via-[#0E1626] to-[#0A0F1D] p-5 sm:p-6 shadow-xl space-y-3">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3.5">
+            <div className="w-12 h-12 rounded-2xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold text-2xl flex-shrink-0 shadow-md">
               📚
             </div>
             <div>
-              <span className="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-mono font-black text-[10px] uppercase tracking-wider">
-                BRYME BETTING ACADEMY
+              <span className="px-2.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-mono font-black text-[10px] uppercase tracking-wider border border-cyan-500/30">
+                BRYME BETTING ACADEMY &bull; FREE GUIDE
               </span>
-              <h3 className="text-base sm:text-lg font-display font-black text-white mt-0.5">
+              <h3 className="text-base sm:text-lg font-display font-black text-white mt-1">
                 Everything to Know About Arbitrage Betting (Surebets in Nigeria)
               </h3>
-              <p className="text-xs text-slate-300 mt-0.5 max-w-xl">
-                How sharp punters exploit odds discrepancies across SportyBet, Bet9ja, and 1xBet to guarantee mathematically risk-free returns.
+              <p className="text-xs text-slate-300 mt-0.5 max-w-xl leading-relaxed">
+                Learn how sharp punters exploit bookmaker odds discrepancies across SportyBet, Bet9ja, and 1xBet to lock in 100% mathematically guaranteed profit regardless of match outcome.
               </p>
             </div>
           </div>
 
           <button
             onClick={() => onNavigate('article/arbitrage-betting-nigeria')}
-            className="px-4 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-display font-black text-xs uppercase tracking-wider transition-all shadow-md flex items-center gap-1.5 flex-shrink-0 self-start sm:self-auto"
+            className="px-5 py-3 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-display font-black text-xs uppercase tracking-wider transition-all shadow-lg flex items-center gap-2 flex-shrink-0 self-start sm:self-auto"
           >
             <span>Read Arbitrage Guide</span>
             <ArrowRight className="w-4 h-4" />
@@ -352,7 +738,7 @@ export default function HomePage({ onNavigate }) {
         </div>
       </section>
 
-      {/* ── 8. VERIFIED RESULTS & ACCURACY ARCHIVE ── */}
+      {/* ── 7. VERIFIED WIN-RATE ACCURACY ARCHIVE ── */}
       <section className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1626] p-4 sm:p-5 shadow-sm space-y-3">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
           <div className="flex items-center gap-2">
