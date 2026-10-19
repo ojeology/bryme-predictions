@@ -228,9 +228,11 @@ async function handleApiRequest(request, env, url) {
 
         const parsed = parseTelegramMessage(text, forwardFrom);
 
+        const botToken = env.TELEGRAM_BOT_TOKEN || '8443187787:AAGui3m2Kq6ck-RCQFBqVJirIs-uepWVSd8';
+
         if (!parsed || parsed.codes.length === 0) {
-          if (chatId && env.TELEGRAM_BOT_TOKEN) {
-            await sendTelegramReply(env.TELEGRAM_BOT_TOKEN, chatId, `⚠️ No valid booking codes detected in this message.\nFormat examples: "SportyBet PZ6US6 10000 odds" or "Bet9ja 5WGQPQ3"`);
+          if (chatId && botToken) {
+            await sendTelegramReply(botToken, chatId, `⚠️ No valid booking codes detected in this message.\nFormat examples: "SportyBet PZ6US6 10000 odds" or "Bet9ja 5WGQPQ3"`);
           }
           return jsonResponse({ ok: true, detected: 0 });
         }
@@ -293,9 +295,9 @@ async function handleApiRequest(request, env, url) {
         }
 
         // Send confirmation back to Telegram
-        if (chatId && env.TELEGRAM_BOT_TOKEN) {
+        if (chatId && botToken) {
           const summary = parsed.codes.map(c => `• <b>${c.bookmaker.toUpperCase()}</b>: <code>${c.code}</code> (${c.odds}x) — <i>${c.punterName}</i>`).join('\n');
-          await sendTelegramReply(env.TELEGRAM_BOT_TOKEN, chatId, `✅ <b>Successfully Published to BRYME!</b>\n\n${summary}\n\n🌐 Live at the top of <b>predictions.thebryme.com</b>`);
+          await sendTelegramReply(botToken, chatId, `✅ <b>Successfully Published to BRYME!</b>\n\n${summary}\n\n🌐 Live at the top of <b>predictions.thebryme.com</b>`);
         }
 
         return jsonResponse({ ok: true, published: publishedCount, items: parsed.codes });
