@@ -212,5 +212,249 @@ async function handleApiRequest(request, env, url) {
     }
   }
 
+  // 7. Telegram Bot Auto-Ingestion Webhook (/api/telegram-webhook)
+  if (path === '/api/telegram-webhook') {
+    if (method === 'POST') {
+      try {
+        const update = await request.json();
+        const msg = update.message || update.channel_post;
+        if (!msg || (!msg.text && !msg.caption)) {
+          return jsonResponse({ ok: true, ignored: 'no_text' });
+        }
+
+        const text = msg.text || msg.caption || '';
+        const chatId = msg.chat?.id;
+        const forwardFrom = msg.forward_from_chat?.title || msg.forward_from?.first_name || '';
+
+        const parsed = parseTelegramMessage(text, forwardFrom);
+
+        if (!parsed || parsed.codes.length === 0) {
+          if (chatId && env.TELEGRAM_BOT_TOKEN) {
+            await sendTelegramReply(env.TELEGRAM_BOT_TOKEN, chatId, `⚠️ No valid booking codes detected in this message.\nFormat examples: "SportyBet PZ6US6 10000 odds" or "Bet9ja 5WGQPQ3"`);
+          }
+          return jsonResponse({ ok: true, detected: 0 });
+        }
+
+        // Push new codes to KV at the very top (newest first)
+        let publishedCount = 0;
+        if (kv) {
+          // 1. Fetch current global state or default
+          let state = await kv.get('bryme_global_state', { type: 'json' });
+          if (!state) {
+            state = { codeCatalogue: [], punters: [] };
+          }
+
+          if (!state.codeCatalogue) state.codeCatalogue = [];
+          if (!state.punters) state.punters = [];
+
+          for (const item of parsed.codes) {
+            // Avoid duplicates
+            const exists = state.codeCatalogue.some(c => c.code === item.code && c.bookmaker === item.bookmaker);
+            if (!exists) {
+              // Prepend to top
+              state.codeCatalogue.unshift({
+                id: `auto-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+                code: item.code,
+                bookmaker: item.bookmaker,
+                marketCategory: item.marketCategory || 'Punter Value Slip',
+                totalOdds: item.odds || 2.00,
+                gamesCount: item.gamesCount || 4,
+                status: 'active',
+                dropTime: 'Just Now',
+                punterName: item.punterName,
+                isNew: true
+              });
+              publishedCount++;
+            }
+
+            // Also attach to punter profile if identified
+            if (item.punterId) {
+              const p = state.punters.find(p => p.id === item.punterId);
+              if (p) {
+                if (!p.dailyCodes) p.dailyCodes = [];
+                const pExists = p.dailyCodes.some(c => c.code === item.code);
+                if (!pExists) {
+                  p.dailyCodes.unshift({
+                    id: `pcode-auto-${Date.now()}`,
+                    bookmaker: item.bookmaker,
+                    code: item.code,
+                    marketType: `${item.punterName} Auto Slip (${item.odds || '2.0'}x)`,
+                    gamesCount: item.gamesCount || 4,
+                    totalOdds: item.odds || 2.00,
+                    status: 'active',
+                    dropTime: 'Just Now'
+                  });
+                }
+              }
+            }
+          }
+
+          await kv.put('bryme_global_state', JSON.stringify(state));
+        }
+
+        // Send confirmation back to Telegram
+        if (chatId && env.TELEGRAM_BOT_TOKEN) {
+          const summary = parsed.codes.map(c => `• <b>${c.bookmaker.toUpperCase()}</b>: <code>${c.code}</code> (${c.odds}x) — <i>${c.punterName}</i>`).join('\n');
+          await sendTelegramReply(env.TELEGRAM_BOT_TOKEN, chatId, `✅ <b>Successfully Published to BRYME!</b>\n\n${summary}\n\n🌐 Live at the top of <b>predictions.thebryme.com</b>`);
+        }
+
+        return jsonResponse({ ok: true, published: publishedCount, items: parsed.codes });
+      } catch (err) {
+        return jsonResponse({ ok: false, error: err.message }, 500);
+      }
+    }
+  }
+
   return jsonResponse({ error: 'Endpoint not found' }, 404);
 }
+
+// ── TELEGRAM MESSAGE PARSER ──
+function parseTelegramMessage(rawText, forwardSource = '') {
+  const text = rawText || '';
+  const combined = `${forwardSource} ${text}`.toLowerCase();
+
+  // 1. Identify punter
+  let punterName = 'BRYME Verified Punter';
+  let punterId = null;
+
+  if (combined.includes('banks') || combined.includes('mr banks')) {
+    punterName = 'Mr banks';
+    punterId = 'punter-mrbanks';
+  } else if (combined.includes('tall') || combined.includes('tallman') || combined.includes('tall man')) {
+    punterName = 'Tall man';
+    punterId = 'punter-tallman';
+  } else if (combined.includes('boss tips') || combined.includes('bosstips')) {
+    punterName = 'Boss Tips';
+    punterId = 'punter-bosstips';
+  } else if (combined.includes('zeh') || combined.includes('dr zeh')) {
+    punterName = 'Dr zeh';
+    punterId = 'punter-drzeh';
+  } else if (combined.includes('bossola') || combined.includes('olamilekan')) {
+    punterName = 'Bossolamilekan';
+    punterId = 'punter-bossolamilekan';
+  } else if (combined.includes('lightbet') || combined.includes('light bet')) {
+    punterName = 'Lightbet';
+    punterId = 'punter-lightbet';
+  } else if (combined.includes('most wanted') || combined.includes('wanted punter')) {
+    punterName = 'Most wanted punter';
+    punterId = 'punter-mostwanted';
+  } else if (combined.includes('jayfund') || combined.includes('theonlyjayfund')) {
+    punterName = 'Theonlyjayfund';
+    punterId = 'punter-theonlyjayfund';
+  } else if (combined.includes('bayo') || combined.includes('mr bayo')) {
+    punterName = 'Mr bayo';
+    punterId = 'punter-mrbayo';
+  } else if (combined.includes('talented fight') || combined.includes('fight')) {
+    punterName = 'Talented fight';
+    punterId = 'punter-talentedfight';
+  } else if (combined.includes('39billion') || combined.includes('39 billion')) {
+    punterName = '39billion';
+    punterId = 'punter-39billion';
+  } else if (combined.includes('cindy') || combined.includes('cindymodel')) {
+    punterName = 'Cindymodel';
+    punterId = 'punter-cindymodel';
+  } else if (combined.includes('pandev')) {
+    punterName = 'Pandev punter';
+    punterId = 'punter-pandev';
+  }
+
+  // 2. Identify odds
+  let odds = 2.00;
+  const oddsMatch = text.match(/([\d,]+(?:\.\d+)?)\s*(?:odds|odd|x)\b/i) || text.match(/@\s*([\d,]+(?:\.\d+)?)/i);
+  if (oddsMatch) {
+    const cleanNum = oddsMatch[1].replace(/,/g, '');
+    const parsedOdds = parseFloat(cleanNum);
+    if (!isNaN(parsedOdds) && parsedOdds > 1.0) {
+      odds = parsedOdds;
+    }
+  }
+
+  // 3. Extract codes
+  const foundCodes = [];
+
+  // Bet9ja: starts with 5W followed by 5 alphanumeric characters (e.g. 5WGQPQ3)
+  const bet9jaMatches = text.match(/\b(5W[A-Z0-9]{5})\b/gi);
+  if (bet9jaMatches) {
+    for (const code of bet9jaMatches) {
+      foundCodes.push({
+        code: code.toUpperCase(),
+        bookmaker: 'bet9ja',
+        punterName,
+        punterId,
+        odds,
+        marketCategory: 'Bet9ja Value Ticket'
+      });
+    }
+  }
+
+  // SportyBet / Football.com: 6 alphanumeric characters (must contain at least one number and one letter, not common words)
+  const ignoredWords = new Set([
+    'BET9JA', 'SPORTY', 'SPORTS', 'TICKET', 'BANKER', 'SOCCER', 'TODAY', 'BETTING', 
+    'FRIDAY', 'SUNDAY', 'MONDAY', 'STREAM', 'FOLLOW', 'WINNER', 'CHANCE', 'MARKET', 
+    'ONLINE', 'MOBILE', 'FOOTY', 'FOOTBALL', 'PROFIT', 'WEALTH', 'ROLLOVER', 'MONSTER',
+    'JACKPOT', 'STRIKE', 'UPDATE', 'LOADED', 'BOOKING', 'CHALLENGE', 'TELEGRAM', 'TWITTER'
+  ]);
+  const sportyMatches = text.match(/\b([A-Z0-9]{6})\b/gi);
+  if (sportyMatches) {
+    for (const raw of sportyMatches) {
+      const code = raw.toUpperCase();
+      if (!ignoredWords.has(code) && !code.startsWith('5W') && /[0-9]/.test(code) && /[A-Z]/.test(code)) {
+        // Add SportyBet slip
+        foundCodes.push({
+          code,
+          bookmaker: 'sportybet',
+          punterName,
+          punterId,
+          odds,
+          marketCategory: 'SportyBet Multiplier Slip'
+        });
+        // User rule: SportyBet & Football.com share exact same codes, create twin!
+        foundCodes.push({
+          code,
+          bookmaker: 'footballcom',
+          punterName,
+          punterId,
+          odds,
+          marketCategory: 'Football.com Twin Multiplier'
+        });
+      }
+    }
+  }
+
+  // 1xBet: 5 uppercase alphanumeric
+  const onexMatches = text.match(/\b([A-Z0-9]{5})\b/gi);
+  if (onexMatches && combined.includes('1x')) {
+    for (const raw of onexMatches) {
+      const code = raw.toUpperCase();
+      if (!['TODAY', 'GAMES', 'MATCH'].includes(code)) {
+        foundCodes.push({
+          code,
+          bookmaker: '1xbet',
+          punterName,
+          punterId,
+          odds,
+          marketCategory: '1xBet High-Multiplier Slip'
+        });
+      }
+    }
+  }
+
+  return { punterName, punterId, codes: foundCodes };
+}
+
+async function sendTelegramReply(botToken, chatId, text) {
+  try {
+    await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: chatId,
+        text,
+        parse_mode: 'HTML'
+      })
+    });
+  } catch (err) {
+    console.error('Telegram reply error:', err);
+  }
+}
+
