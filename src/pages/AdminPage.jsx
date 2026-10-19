@@ -9,7 +9,9 @@ import {
   Search, ExternalLink
 } from 'lucide-react';
 
-const MASTER_PIN = 'bryme2026';
+const getStoredMasterPin = () => {
+  return localStorage.getItem('bryme_master_pin') || 'bryme2026';
+};
 
 const MARKET_PRESETS = [
   'Over 1.5 Goals High-Frequency Radar',
@@ -61,6 +63,10 @@ export default function AdminPage({ onNavigate }) {
     addMarket,
     updateMarket,
     deleteMarket,
+    marketCodes,
+    addMarketCode,
+    updateMarketCode,
+    deleteMarketCode,
     resetToDefaults 
   } = usePredictions();
 
@@ -229,7 +235,7 @@ export default function AdminPage({ onNavigate }) {
   // ── AUTHENTICATION ──
   const handlePinSubmit = (e) => {
     e.preventDefault();
-    if (pinInput.trim() === MASTER_PIN) {
+    if (pinInput.trim() === getStoredMasterPin()) {
       setIsAuthenticated(true);
       sessionStorage.setItem('bryme_admin_authed', 'true');
       setPinError(false);
@@ -243,6 +249,66 @@ export default function AdminPage({ onNavigate }) {
     setIsAuthenticated(false);
     sessionStorage.removeItem('bryme_admin_authed');
     setPinInput('');
+  };
+
+  const [showChangePin, setShowChangePin] = useState(false);
+  const [newMasterPin, setNewMasterPin] = useState('');
+
+  const handleChangePin = (e) => {
+    e.preventDefault();
+    if (!newMasterPin.trim()) return;
+    localStorage.setItem('bryme_master_pin', newMasterPin.trim());
+    showToast('Master Security PIN successfully changed!');
+    setNewMasterPin('');
+    setShowChangePin(false);
+  };
+
+  // ── MARKET BOOKING CODES FORM STATE ──
+  const [selectedMarketForCode, setSelectedMarketForCode] = useState('over-15-goals');
+  const [marketCodeFilter, setMarketCodeFilter] = useState('all');
+  const [marketCodeForm, setMarketCodeForm] = useState({
+    code: '',
+    odds: '47.00',
+    bookmaker: 'sportybet',
+    title: '',
+    eventsCount: 8
+  });
+
+  const handleAddMarketBookingCode = (e) => {
+    e.preventDefault();
+    if (!marketCodeForm.code.trim()) return;
+
+    const bNameMap = {
+      sportybet: 'SportyBet',
+      bet9ja: 'Bet9ja',
+      '1xbet': '1xBet',
+      msport: 'MSport',
+      betking: 'BetKing'
+    };
+
+    const targetMarket = (markets || []).find(m => m.id === selectedMarketForCode || m.slug === selectedMarketForCode);
+    const newEntry = {
+      id: `mcode-${Date.now()}`,
+      marketId: selectedMarketForCode,
+      code: marketCodeForm.code.trim().toUpperCase(),
+      odds: parseFloat(marketCodeForm.odds) || 2.00,
+      bookmaker: marketCodeForm.bookmaker,
+      bookmakerName: bNameMap[marketCodeForm.bookmaker] || marketCodeForm.bookmaker,
+      title: marketCodeForm.title.trim() || `${targetMarket?.name || 'Market'} Value Slip`,
+      eventsCount: parseInt(marketCodeForm.eventsCount, 10) || 4,
+      status: 'active',
+      dropTime: 'Today'
+    };
+
+    addMarketCode(newEntry);
+    showToast(`Code ${newEntry.code} (${newEntry.odds}x) added to ${targetMarket?.name || 'market'}!`);
+    setMarketCodeForm({
+      code: '',
+      odds: '2.50',
+      bookmaker: 'sportybet',
+      title: '',
+      eventsCount: 4
+    });
   };
 
   // ── HANDLERS ──
@@ -394,7 +460,7 @@ export default function AdminPage({ onNavigate }) {
                 type="password"
                 value={pinInput}
                 onChange={(e) => { setPinInput(e.target.value); setPinError(false); }}
-                placeholder="Enter PIN (e.g. bryme2026)"
+                placeholder="••••••••"
                 autoFocus
                 className="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-[#162238] text-slate-900 dark:text-white font-mono text-center tracking-widest text-lg focus:outline-none focus:border-[#E41B13]"
               />
@@ -416,7 +482,10 @@ export default function AdminPage({ onNavigate }) {
           </form>
 
           <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-400">
-            <span>Owner PIN: <code className="bg-slate-100 dark:bg-[#162238] px-1.5 py-0.5 rounded text-[#E41B13] font-mono">bryme2026</code></span>
+            <span className="flex items-center gap-1 text-[11px] font-mono">
+              <Lock className="w-3.5 h-3.5 text-slate-500" />
+              <span>Encrypted Owner Access</span>
+            </span>
             <button onClick={() => onNavigate('home')} className="text-[#E41B13] font-bold hover:underline">
               Return Home &rarr;
             </button>
@@ -458,6 +527,14 @@ export default function AdminPage({ onNavigate }) {
           </button>
 
           <button
+            onClick={() => setShowChangePin(!showChangePin)}
+            className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-display font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 transition-colors border border-slate-700"
+          >
+            <Lock className="w-3.5 h-3.5 text-amber-400" />
+            <span>Change PIN</span>
+          </button>
+
+          <button
             onClick={handleLogout}
             className="px-3.5 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-display font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 transition-colors shadow-sm"
           >
@@ -466,6 +543,46 @@ export default function AdminPage({ onNavigate }) {
           </button>
         </div>
       </div>
+
+      {/* Change PIN Panel Modal */}
+      {showChangePin && (
+        <form onSubmit={handleChangePin} className="p-4 sm:p-5 rounded-2xl border-2 border-amber-500/60 bg-[#0E1626] text-white shadow-xl space-y-3">
+          <div className="flex items-center justify-between border-b border-slate-800 pb-2">
+            <h3 className="font-display font-black text-sm text-white flex items-center gap-2">
+              <Lock className="w-4 h-4 text-amber-400" />
+              <span>Update Master Security PIN</span>
+            </h3>
+            <button
+              type="button"
+              onClick={() => setShowChangePin(false)}
+              className="text-xs text-slate-400 hover:text-white"
+            >
+              ✕ Close
+            </button>
+          </div>
+
+          <p className="text-xs text-slate-300">
+            Set a new private PIN for the owner deck. This updates your browser's encrypted lock immediately.
+          </p>
+
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+            <input
+              type="password"
+              required
+              value={newMasterPin}
+              onChange={(e) => setNewMasterPin(e.target.value)}
+              placeholder="Enter new private PIN..."
+              className="flex-1 p-2.5 rounded-xl bg-[#162238] border border-slate-700 text-white font-mono text-sm tracking-wider"
+            />
+            <button
+              type="submit"
+              className="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-display font-black text-xs uppercase tracking-wider transition-all shadow-md"
+            >
+              Save New PIN
+            </button>
+          </div>
+        </form>
+      )}
 
       {/* Save Notification Toast */}
       {saveNotification && (
@@ -797,8 +914,9 @@ export default function AdminPage({ onNavigate }) {
                 </label>
                 <input
                   type="text"
-                  value={adForm.sportyAffiliateUrl}
+                  value={adForm.sportyAffiliateUrl || ''}
                   onChange={(e) => setAdForm({ ...adForm, sportyAffiliateUrl: e.target.value })}
+                  placeholder="https://www.sportybet.com/?ref=YOUR_CODE"
                   className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono text-xs"
                 />
               </div>
@@ -809,8 +927,9 @@ export default function AdminPage({ onNavigate }) {
                 </label>
                 <input
                   type="text"
-                  value={adForm.bet9jaAffiliateUrl}
+                  value={adForm.bet9jaAffiliateUrl || ''}
                   onChange={(e) => setAdForm({ ...adForm, bet9jaAffiliateUrl: e.target.value })}
+                  placeholder="https://register.bet9ja.com/?promocode=YOUR_CODE"
                   className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono text-xs"
                 />
               </div>
@@ -821,8 +940,35 @@ export default function AdminPage({ onNavigate }) {
                 </label>
                 <input
                   type="text"
-                  value={adForm.oneXBetAffiliateUrl}
+                  value={adForm.oneXBetAffiliateUrl || ''}
                   onChange={(e) => setAdForm({ ...adForm, oneXBetAffiliateUrl: e.target.value })}
+                  placeholder="https://1xbet.ng/?bf=YOUR_CODE"
+                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono text-xs"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                  MSport Affiliate URL
+                </label>
+                <input
+                  type="text"
+                  value={adForm.msportAffiliateUrl || ''}
+                  onChange={(e) => setAdForm({ ...adForm, msportAffiliateUrl: e.target.value })}
+                  placeholder="https://www.msport.com/?ref=YOUR_CODE"
+                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono text-xs"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                  BetKing Affiliate URL
+                </label>
+                <input
+                  type="text"
+                  value={adForm.betkingAffiliateUrl || ''}
+                  onChange={(e) => setAdForm({ ...adForm, betkingAffiliateUrl: e.target.value })}
+                  placeholder="https://www.betking.com/?aff=YOUR_CODE"
                   className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono text-xs"
                 />
               </div>
@@ -1018,13 +1164,228 @@ export default function AdminPage({ onNavigate }) {
       {activeTab === 'markets-mgr' && (
         <div className="space-y-6">
           
-          {/* Section A: Add / Edit Market Form */}
+          {/* Section 1: ATTACH LIVE BOOKING CODES TO MARKETS */}
+          <form onSubmit={handleAddMarketBookingCode} className="p-5 sm:p-6 rounded-2xl border-2 border-[#E41B13]/40 bg-white dark:bg-[#0E1626] shadow-md space-y-4">
+            <div className="border-b border-slate-100 dark:border-slate-800 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div>
+                <h3 className="font-display font-black text-base text-slate-900 dark:text-white flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#00FF66] animate-ping" />
+                  <span>1. Add Live Booking Slip to Football Market</span>
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                  Attach active codes (e.g. YEYEY, 47 Odds, SportyBet) directly to Over 1.5 Goals, Double Chance, or any market.
+                </p>
+              </div>
+
+              <span className="px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-500 font-mono font-bold text-xs border border-emerald-500/30 self-start sm:self-auto">
+                Total Attached: {marketCodes?.length || 0} Slips
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs">
+              <div className="sm:col-span-2">
+                <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                  Target Football Market
+                </label>
+                <select
+                  value={selectedMarketForCode}
+                  onChange={(e) => setSelectedMarketForCode(e.target.value)}
+                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold"
+                >
+                  {(markets || []).map(m => (
+                    <option key={m.id || m.slug} value={m.id || m.slug}>
+                      {m.name} ({m.category})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                  Bookmaker
+                </label>
+                <select
+                  value={marketCodeForm.bookmaker}
+                  onChange={(e) => setMarketCodeForm({ ...marketCodeForm, bookmaker: e.target.value })}
+                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold"
+                >
+                  <option value="sportybet">🔴 SportyBet</option>
+                  <option value="1xbet">🔵 1xBet</option>
+                  <option value="msport">🟢 MSport</option>
+                  <option value="bet9ja">🟡 Bet9ja</option>
+                  <option value="betking">👑 BetKing</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                  Booking Code
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={marketCodeForm.code}
+                  onChange={(e) => setMarketCodeForm({ ...marketCodeForm, code: e.target.value.toUpperCase() })}
+                  placeholder="e.g. YEYEY"
+                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono font-black uppercase text-base tracking-wider"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                  Total Odds
+                </label>
+                <input
+                  type="number"
+                  step="0.01"
+                  required
+                  value={marketCodeForm.odds}
+                  onChange={(e) => setMarketCodeForm({ ...marketCodeForm, odds: e.target.value })}
+                  placeholder="e.g. 47.00"
+                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono font-black"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                  Number of Games (Legs)
+                </label>
+                <input
+                  type="number"
+                  min="1"
+                  max="40"
+                  required
+                  value={marketCodeForm.eventsCount}
+                  onChange={(e) => setMarketCodeForm({ ...marketCodeForm, eventsCount: e.target.value })}
+                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono font-bold text-center"
+                />
+              </div>
+
+              <div className="sm:col-span-2">
+                <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                  Slip Title / Notes
+                </label>
+                <input
+                  type="text"
+                  value={marketCodeForm.title}
+                  onChange={(e) => setMarketCodeForm({ ...marketCodeForm, title: e.target.value })}
+                  placeholder="e.g. Weekend High-Odds Over 1.5 Goals Wave"
+                  className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-medium"
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800">
+              <span className="text-[11px] font-mono text-slate-500">
+                Punters can click &amp; copy this code on the Market Detail page.
+              </span>
+              <button
+                type="submit"
+                className="px-5 py-2.5 rounded-xl bg-[#E41B13] hover:bg-[#D01710] text-white font-display font-black text-xs uppercase tracking-wider transition-all shadow-md flex items-center gap-2"
+              >
+                <Plus className="w-4 h-4" />
+                <span>Attach Code to Market</span>
+              </button>
+            </div>
+          </form>
+
+          {/* Section 2: LIST OF ATTACHED MARKET CODES */}
+          <div className="p-5 sm:p-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1626] shadow-sm space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-3">
+              <div>
+                <h3 className="font-display font-black text-base text-slate-900 dark:text-white">
+                  2. Active Market Slips Catalogue ({marketCodes?.length || 0})
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  Manage or remove codes attached to specific football markets.
+                </p>
+              </div>
+
+              {/* Filter by market */}
+              <select
+                value={marketCodeFilter}
+                onChange={(e) => setMarketCodeFilter(e.target.value)}
+                className="p-2 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-900 dark:text-white"
+              >
+                <option value="all">View All Markets ({marketCodes?.length || 0})</option>
+                {(markets || []).map(m => (
+                  <option key={m.id || m.slug} value={m.id || m.slug}>
+                    {m.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {(marketCodes || [])
+                .filter(c => marketCodeFilter === 'all' || c.marketId === marketCodeFilter)
+                .map(codeItem => {
+                  const mObj = (markets || []).find(m => m.id === codeItem.marketId || m.slug === codeItem.marketId);
+                  return (
+                    <div
+                      key={codeItem.id}
+                      className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#121B2F] flex flex-col justify-between gap-2 text-xs"
+                    >
+                      <div className="space-y-1">
+                        <div className="flex items-center justify-between">
+                          <span className="px-2 py-0.5 rounded text-[10px] font-mono font-black uppercase bg-slate-200 dark:bg-[#162238] text-slate-900 dark:text-white">
+                            {codeItem.bookmaker}
+                          </span>
+                          <span className="font-mono font-bold text-amber-500">
+                            {codeItem.odds}x Odds
+                          </span>
+                        </div>
+
+                        <div className="font-mono font-black text-base text-slate-900 dark:text-white">
+                          {codeItem.code}
+                        </div>
+
+                        <div className="text-[11px] font-bold text-slate-700 dark:text-slate-300">
+                          {mObj?.name || codeItem.marketId}
+                        </div>
+
+                        <div className="text-[10px] text-slate-400">
+                          {codeItem.title || 'Market Slip'} &bull; {codeItem.eventsCount || 4} Games
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-200 dark:border-slate-800">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            navigator.clipboard.writeText(codeItem.code);
+                            showToast(`Copied ${codeItem.code}`);
+                          }}
+                          className="px-2.5 py-1 rounded-lg bg-white dark:bg-[#162238] font-bold text-slate-700 dark:text-slate-300 hover:text-white"
+                        >
+                          Copy
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (confirm(`Remove code ${codeItem.code}?`)) {
+                              deleteMarketCode(codeItem.id);
+                              showToast(`Code ${codeItem.code} removed.`);
+                            }
+                          }}
+                          className="px-2.5 py-1 rounded-lg text-rose-500 hover:bg-rose-500/10 font-bold"
+                        >
+                          Delete ✕
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+            </div>
+          </div>
+
+          {/* Section 3: Add / Edit Market Form */}
           <form onSubmit={handleMarketSubmit} className="p-5 sm:p-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1626] shadow-sm space-y-4">
             <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
               <div>
                 <h3 className="font-display font-black text-base text-slate-900 dark:text-white flex items-center gap-2">
                   <Plus className="w-4 h-4 text-[#E41B13]" />
-                  <span>{editingMarketId ? `Edit Market: ${marketForm.name}` : 'Add New Football Betting Market'}</span>
+                  <span>{editingMarketId ? `Edit Market: ${marketForm.name}` : '3. Add or Edit Football Market Profile'}</span>
                 </h3>
                 <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                   Full control over hit rates, tactical tips, risk profiles, and typical odds across the 35+ betting markets database.
@@ -1218,62 +1579,84 @@ export default function AdminPage({ onNavigate }) {
                   const q = marketSearch.toLowerCase();
                   return m.name?.toLowerCase().includes(q) || m.category?.toLowerCase().includes(q) || m.description?.toLowerCase().includes(q);
                 })
-                .map((m, idx) => (
-                  <div
-                    key={m.id || m.slug || idx}
-                    className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#121B2F] flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition-all"
-                  >
-                    <div className="min-w-0 space-y-1">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-display font-black text-sm text-slate-900 dark:text-white">
-                          {m.name}
-                        </span>
-                        <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-blue-100 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 font-bold">
-                          {m.category}
-                        </span>
-                        <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 font-black border border-emerald-500/30">
-                          {m.averageHitRate || '70%'} Hit
-                        </span>
-                        <span className="text-[10px] font-mono text-slate-400">
-                          Odds: {m.typicalOddsRange || '1.30 - 1.80'}
-                        </span>
+                .map((m, idx) => {
+                  const attachedCount = (marketCodes || []).filter(c => c.marketId === m.id || c.marketId === m.slug).length;
+                  return (
+                    <div
+                      key={m.id || m.slug || idx}
+                      className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#121B2F] flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition-all"
+                    >
+                      <div className="min-w-0 space-y-1">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="font-display font-black text-sm text-slate-900 dark:text-white">
+                            {m.name}
+                          </span>
+                          <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded bg-blue-100 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 font-bold">
+                            {m.category}
+                          </span>
+                          <span className={`text-[10px] font-mono px-2 py-0.5 rounded font-black border ${
+                            attachedCount > 0 
+                              ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border-emerald-500/30' 
+                              : 'bg-slate-100 dark:bg-slate-800 text-slate-400 border-slate-700/40'
+                          }`}>
+                            {attachedCount} {attachedCount === 1 ? 'Slip' : 'Slips'}
+                          </span>
+                          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 font-black border border-emerald-500/30">
+                            {m.averageHitRate || '70%'} Hit
+                          </span>
+                          <span className="text-[10px] font-mono text-slate-400">
+                            Odds: {m.typicalOddsRange || '1.30 - 1.80'}
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-600 dark:text-slate-400 line-clamp-1">
+                          {m.description || m.tacticalTip}
+                        </p>
                       </div>
-                      <p className="text-xs text-slate-600 dark:text-slate-400 line-clamp-1">
-                        {m.description || m.tacticalTip}
-                      </p>
+
+                      <div className="flex items-center gap-2 self-end sm:self-auto flex-shrink-0">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSelectedMarketForCode(m.id || m.slug);
+                            window.scrollTo({ top: 300, behavior: 'smooth' });
+                            showToast(`Selected "${m.name}". Enter code and odds in form above.`);
+                          }}
+                          className="px-2.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-display font-bold text-xs flex items-center gap-1 shadow-sm"
+                        >
+                          <span>➕ Add Code</span>
+                        </button>
+
+                        <button
+                          onClick={() => handleStartEditMarket(m)}
+                          className="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-display font-bold text-xs transition-colors"
+                        >
+                          Edit
+                        </button>
+
+                        <button
+                          onClick={() => onNavigate(`market/${m.id || m.slug}`)}
+                          className="p-1.5 rounded-xl bg-slate-200 dark:bg-[#1A2438] text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
+                          title="View Public Market Page"
+                        >
+                          <ExternalLink className="w-3.5 h-3.5" />
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            if (confirm(`Are you sure you want to delete market "${m.name}"?`)) {
+                              deleteMarket(m.id || m.slug);
+                              showToast(`Market "${m.name}" deleted.`);
+                            }
+                          }}
+                          className="p-1.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 hover:bg-rose-100"
+                          title="Delete Market"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
                     </div>
-
-                    <div className="flex items-center gap-2 self-end sm:self-auto flex-shrink-0">
-                      <button
-                        onClick={() => handleStartEditMarket(m)}
-                        className="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-display font-bold text-xs transition-colors"
-                      >
-                        Edit Market
-                      </button>
-
-                      <button
-                        onClick={() => onNavigate(`market/${m.id || m.slug}`)}
-                        className="p-1.5 rounded-xl bg-slate-200 dark:bg-[#1A2438] text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
-                        title="View Public Market Page"
-                      >
-                        <ExternalLink className="w-3.5 h-3.5" />
-                      </button>
-
-                      <button
-                        onClick={() => {
-                          if (confirm(`Are you sure you want to delete market "${m.name}"?`)) {
-                            deleteMarket(m.id || m.slug);
-                            showToast(`Market "${m.name}" deleted.`);
-                          }
-                        }}
-                        className="p-1.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 hover:bg-rose-100"
-                        title="Delete Market"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
             </div>
           </div>
 

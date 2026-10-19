@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 
 export default function MarketsDirectoryPage({ onNavigate }) {
-  const { markets } = usePredictions();
+  const { markets, marketCodes } = usePredictions();
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('hitRate'); // 'hitRate', 'oddsAsc', 'risk', 'name'
@@ -316,9 +316,19 @@ export default function MarketsDirectoryPage({ onNavigate }) {
 
                 {/* Footer Action */}
                 <div className="pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
-                  <span className="text-[10px] text-slate-400 font-mono">
-                    {ticketsInMarket.length} Active {ticketsInMarket.length === 1 ? 'Slip' : 'Slips'}
-                  </span>
+                  {(() => {
+                    const codesInMarket = (marketCodes || []).filter(c => c.marketId === market.id || c.marketId === market.slug);
+                    const totalCount = ticketsInMarket.length + codesInMarket.length;
+                    return (
+                      <span className="text-[10px] font-mono">
+                        {totalCount > 0 ? (
+                          <span className="text-emerald-500 font-bold">🔥 {totalCount} Active {totalCount === 1 ? 'Slip' : 'Slips'}</span>
+                        ) : (
+                          <span className="text-slate-400">0 Slips</span>
+                        )}
+                      </span>
+                    );
+                  })()}
 
                   <span className="text-xs font-display font-bold text-[#E41B13] dark:text-rose-400 flex items-center gap-1 group-hover:translate-x-1 transition-transform">
                     <span>Inspect Market</span>

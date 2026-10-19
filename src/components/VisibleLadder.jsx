@@ -72,7 +72,7 @@ export const LADDER_18_STEPS = [
 ];
 
 export default function VisibleLadder({ onNavigate }) {
-  const { ladder, triggerCopyModal } = usePredictions();
+  const { ladder, triggerCopyModal, adSettings } = usePredictions();
   const currentStep = ladder?.currentDay || 4;
   const currentPot = ladder?.currentBalance || 3375;
   const sportyCode = ladder?.sportyCode || 'BC4-LAD50-D4';
@@ -85,7 +85,7 @@ export default function VisibleLadder({ onNavigate }) {
 
   const handleCopy = (code, type) => {
     if (triggerCopyModal) {
-      triggerCopyModal(code, type === 'sporty' ? 'SportyBet' : 'Bet9ja', `Rollover Step ${currentStep}`, '1.50');
+      triggerCopyModal(code, type === 'sporty' ? 'SportyBet' : 'Bet9ja', `BRYME Rollover Step ${currentStep}`, '1.50');
     } else {
       navigator.clipboard.writeText(code);
     }
@@ -103,7 +103,7 @@ export default function VisibleLadder({ onNavigate }) {
   return (
     <div className="space-y-4">
       
-      {/* ── 1. SPORTYBET HERO BANNER ── */}
+      {/* ── 1. BRYME ROLLOVER HERO BANNER ── */}
       <div className="rounded-2xl border-2 border-[#E41B13] bg-[#0A0F1D] text-white overflow-hidden shadow-2xl relative">
         
         {/* Glow Effects */}
@@ -115,9 +115,9 @@ export default function VisibleLadder({ onNavigate }) {
           <div className="flex items-center gap-2.5 flex-wrap">
             <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-black/40 text-white font-display font-black text-xs uppercase tracking-wider border border-white/20 shadow-sm">
               <span className="w-2 h-2 rounded-full bg-[#00FF66] animate-ping" />
-              SPORTYBET ROLLOVER &bull; RUN #50
+              BRYME ROLLOVER &bull; RUN #50
             </span>
-            <span className="px-2 py-0.5 rounded bg-black/30 text-amber-300 font-mono font-bold text-xs">
+            <span className="px-2.5 py-0.5 rounded bg-black/40 text-amber-300 font-mono font-black text-xs border border-amber-400/30">
               STEP {currentStep} OF 18
             </span>
           </div>
@@ -137,12 +137,12 @@ export default function VisibleLadder({ onNavigate }) {
               <div className="flex items-center gap-2">
                 <span className="text-2xl sm:text-3xl">🪜</span>
                 <h1 className="text-2xl sm:text-3xl lg:text-4xl font-display font-black text-white tracking-tight">
-                  The ₦1,000 &rarr; ₦1,000,000 Ladder
+                  BRYME 18-Step Rollover Challenge
                 </h1>
               </div>
 
               <p className="text-xs sm:text-sm text-slate-300 max-w-xl leading-relaxed">
-                <strong className="text-white">18 consecutive wins is the ultimate goal.</strong> We roll daily 1.50x banker selections with 2 built-in <strong>Safe Haven Cashouts</strong> at Step 6 and Step 12 so you take profit into your pocket along the journey.
+                <strong className="text-white">₦1,000 Starting Stake &rarr; ₦1,000,000 Target Pot.</strong> 18 consecutive 1.50x banker wins with 2 built-in <strong>Safe Haven Cashouts</strong> at Step 6 and Step 12 so you secure real profit into your pocket along the journey.
               </p>
 
               {/* Progress Summary Pills */}
@@ -154,7 +154,7 @@ export default function VisibleLadder({ onNavigate }) {
 
                 <span className="px-2.5 py-1 rounded-lg bg-[#E41B13]/20 text-rose-300 border border-[#E41B13]/30 flex items-center gap-1.5 font-bold">
                   <Flame className="w-3.5 h-3.5 text-[#E41B13] animate-pulse" />
-                  <span>Step {currentStep} In Play</span>
+                  <span>Step {currentStep} In Play Today</span>
                 </span>
 
                 <span className="px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/30 flex items-center gap-1.5 font-bold">
@@ -188,7 +188,39 @@ export default function VisibleLadder({ onNavigate }) {
 
           </div>
 
-          {/* ── 2. SPORTYBET 1-TAP BOOKING CODE BAR ── */}
+          {/* ── TODAY'S SELECTION SPOTLIGHT ── */}
+          <div className="p-3.5 sm:p-4 rounded-xl bg-gradient-to-r from-amber-500/15 via-red-500/10 to-transparent border border-amber-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <span className="px-2 py-0.5 rounded bg-amber-500 text-slate-950 font-mono font-black text-[10px] uppercase">
+                  Today's Step {currentStep} Pick
+                </span>
+                <span className="text-xs font-mono text-amber-300 font-bold">
+                  Target Odds: 1.50x
+                </span>
+              </div>
+              <div className="font-display font-black text-sm sm:text-base text-white">
+                {LADDER_18_STEPS.find(s => s.step === currentStep)?.match || 'Arsenal vs Everton + Bayern vs Stuttgart (Over 1.5 Goals & DC)'}
+              </div>
+              <div className="text-[11px] font-mono text-slate-300">
+                Current Pot Stake: <strong>₦{currentPot.toLocaleString()}</strong> &rarr; Target Return: <strong>₦{Math.round(currentPot * 1.5).toLocaleString()}</strong>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <a
+                href={adSettings?.sportyAffiliateUrl || 'https://www.sportybet.com/ng/'}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-3.5 py-2 rounded-xl bg-[#E41B13] hover:bg-[#D01710] text-white font-display font-black text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-md"
+              >
+                <span>Load on SportyBet</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </a>
+            </div>
+          </div>
+
+          {/* ── 2. BRYME ROLLOVER 1-TAP BOOKING CODE BAR ── */}
           <div className="mt-4 pt-3 border-t border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white/5 rounded-xl p-3 sm:p-4">
             
             {/* Bookmaker Tabs */}

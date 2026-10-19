@@ -1,20 +1,36 @@
 import React from 'react';
+import { usePredictions } from '../context/PredictionsContext';
 import { Check, Copy, ExternalLink, Share2, X, Sparkles, ShieldCheck } from 'lucide-react';
 
 export default function CopySuccessModal({ isOpen, onClose, code, bookmaker, title, odds }) {
+  const { adSettings } = usePredictions();
+
   if (!isOpen || !code) return null;
 
-  const bookieName = bookmaker?.toLowerCase().includes('sporty') 
+  const bLower = bookmaker?.toLowerCase() || '';
+  const bookieName = bLower.includes('sporty') 
     ? 'SportyBet' 
-    : bookmaker?.toLowerCase().includes('bet9ja') 
+    : bLower.includes('bet9ja') 
     ? 'Bet9ja' 
+    : bLower.includes('msport')
+    ? 'MSport'
+    : bLower.includes('1x')
+    ? '1xBet'
+    : bLower.includes('king')
+    ? 'BetKing'
     : bookmaker || 'Bookmaker';
 
-  const bookieUrl = bookmaker?.toLowerCase().includes('sporty')
-    ? 'https://www.sportybet.com/ng/'
-    : bookmaker?.toLowerCase().includes('bet9ja')
-    ? 'https://sports.bet9ja.com/'
-    : 'https://1xbet.ng/';
+  const bookieUrl = bLower.includes('sporty')
+    ? (adSettings?.sportyAffiliateUrl || 'https://www.sportybet.com/ng/')
+    : bLower.includes('bet9ja')
+    ? (adSettings?.bet9jaAffiliateUrl || 'https://register.bet9ja.com/')
+    : bLower.includes('msport')
+    ? (adSettings?.msportAffiliateUrl || 'https://www.msport.com/')
+    : bLower.includes('1x')
+    ? (adSettings?.oneXBetAffiliateUrl || 'https://1xbet.ng/')
+    : bLower.includes('king')
+    ? (adSettings?.betkingAffiliateUrl || 'https://www.betking.com/')
+    : (adSettings?.sportyAffiliateUrl || 'https://www.sportybet.com/ng/');
 
   const shareText = `🔥 BRYME PREDICTIONS: Verified ${bookieName} Code Dropped!
 🎟️ Booking Code: ${code}

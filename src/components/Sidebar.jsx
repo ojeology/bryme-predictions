@@ -53,7 +53,7 @@ export default function Sidebar({ currentRoute, onNavigate }) {
         <div className="flex items-center justify-between">
           <span className="inline-flex items-center gap-1 text-[10px] font-display font-black uppercase tracking-wider bg-[#E41B13] text-white px-2 py-0.5 rounded-full shadow-sm">
             <span className="w-1.5 h-1.5 rounded-full bg-[#00FF66] animate-ping"></span>
-            SportyBet Rollover
+            BRYME Rollover
           </span>
           <span className="text-[10px] font-mono text-amber-400 font-bold">
             Day {currentDay}/18

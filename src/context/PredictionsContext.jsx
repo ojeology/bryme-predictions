@@ -4,6 +4,7 @@ import { DAILY_BOOKING_TICKETS as DEFAULT_TICKETS } from '../data/bookingTickets
 import { INITIAL_CODE_CATALOGUE } from '../data/catalogueCodes';
 import { INITIAL_PUNTERS } from '../data/punters';
 import { MARKETS as DEFAULT_MARKETS } from '../data/markets';
+import { INITIAL_MARKET_CODES } from '../data/marketCodes';
 
 const PredictionsContext = createContext(null);
 
@@ -15,6 +16,7 @@ const STORAGE_KEY_ANNOUNCEMENTS = 'bryme_announcements_v1';
 const STORAGE_KEY_MARKETS = 'bryme_markets_v2';
 const STORAGE_KEY_WHALE = 'bryme_whale_slip_v1';
 const STORAGE_KEY_ADS = 'bryme_ad_settings_v1';
+const STORAGE_KEY_MARKET_CODES = 'bryme_market_codes_v2';
 
 export const DEFAULT_WHALE_SLIP = {
   id: 'whale-2-odds-today',
@@ -60,7 +62,9 @@ export const DEFAULT_AD_SETTINGS = {
   adsterraPopunder: '',
   sportyAffiliateUrl: 'https://www.sportybet.com/',
   bet9jaAffiliateUrl: 'https://register.bet9ja.com/',
-  oneXBetAffiliateUrl: 'https://1xbet.ng/'
+  oneXBetAffiliateUrl: 'https://1xbet.ng/',
+  msportAffiliateUrl: 'https://www.msport.com/',
+  betkingAffiliateUrl: 'https://www.betking.com/'
 };
 
 export function PredictionsProvider({ children }) {
@@ -101,6 +105,20 @@ export function PredictionsProvider({ children }) {
       return saved ? JSON.parse(saved) : INITIAL_PUNTERS;
     } catch (e) {
       return INITIAL_PUNTERS;
+    }
+  });
+
+  // 5. Market Specific Booking Codes State (Slips attached to Over 1.5, Double Chance, etc.)
+  const [marketCodes, setMarketCodesState] = useState(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY_MARKET_CODES);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+      return INITIAL_MARKET_CODES;
+    } catch (e) {
+      return INITIAL_MARKET_CODES;
     }
   });
 
@@ -299,6 +317,25 @@ export function PredictionsProvider({ children }) {
     } catch (e) {}
   }, [adSettings]);
 
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY_MARKET_CODES, JSON.stringify(marketCodes));
+    } catch (e) {}
+  }, [marketCodes]);
+
+  // ── MARKET BOOKING CODES CRUD ACTIONS ──
+  const addMarketCode = (newEntry) => {
+    setMarketCodesState(prev => [newEntry, ...prev]);
+  };
+
+  const updateMarketCode = (id, updatedFields) => {
+    setMarketCodesState(prev => prev.map(item => item.id === id ? { ...item, ...updatedFields } : item));
+  };
+
+  const deleteMarketCode = (id) => {
+    setMarketCodesState(prev => prev.filter(item => item.id !== id));
+  };
+
   // ── WHALE SLIP ACTIONS ──
   const updateWhaleSlip = (newSlip) => {
     setWhaleSlipState(prev => ({ ...prev, ...newSlip }));
@@ -442,6 +479,7 @@ export function PredictionsProvider({ children }) {
     localStorage.removeItem(STORAGE_KEY_MARKETS);
     localStorage.removeItem(STORAGE_KEY_WHALE);
     localStorage.removeItem(STORAGE_KEY_ADS);
+    localStorage.removeItem(STORAGE_KEY_MARKET_CODES);
   };
 
   return (
@@ -452,6 +490,10 @@ export function PredictionsProvider({ children }) {
       punters,
       announcements,
       markets,
+      marketCodes,
+      addMarketCode,
+      updateMarketCode,
+      deleteMarketCode,
       whaleSlip,
       adSettings,
       updateWhaleSlip,
