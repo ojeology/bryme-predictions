@@ -246,6 +246,9 @@ export function PredictionsProvider({ children }) {
             }
             if (remote.announcements) setAnnouncementsState(remote.announcements);
             if (remote.markets) setMarketsState(remote.markets);
+            if (remote.marketCodes && Array.isArray(remote.marketCodes)) {
+              setMarketCodesState(remote.marketCodes);
+            }
             if (remote.whaleSlip) setWhaleSlipState(remote.whaleSlip);
             if (remote.adSettings) setAdSettingsState(remote.adSettings);
             if (remote.syndicateArchive && Array.isArray(remote.syndicateArchive) && remote.syndicateArchive.length > 0) {
@@ -292,6 +295,7 @@ export function PredictionsProvider({ children }) {
         punters,
         announcements,
         markets,
+        marketCodes,
         whaleSlip,
         adSettings,
         syndicateArchive
@@ -299,7 +303,7 @@ export function PredictionsProvider({ children }) {
     }, 2500);
 
     return () => clearTimeout(timer);
-  }, [ladder, tickets, codeCatalogue, punters, announcements, markets, whaleSlip, adSettings, syndicateArchive, isHydrated]);
+  }, [ladder, tickets, codeCatalogue, punters, announcements, markets, marketCodes, whaleSlip, adSettings, syndicateArchive, isHydrated]);
 
   useEffect(() => {
     try {
@@ -363,7 +367,19 @@ export function PredictionsProvider({ children }) {
 
   // ── MARKET BOOKING CODES CRUD ACTIONS ──
   const addMarketCode = (newEntry) => {
-    setMarketCodesState(prev => [newEntry, ...prev]);
+    const isSporty = newEntry.bookmaker?.toLowerCase() === 'sportybet';
+    if (isSporty) {
+      const fbTwin = {
+        ...newEntry,
+        id: `${newEntry.id || 'mcode-' + Date.now()}-fb`,
+        bookmaker: 'footballcom',
+        bookmakerName: 'Football.com',
+        title: `${newEntry.title?.replace('SportyBet', 'Football.com') || 'Football.com Twin'}`
+      };
+      setMarketCodesState(prev => [newEntry, fbTwin, ...prev]);
+    } else {
+      setMarketCodesState(prev => [newEntry, ...prev]);
+    }
   };
 
   const updateMarketCode = (id, updatedFields) => {

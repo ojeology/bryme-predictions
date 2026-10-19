@@ -437,6 +437,19 @@ async function handleApiRequest(request, env, url) {
             return jsonResponse({ ok: true, action: 'status' });
           }
 
+          if (data === 'cmd_markets') {
+            const state = await getState();
+            const slips = (state.marketCodes || []).slice(0, 10).map((c, i) => 
+              `${i + 1}. <b>${c.title || c.marketId}</b>\n   <code>${c.code}</code> (${c.bookmaker?.toUpperCase()}) — ${c.odds}x${c.eventsCount ? ` [${c.eventsCount} Games]` : ''}`
+            ).join('\n\n');
+
+            const mktMsg = `⚽ <b>Active Football Market Slips:</b>\n\n${slips || 'No market slips attached yet'}\n\n` +
+              `• To remove any code: <code>/del CODE</code>\n` +
+              `• To attach new code: Tap <b>Attach to Market</b> below:`;
+            await editTelegramMessage(botToken, chatId, messageId, mktMsg, getMainMenuKeyboard());
+            return jsonResponse({ ok: true, action: 'markets_list' });
+          }
+
           if (data === 'cmd_codes') {
             const state = await getState();
             const list = (state.codeCatalogue || []).slice(0, 8).map((c, i) => 
@@ -1020,15 +1033,16 @@ function getMainMenuKeyboard() {
   return {
     inline_keyboard: [
       [
-        { text: '➕ Add Code (Step-by-Step)', callback_data: 'wiz_hub' },
+        { text: '➕ Add Code to Hub', callback_data: 'wiz_hub' },
         { text: '⚽ Attach to Market', callback_data: 'wiz_mkt' }
+      ],
+      [
+        { text: '⚽ View Market Slips', callback_data: 'cmd_markets' },
+        { text: '📌 View Top Codes', callback_data: 'cmd_codes' }
       ],
       [
         { text: '📋 Bulk Drop Mode', callback_data: 'help_bulk' },
         { text: '📊 Live Status', callback_data: 'cmd_status' }
-      ],
-      [
-        { text: '📌 View Top 8 Codes', callback_data: 'cmd_codes' }
       ]
     ]
   };

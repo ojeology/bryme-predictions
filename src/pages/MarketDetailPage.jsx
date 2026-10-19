@@ -6,11 +6,11 @@ import TicketCard from '../components/TicketCard';
 import AdBanner from '../components/AdBanner';
 import { 
   ArrowLeft, Layers, Info, CheckCircle2, Percent, ShieldCheck, 
-  Flame, Copy, Check, ExternalLink, Zap, Clock, Filter
+  Flame, Copy, Check, ExternalLink, Zap, Clock, Filter, Plus, Trash2, X
 } from 'lucide-react';
 
 export default function MarketDetailPage({ marketId, slug, onNavigate }) {
-  const { markets, marketCodes, triggerCopyModal, adSettings } = usePredictions();
+  const { markets, marketCodes, addMarketCode, deleteMarketCode, triggerCopyModal, adSettings } = usePredictions();
   const currentKey = marketId || slug;
   const marketList = markets && markets.length > 0 ? markets : FALLBACK_MARKETS;
   const market = marketList.find(m => m.id === currentKey || m.slug === currentKey) || marketList[0];
@@ -26,6 +26,46 @@ export default function MarketDetailPage({ marketId, slug, onNavigate }) {
 
   const [selectedBookmaker, setSelectedBookmaker] = useState('all');
   const [copiedCodeId, setCopiedCodeId] = useState(null);
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [newCodeForm, setNewCodeForm] = useState({
+    bookmaker: 'sportybet',
+    code: '',
+    odds: '',
+    gamesCount: ''
+  });
+
+  const handleAddSubmit = (e) => {
+    e.preventDefault();
+    if (!newCodeForm.code.trim()) return;
+
+    const cleanCode = newCodeForm.code.trim().toUpperCase();
+    const cleanOdds = parseFloat(newCodeForm.odds) || 2.00;
+    const cleanGames = newCodeForm.gamesCount.trim() ? (parseInt(newCodeForm.gamesCount, 10) || null) : null;
+    const bName = newCodeForm.bookmaker === 'footballcom' ? 'Football.com' : newCodeForm.bookmaker === 'bet9ja' ? 'Bet9ja' : newCodeForm.bookmaker === '1xbet' ? '1xBet' : newCodeForm.bookmaker === 'betking' ? 'BetKing' : 'SportyBet';
+
+    addMarketCode({
+      id: `mcode-${Date.now()}-${cleanCode.toLowerCase()}`,
+      marketId: market.id || market.slug,
+      code: cleanCode,
+      odds: cleanOdds,
+      bookmaker: newCodeForm.bookmaker,
+      bookmakerName: bName,
+      title: `${market.name} (${cleanOdds}x ${bName})`,
+      eventsCount: cleanGames,
+      status: 'active',
+      dropTime: 'Just Now'
+    });
+
+    setNewCodeForm({ bookmaker: 'sportybet', code: '', odds: '', gamesCount: '' });
+    setShowAddForm(false);
+  };
+
+  const handleDeleteCode = (e, codeId, codeText) => {
+    e.stopPropagation();
+    if (window.confirm(`Are you sure you want to remove code ${codeText} from this market?`)) {
+      deleteMarketCode(codeId);
+    }
+  };
 
   const filteredCodes = attachedCodes.filter(c => {
     if (selectedBookmaker === 'all') return true;
@@ -158,9 +198,17 @@ export default function MarketDetailPage({ marketId, slug, onNavigate }) {
             </p>
           </div>
 
-          {/* Bookmaker Filter Pills */}
-          <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none self-start sm:self-auto">
-            {['all', 'sportybet', '1xbet', 'msport', 'bet9ja'].map(b => (
+          {/* Bookmaker Filter Pills & Add Button */}
+          <div className="flex items-center gap-2 overflow-x-auto scrollbar-none self-start sm:self-auto">
+            <button
+              onClick={() => setShowAddForm(!showAddForm)}
+              className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-display font-black text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-sm transition-all"
+            >
+              {showAddForm ? <X className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
+              <span>{showAddForm ? 'Cancel' : 'Add Code to Market'}</span>
+            </button>
+
+            {['all', 'sportybet', 'footballcom', '1xbet', 'msport', 'bet9ja'].map(b => (
               <button
                 key={b}
                 onClick={() => setSelectedBookmaker(b)}
@@ -170,11 +218,98 @@ export default function MarketDetailPage({ marketId, slug, onNavigate }) {
                     : 'bg-slate-100 dark:bg-[#162238] text-slate-600 dark:text-slate-400 hover:text-white'
                 }`}
               >
-                {b === 'all' ? 'All Books' : b}
+                {b === 'all' ? 'All' : b === 'footballcom' ? 'Football.com' : b}
               </button>
             ))}
           </div>
         </div>
+
+        {/* ── INLINE ADD CODE FORM ── */}
+        {showAddForm && (
+          <form 
+            onSubmit={handleAddSubmit}
+            className="p-4 rounded-2xl border-2 border-emerald-500/40 bg-emerald-50/40 dark:bg-emerald-950/20 backdrop-blur-sm space-y-3 shadow-md"
+          >
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-mono font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
+                ➕ Add New Code to {market.name}
+              </span>
+              <span className="text-[11px] text-slate-400 font-mono">
+                Auto-creates Football.com twin if SportyBet
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
+              <div>
+                <label className="text-[11px] font-mono font-bold text-slate-500 uppercase block mb-1">Bookmaker</label>
+                <select
+                  value={newCodeForm.bookmaker}
+                  onChange={(e) => setNewCodeForm({ ...newCodeForm, bookmaker: e.target.value })}
+                  className="w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-sm font-bold text-slate-900 dark:text-white"
+                >
+                  <option value="sportybet">🔴 SportyBet</option>
+                  <option value="footballcom">🟢 Football.com</option>
+                  <option value="bet9ja">🟡 Bet9ja</option>
+                  <option value="1xbet">🔵 1xBet</option>
+                  <option value="betking">👑 BetKing</option>
+                  <option value="msport">⚡ MSport</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="text-[11px] font-mono font-bold text-slate-500 uppercase block mb-1">Booking Code *</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. PZ6US6"
+                  value={newCodeForm.code}
+                  onChange={(e) => setNewCodeForm({ ...newCodeForm, code: e.target.value.toUpperCase() })}
+                  className="w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-sm font-mono font-black text-slate-900 dark:text-white uppercase"
+                />
+              </div>
+
+              <div>
+                <label className="text-[11px] font-mono font-bold text-slate-500 uppercase block mb-1">Total Odds *</label>
+                <input
+                  type="number"
+                  step="0.01"
+                  required
+                  placeholder="e.g. 2.50"
+                  value={newCodeForm.odds}
+                  onChange={(e) => setNewCodeForm({ ...newCodeForm, odds: e.target.value })}
+                  className="w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-sm font-mono font-bold text-slate-900 dark:text-white"
+                />
+              </div>
+
+              <div>
+                <label className="text-[11px] font-mono font-bold text-slate-500 uppercase block mb-1">Games Count (Optional)</label>
+                <input
+                  type="number"
+                  placeholder="Leave empty to skip"
+                  value={newCodeForm.gamesCount}
+                  onChange={(e) => setNewCodeForm({ ...newCodeForm, gamesCount: e.target.value })}
+                  className="w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-sm font-mono font-bold text-slate-900 dark:text-white"
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => setShowAddForm(false)}
+                className="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-500 hover:text-slate-900 dark:hover:text-white"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-display font-black text-xs uppercase tracking-wider shadow-sm transition-all"
+              >
+                Publish Code to {market.shortName || market.name}
+              </button>
+            </div>
+          </form>
+        )}
 
         {filteredCodes.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
@@ -255,6 +390,14 @@ export default function MarketDetailPage({ marketId, slug, onNavigate }) {
                       <span>Load</span>
                       <ExternalLink className="w-3.5 h-3.5" />
                     </a>
+
+                    <button
+                      onClick={(e) => handleDeleteCode(e, codeItem.id, codeItem.code)}
+                      className="p-2 rounded-xl bg-rose-50 dark:bg-rose-950/30 hover:bg-rose-100 dark:hover:bg-rose-900/50 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-900 transition-all"
+                      title="Remove code from this market"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
                   </div>
                 </div>
               );
