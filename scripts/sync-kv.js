@@ -15,8 +15,8 @@ const DEFAULT_WHALE_SLIP = {
   confidence: '94%',
   status: 'won', // WON & CASHED OUT
   payoutStatus: 'PAID OUT (₦1,090,000 CASHED)',
-  sportyCode: 'BC4-WHALE',
-  bet9jaCode: 'B9J-WHALE',
+  sportyCode: 'Q7S287',
+  bet9jaCode: '5WGQKM6',
   kickoffTime: 'Settled & Won (Full Time)',
   punterCount: 4210,
   volumeStaked: '₦18,450,000',
