@@ -29,7 +29,7 @@ export default function CopySuccessModal({ isOpen, onClose, code, bookmaker, tit
     : bLower.includes('msport')
     ? (adSettings?.msportAffiliateUrl || 'https://www.msport.com/')
     : bLower.includes('22bet')
-    ? (adSettings?.twentyTwoBetAffiliateUrl || 'https://22bet.ng/')
+    ? (adSettings?.twentyTwoBetAffiliateUrl || 'https://che.fluxbrox.com/redirect.aspx?pid=199669&bid=1488&lpid=25')
     : bLower.includes('1x')
     ? (adSettings?.oneXBetAffiliateUrl || 'https://1xbet.ng/')
     : bLower.includes('king')

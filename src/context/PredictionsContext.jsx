@@ -72,7 +72,7 @@ export const DEFAULT_AD_SETTINGS = {
   oneXBetAffiliateUrl: 'https://1xbet.ng/',
   msportAffiliateUrl: 'https://www.msport.com/',
   betkingAffiliateUrl: 'https://www.betking.com/',
-  twentyTwoBetAffiliateUrl: 'https://22bet.ng/'
+  twentyTwoBetAffiliateUrl: 'https://che.fluxbrox.com/redirect.aspx?pid=199669&bid=1488&lpid=25'
 };
 
 export function PredictionsProvider({ children }) {

@@ -47,7 +47,7 @@ export default function HomePage({ onNavigate }) {
 
   const getBookmakerUrl = (bName) => {
     const b = (bName || '').toLowerCase();
-    if (b.includes('22bet')) return adSettings?.twentyTwoBetAffiliateUrl || 'https://22bet.ng/?ref=bryme';
+    if (b.includes('22bet')) return adSettings?.twentyTwoBetAffiliateUrl || 'https://che.fluxbrox.com/redirect.aspx?pid=199669&bid=1488&lpid=25';
     if (b.includes('1x')) return adSettings?.oneXBetAffiliateUrl || 'https://1xbet.ng/?bf=bryme';
     if (b.includes('msport')) return adSettings?.msportAffiliateUrl || 'https://www.msport.com/?ref=bryme';
     if (b.includes('bet9ja')) return adSettings?.bet9jaAffiliateUrl || 'https://register.bet9ja.com/?promocode=bryme';
@@ -68,7 +68,7 @@ export default function HomePage({ onNavigate }) {
       description: 'Massive 100% sports welcome bonus up to ₦207,500 with high European odds, deep Asian handicaps, and weekly reload bonuses.',
       promoCode: '22_BRYME',
       perk: 'Deep alternative Asian totals & fast payouts',
-      url: adSettings?.twentyTwoBetAffiliateUrl || 'https://22bet.ng/?ref=bryme'
+      url: adSettings?.twentyTwoBetAffiliateUrl || 'https://che.fluxbrox.com/redirect.aspx?pid=199669&bid=1488&lpid=25'
     },
     {
       id: '1xbet',
