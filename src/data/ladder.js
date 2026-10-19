@@ -37,32 +37,33 @@ export const ACTIVE_CHALLENGE = {
   challengeNumber: 50,
   status: 'active',
   startDate: '2026-10-14',
-  currentDay: 3,
+  currentDay: 4,
   startingStake: 1000,
-  currentBalance: 3375, // Day 1: 1000*1.50=1500; Day 2: 1500*1.50=2250; Day 3 in progress (2250 * 1.50 = 3375)
-  nextPotentialBalance: 5062,
+  currentBalance: 3375, // Day 1: 1000*1.50=1500; Day 2: 1500*1.50=2250; Day 3: 2250*1.50=3375; Day 4: 3375 * 1.54 = 5198
+  nextPotentialBalance: 5198,
   bankedAmount: 0,
-  todaysCode: 'B9J-LAD-50-D3',
-  bookmaker: 'Bet9ja',
-  sportyCode: 'BC4-LAD50-D3',
-  dailyOdds: 1.50,
+  todaysCode: 'Q7S287',
+  bookmaker: 'SportyBet',
+  sportyCode: 'Q7S287',
+  footballCode: 'Q7S287',
+  dailyOdds: 1.54,
   selections: [
     {
-      match: 'Arsenal vs Everton',
-      league: 'Premier League',
-      kickoff: '2026-10-16 17:30',
-      market: 'Double Chance & Over 1.5 Goals',
-      pick: '1X & Over 1.5',
-      odds: 1.25,
+      match: 'Ribecai Michele vs Vasami',
+      league: 'Tennis Professional Circuit',
+      kickoff: 'Today 14:00 WAT',
+      market: 'Set Betting',
+      pick: 'Home to Win a Set',
+      odds: 1.26,
       status: 'pending'
     },
     {
-      match: 'Bayern Munich vs VfB Stuttgart',
-      league: 'German Bundesliga',
-      kickoff: '2026-10-16 19:30',
-      market: 'Over/Under Goals',
-      pick: 'Over 2.5 Goals',
-      odds: 1.20,
+      match: 'Cecchinato vs Gaubas, Vilius',
+      league: 'Tennis ATP / Challenger Tour',
+      kickoff: 'Today 16:30 WAT',
+      market: 'Set Betting',
+      pick: 'Away to Win a Set',
+      odds: 1.22,
       status: 'pending'
     }
   ],
@@ -93,9 +94,19 @@ export const ACTIVE_CHALLENGE = {
       odds: 1.50,
       stake: 2250,
       payout: 3375,
-      result: 'pending',
+      result: 'won',
       code: 'B9J-LAD-50-D3',
       summary: 'Arsenal 1X & Over 1.5 + Bayern vs Stuttgart Over 2.5'
+    },
+    {
+      day: 4,
+      date: '2026-10-19',
+      odds: 1.54,
+      stake: 3375,
+      payout: 5198,
+      result: 'pending',
+      code: 'Q7S287',
+      summary: 'Ribecai Home to Win a Set (1.26) + Gaubas Away to Win a Set (1.22)'
     }
   ]
 };

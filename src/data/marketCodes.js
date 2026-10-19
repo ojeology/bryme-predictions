@@ -4,6 +4,151 @@
  */
 
 export const INITIAL_MARKET_CODES = [
+  // ── 0. NEW HIGH-ODDS VERIFIED COMMUNITY SLIPS (SportyBet & Football.com) ──
+  {
+    id: 'mcode-tz01sr-sporty',
+    marketId: 'over-25-goals',
+    code: 'TZ01SR',
+    odds: 2694.00,
+    bookmaker: 'sportybet',
+    bookmakerName: 'SportyBet',
+    title: 'All Over 2.5 Goals 2,694x Multiplier (SportyBet)',
+    eventsCount: 20,
+    status: 'active',
+    dropTime: 'Live Today'
+  },
+  {
+    id: 'mcode-tz01sr-footballcom',
+    marketId: 'over-25-goals',
+    code: 'TZ01SR',
+    odds: 2694.00,
+    bookmaker: 'footballcom',
+    bookmakerName: 'Football.com',
+    title: 'All Over 2.5 Goals 2,694x Multiplier (Football.com)',
+    eventsCount: 20,
+    status: 'active',
+    dropTime: 'Live Today'
+  },
+  {
+    id: 'mcode-g0320z-sporty',
+    marketId: 'over-15-goals',
+    code: 'G0320Z',
+    odds: 860.00,
+    bookmaker: 'sportybet',
+    bookmakerName: 'SportyBet',
+    title: 'Over & Under Goals 860-Odds Mega Slip (SportyBet)',
+    eventsCount: 16,
+    status: 'active',
+    dropTime: 'Live Today'
+  },
+  {
+    id: 'mcode-g0320z-footballcom',
+    marketId: 'over-15-goals',
+    code: 'G0320Z',
+    odds: 860.00,
+    bookmaker: 'footballcom',
+    bookmakerName: 'Football.com',
+    title: 'Over & Under Goals 860-Odds Mega Slip (Football.com)',
+    eventsCount: 16,
+    status: 'active',
+    dropTime: 'Live Today'
+  },
+  {
+    id: 'mcode-tzumdq-sporty',
+    marketId: '1x2-match-result',
+    code: 'TZUMDQ',
+    odds: 365.00,
+    bookmaker: 'sportybet',
+    bookmakerName: 'SportyBet',
+    title: '24 Folds 365-Odds 1X2 Win Markets (SportyBet)',
+    eventsCount: 24,
+    status: 'active',
+    dropTime: 'Live Today'
+  },
+  {
+    id: 'mcode-tzumdq-footballcom',
+    marketId: '1x2-match-result',
+    code: 'TZUMDQ',
+    odds: 365.00,
+    bookmaker: 'footballcom',
+    bookmakerName: 'Football.com',
+    title: '24 Folds 365-Odds 1X2 Win Markets (Football.com)',
+    eventsCount: 24,
+    status: 'active',
+    dropTime: 'Live Today'
+  },
+  {
+    id: 'mcode-u0vb59-sporty',
+    marketId: '1x2-match-result',
+    code: 'U0VB59',
+    odds: 2335.00,
+    bookmaker: 'sportybet',
+    bookmakerName: 'SportyBet',
+    title: 'Home Straight Wins 2,335-Odds Fortress (SportyBet)',
+    eventsCount: 18,
+    status: 'active',
+    dropTime: 'Live Today'
+  },
+  {
+    id: 'mcode-u0vb59-footballcom',
+    marketId: '1x2-match-result',
+    code: 'U0VB59',
+    odds: 2335.00,
+    bookmaker: 'footballcom',
+    bookmakerName: 'Football.com',
+    title: 'Home Straight Wins 2,335-Odds Fortress (Football.com)',
+    eventsCount: 18,
+    status: 'active',
+    dropTime: 'Live Today'
+  },
+  {
+    id: 'mcode-qm7nwd-sporty',
+    marketId: 'team-goals',
+    code: 'QM7NWD',
+    odds: 298.00,
+    bookmaker: 'sportybet',
+    bookmakerName: 'SportyBet',
+    title: 'Europa & Conference League Favourites 1 Goal (SportyBet)',
+    eventsCount: 14,
+    status: 'active',
+    dropTime: 'Live Today'
+  },
+  {
+    id: 'mcode-qm7nwd-footballcom',
+    marketId: 'team-goals',
+    code: 'QM7NWD',
+    odds: 298.00,
+    bookmaker: 'footballcom',
+    bookmakerName: 'Football.com',
+    title: 'Europa & Conference League Favourites 1 Goal (Football.com)',
+    eventsCount: 14,
+    status: 'active',
+    dropTime: 'Live Today'
+  },
+  {
+    id: 'mcode-u1g51j-sporty',
+    marketId: 'multigoals',
+    code: 'U1G51J',
+    odds: 7065.19,
+    bookmaker: 'sportybet',
+    bookmakerName: 'SportyBet',
+    title: 'Mixed Options 7,065.19 Mega Multiplier (SportyBet)',
+    eventsCount: 22,
+    status: 'active',
+    dropTime: 'Live Today'
+  },
+  {
+    id: 'mcode-u1g51j-footballcom',
+    marketId: 'multigoals',
+    code: 'U1G51J',
+    odds: 7065.19,
+    bookmaker: 'footballcom',
+    bookmakerName: 'Football.com',
+    title: 'Mixed Options 7,065.19 Mega Multiplier (Football.com)',
+    eventsCount: 22,
+    status: 'active',
+    dropTime: 'Live Today'
+  },
   // ── 1. Over 1.5 Total Goals (User requested live examples) ──
   {
     id: 'mcode-o15-01',

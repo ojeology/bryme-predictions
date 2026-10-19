@@ -53,39 +53,220 @@ export const DAILY_BOOKING_TICKETS = [
   },
   {
     id: 'ticket-ladder-challenge',
-    badge: 'LADDER ROLLOVER',
-    title: 'Ladder Challenge Step 3/18 (₦3,375 Purse)',
+    badge: 'BRYME ROLLOVER',
+    title: 'BRYME Rollover Step 4/18 (₦3,375 Purse → ₦5,198 Payout)',
     category: 'ladder',
     riskLevel: 'Ultra Conservative',
-    totalOdds: 1.50,
-    date: '2026-10-18',
+    totalOdds: 1.54,
+    date: '2026-10-19',
     status: 'pending',
-    dropTime: '02:00 AM WAT',
+    dropTime: '11:00 AM WAT',
     confidence: '98% Model Rating',
-    description: '₦1,000 to ₦1,000,000 Journey. Target 1.50 daily odds. 50% capital banked at Day 6.',
+    description: '₦1,000 to ₦1,000,000 Journey. Target 1.54 daily odds. 50% capital banked at Day 6.',
     codes: {
-      sportybet: 'BC4-LAD50-D3',
-      bet9ja: 'B9J-LAD-50-D3',
-      onexbet: '1XB-LAD-503',
-      betking: 'BK-LAD-503',
-      betway: 'BTW-LAD-503'
+      sportybet: 'Q7S287',
+      footballcom: 'Q7S287',
+      bet9ja: 'B9J-LAD-50-D4',
+      onexbet: '1XB-LAD-504',
+      betking: 'BK-LAD-504',
+      betway: 'BTW-LAD-504'
     },
     selections: [
       {
-        match: 'Bournemouth vs Arsenal',
-        league: '🏴󠁧󠁢󠁥󠁮󠁧󠁿 Premier League',
-        kickoff: '17:30 WAT / 19:30 EAT',
-        pick: 'Arsenal 1X & Over 1.5 Goals',
-        odds: 1.25,
-        analysis: 'Arteta’s defense leads the EPL in clean sheets; Bournemouth conceding 1.8 goals per match.'
+        match: 'Ribecai Michele vs Vasami',
+        league: '🎾 Tennis Professional Circuit',
+        kickoff: 'Today 14:00 WAT',
+        pick: 'Home to Win a Set',
+        odds: 1.26,
+        analysis: 'Ribecai has won at least one set in 9 of his last 10 competitive appearances.'
       },
       {
-        match: 'Bayern Munich vs VfB Stuttgart',
-        league: '🇩🇪 Bundesliga',
-        kickoff: '17:30 WAT / 19:30 EAT',
-        pick: 'Over 2.5 Total Goals',
-        odds: 1.20,
-        analysis: 'Highest xG fixture in Europe. Last 6 meetings between Bayern and Stuttgart averaged 4.1 goals.'
+        match: 'Cecchinato vs Gaubas, Vilius',
+        league: '🎾 Tennis ATP / Challenger Tour',
+        kickoff: 'Today 16:30 WAT',
+        pick: 'Away to Win a Set',
+        odds: 1.22,
+        analysis: 'Gaubas in top baseline form; secured set-winning points in 8 straight Challenger clashes.'
+      }
+    ]
+  },
+  {
+    id: 'ticket-mixed-7000-odds',
+    badge: '7,000x JACKPOT',
+    title: 'Mixed Options 7,065.19x Mega Multiplier',
+    category: 'mega',
+    riskLevel: 'High Reward Jackpot',
+    totalOdds: 7065.19,
+    date: '2026-10-19',
+    status: 'pending',
+    dropTime: 'Live Today',
+    confidence: 'Syndicate Longshot',
+    description: '22-selection mixed options jackpot slip covering double chance, corner lines, and card margins.',
+    codes: {
+      sportybet: 'U1G51J',
+      footballcom: 'U1G51J',
+      bet9ja: 'B9J-7000-MIX',
+      onexbet: '1XB-7000-MIX',
+      betking: 'BK-7000-MIX'
+    },
+    selections: [
+      {
+        match: 'Continental Mixed Wave',
+        league: '🌍 Top European Competitions',
+        kickoff: 'European Matchdays',
+        pick: '22-Fold Mixed Multiplier',
+        odds: 7065.19,
+        analysis: 'High-payout accumulator across cards, corners, and match combos.'
+      }
+    ]
+  },
+  {
+    id: 'ticket-over25-2694-odds',
+    badge: '2,694x GOAL RUSH',
+    title: 'All Over 2.5 Goals 2,694x Multiplier',
+    category: 'mega',
+    riskLevel: 'High Reward Wave',
+    totalOdds: 2694.00,
+    date: '2026-10-19',
+    status: 'pending',
+    dropTime: 'Live Today',
+    confidence: 'Goal-Rush Algorithm',
+    description: 'Pure Over 2.5 Total Goals multi-slip across high expected-goals European matches.',
+    codes: {
+      sportybet: 'TZ01SR',
+      footballcom: 'TZ01SR',
+      bet9ja: 'B9J-O25-2694',
+      onexbet: '1XB-O25-2694',
+      betking: 'BK-O25-2694'
+    },
+    selections: [
+      {
+        match: 'European Goal Explosion Wave',
+        league: '⚽ Bundesliga, Eredivisie & EPL',
+        kickoff: 'European Matchdays',
+        pick: 'All Over 2.5 Goals (20 Folds)',
+        odds: 2694.00,
+        analysis: 'Filtered for matches with combined xG exceeding 3.4 per 90.'
+      }
+    ]
+  },
+  {
+    id: 'ticket-home-wins-2335-odds',
+    badge: '2,335x FORTRESS',
+    title: 'Home Straight Wins 2,335x Fortress',
+    category: 'mega',
+    riskLevel: 'High Payout Multiplier',
+    totalOdds: 2335.00,
+    date: '2026-10-19',
+    status: 'pending',
+    dropTime: 'Live Today',
+    confidence: 'Home Dominance Index',
+    description: '18-fold pure home straight win (1X2 Home) accumulator across European fortresses.',
+    codes: {
+      sportybet: 'U0VB59',
+      footballcom: 'U0VB59',
+      bet9ja: 'B9J-HOME-2335',
+      onexbet: '1XB-HOME-2335',
+      betking: 'BK-HOME-2335'
+    },
+    selections: [
+      {
+        match: 'European Home Venues',
+        league: '🏰 Top European Leagues',
+        kickoff: 'European Matchdays',
+        pick: '18-Fold Home Straight Wins',
+        odds: 2335.00,
+        analysis: 'Selected teams have won 80%+ of their domestic home fixtures.'
+      }
+    ]
+  },
+  {
+    id: 'ticket-over-under-860-odds',
+    badge: '860x GOAL TOTALS',
+    title: 'Over & Under Goals 860x Balanced Slip',
+    category: 'mega',
+    riskLevel: 'Balanced High Odds',
+    totalOdds: 860.00,
+    date: '2026-10-19',
+    status: 'pending',
+    dropTime: 'Live Today',
+    confidence: 'Poisson Goal Distribution',
+    description: 'Strategically balanced Over/Under totals slip taking low-line overs and tight-match unders.',
+    codes: {
+      sportybet: 'G0320Z',
+      footballcom: 'G0320Z',
+      bet9ja: 'B9J-OU-860',
+      onexbet: '1XB-OU-860',
+      betking: 'BK-OU-860'
+    },
+    selections: [
+      {
+        match: 'European Over & Under Spread',
+        league: '⚽ European Domestic Top Flights',
+        kickoff: 'European Matchdays',
+        pick: '16-Fold Over/Under Goals Mix',
+        odds: 860.00,
+        analysis: 'Combines German/Dutch overs with French/Italian tactical unders.'
+      }
+    ]
+  },
+  {
+    id: 'ticket-1x2-365-odds',
+    badge: '365x 1X2 STRAIGHT',
+    title: '24 Folds 365x 1X2 Win Markets',
+    category: 'mega',
+    riskLevel: 'High Payout Accumulator',
+    totalOdds: 365.00,
+    date: '2026-10-19',
+    status: 'pending',
+    dropTime: 'Live Today',
+    confidence: 'Consensus Match Results',
+    description: 'Massive 24-fold 1X2 match winner ticket targeting outright winners across matchdays.',
+    codes: {
+      sportybet: 'TZUMDQ',
+      footballcom: 'TZUMDQ',
+      bet9ja: 'B9J-1X2-365',
+      onexbet: '1XB-1X2-365',
+      betking: 'BK-1X2-365'
+    },
+    selections: [
+      {
+        match: '24 Continental Match Winners',
+        league: '🎯 Global League Highlights',
+        kickoff: 'European Matchdays',
+        pick: '24-Fold 1X2 Match Selections',
+        odds: 365.00,
+        analysis: '24 heavy favourites and draw-no-bet selections combined.'
+      }
+    ]
+  },
+  {
+    id: 'ticket-uel-uecl-298-odds',
+    badge: '298x EUROPEAN GOAL',
+    title: 'Europa & Conference League Favourites 1 Goal (298x)',
+    category: 'banker',
+    riskLevel: 'High Confidence Bankers',
+    totalOdds: 298.00,
+    date: '2026-10-19',
+    status: 'pending',
+    dropTime: 'Live Today',
+    confidence: 'UEL / UECL Momentum',
+    description: '14-fold banker slip backing tournament favourites to score at least 1 goal (Team Over 0.5).',
+    codes: {
+      sportybet: 'QM7NWD',
+      footballcom: 'QM7NWD',
+      bet9ja: 'B9J-UEL-298',
+      onexbet: '1XB-UEL-298',
+      betking: 'BK-UEL-298'
+    },
+    selections: [
+      {
+        match: 'Europa & Conference League Heavyweights',
+        league: '🏆 UEFA Europa & Conference League',
+        kickoff: 'Thursday 17:45 & 20:00 WAT',
+        pick: 'Team to Score 1 Goal (14 Folds)',
+        odds: 298.00,
+        analysis: 'All 14 selected European teams average 1.8+ goals in continental competition.'
       }
     ]
   },

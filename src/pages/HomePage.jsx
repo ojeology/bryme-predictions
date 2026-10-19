@@ -27,8 +27,10 @@ export default function HomePage({ onNavigate }) {
 
   const currentStep = ladder?.currentDay || 4;
   const currentPot = ladder?.currentBalance || 3375;
-  const targetPot = Math.round(currentPot * 1.5);
-  const sportyLadderCode = ladder?.sportyCode || 'BC4-LAD50-D4';
+  const dailyOdds = ladder?.dailyOdds || 1.54;
+  const targetPot = Math.round(currentPot * dailyOdds);
+  const sportyLadderCode = ladder?.sportyCode || 'Q7S287';
+  const footballLadderCode = ladder?.footballCode || sportyLadderCode;
   const bet9jaLadderCode = ladder?.todaysCode || 'B9J-LAD-50-D4';
   const oneXBetLadderCode = '1XB-LAD50-D4';
 
@@ -196,30 +198,38 @@ export default function HomePage({ onNavigate }) {
             <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 space-y-1.5 text-xs">
               <div className="flex items-center justify-between text-[10px] font-mono font-bold text-amber-400 uppercase">
                 <span>Today's Step {currentStep} Banker Pick:</span>
-                <span>Odds: 1.50x</span>
+                <span>Odds: {dailyOdds}x</span>
               </div>
               <div className="font-display font-black text-sm text-white">
-                Arsenal vs Everton (1X &amp; O1.5) + Bayern vs Stuttgart (O2.5 Goals)
+                Ribecai Michele vs Vasami (Home Set @ 1.26) + Cecchinato vs Gaubas (Away Set @ 1.22)
               </div>
               <div className="text-[11px] text-slate-400 font-mono">
-                European Top Flights &bull; Consecutively backtested high-xG momentum
+                Tennis Pro Circuit &bull; High-probability set-winning momentum
               </div>
             </div>
 
             {/* 1-Tap Booking Codes Bar */}
             <div className="space-y-2 pt-1">
-              <div className="flex items-center gap-1.5 text-xs font-mono">
+              <div className="flex items-center gap-1.5 text-xs font-mono overflow-x-auto scrollbar-none pb-0.5">
                 <button
                   onClick={() => setSelectedBookieTab('sporty')}
-                  className={`px-2.5 py-1 rounded-lg font-bold uppercase transition-all ${
+                  className={`px-2.5 py-1 rounded-lg font-bold uppercase transition-all whitespace-nowrap ${
                     selectedBookieTab === 'sporty' ? 'bg-[#E41B13] text-white shadow-sm' : 'bg-white/10 text-slate-400'
                   }`}
                 >
                   SportyBet
                 </button>
                 <button
+                  onClick={() => setSelectedBookieTab('football')}
+                  className={`px-2.5 py-1 rounded-lg font-bold uppercase transition-all whitespace-nowrap ${
+                    selectedBookieTab === 'football' ? 'bg-[#008751] text-white shadow-sm' : 'bg-white/10 text-slate-400'
+                  }`}
+                >
+                  Football.com
+                </button>
+                <button
                   onClick={() => setSelectedBookieTab('1xbet')}
-                  className={`px-2.5 py-1 rounded-lg font-bold uppercase transition-all ${
+                  className={`px-2.5 py-1 rounded-lg font-bold uppercase transition-all whitespace-nowrap ${
                     selectedBookieTab === '1xbet' ? 'bg-blue-600 text-white shadow-sm' : 'bg-white/10 text-slate-400'
                   }`}
                 >
@@ -227,7 +237,7 @@ export default function HomePage({ onNavigate }) {
                 </button>
                 <button
                   onClick={() => setSelectedBookieTab('bet9ja')}
-                  className={`px-2.5 py-1 rounded-lg font-bold uppercase transition-all ${
+                  className={`px-2.5 py-1 rounded-lg font-bold uppercase transition-all whitespace-nowrap ${
                     selectedBookieTab === 'bet9ja' ? 'bg-[#00C250] text-black shadow-sm' : 'bg-white/10 text-slate-400'
                   }`}
                 >
@@ -239,24 +249,25 @@ export default function HomePage({ onNavigate }) {
               <div className="p-3 rounded-xl bg-black border border-white/15 flex items-center justify-between gap-2">
                 <div>
                   <span className="text-[9px] uppercase font-mono font-bold text-slate-400 block">
-                    {selectedBookieTab === 'sporty' ? 'SportyBet' : selectedBookieTab === '1xbet' ? '1xBet' : 'Bet9ja'} Code
+                    {selectedBookieTab === 'sporty' ? 'SportyBet' : selectedBookieTab === 'football' ? 'Football.com' : selectedBookieTab === '1xbet' ? '1xBet' : 'Bet9ja'} Code
                   </span>
                   <span className="font-mono font-black text-lg text-amber-300 tracking-wider">
-                    {selectedBookieTab === 'sporty' ? sportyLadderCode : selectedBookieTab === '1xbet' ? oneXBetLadderCode : bet9jaLadderCode}
+                    {selectedBookieTab === 'sporty' ? sportyLadderCode : selectedBookieTab === 'football' ? footballLadderCode : selectedBookieTab === '1xbet' ? oneXBetLadderCode : bet9jaLadderCode}
                   </span>
                 </div>
 
                 <div className="flex items-center gap-1.5">
                   <button
-                    onClick={() => handleCopy(
-                      selectedBookieTab === 'sporty' ? sportyLadderCode : selectedBookieTab === '1xbet' ? oneXBetLadderCode : bet9jaLadderCode,
-                      selectedBookieTab === 'sporty' ? 'SportyBet' : selectedBookieTab === '1xbet' ? '1xBet' : 'Bet9ja',
-                      `Rollover Step ${currentStep}`,
-                      '1.50'
-                    )}
-                    className="px-3 py-2 rounded-xl bg-[#E41B13] hover:bg-[#D01710] text-white font-display font-black text-xs uppercase tracking-wider flex items-center gap-1 shadow-md transition-all"
+                    onClick={() => {
+                      const activeCode = selectedBookieTab === 'sporty' ? sportyLadderCode : selectedBookieTab === 'football' ? footballLadderCode : selectedBookieTab === '1xbet' ? oneXBetLadderCode : bet9jaLadderCode;
+                      const activeBookie = selectedBookieTab === 'sporty' ? 'SportyBet' : selectedBookieTab === 'football' ? 'Football.com' : selectedBookieTab === '1xbet' ? '1xBet' : 'Bet9ja';
+                      handleCopy(activeCode, activeBookie, `Rollover Step ${currentStep}`, `${dailyOdds}`);
+                    }}
+                    className={`px-3 py-2 rounded-xl text-white font-display font-black text-xs uppercase tracking-wider flex items-center gap-1 shadow-md transition-all ${
+                      selectedBookieTab === 'football' ? 'bg-[#008751] hover:bg-[#007043]' : 'bg-[#E41B13] hover:bg-[#D01710]'
+                    }`}
                   >
-                    {copiedCode === (selectedBookieTab === 'sporty' ? sportyLadderCode : selectedBookieTab === '1xbet' ? oneXBetLadderCode : bet9jaLadderCode) ? (
+                    {copiedCode === (selectedBookieTab === 'sporty' ? sportyLadderCode : selectedBookieTab === 'football' ? footballLadderCode : selectedBookieTab === '1xbet' ? oneXBetLadderCode : bet9jaLadderCode) ? (
                       <>
                         <Check className="w-4 h-4 stroke-[3]" />
                         <span>Copied!</span>

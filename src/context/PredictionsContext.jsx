@@ -501,15 +501,25 @@ export function PredictionsProvider({ children }) {
 
   // ── SIMULATED CODE CONVERTER ──
   const convertBetCode = (sourceCode, fromBookie, toBookie) => {
+    const f = fromBookie?.toLowerCase();
+    const t = toBookie?.toLowerCase();
+
+    // SportyBet and Football.com share the exact same booking codes!
+    if ((f === 'sportybet' && t === 'footballcom') || (f === 'footballcom' && t === 'sportybet')) {
+      return sourceCode ? sourceCode.trim().toUpperCase() : 'Q7S287';
+    }
+
     const prefixes = {
       sportybet: 'BC4-',
+      footballcom: 'BC4-',
       bet9ja: 'B9J-',
       '1xbet': '1XB-',
       betking: 'BKG-',
-      msport: 'MSP-'
+      msport: 'MSP-',
+      '22bet': '22B-'
     };
     const randomSuffix = Math.floor(1000 + Math.random() * 9000);
-    const targetPrefix = prefixes[toBookie?.toLowerCase()] || 'BRY-';
+    const targetPrefix = prefixes[t] || 'BRY-';
     return `${targetPrefix}${randomSuffix}`;
   };
 

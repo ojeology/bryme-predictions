@@ -20,6 +20,16 @@ export const BOOKMAKERS = [
     accentColor: '#EF4444'
   },
   {
+    id: 'footballcom',
+    name: 'Football.com',
+    country: 'Nigeria / Kenya / Ghana',
+    currency: 'NGN / KES / GHS',
+    codeFormat: 'e.g. Q7S287',
+    description: 'Ultra-fast sportsbook sharing 100% identical booking codes with SportyBet. Features heavy zero-data support and high odds multipliers.',
+    badgeColor: 'bg-emerald-950 text-emerald-400 border-emerald-800',
+    accentColor: '#008751'
+  },
+  {
     id: 'msport',
     name: 'MSport',
     country: 'Nigeria / Ghana',
