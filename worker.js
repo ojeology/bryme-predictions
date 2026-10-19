@@ -267,6 +267,138 @@ async function handleApiRequest(request, env, url) {
             return jsonResponse({ ok: true, action: 'main_menu' });
           }
 
+          // 1.1.A Punters Submenu
+          if (data === 'menu_punters') {
+            await clearSession(userId);
+            const state = await getState();
+            const pCount = state.punters?.length || 0;
+            const text = `👤 <b>Punters Management Hub</b>\n\n` +
+              `Total Verified Punters: <b>${pCount}</b>\n\n` +
+              `You can add new punters, view their profiles, or remove punters directly from here:`;
+            await editTelegramMessage(botToken, chatId, messageId, text, getPuntersMenuKeyboard());
+            return jsonResponse({ ok: true, action: 'menu_punters' });
+          }
+
+          // 1.1.B Markets Submenu
+          if (data === 'menu_markets') {
+            await clearSession(userId);
+            const state = await getState();
+            const mCount = state.markets?.length || 0;
+            const sCount = state.marketCodes?.length || 0;
+            const text = `⚽ <b>Market Types & Slips Management</b>\n\n` +
+              `Total Betting Markets: <b>${mCount}</b>\n` +
+              `Active Slips Attached: <b>${sCount}</b>\n\n` +
+              `You can add brand new betting market types, attach codes, or delete markets:`;
+            await editTelegramMessage(botToken, chatId, messageId, text, getMarketsMenuKeyboard());
+            return jsonResponse({ ok: true, action: 'menu_markets' });
+          }
+
+          // 1.1.C Start Add Punter Wizard
+          if (data === 'wiz_punter_add') {
+            await saveSession(userId, { flow: 'add_punter', step: 'punter_name' });
+            const text = `<b>➕ Add New Punter (Step 1/2)</b>\n\n` +
+              `👉 <b>Send the Punter's Name and Handle:</b>\n` +
+              `Example: <code>Whale King @WhaleKing</code> or just <code>Whale King</code>`;
+            await editTelegramMessage(botToken, chatId, messageId, text, getCancelKeyboard());
+            return jsonResponse({ ok: true, action: 'wiz_punter_name' });
+          }
+
+          // 1.1.D List All Punters
+          if (data === 'cmd_list_punters') {
+            const state = await getState();
+            const list = (state.punters || []).map((p, i) => 
+              `${i + 1}. <b>${p.displayName}</b> (${p.handle || '@punter'}) ${p.pinned ? '📌 VIP' : ''}\n   <i>${p.specialty || 'Analyst'}</i> &bull; ${p.hitRate || '80%'} Hit Rate`
+            ).join('\n\n');
+            const text = `👤 <b>All Tracked Punters (${state.punters?.length || 0}):</b>\n\n${list || 'No punters found.'}\n\nTo delete: <code>/delpunter Name</code>`;
+            await editTelegramMessage(botToken, chatId, messageId, text, getPuntersMenuKeyboard());
+            return jsonResponse({ ok: true, action: 'list_punters' });
+          }
+
+          // 1.1.E Delete Punter Menu (Interactive Buttons)
+          if (data === 'wiz_punter_del_menu') {
+            const state = await getState();
+            const text = `🗑 <b>Tap a Punter below to remove from website:</b>`;
+            await editTelegramMessage(botToken, chatId, messageId, text, getPunterDeleteKeyboard(state.punters || []));
+            return jsonResponse({ ok: true, action: 'del_punter_menu' });
+          }
+
+          // 1.1.F Execute Punter Delete
+          if (data.startsWith('del_punter_')) {
+            const pId = data.replace('del_punter_', '');
+            const state = await getState();
+            const target = state.punters.find(p => p.id === pId);
+            const pName = target?.displayName || pId;
+            state.punters = state.punters.filter(p => p.id !== pId);
+            await saveState(state);
+
+            const text = `🗑 <b>Punter Removed:</b> <b>${pName}</b>\nRemoved from the site successfully!`;
+            await editTelegramMessage(botToken, chatId, messageId, text, getPuntersMenuKeyboard());
+            return jsonResponse({ ok: true, action: 'punter_deleted', pId });
+          }
+
+          // 1.1.G Start Add Market Type Wizard
+          if (data === 'wiz_mkt_type_add') {
+            await saveSession(userId, { flow: 'add_market_type', step: 'mkt_name' });
+            const text = `<b>➕ Add New Market Type (Step 1/3)</b>\n\n` +
+              `👉 <b>Send the Market Name:</b>\n` +
+              `Example: <code>First Half Over 0.5 Goals</code> or <code>Asian Handicap +0.5</code>`;
+            await editTelegramMessage(botToken, chatId, messageId, text, getCancelKeyboard());
+            return jsonResponse({ ok: true, action: 'wiz_mkt_name' });
+          }
+
+          // 1.1.H Market Category Selected in Wizard
+          if (data.startsWith('cat_mkt_')) {
+            const cat = data.replace('cat_mkt_', '');
+            const session = await getSession(userId);
+            if (session && session.flow === 'add_market_type') {
+              session.category = cat;
+              session.step = 'mkt_odds';
+              await saveSession(userId, session);
+
+              const text = `<b>Typical Odds Range (Step 3/3)</b>\n` +
+                `Market: <b>${session.marketName}</b>\nCategory: <code>${cat}</code>\n\n` +
+                `👉 <b>Send typical odds range</b> (e.g. <code>1.30 - 1.65</code>):`;
+              await editTelegramMessage(botToken, chatId, messageId, text, getCancelKeyboard());
+              return jsonResponse({ ok: true, action: 'wiz_mkt_odds' });
+            }
+          }
+
+          // 1.1.I List All Market Types
+          if (data === 'cmd_list_all_markets') {
+            const state = await getState();
+            const list = (state.markets || []).slice(0, 15).map((m, i) => {
+              const slips = (state.marketCodes || []).filter(c => c.marketId === m.id || c.marketId === m.slug).length;
+              return `${i + 1}. <b>${m.name}</b> (${m.category}) — <i>${slips} Slips Attached</i>`;
+            }).join('\n');
+            const text = `⚽ <b>Active Betting Markets (${state.markets?.length || 0}):</b>\n\n${list}\n\nTo delete: <code>/delmarket slug</code>`;
+            await editTelegramMessage(botToken, chatId, messageId, text, getMarketsMenuKeyboard());
+            return jsonResponse({ ok: true, action: 'list_all_markets' });
+          }
+
+          // 1.1.J Delete Market Type Menu (Interactive Buttons)
+          if (data === 'wiz_mkt_type_del_menu') {
+            const state = await getState();
+            const text = `🗑 <b>Tap a Market Type below to remove from directory:</b>`;
+            await editTelegramMessage(botToken, chatId, messageId, text, getMarketDeleteKeyboard(state.markets || []));
+            return jsonResponse({ ok: true, action: 'del_mkt_menu' });
+          }
+
+          // 1.1.K Execute Market Type Delete
+          if (data.startsWith('del_mkt_')) {
+            const mSlug = data.replace('del_mkt_', '');
+            const state = await getState();
+            const target = state.markets.find(m => m.id === mSlug || m.slug === mSlug);
+            const mName = target?.name || mSlug;
+            state.markets = state.markets.filter(m => m.id !== mSlug && m.slug !== mSlug);
+            // Also clean attached codes
+            state.marketCodes = state.marketCodes.filter(c => c.marketId !== mSlug);
+            await saveState(state);
+
+            const text = `🗑 <b>Market Removed:</b> <b>${mName}</b>\nRemoved from the directory & homepage successfully!`;
+            await editTelegramMessage(botToken, chatId, messageId, text, getMarketsMenuKeyboard());
+            return jsonResponse({ ok: true, action: 'market_type_deleted', mSlug });
+          }
+
           // 1.2 Start Code Hub Wizard
           if (data === 'wiz_hub') {
             await saveSession(userId, { flow: 'hub', step: 'bookmaker' });
@@ -334,11 +466,12 @@ async function handleApiRequest(request, env, url) {
               session.step = 'awaiting_punter';
               await saveSession(userId, session);
 
+              const state = await getState();
               const text = `<b>Select Punter / Source (Step ${session.flow === 'market' ? '4/5' : 'Final'})</b>\n` +
                 `Code: <code>${session.code}</code> | Odds: <b>${session.odds}x</b>` +
                 (session.gamesCount ? ` | Games: <b>${session.gamesCount}</b>\n\n` : `\n\n`) +
                 `Who dropped this slip?`;
-              await editTelegramMessage(botToken, chatId, messageId, text, getPuntersKeyboard());
+              await editTelegramMessage(botToken, chatId, messageId, text, getPuntersKeyboard(state.punters || []));
               return jsonResponse({ ok: true, action: 'step_punter' });
             }
           }
@@ -346,39 +479,28 @@ async function handleApiRequest(request, env, url) {
           // 1.8 Punter Selected
           if (data.startsWith('punter_')) {
             const pKey = data.replace('punter_', '');
-            const pMap = {
-              'mrbanks': { name: 'Mr banks', id: 'punter-mrbanks' },
-              'tallman': { name: 'Tall man', id: 'punter-tallman' },
-              'bosstips': { name: 'Boss Tips', id: 'punter-bosstips' },
-              'drzeh': { name: 'Dr zeh', id: 'punter-drzeh' },
-              'cindymodel': { name: 'Cindymodel', id: 'punter-cindymodel' },
-              '39billion': { name: '39billion', id: 'punter-39billion' },
-              'lightbet': { name: 'Lightbet', id: 'punter-lightbet' },
-              'mrbayo': { name: 'Mr bayo', id: 'punter-mrbayo' },
-              'talentedfight': { name: 'Talented fight', id: 'punter-talentedfight' },
-              'bossolamilekan': { name: 'Bossolamilekan', id: 'punter-bossolamilekan' },
-              'general': { name: 'BRYME Desk', id: null }
-            };
-            const pObj = pMap[pKey] || { name: 'BRYME Desk', id: null };
+            const state = await getState();
+            let pObj = (state.punters || []).find(p => p.id === `punter-${pKey}` || p.id === pKey || p.displayName.toLowerCase().replace(/[^a-z0-9]/g, '') === pKey);
+            const punterName = pKey === 'general' ? 'BRYME Desk' : (pObj?.displayName || pKey);
+            const punterId = pKey === 'general' ? null : (pObj?.id || `punter-${pKey}`);
 
             const session = await getSession(userId);
             if (session) {
-              session.punterName = pObj.name;
-              session.punterId = pObj.id;
+              session.punterName = punterName;
+              session.punterId = punterId;
 
               // If market flow, ask for market
               if (session.flow === 'market') {
                 session.step = 'awaiting_market';
                 await saveSession(userId, session);
                 const text = `<b>⚽ Target Football Market (Step 5/5)</b>\n` +
-                  `Code: <code>${session.code}</code> | By: <b>${pObj.name}</b>\n\n` +
+                  `Code: <code>${session.code}</code> | By: <b>${punterName}</b>\n\n` +
                   `Which market does this slip belong to?`;
-                await editTelegramMessage(botToken, chatId, messageId, text, getMarketsKeyboard());
+                await editTelegramMessage(botToken, chatId, messageId, text, getMarketsKeyboard(state.markets || []));
                 return jsonResponse({ ok: true, action: 'step_market' });
               }
 
               // Otherwise execute Code Hub Publish!
-              const state = await getState();
               publishToState(state, session);
               await saveState(state);
               await clearSession(userId);
@@ -488,6 +610,102 @@ async function handleApiRequest(request, env, url) {
 
         // 2.1 Handle Active Wizard Step Input
         if (session && session.step) {
+          // If awaiting punter name:
+          if (session.step === 'punter_name') {
+            const parts = text.split(/\s+/);
+            let handle = parts.find(p => p.startsWith('@')) || '';
+            let name = parts.filter(p => !p.startsWith('@')).join(' ');
+            if (!name) name = text;
+            session.punterDisplayName = name;
+            session.punterHandle = handle || `@${name.replace(/[^a-zA-Z0-9]/g, '')}`;
+            session.step = 'punter_specialty';
+            await saveSession(userId, session);
+
+            const promptText = `<b>Specialty / Niche (Step 2/2)</b>\n` +
+              `Punter: <b>${name}</b> (${session.punterHandle})\n\n` +
+              `👉 <b>Send their betting specialty:</b>\n` +
+              `Example: <code>Corner Markets & 2-Odds European Whale Accas</code>`;
+            if (chatId) await sendTelegramReply(botToken, chatId, promptText, getCancelKeyboard());
+            return jsonResponse({ ok: true, action: 'saved_punter_name' });
+          }
+
+          // If awaiting punter specialty:
+          if (session.step === 'punter_specialty') {
+            const state = await getState();
+            const slug = session.punterDisplayName.toLowerCase().replace(/[^a-z0-9]/g, '');
+            state.punters.push({
+              id: `punter-${slug}`,
+              displayName: session.punterDisplayName,
+              handle: session.punterHandle,
+              pinned: false,
+              region: 'Nigeria',
+              countryCode: 'NG',
+              avatar: session.punterDisplayName.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase() || 'BP',
+              specialty: text,
+              bio: `Verified betting analyst specializing in ${text}.`,
+              winStreak: '5 Wins',
+              hitRate: '80%',
+              verified: true,
+              dailyCodes: []
+            });
+            await saveState(state);
+            await clearSession(userId);
+
+            const confirmText = `✅ <b>Punter Added Successfully!</b>\n\n` +
+              `• <b>Name:</b> ${session.punterDisplayName}\n` +
+              `• <b>Handle:</b> ${session.punterHandle}\n` +
+              `• <b>Specialty:</b> ${text}\n\n` +
+              `Now live on the Punters Directory at <b>predictions.thebryme.com</b>!`;
+            if (chatId) await sendTelegramReply(botToken, chatId, confirmText, getPuntersMenuKeyboard());
+            return jsonResponse({ ok: true, action: 'punter_created' });
+          }
+
+          // If awaiting new market name:
+          if (session.step === 'mkt_name') {
+            session.marketName = text;
+            session.step = 'mkt_category';
+            await saveSession(userId, session);
+
+            const promptText = `<b>Select Market Category (Step 2/3)</b>\n` +
+              `Market: <b>${text}</b>\n\n` +
+              `Choose the category this market belongs to:`;
+            if (chatId) await sendTelegramReply(botToken, chatId, promptText, getMarketCategoryKeyboard());
+            return jsonResponse({ ok: true, action: 'saved_mkt_name' });
+          }
+
+          // If awaiting market typical odds:
+          if (session.step === 'mkt_odds') {
+            const state = await getState();
+            const slug = session.marketName.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-');
+            state.markets.push({
+              id: slug,
+              slug: slug,
+              name: session.marketName,
+              shortName: session.marketName,
+              category: session.category || 'goals',
+              badge: 'Verified Model',
+              riskLevel: 'Medium Risk',
+              typicalOddsRange: text || '1.30 - 2.00',
+              averageHitRate: '75%',
+              bestLeagues: ['English Premier League', 'Spanish La Liga', 'German Bundesliga'],
+              bookmakerSupport: ['SportyBet', 'Football.com', 'Bet9ja', '1xBet', 'BetKing', 'MSport'],
+              description: `${session.marketName} betting line for European and continental fixtures.`,
+              tacticalTip: `Statistical model edge on ${session.marketName}.`,
+              presets: ['Standard Acca', 'Rollover'],
+              howItWorks: `Wager settled on ${session.marketName} conditions.`
+            });
+            await saveState(state);
+            await clearSession(userId);
+
+            const confirmText = `✅ <b>New Betting Market Added!</b>\n\n` +
+              `• <b>Name:</b> ${session.marketName}\n` +
+              `• <b>Category:</b> ${session.category}\n` +
+              `• <b>Typical Odds:</b> ${text}\n\n` +
+              `Now live in the 35+ Markets Directory and Homepage Vault!`;
+            if (chatId) await sendTelegramReply(botToken, chatId, confirmText, getMarketsMenuKeyboard());
+            return jsonResponse({ ok: true, action: 'market_created' });
+          }
+
           // If awaiting code:
           if (session.step === 'awaiting_code') {
             const codeCandidate = text.toUpperCase().replace(/[^A-Z0-9]/g, '');
@@ -535,11 +753,12 @@ async function handleApiRequest(request, env, url) {
             session.step = 'awaiting_punter';
             await saveSession(userId, session);
 
+            const state = await getState();
             const promptText = `<b>Select Punter / Source (Step ${session.flow === 'market' ? '4/5' : 'Final'})</b>\n` +
               `Code: <code>${session.code}</code> | Odds: <b>${session.odds}x</b>` +
               (session.gamesCount ? ` | Games: <b>${session.gamesCount}</b>\n\n` : `\n\n`) +
               `Who dropped this slip? Tap below or type a name:`;
-            if (chatId) await sendTelegramReply(botToken, chatId, promptText, getPuntersKeyboard());
+            if (chatId) await sendTelegramReply(botToken, chatId, promptText, getPuntersKeyboard(state.punters || []));
             return jsonResponse({ ok: true, action: 'saved_games' });
           }
         }
@@ -600,6 +819,166 @@ async function handleApiRequest(request, env, url) {
           const replyMsg = `🗑 <b>Code Purged:</b> <code>${targetCode}</code>\nRemoved from Code Hub, Market Slips & Punters!`;
           if (chatId) await sendTelegramReply(botToken, chatId, replyMsg, getMainMenuKeyboard());
           return jsonResponse({ ok: true, action: 'deleted', code: targetCode });
+        }
+
+        // 2.5.A Add Punter (/addpunter Name [@handle] [specialty])
+        if (text.startsWith('/addpunter')) {
+          const raw = text.replace('/addpunter', '').trim();
+          if (!raw) {
+            if (chatId) await sendTelegramReply(botToken, chatId, '⚠️ Format: <code>/addpunter Whale King @WhaleKing 2-Odds Whale Specialist</code>', getPuntersMenuKeyboard());
+            return jsonResponse({ ok: false, error: 'missing_punter_info' });
+          }
+
+          const parts = raw.split(/\s+/);
+          let handle = parts.find(p => p.startsWith('@')) || '';
+          let nameParts = parts.filter(p => !p.startsWith('@'));
+          let name = nameParts.slice(0, 2).join(' ') || raw;
+          let specialty = nameParts.slice(2).join(' ') || 'High-Yield Syndicate Analyst';
+          if (!handle) handle = `@${name.replace(/[^a-zA-Z0-9]/g, '')}`;
+
+          const state = await getState();
+          const slug = name.toLowerCase().replace(/[^a-z0-9]/g, '');
+          state.punters.push({
+            id: `punter-${slug}`,
+            displayName: name,
+            handle: handle,
+            pinned: false,
+            region: 'Nigeria',
+            countryCode: 'NG',
+            avatar: name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase() || 'BP',
+            specialty: specialty,
+            bio: `Verified betting analyst specializing in ${specialty}.`,
+            winStreak: '5 Wins',
+            hitRate: '80%',
+            verified: true,
+            dailyCodes: []
+          });
+          await saveState(state);
+
+          const replyMsg = `✅ <b>Punter Added Successfully!</b>\n\n` +
+            `• <b>Name:</b> ${name}\n` +
+            `• <b>Handle:</b> ${handle}\n` +
+            `• <b>Specialty:</b> ${specialty}\n\n` +
+            `Now live on the Punters Directory at <b>predictions.thebryme.com</b>!`;
+          if (chatId) await sendTelegramReply(botToken, chatId, replyMsg, getPuntersMenuKeyboard());
+          return jsonResponse({ ok: true, action: 'punter_added', name });
+        }
+
+        // 2.5.B Delete Punter (/delpunter Name)
+        if (text.startsWith('/delpunter')) {
+          const target = text.replace('/delpunter', '').trim().toLowerCase();
+          if (!target) {
+            if (chatId) await sendTelegramReply(botToken, chatId, '⚠️ Format: <code>/delpunter Name</code>', getPuntersMenuKeyboard());
+            return jsonResponse({ ok: false, error: 'missing_punter_target' });
+          }
+
+          const state = await getState();
+          const beforeCount = state.punters.length;
+          state.punters = state.punters.filter(p => 
+            p.id.toLowerCase() !== target && 
+            p.displayName.toLowerCase() !== target && 
+            p.handle.toLowerCase() !== target &&
+            p.handle.toLowerCase().replace('@', '') !== target
+          );
+          const removed = beforeCount - state.punters.length;
+          await saveState(state);
+
+          const replyMsg = removed > 0 
+            ? `🗑 <b>Punter Removed:</b> ${target}\nRemoved from Punters Directory!`
+            : `⚠️ Punter "${target}" not found. Send /punters to list all.`;
+          if (chatId) await sendTelegramReply(botToken, chatId, replyMsg, getPuntersMenuKeyboard());
+          return jsonResponse({ ok: true, action: 'punter_deleted' });
+        }
+
+        // 2.5.C Add Market Type (/addmarket Name [category] [odds])
+        if (text.startsWith('/addmarket')) {
+          const raw = text.replace('/addmarket', '').trim();
+          if (!raw) {
+            if (chatId) await sendTelegramReply(botToken, chatId, '⚠️ Format: <code>/addmarket First Half Over 0.5 goals 1.30-1.60</code>', getMarketsMenuKeyboard());
+            return jsonResponse({ ok: false, error: 'missing_market_info' });
+          }
+
+          const parts = raw.split(/\s+/);
+          let oddsRange = parts.find(p => p.includes('-') || p.includes('.')) || '1.30 - 2.00';
+          let nameParts = parts.filter(p => p !== oddsRange);
+          let name = nameParts.join(' ');
+          let category = 'goals';
+          const lower = name.toLowerCase();
+          if (lower.includes('corner') || lower.includes('card')) category = 'specials';
+          else if (lower.includes('btts') || lower.includes('gg')) category = 'btts';
+          else if (lower.includes('dc') || lower.includes('winner') || lower.includes('1x2')) category = 'outcomes';
+          else if (lower.includes('half')) category = 'halves';
+
+          const state = await getState();
+          const slug = name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-');
+          state.markets.push({
+            id: slug,
+            slug: slug,
+            name: name,
+            shortName: name,
+            category: category,
+            badge: 'Verified Model',
+            riskLevel: 'Medium Risk',
+            typicalOddsRange: oddsRange,
+            averageHitRate: '75%',
+            bestLeagues: ['English Premier League', 'Spanish La Liga', 'German Bundesliga'],
+            bookmakerSupport: ['SportyBet', 'Football.com', 'Bet9ja', '1xBet', 'BetKing', 'MSport'],
+            description: `${name} betting line for European and continental fixtures.`,
+            tacticalTip: `Statistical model edge on ${name}.`,
+            presets: ['Standard Acca', 'Rollover'],
+            howItWorks: `Wager settled on ${name} conditions.`
+          });
+          await saveState(state);
+
+          const replyMsg = `✅ <b>New Betting Market Added!</b>\n\n` +
+            `• <b>Name:</b> ${name}\n` +
+            `• <b>Category:</b> ${category}\n` +
+            `• <b>Typical Odds:</b> ${oddsRange}\n\n` +
+            `Live in the 35+ Markets Directory and Homepage Vault!`;
+          if (chatId) await sendTelegramReply(botToken, chatId, replyMsg, getMarketsMenuKeyboard());
+          return jsonResponse({ ok: true, action: 'market_type_added', name });
+        }
+
+        // 2.5.D Delete Market Type (/delmarket slug)
+        if (text.startsWith('/delmarket')) {
+          const target = text.replace('/delmarket', '').trim().toLowerCase();
+          if (!target) {
+            if (chatId) await sendTelegramReply(botToken, chatId, '⚠️ Format: <code>/delmarket slug</code>', getMarketsMenuKeyboard());
+            return jsonResponse({ ok: false, error: 'missing_market_target' });
+          }
+
+          const state = await getState();
+          const beforeCount = state.markets.length;
+          state.markets = state.markets.filter(m => m.id.toLowerCase() !== target && m.slug.toLowerCase() !== target && m.name.toLowerCase() !== target);
+          state.marketCodes = state.marketCodes.filter(c => c.marketId?.toLowerCase() !== target);
+          const removed = beforeCount - state.markets.length;
+          await saveState(state);
+
+          const replyMsg = removed > 0 
+            ? `🗑 <b>Market Removed:</b> ${target}\nRemoved from Markets Directory!`
+            : `⚠️ Market "${target}" not found.`;
+          if (chatId) await sendTelegramReply(botToken, chatId, replyMsg, getMarketsMenuKeyboard());
+          return jsonResponse({ ok: true, action: 'market_type_deleted' });
+        }
+
+        // 2.5.E View Punters (/punters)
+        if (text === '/punters') {
+          const state = await getState();
+          const list = (state.punters || []).map((p, i) => 
+            `${i + 1}. <b>${p.displayName}</b> (${p.handle || '@punter'}) ${p.pinned ? '📌 VIP' : ''}\n   <i>${p.specialty || 'Analyst'}</i>`
+          ).join('\n\n');
+          if (chatId) await sendTelegramReply(botToken, chatId, `👤 <b>All Tracked Punters:</b>\n\n${list}`, getPuntersMenuKeyboard());
+          return jsonResponse({ ok: true, action: 'list_punters' });
+        }
+
+        // 2.5.F View Markets (/markets)
+        if (text === '/markets') {
+          const state = await getState();
+          const list = (state.markets || []).slice(0, 15).map((m, i) => 
+            `${i + 1}. <b>${m.name}</b> (${m.category})`
+          ).join('\n');
+          if (chatId) await sendTelegramReply(botToken, chatId, `⚽ <b>Active Betting Markets (${state.markets?.length || 0}):</b>\n\n${list}`, getMarketsMenuKeyboard());
+          return jsonResponse({ ok: true, action: 'list_markets' });
         }
 
         // 2.6 Rollover Command (/rollover, /ladder)
@@ -1034,15 +1413,102 @@ function getMainMenuKeyboard() {
     inline_keyboard: [
       [
         { text: '➕ Add Code to Hub', callback_data: 'wiz_hub' },
-        { text: '⚽ Attach to Market', callback_data: 'wiz_mkt' }
+        { text: '⚽ Attach Slip to Market', callback_data: 'wiz_mkt' }
       ],
       [
-        { text: '⚽ View Market Slips', callback_data: 'cmd_markets' },
-        { text: '📌 View Top Codes', callback_data: 'cmd_codes' }
+        { text: '👤 Manage Punters', callback_data: 'menu_punters' },
+        { text: '⚽ Manage Market Types', callback_data: 'menu_markets' }
       ],
       [
         { text: '📋 Bulk Drop Mode', callback_data: 'help_bulk' },
-        { text: '📊 Live Status', callback_data: 'cmd_status' }
+        { text: '📊 Platform Status', callback_data: 'cmd_status' }
+      ],
+      [
+        { text: '📌 View Top Codes', callback_data: 'cmd_codes' }
+      ]
+    ]
+  };
+}
+
+function getPuntersMenuKeyboard() {
+  return {
+    inline_keyboard: [
+      [
+        { text: '➕ Add New Punter', callback_data: 'wiz_punter_add' },
+        { text: '📋 View All Punters', callback_data: 'cmd_list_punters' }
+      ],
+      [
+        { text: '🗑 Delete a Punter', callback_data: 'wiz_punter_del_menu' },
+        { text: '🏠 Main Menu', callback_data: 'menu_main' }
+      ]
+    ]
+  };
+}
+
+function getMarketsMenuKeyboard() {
+  return {
+    inline_keyboard: [
+      [
+        { text: '➕ Add New Market Type', callback_data: 'wiz_mkt_type_add' },
+        { text: '⚽ Attach Slip to Market', callback_data: 'wiz_mkt' }
+      ],
+      [
+        { text: '📋 View All Markets', callback_data: 'cmd_list_all_markets' },
+        { text: '🗑 Delete Market Type', callback_data: 'wiz_mkt_type_del_menu' }
+      ],
+      [
+        { text: '🏠 Main Menu', callback_data: 'menu_main' }
+      ]
+    ]
+  };
+}
+
+function getPunterDeleteKeyboard(punters = []) {
+  const rows = [];
+  for (let i = 0; i < punters.length; i += 2) {
+    const row = [];
+    row.push({ text: `🗑 ${punters[i].displayName}`, callback_data: `del_punter_${punters[i].id}` });
+    if (punters[i + 1]) {
+      row.push({ text: `🗑 ${punters[i + 1].displayName}`, callback_data: `del_punter_${punters[i + 1].id}` });
+    }
+    rows.push(row);
+  }
+  rows.push([{ text: '◀️ Back to Punters Menu', callback_data: 'menu_punters' }]);
+  return { inline_keyboard: rows };
+}
+
+function getMarketDeleteKeyboard(markets = []) {
+  const rows = [];
+  const list = markets.slice(0, 16);
+  for (let i = 0; i < list.length; i += 2) {
+    const row = [];
+    row.push({ text: `🗑 ${list[i].name.slice(0, 18)}`, callback_data: `del_mkt_${list[i].id || list[i].slug}` });
+    if (list[i + 1]) {
+      row.push({ text: `🗑 ${list[i + 1].name.slice(0, 18)}`, callback_data: `del_mkt_${list[i + 1].id || list[i + 1].slug}` });
+    }
+    rows.push(row);
+  }
+  rows.push([{ text: '◀️ Back to Markets Menu', callback_data: 'menu_markets' }]);
+  return { inline_keyboard: rows };
+}
+
+function getMarketCategoryKeyboard() {
+  return {
+    inline_keyboard: [
+      [
+        { text: '⚽ Goals & Totals', callback_data: 'cat_mkt_goals' },
+        { text: '🛡️ 1X2 & Outcomes', callback_data: 'cat_mkt_outcomes' }
+      ],
+      [
+        { text: '🎯 Both Teams (GG)', callback_data: 'cat_mkt_btts' },
+        { text: '🚩 Corners & Cards', callback_data: 'cat_mkt_specials' }
+      ],
+      [
+        { text: '⚡ Combos & Multi', callback_data: 'cat_mkt_combos' },
+        { text: '⏱️ Halves & Intervals', callback_data: 'cat_mkt_halves' }
+      ],
+      [
+        { text: '❌ Cancel', callback_data: 'wiz_cancel' }
       ]
     ]
   };
@@ -1123,7 +1589,26 @@ function getGamesKeyboard() {
   };
 }
 
-function getPuntersKeyboard() {
+function getPuntersKeyboard(puntersList = []) {
+  if (Array.isArray(puntersList) && puntersList.length > 0) {
+    const rows = [];
+    for (let i = 0; i < puntersList.length; i += 2) {
+      const row = [];
+      const p1 = puntersList[i];
+      const p1Key = p1.id.replace('punter-', '');
+      row.push({ text: `${p1.displayName}${p1.pinned ? ' 📌' : ''}`, callback_data: `punter_${p1Key}` });
+      if (puntersList[i + 1]) {
+        const p2 = puntersList[i + 1];
+        const p2Key = p2.id.replace('punter-', '');
+        row.push({ text: `${p2.displayName}${p2.pinned ? ' 📌' : ''}`, callback_data: `punter_${p2Key}` });
+      }
+      rows.push(row);
+    }
+    rows.push([{ text: '🏢 BRYME General Desk', callback_data: 'punter_general' }]);
+    rows.push([{ text: '❌ Cancel', callback_data: 'wiz_cancel' }]);
+    return { inline_keyboard: rows };
+  }
+
   return {
     inline_keyboard: [
       [
@@ -1156,7 +1641,22 @@ function getPuntersKeyboard() {
   };
 }
 
-function getMarketsKeyboard() {
+function getMarketsKeyboard(marketsList = []) {
+  if (Array.isArray(marketsList) && marketsList.length > 0) {
+    const rows = [];
+    const list = marketsList.slice(0, 16);
+    for (let i = 0; i < list.length; i += 2) {
+      const row = [];
+      row.push({ text: `⚽ ${list[i].shortName || list[i].name}`, callback_data: `mkt_${list[i].slug || list[i].id}` });
+      if (list[i + 1]) {
+        row.push({ text: `⚽ ${list[i + 1].shortName || list[i + 1].name}`, callback_data: `mkt_${list[i + 1].slug || list[i + 1].id}` });
+      }
+      rows.push(row);
+    }
+    rows.push([{ text: '❌ Cancel', callback_data: 'wiz_cancel' }]);
+    return { inline_keyboard: rows };
+  }
+
   return {
     inline_keyboard: [
       [
