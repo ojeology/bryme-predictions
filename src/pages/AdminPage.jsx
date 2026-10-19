@@ -173,7 +173,7 @@ export default function AdminPage({ onNavigate }) {
 
   // ── 3. ASSIGN CODE TO PUNTER FORM STATE ──
   const [punterCodeForm, setPunterCodeForm] = useState({
-    punterId: punters[0]?.id || 'punter-femi',
+    punterId: punters[0]?.id || 'punter-mrbanks',
     bookmaker: 'sportybet',
     code: '',
     marketType: 'Over 1.5 Goals Radar',

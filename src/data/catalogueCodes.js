@@ -49,7 +49,7 @@ export const INITIAL_CODE_CATALOGUE = [
     status: 'active',
     highlightMatch: 'Liverpool vs Chelsea (1X & Over 1.5)',
     dropTime: '02:00 AM WAT',
-    author: 'Chief Punter Femi'
+    author: 'Mr banks'
   },
   {
     id: 'code-cat-04',
@@ -64,7 +64,7 @@ export const INITIAL_CODE_CATALOGUE = [
     status: 'active',
     highlightMatch: 'Liverpool vs Chelsea (1X & Over 1.5)',
     dropTime: '02:00 AM WAT',
-    author: 'Chief Punter Femi'
+    author: 'Mr banks'
   },
   {
     id: 'code-cat-05',
@@ -79,7 +79,7 @@ export const INITIAL_CODE_CATALOGUE = [
     status: 'active',
     highlightMatch: 'Liverpool vs Chelsea (1X & O1.5)',
     dropTime: '02:00 AM WAT',
-    author: 'Chief Punter Femi'
+    author: 'Mr banks'
   },
   {
     id: 'code-cat-06',
@@ -94,7 +94,7 @@ export const INITIAL_CODE_CATALOGUE = [
     status: 'active',
     highlightMatch: 'Man United vs Brentford (Over 1.5)',
     dropTime: '02:00 AM WAT',
-    author: 'Coach Dan'
+    author: 'Tall man'
   },
   {
     id: 'code-cat-07',
@@ -109,7 +109,7 @@ export const INITIAL_CODE_CATALOGUE = [
     status: 'active',
     highlightMatch: 'Juventus vs Lazio (Over 1.5)',
     dropTime: '02:00 AM WAT',
-    author: 'Coach Dan'
+    author: 'Tall man'
   },
   {
     id: 'code-cat-08',
@@ -124,7 +124,7 @@ export const INITIAL_CODE_CATALOGUE = [
     status: 'active',
     highlightMatch: 'Barcelona vs Sevilla (Home Win & O1.5)',
     dropTime: '02:00 AM WAT',
-    author: 'Baba Tunde'
+    author: 'Boss Tips'
   },
   {
     id: 'code-cat-09',
@@ -139,7 +139,7 @@ export const INITIAL_CODE_CATALOGUE = [
     status: 'active',
     highlightMatch: 'Leverkusen vs Frankfurt (1X & O1.5)',
     dropTime: '02:00 AM WAT',
-    author: 'Baba Tunde'
+    author: 'Boss Tips'
   },
   {
     id: 'code-cat-10',
@@ -154,7 +154,7 @@ export const INITIAL_CODE_CATALOGUE = [
     status: 'active',
     highlightMatch: 'Roma vs Inter Milan (Inter Win)',
     dropTime: '02:00 AM WAT',
-    author: 'Sipho Ndlovu'
+    author: '39billion'
   },
   {
     id: 'code-cat-11',
@@ -169,7 +169,7 @@ export const INITIAL_CODE_CATALOGUE = [
     status: 'active',
     highlightMatch: 'Bayern vs Stuttgart (Win & O2.5)',
     dropTime: '02:00 AM WAT',
-    author: 'Sipho Ndlovu'
+    author: '39billion'
   },
   {
     id: 'code-cat-12',

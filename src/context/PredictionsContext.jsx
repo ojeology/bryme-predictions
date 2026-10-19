@@ -10,8 +10,8 @@ const PredictionsContext = createContext(null);
 
 const STORAGE_KEY_LADDER = 'bryme_active_ladder_v3';
 const STORAGE_KEY_TICKETS = 'bryme_booking_tickets_v3';
-const STORAGE_KEY_CATALOGUE = 'bryme_code_catalogue_v2';
-const STORAGE_KEY_PUNTERS = 'bryme_punters_v3';
+const STORAGE_KEY_CATALOGUE = 'bryme_code_catalogue_v3';
+const STORAGE_KEY_PUNTERS = 'bryme_punters_v4';
 const STORAGE_KEY_ANNOUNCEMENTS = 'bryme_announcements_v1';
 const STORAGE_KEY_MARKETS = 'bryme_markets_v2';
 const STORAGE_KEY_WHALE = 'bryme_whale_slip_v1';
@@ -102,7 +102,13 @@ export function PredictionsProvider({ children }) {
   const [punters, setPuntersState] = useState(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY_PUNTERS);
-      return saved ? JSON.parse(saved) : INITIAL_PUNTERS;
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.some(p => p.id === 'punter-mrbanks')) {
+          return parsed;
+        }
+      }
+      return INITIAL_PUNTERS;
     } catch (e) {
       return INITIAL_PUNTERS;
     }
@@ -215,7 +221,11 @@ export function PredictionsProvider({ children }) {
             if (remote.ladder) setLadderState(remote.ladder);
             if (remote.tickets) setTicketsState(remote.tickets);
             if (remote.codeCatalogue) setCodeCatalogueState(remote.codeCatalogue);
-            if (remote.punters) setPuntersState(remote.punters);
+            if (remote.punters && Array.isArray(remote.punters) && remote.punters.some(p => p.id === 'punter-mrbanks')) {
+              setPuntersState(remote.punters);
+            } else {
+              setPuntersState(INITIAL_PUNTERS);
+            }
             if (remote.announcements) setAnnouncementsState(remote.announcements);
             if (remote.markets) setMarketsState(remote.markets);
             if (remote.whaleSlip) setWhaleSlipState(remote.whaleSlip);
