@@ -34,7 +34,7 @@ export default function PuntersPage({ onNavigate }) {
       if (!inName && !inHandle && !inSpec) return false;
     }
     return true;
-  });
+  }).sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto">
@@ -115,21 +115,38 @@ export default function PuntersPage({ onNavigate }) {
         {filteredPunters.map((punter) => (
           <div
             key={punter.id}
-            className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1626] overflow-hidden shadow-sm space-y-3"
+            className={`rounded-2xl border ${
+              punter.pinned 
+                ? 'border-2 border-amber-500/70 bg-gradient-to-br from-amber-500/10 via-white dark:via-[#0E1626] to-transparent shadow-xl' 
+                : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1626]'
+            } overflow-hidden shadow-sm space-y-3`}
           >
             {/* Punter Profile Header Bar */}
-            <div className="p-4 sm:p-5 bg-slate-50/70 dark:bg-[#121B30] border-b border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className={`p-4 sm:p-5 ${
+              punter.pinned 
+                ? 'bg-amber-500/15 dark:bg-amber-950/30 border-b border-amber-500/30' 
+                : 'bg-slate-50/70 dark:bg-[#121B30] border-b border-slate-100 dark:border-slate-800'
+            } flex flex-col sm:flex-row sm:items-center justify-between gap-3`}>
               
               <div className="flex items-center gap-3">
-                <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-slate-900 via-[#1a2336] to-[#0A0F1D] border border-slate-700 text-white flex items-center justify-center font-display font-black text-sm shadow-md">
-                  {punter.avatar || punter.displayName.slice(0, 2).toUpperCase()}
+                <div className={`w-11 h-11 rounded-2xl ${
+                  punter.pinned 
+                    ? 'bg-gradient-to-tr from-amber-600 to-yellow-400 text-slate-950 font-black shadow-lg shadow-amber-500/20' 
+                    : 'bg-gradient-to-br from-slate-900 via-[#1a2336] to-[#0A0F1D] border border-slate-700 text-white'
+                } flex items-center justify-center font-display font-black text-sm shadow-md`}>
+                  {punter.pinned ? '📌' : (punter.avatar || punter.displayName.slice(0, 2).toUpperCase())}
                 </div>
 
                 <div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 flex-wrap">
                     <h2 className="font-display font-black text-base sm:text-lg text-slate-900 dark:text-white">
                       {punter.displayName}
                     </h2>
+                    {punter.pinned && (
+                      <span className="px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-500 dark:text-amber-300 font-mono font-black text-[10px] border border-amber-500/40 flex items-center gap-1 shadow-sm">
+                        <span>📌 PINNED MASTER</span>
+                      </span>
+                    )}
                     <span className="text-xs font-mono font-bold text-slate-400">
                       {punter.handle}
                     </span>
