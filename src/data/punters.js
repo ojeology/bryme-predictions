@@ -50,12 +50,32 @@ export const INITIAL_PUNTERS = [
     region: 'Nigeria',
     countryCode: 'NG',
     avatar: 'TM',
-    specialty: 'Over 1.5 & Over 2.5 High-Frequency Goals Radar',
-    bio: 'Specialist in European goal markets (Bundesliga, Eredivisie, EPL) tracking xG metrics for early and late goal surges.',
-    winStreak: '7 Wins',
-    hitRate: '81%',
+    specialty: 'Basketball & Over 1.5/2.5 Goals Radar',
+    bio: 'Specialist in high-odds basketball accumulators and European goal markets tracking early surge momentum.',
+    winStreak: '8 Wins',
+    hitRate: '82%',
     verified: true,
     dailyCodes: [
+      {
+        id: 'pcode-tm-00',
+        bookmaker: 'sportybet',
+        code: 'PZ6US6',
+        marketType: 'Basketball 10,000-Odds Mega Monster',
+        gamesCount: 16,
+        totalOdds: 10000.00,
+        status: 'active',
+        dropTime: 'Live Today'
+      },
+      {
+        id: 'pcode-tm-00-fb',
+        bookmaker: 'footballcom',
+        code: 'PZ6US6',
+        marketType: 'Basketball 10,000-Odds Mega Monster (Football.com)',
+        gamesCount: 16,
+        totalOdds: 10000.00,
+        status: 'active',
+        dropTime: 'Live Today'
+      },
       {
         id: 'pcode-tm-01',
         bookmaker: 'sportybet',
@@ -86,21 +106,61 @@ export const INITIAL_PUNTERS = [
     region: 'Nigeria',
     countryCode: 'NG',
     avatar: 'BT',
-    specialty: 'European League Combinations & Straight Wins',
-    bio: 'Disciplined match previewer analyzing team news, tactical form, and home fortress records across the Top 5 leagues.',
-    winStreak: '5 Wins',
-    hitRate: '79%',
+    specialty: 'European League Combinations & High-Yield Accas',
+    bio: 'Disciplined match previewer analyzing team news, tactical form, and high-odds multi-bookmaker slips.',
+    winStreak: '6 Wins',
+    hitRate: '80%',
     verified: true,
     dailyCodes: [
       {
-        id: 'pcode-bt-01',
+        id: 'pcode-bt-zne44s',
         bookmaker: 'sportybet',
-        code: 'BC4-BOSS-COMBO',
-        marketType: 'Straight Wins & 1X Combos',
-        gamesCount: 3,
-        totalOdds: 2.80,
+        code: 'ZNE44S',
+        marketType: '90,000-Odds Mega Jackpot Accumulator',
+        gamesCount: 26,
+        totalOdds: 90000.00,
         status: 'active',
-        dropTime: '02:00 AM WAT'
+        dropTime: 'Live Today'
+      },
+      {
+        id: 'pcode-bt-zne44s-fb',
+        bookmaker: 'footballcom',
+        code: 'ZNE44S',
+        marketType: '90,000-Odds Mega Jackpot (Football.com)',
+        gamesCount: 26,
+        totalOdds: 90000.00,
+        status: 'active',
+        dropTime: 'Live Today'
+      },
+      {
+        id: 'pcode-bt-5wfvhmq',
+        bookmaker: 'bet9ja',
+        code: '5WFVHMQ',
+        marketType: 'Random Picks High-Yield Ticket',
+        gamesCount: 8,
+        totalOdds: 84.50,
+        status: 'active',
+        dropTime: 'Live Today'
+      },
+      {
+        id: 'pcode-bt-5wfvjcs',
+        bookmaker: 'bet9ja',
+        code: '5WFVJCS',
+        marketType: 'Random Sweet Picks Accumulator',
+        gamesCount: 10,
+        totalOdds: 145.00,
+        status: 'active',
+        dropTime: 'Live Today'
+      },
+      {
+        id: 'pcode-bt-23puc',
+        bookmaker: '1xbet',
+        code: '23PUC',
+        marketType: 'Table Tennis 224-Odds Multiplier',
+        gamesCount: 7,
+        totalOdds: 224.00,
+        status: 'active',
+        dropTime: 'Live Today'
       }
     ]
   },
@@ -174,21 +234,91 @@ export const INITIAL_PUNTERS = [
     region: 'Nigeria',
     countryCode: 'NG',
     avatar: 'LB',
-    specialty: 'Weekend 3-Odds & UCL Midweek Specials',
-    bio: 'Picks focused on European continental nights and high-value Saturday afternoon fixtures.',
-    winStreak: '4 Wins',
-    hitRate: '77%',
+    specialty: 'Table Tennis Monsters, GG & High-Odds Accas',
+    bio: 'Picks focused on high-yield table tennis, Goal-Goal (GG) lines, and massive speculative multipliers.',
+    winStreak: '5 Wins',
+    hitRate: '78%',
     verified: true,
     dailyCodes: [
       {
-        id: 'pcode-lb-01',
+        id: 'pcode-lb-pkb6uh',
         bookmaker: 'sportybet',
-        code: 'BC4-LIGHT-3OD',
-        marketType: 'Midweek & Weekend 3-Odds Booster',
-        gamesCount: 3,
-        totalOdds: 3.15,
+        code: 'PKB6UH',
+        marketType: 'Table Tennis 10,000-Odds Mega Monster',
+        gamesCount: 18,
+        totalOdds: 10000.00,
         status: 'active',
-        dropTime: '02:00 AM WAT'
+        dropTime: 'Live Today'
+      },
+      {
+        id: 'pcode-lb-pkb6uh-fb',
+        bookmaker: 'footballcom',
+        code: 'PKB6UH',
+        marketType: 'Table Tennis 10,000-Odds Monster (Football.com)',
+        gamesCount: 18,
+        totalOdds: 10000.00,
+        status: 'active',
+        dropTime: 'Live Today'
+      },
+      {
+        id: 'pcode-lb-s4met9',
+        bookmaker: 'sportybet',
+        code: 'S4MET9',
+        marketType: 'Table Tennis 6,483-Odds Multiplier',
+        gamesCount: 15,
+        totalOdds: 6483.00,
+        status: 'active',
+        dropTime: 'Live Today'
+      },
+      {
+        id: 'pcode-lb-s4met9-fb',
+        bookmaker: 'footballcom',
+        code: 'S4MET9',
+        marketType: 'Table Tennis 6,483-Odds (Football.com)',
+        gamesCount: 15,
+        totalOdds: 6483.00,
+        status: 'active',
+        dropTime: 'Live Today'
+      },
+      {
+        id: 'pcode-lb-qdw2nj',
+        bookmaker: 'sportybet',
+        code: 'QDW2NJ',
+        marketType: 'Double Chance & Both Teams To Score (68,000 Odds)',
+        gamesCount: 22,
+        totalOdds: 68000.00,
+        status: 'active',
+        dropTime: 'Live Today'
+      },
+      {
+        id: 'pcode-lb-qdw2nj-fb',
+        bookmaker: 'footballcom',
+        code: 'QDW2NJ',
+        marketType: 'Double Chance & GG 68,000-Odds (Football.com)',
+        gamesCount: 22,
+        totalOdds: 68000.00,
+        status: 'active',
+        dropTime: 'Live Today'
+      },
+      {
+        id: 'pcode-lb-w6xdm5',
+        bookmaker: 'sportybet',
+        code: 'W6XDM5',
+        marketType: 'Both Teams To Score (GG Only) Wave',
+        gamesCount: 8,
+        totalOdds: 148.00,
+        status: 'active',
+        dropTime: 'Live Today'
+      },
+      {
+        id: 'pcode-lb-w6xdm5-fb',
+        bookmaker: 'footballcom',
+        code: 'W6XDM5',
+        marketType: 'GG Only Wave (Football.com)',
+        gamesCount: 8,
+        totalOdds: 148.00,
+        status: 'active',
+        dropTime: 'Live Today'
       }
     ]
   },
@@ -304,21 +434,123 @@ export const INITIAL_PUNTERS = [
     region: 'Nigeria',
     countryCode: 'NG',
     avatar: '39',
-    specialty: 'Mega Multi-Slips & Weekend Long Shots',
-    bio: 'Speculative long-odds accumulators (10x to 50x) with minimal stakes and maximum upside.',
-    winStreak: '4 Wins',
-    hitRate: '74%',
+    specialty: 'Multiscores, 10,000-Odds & Mega Long Shots',
+    bio: 'High-leverage accumulator specialist. Known for correct multiscores and 10k-odds speculative moonshots.',
+    winStreak: '5 Wins',
+    hitRate: '76%',
     verified: true,
     dailyCodes: [
       {
-        id: 'pcode-39b-01',
+        id: 'pcode-39b-zpmr5q',
         bookmaker: 'sportybet',
-        code: 'BC4-39B-MEGA',
-        marketType: 'Weekend Long-Shot Value Acca',
-        gamesCount: 6,
-        totalOdds: 12.80,
+        code: 'ZPMR5Q',
+        marketType: 'SportyBet 10,000-Odds Mega Moonshot',
+        gamesCount: 20,
+        totalOdds: 10000.00,
         status: 'active',
-        dropTime: '02:00 AM WAT'
+        dropTime: 'Live Today'
+      },
+      {
+        id: 'pcode-39b-zpmr5q-fb',
+        bookmaker: 'footballcom',
+        code: 'ZPMR5Q',
+        marketType: 'Football.com 10,000-Odds Mega Moonshot',
+        gamesCount: 20,
+        totalOdds: 10000.00,
+        status: 'active',
+        dropTime: 'Live Today'
+      },
+      {
+        id: 'pcode-39b-5wgm3nm',
+        bookmaker: 'bet9ja',
+        code: '5WGM3NM',
+        marketType: 'Bet9ja Multiscores Combination Slip 1',
+        gamesCount: 6,
+        totalOdds: 890.00,
+        status: 'active',
+        dropTime: 'Live Today'
+      },
+      {
+        id: 'pcode-39b-5wgm7h7',
+        bookmaker: 'bet9ja',
+        code: '5WGM7H7',
+        marketType: 'Bet9ja Multiscores Combination Slip 2',
+        gamesCount: 6,
+        totalOdds: 920.00,
+        status: 'active',
+        dropTime: 'Live Today'
+      }
+    ]
+  },
+  {
+    id: 'punter-cindymodel',
+    displayName: 'Cindymodel',
+    handle: '@CindyModel',
+    pinned: false,
+    region: 'Nigeria',
+    countryCode: 'NG',
+    avatar: 'CM',
+    specialty: 'Bet9ja Value Accumulators & Sweet Picks',
+    bio: 'Recognized Nigerian punter specializing in high-converting Bet9ja 20x to 200x accumulator combinations.',
+    winStreak: '6 Wins',
+    hitRate: '82%',
+    verified: true,
+    dailyCodes: [
+      {
+        id: 'pcode-cm-5wgqpq3',
+        bookmaker: 'bet9ja',
+        code: '5WGQPQ3',
+        marketType: 'Bet9ja 200-Odds Value Accumulator',
+        gamesCount: 12,
+        totalOdds: 200.00,
+        status: 'active',
+        dropTime: 'Live Today'
+      },
+      {
+        id: 'pcode-cm-5wgqkm6',
+        bookmaker: 'bet9ja',
+        code: '5WGQKM6',
+        marketType: 'Bet9ja 20-Odds Solid Banker Slip',
+        gamesCount: 5,
+        totalOdds: 20.00,
+        status: 'active',
+        dropTime: 'Live Today'
+      }
+    ]
+  },
+  {
+    id: 'punter-pandev',
+    displayName: 'Pandev punter',
+    handle: '@PandevPunter',
+    pinned: false,
+    region: 'Nigeria',
+    countryCode: 'NG',
+    avatar: 'PP',
+    specialty: 'Tactical European Accas & Bet9ja Combinations',
+    bio: 'Deep technical analysis of match rhythms, form curves, and disciplined Bet9ja code generation.',
+    winStreak: '5 Wins',
+    hitRate: '79%',
+    verified: true,
+    dailyCodes: [
+      {
+        id: 'pcode-pp-5wggc8t',
+        bookmaker: 'bet9ja',
+        code: '5WGGC8T',
+        marketType: 'Bet9ja Tactical Multiplier Slip 1',
+        gamesCount: 8,
+        totalOdds: 65.00,
+        status: 'active',
+        dropTime: 'Live Today'
+      },
+      {
+        id: 'pcode-pp-5wgfxkn',
+        bookmaker: 'bet9ja',
+        code: '5WGFXKN',
+        marketType: 'Bet9ja Tactical Multiplier Slip 2',
+        gamesCount: 9,
+        totalOdds: 110.00,
+        status: 'active',
+        dropTime: 'Live Today'
       }
     ]
   }
