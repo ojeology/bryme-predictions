@@ -143,9 +143,11 @@ export default function BookingCodesHub({ onNavigate }) {
                     {item.bookmakerName || item.bookmaker}
                   </span>
 
-                  <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 font-bold bg-slate-100 dark:bg-[#162238] px-2 py-0.5 rounded">
-                    {item.eventsCount || 3} Games
-                  </span>
+                  {item.eventsCount ? (
+                    <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 font-bold bg-slate-100 dark:bg-[#162238] px-2 py-0.5 rounded">
+                      {item.eventsCount} Games
+                    </span>
+                  ) : null}
                 </div>
 
                 <div className="flex items-center gap-1.5 font-mono text-xs">

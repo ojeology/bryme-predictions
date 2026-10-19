@@ -3,6 +3,7 @@ import { INITIAL_CODE_CATALOGUE } from '../src/data/catalogueCodes.js';
 import { DAILY_BOOKING_TICKETS } from '../src/data/bookingTickets.js';
 import { ACTIVE_CHALLENGE } from '../src/data/ladder.js';
 import { MARKETS } from '../src/data/markets.js';
+import { INITIAL_MARKET_CODES } from '../src/data/marketCodes.js';
 import { SYNDICATE_ARCHIVE } from '../src/data/syndicateArchive.js';
 
 const DEFAULT_WHALE_SLIP = {
@@ -54,6 +55,7 @@ async function syncKV() {
     codeCatalogue: INITIAL_CODE_CATALOGUE,
     punters: INITIAL_PUNTERS,
     markets: MARKETS,
+    marketCodes: INITIAL_MARKET_CODES,
     whaleSlip: DEFAULT_WHALE_SLIP,
     syndicateArchive: SYNDICATE_ARCHIVE,
     adSettings: {

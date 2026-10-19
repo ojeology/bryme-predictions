@@ -34,84 +34,47 @@ export const LADDER_CONFIG = {
 };
 
 export const ACTIVE_CHALLENGE = {
-  challengeNumber: 50,
-  status: 'active',
-  startDate: '2026-10-14',
-  currentDay: 4,
+  challengeNumber: 51,
+  status: 'pending',
+  startDate: '2026-10-20',
+  currentDay: 1,
   startingStake: 1000,
-  currentBalance: 3375, // Day 1: 1000*1.50=1500; Day 2: 1500*1.50=2250; Day 3: 2250*1.50=3375; Day 4: 3375 * 1.54 = 5198
-  nextPotentialBalance: 5198,
+  currentBalance: 1000,
+  nextPotentialBalance: 1500,
   bankedAmount: 0,
-  todaysCode: 'Q7S287',
+  todaysCode: 'DROPS 11:00 AM',
   bookmaker: 'SportyBet',
-  sportyCode: 'Q7S287',
-  footballCode: 'Q7S287',
-  dailyOdds: 1.54,
+  sportyCode: 'DROPS 11:00 AM',
+  footballCode: 'DROPS 11:00 AM',
+  dailyOdds: 1.50,
   selections: [
     {
-      match: 'Ribecai Michele vs Vasami',
-      league: 'Tennis Professional Circuit',
-      kickoff: 'Today 14:00 WAT',
-      market: 'Set Betting',
-      pick: 'Home to Win a Set',
-      odds: 1.26,
-      status: 'pending'
-    },
-    {
-      match: 'Cecchinato vs Gaubas, Vilius',
-      league: 'Tennis ATP / Challenger Tour',
-      kickoff: 'Today 16:30 WAT',
-      market: 'Set Betting',
-      pick: 'Away to Win a Set',
-      odds: 1.22,
+      match: 'Day 1 Banker Double (UEFA Champions League / Domestic Top Flights)',
+      league: 'European Top-Flight Competitions',
+      kickoff: 'Tomorrow 16:30 WAT',
+      market: 'Double Chance & Total Goals',
+      pick: 'Analysis in Progress (Drops 11:00 AM WAT)',
+      odds: 1.50,
       status: 'pending'
     }
   ],
-  daysHistory: [
-    {
-      day: 1,
-      date: '2026-10-14',
-      odds: 1.50,
-      stake: 1000,
-      payout: 1500,
-      result: 'won',
-      code: 'Q7S281',
-      summary: 'Leverkusen 1X + Inter Milan Over 1.5 Goals'
-    },
-    {
-      day: 2,
-      date: '2026-10-15',
-      odds: 1.50,
-      stake: 1500,
-      payout: 2250,
-      result: 'won',
-      code: 'Q7S283',
-      summary: 'Barcelona Over 1.5 Team Goals + PSG Win or Draw'
-    },
-    {
-      day: 3,
-      date: '2026-10-16',
-      odds: 1.50,
-      stake: 2250,
-      payout: 3375,
-      result: 'won',
-      code: 'Q7S285',
-      summary: 'Arsenal 1X & Over 1.5 + Bayern vs Stuttgart Over 2.5'
-    },
-    {
-      day: 4,
-      date: '2026-10-19',
-      odds: 1.54,
-      stake: 3375,
-      payout: 5198,
-      result: 'pending',
-      code: 'Q7S287',
-      summary: 'Ribecai Home to Win a Set (1.26) + Gaubas Away to Win a Set (1.22)'
-    }
-  ]
+  daysHistory: []
 };
 
 export const PAST_CHALLENGES = [
+  {
+    challengeNumber: 50,
+    startDate: '2026-10-14',
+    endDate: '2026-10-19',
+    startingStake: 1000,
+    dayReached: 4,
+    outcome: 'lost',
+    stakeLost: 3375,
+    bankedAmount: 0,
+    netReturn: -1000,
+    finalCode: 'Q7S287',
+    fatalMatch: 'Cecchinato vs Gaubas (Gaubas lost 4-6, 3-6 in straight sets)'
+  },
   {
     challengeNumber: 49,
     startDate: '2026-10-12',

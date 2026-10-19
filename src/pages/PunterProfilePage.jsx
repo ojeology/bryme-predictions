@@ -158,8 +158,12 @@ export default function PunterProfilePage({ punterId, onNavigate }) {
                       </span>
 
                       <div className="flex items-center gap-1.5 font-mono text-xs">
-                        <span className="text-slate-500">{codeItem.gamesCount || 2} Games</span>
-                        <span>&bull;</span>
+                        {codeItem.gamesCount ? (
+                          <>
+                            <span className="text-slate-500">{codeItem.gamesCount} Games</span>
+                            <span>&bull;</span>
+                          </>
+                        ) : null}
                         <strong className="text-emerald-600 dark:text-emerald-400 font-black">{codeItem.totalOdds}x Odds</strong>
                       </div>
                     </div>

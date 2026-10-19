@@ -518,7 +518,7 @@ export function PredictionsProvider({ children }) {
       code: codeObj.code.toUpperCase(),
       title: `${pName} ${codeObj.marketType || 'Special Slip'}`,
       odds: parseFloat(codeObj.totalOdds) || 2.00,
-      eventsCount: parseInt(codeObj.gamesCount, 10) || 3,
+      eventsCount: codeObj.gamesCount ? (parseInt(codeObj.gamesCount, 10) || null) : null,
       category: 'mega',
       categoryName: codeObj.marketType || 'Punter Pick',
       status: 'active',

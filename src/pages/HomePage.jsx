@@ -573,7 +573,7 @@ export default function HomePage({ onNavigate }) {
                         {primaryCode.bookmaker}
                       </span>
                       <span className="font-bold text-amber-500">
-                        {primaryCode.totalOdds}x Odds &bull; {primaryCode.gamesCount || 2} Legs
+                        {primaryCode.totalOdds}x Odds{primaryCode.gamesCount ? ` • ${primaryCode.gamesCount} Legs` : ''}
                       </span>
                     </div>
 

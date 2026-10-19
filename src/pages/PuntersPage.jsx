@@ -201,9 +201,11 @@ export default function PuntersPage({ onNavigate }) {
                             }`}>
                               {codeItem.bookmaker?.toUpperCase()}
                             </span>
-                            <span className="text-xs font-mono font-bold text-slate-600 dark:text-slate-300">
-                              {codeItem.gamesCount} Games
-                            </span>
+                            {codeItem.gamesCount ? (
+                              <span className="text-xs font-mono font-bold text-slate-600 dark:text-slate-300">
+                                {codeItem.gamesCount} Games
+                              </span>
+                            ) : null}
                           </div>
 
                           <span className="text-xs font-mono font-black text-slate-900 dark:text-white bg-white dark:bg-[#162238] px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700">
