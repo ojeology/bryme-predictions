@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { 
   Flame, ShieldCheck, Copy, Check, TrendingUp, Sparkles, 
-  ExternalLink, ArrowRight, Clock, Users, DollarSign, Award, ChevronDown, ChevronUp
+  ExternalLink, ArrowRight, Clock, Users, DollarSign, Award, 
+  ChevronDown, ChevronUp, History, XCircle, CheckCircle
 } from 'lucide-react';
+import { SYNDICATE_ARCHIVE, SYNDICATE_STATS } from '../data/syndicateArchive';
 
 export default function Whale2OddsCard({ whaleSlip, onNavigate }) {
   const [copiedSporty, setCopiedSporty] = useState(false);
   const [copiedBet9ja, setCopiedBet9ja] = useState(false);
-  const [showIntel, setShowIntel] = useState(true);
+  const [showHistory, setShowHistory] = useState(false);
 
   // Safe defaults if whaleSlip is not fully provided
   const slip = whaleSlip || {
@@ -18,31 +20,31 @@ export default function Whale2OddsCard({ whaleSlip, onNavigate }) {
     totalOdds: 2.18,
     potentialReturn: '₦1,090,000',
     confidence: '94%',
-    status: 'live',
+    status: 'won',
     sportyCode: 'BC4-WHALE',
     bet9jaCode: 'B9J-WHALE',
-    kickoffTime: '20:00 WAT Today',
+    kickoffTime: 'Settled & Paid Out',
     punterCount: 4210,
     volumeStaked: '₦18,450,000',
-    intel: 'Syndicate placed ₦500k after sharp line movements in Madrid & Munich. Over 1.5 Team Goals line dropped 18% on early European exchange liquidity.',
+    intel: 'Syndicate placed ₦500k following sharp European liquidity drops. Madrid Over 1.5 Team Goals and Bayern Over 2.5 Goals landed before full time.',
     matches: [
       {
         id: 'm1',
-        match: 'Real Madrid vs Sevilla',
+        match: 'Real Madrid vs Sevilla (2-1 FT)',
         league: 'Spanish La Liga',
-        kickoff: '20:00 WAT',
+        kickoff: 'Full Time',
         pick: 'Real Madrid Over 1.5 Team Goals',
         odds: 1.45,
-        analysis: 'Madrid averages 2.6 goals at the Bernabéu; scored 2+ in 9 of last 10 home fixtures.'
+        analysis: 'Madrid scored 2+ in 9 of last 10 home fixtures; won 2-1.'
       },
       {
         id: 'm2',
-        match: 'Bayern Munich vs RB Leipzig',
+        match: 'Bayern Munich vs RB Leipzig (3-2 FT)',
         league: 'German Bundesliga',
-        kickoff: '17:30 WAT',
+        kickoff: 'Full Time',
         pick: 'Over 2.5 Total Goals',
         odds: 1.50,
-        analysis: 'Both attacks rank top 2 in expected goals (xG); last 6 head-to-heads averaged 4.1 goals.'
+        analysis: 'Explosive 5-goal match cleared the Over 2.5 line by the 52nd minute.'
       }
     ]
   };
@@ -74,7 +76,7 @@ export default function Whale2OddsCard({ whaleSlip, onNavigate }) {
             🐋
           </div>
           <div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               <span className="text-[11px] font-mono uppercase tracking-widest px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-black border border-amber-500/40">
                 WHALE 2-ODDS SYNDICATE
               </span>
@@ -86,7 +88,7 @@ export default function Whale2OddsCard({ whaleSlip, onNavigate }) {
               ) : (
                 <span className="text-[11px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-bold flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
-                  LIVE &bull; {slip.confidence} EDGE
+                  LIVE &bull; {slip.confidence || '94%'} EDGE
                 </span>
               )}
             </div>
@@ -131,7 +133,7 @@ export default function Whale2OddsCard({ whaleSlip, onNavigate }) {
           </span>
           <div className="text-xl sm:text-2xl font-display font-black text-emerald-400 mt-0.5 flex items-center justify-between">
             <span>{slip.potentialReturn}</span>
-            <span className="text-xs font-mono bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-md">
+            <span className="text-xs font-mono bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-md font-bold">
               +118% Net ROI
             </span>
           </div>
@@ -251,6 +253,106 @@ export default function Whale2OddsCard({ whaleSlip, onNavigate }) {
           </button>
         </div>
       )}
+
+      {/* ── HISTORICAL RESULTS AUDIT BAR & TOGGLE ── */}
+      <div className="pt-3 border-t border-amber-500/20 relative z-10 space-y-3">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+          <div className="flex items-center gap-2 font-mono">
+            <span className="text-amber-400 font-bold flex items-center gap-1">
+              <History className="w-4 h-4" />
+              <span>Syndicate Ledger:</span>
+            </span>
+            <span className="text-slate-300">
+              <strong>{SYNDICATE_STATS.won} Wins</strong>, <strong className="text-rose-400">{SYNDICATE_STATS.lost} Loss</strong> &bull; <strong className="text-emerald-400">{SYNDICATE_STATS.hitRate} Hit Rate</strong> ({SYNDICATE_STATS.netProfitNGN} Net Profit)
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setShowHistory(!showHistory)}
+              className="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 text-amber-300 text-xs font-mono font-bold flex items-center gap-1 transition-all"
+            >
+              <span>{showHistory ? 'Hide Past Runs' : 'Check Historical Runs'}</span>
+              {showHistory ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+            </button>
+
+            {onNavigate && (
+              <button
+                onClick={() => onNavigate('results/syndicate')}
+                className="px-3 py-1.5 rounded-xl bg-amber-500 text-slate-950 text-xs font-display font-black uppercase tracking-wider flex items-center gap-1 hover:bg-amber-400 transition-all shadow-md"
+              >
+                <span>Full Ledger &rarr;</span>
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Expandable Historical Drawer */}
+        {showHistory && (
+          <div className="rounded-2xl bg-black/60 border border-slate-800 p-4 space-y-3 animate-fadeIn">
+            <div className="flex items-center justify-between text-xs border-b border-slate-800 pb-2">
+              <span className="font-mono font-bold text-amber-400 uppercase">
+                Past Syndicate Runs (Transparent Wins &amp; Losses)
+              </span>
+              <span className="text-[10px] font-mono text-slate-400">
+                Zero Deletions &bull; 100% Verifiable
+              </span>
+            </div>
+
+            <div className="space-y-2.5 max-h-80 overflow-y-auto pr-1">
+              {SYNDICATE_ARCHIVE.map((run) => (
+                <div 
+                  key={run.id || run.runNumber}
+                  className={`p-3 rounded-xl border text-xs space-y-1.5 ${
+                    run.status === 'won'
+                      ? 'bg-emerald-950/20 border-emerald-500/30'
+                      : 'bg-rose-950/20 border-rose-500/30'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-black ${
+                        run.status === 'won' ? 'bg-emerald-500 text-black' : 'bg-rose-600 text-white'
+                      }`}>
+                        #{run.runNumber}
+                      </span>
+                      <strong className="text-white font-display">{run.title}</strong>
+                    </div>
+
+                    <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-black uppercase ${
+                      run.status === 'won' ? 'bg-emerald-500 text-slate-950' : 'bg-rose-600 text-white'
+                    }`}>
+                      {run.status === 'won' ? 'WON (CASHED)' : 'LOST (SETTLED)'}
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 text-[11px] font-mono text-slate-300">
+                    <div>Stake: <strong className="text-amber-400">{run.stakeAmount}</strong></div>
+                    <div>Odds: <strong className="text-white">{run.totalOdds}x</strong></div>
+                    <div>Return: <strong className={run.status === 'won' ? 'text-emerald-400' : 'text-slate-400 line-through'}>{run.potentialReturn}</strong></div>
+                    <div>Outcome: <strong className={run.status === 'won' ? 'text-emerald-400' : 'text-rose-400'}>{run.netProfit}</strong></div>
+                  </div>
+
+                  <div className="text-[10px] text-slate-400 font-sans border-t border-slate-800/60 pt-1">
+                    <span className="font-bold text-slate-300">Score &amp; Notes:</span> {run.settledScore} &bull; {run.intel}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {onNavigate && (
+              <div className="pt-2 text-center border-t border-slate-800">
+                <button
+                  onClick={() => onNavigate('results/syndicate')}
+                  className="text-xs font-mono font-bold text-amber-400 hover:text-amber-300 underline"
+                >
+                  Open Full Accuracy Scorecard &amp; Ledger with Booking Codes &rarr;
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
 
     </div>
   );

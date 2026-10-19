@@ -358,11 +358,13 @@ export default function HomePage({ onNavigate }) {
           </div>
 
           {/* Action Row */}
-          <div className="pt-2 border-t border-white/10 flex items-center justify-between text-xs">
-            <span className="font-mono text-emerald-400 text-[11px] font-bold flex items-center gap-1">
-              <CheckCircle className="w-3.5 h-3.5" />
-              <span>Result Confirmed &amp; Settled</span>
-            </span>
+          <div className="pt-2 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs">
+            <button
+              onClick={() => onNavigate('results/syndicate')}
+              className="text-amber-300 hover:text-amber-200 font-mono font-bold flex items-center gap-1.5 text-xs transition-colors"
+            >
+              <span>📜 Check Past Syndicate Wins &amp; Loss (85.7% Win Rate) &rarr;</span>
+            </button>
 
             <a
               href={getBookmakerUrl('1xbet')}

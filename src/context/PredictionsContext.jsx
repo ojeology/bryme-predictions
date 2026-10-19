@@ -5,6 +5,7 @@ import { INITIAL_CODE_CATALOGUE } from '../data/catalogueCodes';
 import { INITIAL_PUNTERS } from '../data/punters';
 import { MARKETS as DEFAULT_MARKETS } from '../data/markets';
 import { INITIAL_MARKET_CODES } from '../data/marketCodes';
+import { SYNDICATE_ARCHIVE as DEFAULT_SYNDICATE_ARCHIVE } from '../data/syndicateArchive';
 
 const PredictionsContext = createContext(null);
 
@@ -17,6 +18,7 @@ const STORAGE_KEY_MARKETS = 'bryme_markets_v2';
 const STORAGE_KEY_WHALE = 'bryme_whale_slip_v1';
 const STORAGE_KEY_ADS = 'bryme_ad_settings_v1';
 const STORAGE_KEY_MARKET_CODES = 'bryme_market_codes_v2';
+const STORAGE_KEY_SYNDICATE = 'bryme_syndicate_archive_v1';
 
 export const DEFAULT_WHALE_SLIP = {
   id: 'whale-2-odds-today',
@@ -185,6 +187,16 @@ export function PredictionsProvider({ children }) {
     }
   });
 
+  // 9. Historical Whale Syndicate Archive
+  const [syndicateArchive, setSyndicateArchiveState] = useState(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY_SYNDICATE);
+      return saved ? JSON.parse(saved) : DEFAULT_SYNDICATE_ARCHIVE;
+    } catch (e) {
+      return DEFAULT_SYNDICATE_ARCHIVE;
+    }
+  });
+
   // Global Copy Success Modal State (High CTR & Viral Share)
   const [copyModal, setCopyModal] = useState({
     isOpen: false,
@@ -235,6 +247,9 @@ export function PredictionsProvider({ children }) {
             if (remote.markets) setMarketsState(remote.markets);
             if (remote.whaleSlip) setWhaleSlipState(remote.whaleSlip);
             if (remote.adSettings) setAdSettingsState(remote.adSettings);
+            if (remote.syndicateArchive && Array.isArray(remote.syndicateArchive) && remote.syndicateArchive.length > 0) {
+              setSyndicateArchiveState(remote.syndicateArchive);
+            }
           }
         }
       } catch (err) {
@@ -277,12 +292,13 @@ export function PredictionsProvider({ children }) {
         announcements,
         markets,
         whaleSlip,
-        adSettings
+        adSettings,
+        syndicateArchive
       });
     }, 2500);
 
     return () => clearTimeout(timer);
-  }, [ladder, tickets, codeCatalogue, punters, announcements, markets, whaleSlip, adSettings, isHydrated]);
+  }, [ladder, tickets, codeCatalogue, punters, announcements, markets, whaleSlip, adSettings, syndicateArchive, isHydrated]);
 
   useEffect(() => {
     try {
@@ -338,6 +354,12 @@ export function PredictionsProvider({ children }) {
     } catch (e) {}
   }, [marketCodes]);
 
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY_SYNDICATE, JSON.stringify(syndicateArchive));
+    } catch (e) {}
+  }, [syndicateArchive]);
+
   // ── MARKET BOOKING CODES CRUD ACTIONS ──
   const addMarketCode = (newEntry) => {
     setMarketCodesState(prev => [newEntry, ...prev]);
@@ -354,6 +376,19 @@ export function PredictionsProvider({ children }) {
   // ── WHALE SLIP ACTIONS ──
   const updateWhaleSlip = (newSlip) => {
     setWhaleSlipState(prev => ({ ...prev, ...newSlip }));
+  };
+
+  // ── SYNDICATE ARCHIVE CRUD ACTIONS ──
+  const addSyndicateRun = (newRun) => {
+    setSyndicateArchiveState(prev => [newRun, ...prev]);
+  };
+
+  const updateSyndicateRun = (id, updatedFields) => {
+    setSyndicateArchiveState(prev => prev.map(item => item.id === id ? { ...item, ...updatedFields } : item));
+  };
+
+  const deleteSyndicateRun = (id) => {
+    setSyndicateArchiveState(prev => prev.filter(item => item.id !== id));
   };
 
   // ── AD SETTINGS ACTIONS ──
@@ -511,6 +546,10 @@ export function PredictionsProvider({ children }) {
       deleteMarketCode,
       whaleSlip,
       adSettings,
+      syndicateArchive,
+      addSyndicateRun,
+      updateSyndicateRun,
+      deleteSyndicateRun,
       updateWhaleSlip,
       updateAdSettings,
       addMarket,

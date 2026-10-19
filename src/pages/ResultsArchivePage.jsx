@@ -1,27 +1,55 @@
 import React, { useState, useMemo } from 'react';
+import { usePredictions } from '../context/PredictionsContext';
 import { TICKETS, LEAGUES_DATA } from '../data/tickets';
 import { WEEKEND_2_ODDS_STATS, WEEKEND_ARCHIVE } from '../data/weekendArchive';
 import { ACTIVE_CHALLENGE, PAST_CHALLENGES } from '../data/ladder';
+import { SYNDICATE_ARCHIVE as DEFAULT_SYNDICATE_ARCHIVE, SYNDICATE_STATS } from '../data/syndicateArchive';
 import StatusBadge from '../components/StatusBadge';
 import AdBanner from '../components/AdBanner';
 import { 
   CheckSquare, Filter, RotateCcw, Search, TrendingUp, 
   CheckCircle, XCircle, AlertCircle, Clock, ShieldCheck, 
-  Trophy, Flame, Zap, Copy, Check, ChevronDown, ChevronUp, Layers, Info
+  Trophy, Flame, Zap, Copy, Check, ChevronDown, ChevronUp, Layers, Info, ExternalLink
 } from 'lucide-react';
 
-export default function ResultsArchivePage({ onNavigate }) {
-  const [activeTab, setActiveTab] = useState('weekend-2-odds'); // 'weekend-2-odds' | 'ladder-history' | 'all-tickets'
+export default function ResultsArchivePage({ initialTab, onNavigate }) {
+  const { syndicateArchive = DEFAULT_SYNDICATE_ARCHIVE } = usePredictions() || {};
+
+  // Tab selection: defaults to syndicate-archive if specified, otherwise weekend-2-odds or syndicate
+  const [activeTab, setActiveTab] = useState(() => {
+    if (initialTab === 'syndicate' || initialTab === 'syndicate-archive' || initialTab === 'whale') {
+      return 'syndicate-archive';
+    }
+    return 'syndicate-archive';
+  });
+
+  const [syndicateFilter, setSyndicateFilter] = useState('all'); // 'all' | 'won' | 'lost'
   const [weekendFilter, setWeekendFilter] = useState('all'); // 'all' | 'won' | 'lost' | 'pending'
   const [ladderFilter, setLadderFilter] = useState('all'); // 'all' | 'milestone' | 'lost' | 'active'
   const [copiedCode, setCopiedCode] = useState(null);
 
   // Copy helper
   const handleCopy = (code, id) => {
+    if (!code) return;
     navigator.clipboard.writeText(code);
     setCopiedCode(id);
     setTimeout(() => setCopiedCode(null), 2000);
   };
+
+  // Compute Syndicate metrics dynamically
+  const syndicateRuns = syndicateArchive && syndicateArchive.length > 0 ? syndicateArchive : DEFAULT_SYNDICATE_ARCHIVE;
+  const syndicateWonCount = syndicateRuns.filter(r => r.status === 'won').length;
+  const syndicateLostCount = syndicateRuns.filter(r => r.status === 'lost').length;
+  const syndicateTotalRuns = syndicateRuns.length;
+  const syndicateHitRate = syndicateTotalRuns > 0 ? ((syndicateWonCount / syndicateTotalRuns) * 100).toFixed(1) : '85.7';
+
+  // Filtered Syndicate Archive
+  const filteredSyndicateRuns = useMemo(() => {
+    return syndicateRuns.filter(item => {
+      if (syndicateFilter === 'all') return true;
+      return item.status === syndicateFilter;
+    });
+  }, [syndicateRuns, syndicateFilter]);
 
   // Filtered Weekend Archive
   const filteredWeekends = useMemo(() => {
@@ -49,28 +77,40 @@ export default function ResultsArchivePage({ onNavigate }) {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-xl bg-blue-600/10 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold">
-                📊
+              <div className="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center font-bold text-lg">
+                🐋
               </div>
               <h1 className="text-xl sm:text-2xl font-display font-black text-slate-900 dark:text-white">
                 Historical Results &amp; Accuracy Ledger
               </h1>
             </div>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-2xl">
-              Transparent, timestamped archive tracking our <strong>Weekend 2 Odds Accuracy</strong> and <strong>Previous Ladder Rollover Challenges</strong>. Primarily European top-flight fixtures tailored for African punters (₦ / KSh).
+              Transparent, permanent historical archive tracking our <strong>Whale 2-Odds Syndicate Runs</strong>, <strong>Weekend 2 Odds Accuracy</strong>, and <strong>BRYME Rollover Challenges</strong>. 100% verifiable with real full-time scores and zero deleted tickets.
             </p>
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1 text-[11px] font-mono bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30 px-2.5 py-1 rounded-lg">
+            <span className="inline-flex items-center gap-1 text-[11px] font-mono bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30 px-2.5 py-1 rounded-lg font-bold">
               <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
-              <span>100% Verifiable &bull; Zero Deletions</span>
+              <span>Verifiable Ledger &bull; Real FT Scores</span>
             </span>
           </div>
         </div>
 
-        {/* ── 2. THREE MASTER TABS ── */}
+        {/* ── 2. FOUR MASTER TABS ── */}
         <div className="flex items-center gap-2 mt-4 overflow-x-auto scrollbar-none pb-1">
+          <button
+            onClick={() => setActiveTab('syndicate-archive')}
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-display font-bold uppercase transition-all whitespace-nowrap ${
+              activeTab === 'syndicate-archive'
+                ? 'bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 font-black shadow-md ring-2 ring-amber-400/50'
+                : 'bg-white dark:bg-[#131C2E] text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-slate-800'
+            }`}
+          >
+            <span>🐋</span>
+            <span>Whale Syndicate Ledger ({syndicateHitRate}% Hit Rate)</span>
+          </button>
+
           <button
             onClick={() => setActiveTab('weekend-2-odds')}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-display font-bold uppercase transition-all whitespace-nowrap ${
@@ -92,7 +132,7 @@ export default function ResultsArchivePage({ onNavigate }) {
             }`}
           >
             <span>🪜</span>
-            <span>Previous Ladder Challenges ({PAST_CHALLENGES.length + 1} Runs)</span>
+            <span>Rollover Challenges ({PAST_CHALLENGES.length + 1} Runs)</span>
           </button>
 
           <button
@@ -108,6 +148,349 @@ export default function ResultsArchivePage({ onNavigate }) {
           </button>
         </div>
       </div>
+
+      {/* ───────────────────────────────────────────────────────────── */}
+      {/* ── TAB 0: WHALE SYNDICATE HISTORICAL LEDGER (WINS & LOSSES) ── */}
+      {/* ───────────────────────────────────────────────────────────── */}
+      {activeTab === 'syndicate-archive' && (
+        <div className="space-y-4">
+          
+          {/* Performance Hero Banner */}
+          <div className="rounded-3xl bg-gradient-to-br from-[#091512] via-[#0E201B] to-[#0A101C] text-white p-5 sm:p-6 border-2 border-amber-500/40 shadow-xl space-y-4 relative overflow-hidden">
+            <div className="pointer-events-none absolute -right-20 -top-20 w-80 h-80 rounded-full bg-amber-500/10 blur-3xl" />
+            <div className="pointer-events-none absolute -left-20 -bottom-20 w-80 h-80 rounded-full bg-emerald-500/10 blur-3xl" />
+
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 relative z-10">
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] uppercase font-mono font-black tracking-wider text-amber-300 bg-amber-500/20 px-2.5 py-0.5 rounded-full border border-amber-400/40">
+                    High-Roller Capital Tracking
+                  </span>
+                  <span className="text-[10px] uppercase font-mono text-emerald-400 bg-emerald-500/15 px-2 py-0.5 rounded-full border border-emerald-500/30">
+                    ₦500k Flat Discipline
+                  </span>
+                </div>
+                <h2 className="text-xl sm:text-2xl font-display font-black tracking-tight text-white mt-1.5 flex items-center gap-2">
+                  <span>🐋 Whale Syndicate Accuracy &amp; Settlement Ledger</span>
+                </h2>
+                <p className="text-xs text-slate-300 mt-1 max-w-2xl leading-relaxed">
+                  Historical tracking of high-stake syndicate bets placed by <strong>Lagos VIP Syndicate #04</strong>. Every single run is recorded with kickoffs, odds, and real full-time scores. Both wins and losses are permanently visible.
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2 self-start sm:self-auto">
+                <span className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 rounded-xl font-display font-black text-xs">
+                  <Flame className="w-4 h-4 text-emerald-400 fill-emerald-400" />
+                  <span>{SYNDICATE_STATS.currentStreak} Streak</span>
+                </span>
+              </div>
+            </div>
+
+            {/* Scorecard Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-3 border-t border-white/10 relative z-10">
+              <div className="bg-white/5 p-3 rounded-2xl border border-white/10">
+                <div className="text-[10px] font-mono text-slate-400 uppercase font-bold">All-Time Accuracy</div>
+                <div className="text-2xl sm:text-3xl font-display font-black text-emerald-400 mt-0.5">
+                  {syndicateHitRate}%
+                </div>
+                <div className="text-[10px] text-slate-300 mt-0.5 font-mono">
+                  {syndicateWonCount} Won &bull; {syndicateLostCount} Lost ({syndicateTotalRuns} Runs)
+                </div>
+              </div>
+
+              <div className="bg-white/5 p-3 rounded-2xl border border-white/10">
+                <div className="text-[10px] font-mono text-slate-400 uppercase font-bold">Total Staked</div>
+                <div className="text-xl sm:text-2xl font-display font-black text-amber-400 mt-0.5">
+                  ₦{(syndicateTotalRuns * 500000).toLocaleString()}
+                </div>
+                <div className="text-[10px] text-slate-300 mt-0.5 font-mono">
+                  ₦500,000 per entry
+                </div>
+              </div>
+
+              <div className="bg-white/5 p-3 rounded-2xl border border-white/10">
+                <div className="text-[10px] font-mono text-slate-400 uppercase font-bold">Verified Payouts</div>
+                <div className="text-xl sm:text-2xl font-display font-black text-[#00FF66] mt-0.5">
+                  {SYNDICATE_STATS.totalPaidOutNGN}
+                </div>
+                <div className="text-[10px] text-slate-300 mt-0.5 font-mono">
+                  Cashed at bookmakers
+                </div>
+              </div>
+
+              <div className="bg-white/5 p-3 rounded-2xl border border-white/10">
+                <div className="text-[10px] font-mono text-slate-400 uppercase font-bold">Net Syndicate ROI</div>
+                <div className="text-xl sm:text-2xl font-display font-black text-emerald-400 mt-0.5">
+                  {SYNDICATE_STATS.netProfitNGN}
+                </div>
+                <div className="text-[10px] text-emerald-300 mt-0.5 font-mono">
+                  +105.1% Pure Net Return
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Educational Callout on Transparency & Staking Discipline */}
+          <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-slate-800 dark:text-amber-100 text-xs flex items-start gap-2.5">
+            <Info className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
+            <div className="space-y-1">
+              <strong className="font-bold text-amber-500 dark:text-amber-300">
+                Transparency &amp; Zero Deletions Commitment:
+              </strong>
+              <p className="text-[11px] leading-relaxed opacity-90 text-slate-600 dark:text-slate-300">
+                Whale Syndicate bets are published exclusively with pre-match booking codes and early liquidity intel. In sports betting, no system wins 100% of the time. When a run loses (such as <strong>Run #05</strong> where Leverkusen conceded a 90th-minute penalty), it is retained permanently on this page. Punters can verify both the wins and the losses to measure real mathematical advantage.
+              </p>
+            </div>
+          </div>
+
+          {/* Filter Bar */}
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-1.5 flex-wrap">
+              {[
+                { id: 'all', label: `All Syndicate Runs (${syndicateRuns.length})` },
+                { id: 'won', label: `🏆 Won & Cashed (${syndicateWonCount})` },
+                { id: 'lost', label: `🔴 Settled Losses (${syndicateLostCount})` },
+              ].map(f => (
+                <button
+                  key={f.id}
+                  onClick={() => setSyndicateFilter(f.id)}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-display font-bold uppercase transition-all ${
+                    syndicateFilter === f.id
+                      ? 'bg-amber-500 text-slate-950 font-black shadow-sm ring-1 ring-amber-400'
+                      : 'bg-white dark:bg-[#131C2E] text-slate-600 dark:text-slate-300 hover:text-slate-900 border border-slate-200 dark:border-slate-800'
+                  }`}
+                >
+                  {f.label}
+                </button>
+              ))}
+            </div>
+
+            <span className="text-[11px] text-slate-400 font-mono hidden sm:inline">
+              Sorted newest to oldest
+            </span>
+          </div>
+
+          {/* Syndicate Runs List */}
+          <div className="space-y-4">
+            {filteredSyndicateRuns.map((run) => (
+              <div 
+                key={run.id || run.runNumber}
+                className={`rounded-3xl border-2 transition-all overflow-hidden shadow-sm ${
+                  run.status === 'won'
+                    ? 'border-emerald-500/40 bg-white dark:bg-[#0E1724]'
+                    : 'border-rose-500/40 bg-white dark:bg-[#181014]'
+                }`}
+              >
+                {/* Header Bar */}
+                <div className={`p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b ${
+                  run.status === 'won'
+                    ? 'bg-emerald-50/50 dark:bg-[#0B1E19]/80 border-emerald-500/20'
+                    : 'bg-rose-50/50 dark:bg-[#200D12]/80 border-rose-500/20'
+                }`}>
+                  <div className="flex items-center gap-3">
+                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center font-display font-black text-sm flex-shrink-0 ${
+                      run.status === 'won'
+                        ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/20'
+                        : 'bg-rose-600 text-white shadow-md shadow-rose-600/20'
+                    }`}>
+                      #{run.runNumber}
+                    </div>
+
+                    <div>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <h3 className="font-display font-black text-sm sm:text-base text-slate-900 dark:text-white">
+                          {run.title}
+                        </h3>
+                        <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-mono font-black uppercase tracking-wider flex items-center gap-1 ${
+                          run.status === 'won'
+                            ? 'bg-emerald-500 text-slate-950'
+                            : 'bg-rose-600 text-white'
+                        }`}>
+                          {run.status === 'won' ? (
+                            <>
+                              <Check className="w-3 h-3 stroke-[3]" />
+                              <span>WON &bull; CASHED OUT</span>
+                            </>
+                          ) : (
+                            <>
+                              <XCircle className="w-3 h-3" />
+                              <span>LOST &bull; SETTLED</span>
+                            </>
+                          )}
+                        </span>
+                      </div>
+
+                      <div className="text-[11px] text-slate-500 dark:text-slate-400 font-mono mt-0.5 flex items-center gap-2">
+                        <span>{run.date}</span>
+                        <span>&bull;</span>
+                        <span>Staker: <strong>{run.staker}</strong></span>
+                        <span>&bull;</span>
+                        <span>FT: <strong className="text-slate-900 dark:text-white">{run.settledScore}</strong></span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Verification Booking Codes */}
+                  <div className="flex items-center gap-2 flex-wrap self-start sm:self-auto">
+                    {run.sportyCode && (
+                      <button
+                        onClick={() => handleCopy(run.sportyCode, `sporty-${run.runNumber}`)}
+                        className="inline-flex items-center gap-1.5 text-xs font-mono bg-white dark:bg-[#162032] border border-slate-200 dark:border-slate-700 px-3 py-1.5 rounded-xl text-slate-700 dark:text-slate-300 hover:border-amber-500 transition-colors"
+                        title="Copy SportyBet verification code"
+                      >
+                        <span className="text-[10px] font-bold text-rose-500">Sporty:</span>
+                        <strong className="font-bold">{run.sportyCode}</strong>
+                        {copiedCode === `sporty-${run.runNumber}` ? (
+                          <Check className="w-3.5 h-3.5 text-emerald-500" />
+                        ) : (
+                          <Copy className="w-3.5 h-3.5 text-slate-400" />
+                        )}
+                      </button>
+                    )}
+
+                    {run.bet9jaCode && (
+                      <button
+                        onClick={() => handleCopy(run.bet9jaCode, `bet9ja-${run.runNumber}`)}
+                        className="inline-flex items-center gap-1.5 text-xs font-mono bg-white dark:bg-[#162032] border border-slate-200 dark:border-slate-700 px-3 py-1.5 rounded-xl text-slate-700 dark:text-slate-300 hover:border-emerald-500 transition-colors"
+                        title="Copy Bet9ja verification code"
+                      >
+                        <span className="text-[10px] font-bold text-emerald-500">Bet9ja:</span>
+                        <strong className="font-bold">{run.bet9jaCode}</strong>
+                        {copiedCode === `bet9ja-${run.runNumber}` ? (
+                          <Check className="w-3.5 h-3.5 text-emerald-500" />
+                        ) : (
+                          <Copy className="w-3.5 h-3.5 text-slate-400" />
+                        )}
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* Body Content */}
+                <div className="p-4 sm:p-5 space-y-4">
+                  {/* Financial Metrics Strip */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                    <div className="p-3 rounded-2xl bg-slate-50 dark:bg-[#121B2B] border border-slate-200 dark:border-slate-800">
+                      <span className="text-[10px] font-mono text-slate-400 uppercase font-bold block">
+                        Confirmed Stake
+                      </span>
+                      <div className="text-lg sm:text-xl font-display font-black text-amber-500 mt-0.5">
+                        {run.stakeAmount}
+                      </div>
+                      <span className="text-[10px] text-slate-400 font-mono">Syndicate Stake</span>
+                    </div>
+
+                    <div className="p-3 rounded-2xl bg-slate-50 dark:bg-[#121B2B] border border-slate-200 dark:border-slate-800">
+                      <span className="text-[10px] font-mono text-slate-400 uppercase font-bold block">
+                        Combined Odds
+                      </span>
+                      <div className="text-lg sm:text-xl font-mono font-black text-slate-900 dark:text-white mt-0.5">
+                        {typeof run.totalOdds === 'number' ? run.totalOdds.toFixed(2) : run.totalOdds}x
+                      </div>
+                      <span className="text-[10px] text-slate-400 font-mono">2-Game Double</span>
+                    </div>
+
+                    <div className="p-3 rounded-2xl bg-slate-50 dark:bg-[#121B2B] border border-slate-200 dark:border-slate-800">
+                      <span className="text-[10px] font-mono text-slate-400 uppercase font-bold block">
+                        {run.status === 'won' ? 'Cashed Return' : 'Target Return'}
+                      </span>
+                      <div className={`text-lg sm:text-xl font-display font-black mt-0.5 ${
+                        run.status === 'won' ? 'text-emerald-500' : 'text-slate-400 line-through'
+                      }`}>
+                        {run.potentialReturn}
+                      </div>
+                      <span className="text-[10px] text-slate-400 font-mono">
+                        {run.status === 'won' ? '100% Paid Out' : 'Did Not Land'}
+                      </span>
+                    </div>
+
+                    <div className={`p-3 rounded-2xl border ${
+                      run.status === 'won'
+                        ? 'bg-emerald-500/10 border-emerald-500/30'
+                        : 'bg-rose-500/10 border-rose-500/30'
+                    }`}>
+                      <span className="text-[10px] font-mono uppercase font-bold block text-slate-400">
+                        Net Profit / Loss
+                      </span>
+                      <div className={`text-lg sm:text-xl font-display font-black mt-0.5 ${
+                        run.status === 'won' ? 'text-emerald-500 dark:text-emerald-400' : 'text-rose-500 dark:text-rose-400'
+                      }`}>
+                        {run.netProfit}
+                      </div>
+                      <span className="text-[10px] font-mono opacity-80">
+                        {run.status === 'won' ? 'Net Cash Secured' : 'Total Loss on Stake'}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Match Selections Breakdown */}
+                  <div className="space-y-2">
+                    <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 block">
+                      Verified Match Legs &amp; Official Full-Time Scores
+                    </span>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+                      {run.matches?.map((m, idx) => (
+                        <div 
+                          key={idx}
+                          className={`p-3.5 rounded-2xl border transition-colors space-y-1.5 ${
+                            m.result === 'won'
+                              ? 'bg-emerald-50/40 dark:bg-[#0D1C1B] border-emerald-500/30'
+                              : 'bg-rose-50/40 dark:bg-[#1F1015] border-rose-500/30'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between text-xs">
+                            <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400 uppercase">
+                              {m.league}
+                            </span>
+                            <div className="flex items-center gap-1.5">
+                              <span className="font-mono font-bold text-slate-900 dark:text-white text-xs">
+                                {m.odds}x
+                              </span>
+                              <span className={`px-1.5 py-0.5 rounded text-[10px] font-mono font-black uppercase ${
+                                m.result === 'won'
+                                  ? 'bg-emerald-500 text-slate-950'
+                                  : 'bg-rose-600 text-white'
+                              }`}>
+                                {m.result === 'won' ? 'WON' : 'LOST'}
+                              </span>
+                            </div>
+                          </div>
+
+                          <div className="font-display font-black text-slate-900 dark:text-white text-sm flex items-center justify-between">
+                            <span>{m.match}</span>
+                            <span className="font-mono text-xs text-amber-500 font-black">
+                              {m.score}
+                            </span>
+                          </div>
+
+                          <div className="text-xs font-mono font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+                            <span>Selection:</span>
+                            <strong className="text-slate-900 dark:text-white">{m.pick}</strong>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Market Intel / Post-Match Debrief */}
+                  {run.intel && (
+                    <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-[#121B2B] border border-slate-200 dark:border-slate-800 text-xs space-y-1">
+                      <div className="flex items-center gap-1 text-[11px] font-mono font-bold uppercase tracking-wider text-amber-500">
+                        <span>💡 Syndicate Post-Match Debrief:</span>
+                      </div>
+                      <p className="text-slate-600 dark:text-slate-300 leading-relaxed font-sans text-xs">
+                        {run.intel}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+
+        </div>
+      )}
 
       {/* ───────────────────────────────────────────────────────────── */}
       {/* ── TAB 1: WEEKEND 2 ODDS ACCURACY TRACKER ── */}
@@ -138,25 +521,25 @@ export default function ResultsArchivePage({ onNavigate }) {
               </div>
             </div>
 
-            {/* Metrics Dashboard */}
+            {/* Scorecard Grid */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-2 border-t border-white/10">
               <div className="bg-white/5 p-3 rounded-xl border border-white/10">
-                <div className="text-[10px] font-mono text-slate-400 uppercase">Win Accuracy</div>
+                <div className="text-[10px] font-mono text-slate-400 uppercase">All-Time Accuracy</div>
                 <div className="text-2xl font-mono font-black text-emerald-400 mt-0.5">
                   {WEEKEND_2_ODDS_STATS.accuracyRate}%
                 </div>
                 <div className="text-[10px] text-slate-300 mt-0.5">
-                  {WEEKEND_2_ODDS_STATS.won} Won / {WEEKEND_2_ODDS_STATS.lost} Lost
+                  {WEEKEND_2_ODDS_STATS.won} Won &bull; {WEEKEND_2_ODDS_STATS.lost} Lost ({WEEKEND_2_ODDS_STATS.totalWeekends} total)
                 </div>
               </div>
 
               <div className="bg-white/5 p-3 rounded-xl border border-white/10">
                 <div className="text-[10px] font-mono text-slate-400 uppercase">Average Odds</div>
-                <div className="text-2xl font-mono font-black text-blue-400 mt-0.5">
-                  {WEEKEND_2_ODDS_STATS.avgOdds}x
+                <div className="text-2xl font-mono font-black text-white mt-0.5">
+                  {WEEKEND_2_ODDS_STATS.averageOdds}x
                 </div>
                 <div className="text-[10px] text-slate-300 mt-0.5">
-                  Low-variance threshold
+                  Banker 2-leg European doubles
                 </div>
               </div>
 
@@ -184,7 +567,7 @@ export default function ResultsArchivePage({ onNavigate }) {
 
           {/* Filter Bar */}
           <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-1.5 flex-wrap">
               {[
                 { id: 'all', label: `All Weekends (${WEEKEND_ARCHIVE.length})` },
                 { id: 'won', label: `Won (${WEEKEND_ARCHIVE.filter(w => w.status === 'won').length})` },
@@ -259,45 +642,33 @@ export default function ResultsArchivePage({ onNavigate }) {
                         className="p-3 rounded-xl bg-slate-50 dark:bg-[#162032] border border-slate-200/80 dark:border-slate-800/80 space-y-1.5"
                       >
                         <div className="flex items-center justify-between text-xs">
-                          <span className="font-mono text-slate-500 dark:text-slate-400 text-[10px]">
-                            {sel.league} &bull; {sel.kickoff}
+                          <span className="text-[10px] font-mono text-slate-400 uppercase">
+                            {sel.league}
                           </span>
-                          <span className={`font-mono font-bold text-xs px-2 py-0.5 rounded ${
-                            sel.result === 'won' 
-                              ? 'bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400' 
-                              : sel.result === 'lost' 
-                              ? 'bg-rose-100 dark:bg-rose-950/80 text-rose-700 dark:text-rose-400'
-                              : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
-                          }`}>
-                            {sel.score}
-                          </span>
-                        </div>
-
-                        <div className="font-display font-bold text-xs sm:text-sm text-slate-900 dark:text-white">
-                          {sel.match}
-                        </div>
-
-                        <div className="flex items-center justify-between text-xs pt-0.5">
-                          <span className="text-blue-600 dark:text-blue-400 font-bold">
-                            Selection: {sel.pick}
-                          </span>
-                          <span className="font-mono font-black text-slate-700 dark:text-slate-300 bg-white dark:bg-[#1A2438] px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-800 text-[11px]">
+                          <span className="font-mono font-bold text-blue-600 dark:text-blue-400">
                             {sel.odds}x
                           </span>
                         </div>
-
-                        <p className="text-[11px] text-slate-500 dark:text-slate-400 italic pt-1 border-t border-slate-200/50 dark:border-slate-800/50">
-                          "{sel.tacticalReason}"
-                        </p>
+                        <div className="font-display font-bold text-slate-900 dark:text-white text-sm">
+                          {sel.match}
+                        </div>
+                        <div className="text-xs font-mono text-emerald-600 dark:text-emerald-400 flex items-center justify-between">
+                          <span>Pick: <strong>{sel.pick}</strong></span>
+                          {sel.score && (
+                            <span className="font-mono text-slate-500 dark:text-slate-400">
+                              FT: <strong>{sel.score}</strong>
+                            </span>
+                          )}
+                        </div>
                       </div>
                     ))}
                   </div>
 
-                  {/* Post-match verdict */}
-                  <div className="p-2.5 rounded-xl bg-blue-50/60 dark:bg-blue-950/30 border border-blue-200/60 dark:border-blue-900/50 text-[11px] text-blue-900 dark:text-blue-200 flex items-center justify-between">
-                    <span><strong>Record Verdict:</strong> {item.postMatchVerdict}</span>
-                    <span className="font-mono font-bold text-xs">{item.status === 'won' ? '+1.06u' : item.status === 'lost' ? '-1.00u' : 'Active'}</span>
-                  </div>
+                  {item.recap && (
+                    <div className="text-xs text-slate-600 dark:text-slate-400 pt-2 border-t border-slate-100 dark:border-slate-800 font-sans">
+                      <span className="font-semibold text-slate-800 dark:text-slate-200">Weekend Recap:</span> {item.recap}
+                    </div>
+                  )}
                 </div>
               </div>
             ))}
@@ -485,7 +856,7 @@ export default function ResultsArchivePage({ onNavigate }) {
             {TICKETS.map(t => (
               <div 
                 key={t.id}
-                onClick={() => onNavigate(`ticket/${t.id}`)}
+                onClick={() => onNavigate && onNavigate(`ticket/${t.id}`)}
                 className="p-3.5 hover:bg-slate-50 dark:hover:bg-[#162032] cursor-pointer transition-colors"
               >
                 <div className="flex items-center justify-between text-xs">

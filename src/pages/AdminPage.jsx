@@ -43,6 +43,10 @@ export default function AdminPage({ onNavigate }) {
     announcements,
     whaleSlip,
     updateWhaleSlip,
+    syndicateArchive,
+    addSyndicateRun,
+    updateSyndicateRun,
+    deleteSyndicateRun,
     adSettings,
     updateAdSettings,
     updateTicketCode, 
@@ -622,6 +626,7 @@ export default function AdminPage({ onNavigate }) {
 
       {/* ── TAB 0A: WHALE 2-ODDS MANAGER ── */}
       {activeTab === 'whale-mgr' && (
+        <div className="space-y-6">
         <form onSubmit={(e) => {
           e.preventDefault();
           updateWhaleSlip(whaleForm);
@@ -831,6 +836,101 @@ export default function AdminPage({ onNavigate }) {
             <span>Save Whale 2-Odds Slip</span>
           </button>
         </form>
+
+        {/* ── SYNDICATE HISTORICAL RUNS LEDGER ── */}
+        <div className="p-5 sm:p-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1626] shadow-sm space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800 pb-3">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-xl">📜</span>
+                <h3 className="font-display font-black text-base text-slate-900 dark:text-white">
+                  Syndicate Historical Results Ledger ({syndicateArchive?.length || 0} Runs)
+                </h3>
+              </div>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                Transparent log of settled Whale Syndicate bets. Wins and losses are permanently stored for punters to inspect.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => {
+                const nextRunNum = (syndicateArchive?.length || 0) + 1;
+                const newRun = {
+                  id: `whale-run-${String(nextRunNum).padStart(2, '0')}`,
+                  runNumber: nextRunNum,
+                  date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+                  title: `Run #${String(nextRunNum).padStart(2, '0')}: ${whaleForm.title || 'European Syndicate Lock'}`,
+                  staker: whaleForm.staker || 'Lagos VIP Syndicate #04',
+                  stakeAmount: whaleForm.stakeAmount || '₦500,000',
+                  totalOdds: whaleForm.totalOdds || 2.18,
+                  potentialReturn: whaleForm.potentialReturn || '₦1,090,000',
+                  netProfit: whaleForm.status === 'won' ? '+₦590,000' : '-₦500,000',
+                  status: whaleForm.status || 'won',
+                  settledScore: 'FT Settled',
+                  sportyCode: whaleForm.sportyCode || 'BC4-WHALE',
+                  bet9jaCode: whaleForm.bet9jaCode || 'B9J-WHALE',
+                  intel: whaleForm.intel || 'Settled run recorded in historical ledger.',
+                  matches: (whaleForm.matches || []).map(m => ({
+                    match: m.match,
+                    league: m.league || 'European Top Flight',
+                    pick: m.pick,
+                    odds: m.odds,
+                    score: m.resultScore || 'FT Settled',
+                    result: whaleForm.status === 'won' ? 'won' : 'lost'
+                  }))
+                };
+                addSyndicateRun(newRun);
+                showToast(`📜 Run #${nextRunNum} archived to Syndicate Ledger!`);
+              }}
+              className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-display font-bold text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-md"
+            >
+              <span>+ Archive Current Slip as Run #{(syndicateArchive?.length || 0) + 1}</span>
+            </button>
+          </div>
+
+          <div className="divide-y divide-slate-100 dark:divide-slate-800 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden text-xs">
+            {(syndicateArchive || []).map((run) => (
+              <div key={run.id || run.runNumber} className="p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-slate-50 dark:hover:bg-[#121B2B]">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-black uppercase ${
+                      run.status === 'won' ? 'bg-emerald-500 text-slate-950' : 'bg-rose-600 text-white'
+                    }`}>
+                      #{run.runNumber} {run.status === 'won' ? 'WON' : 'LOST'}
+                    </span>
+                    <strong className="text-slate-900 dark:text-white font-display text-sm">{run.title}</strong>
+                    <span className="text-slate-400 font-mono text-[11px]">&bull; {run.date}</span>
+                  </div>
+                  <div className="flex items-center gap-3 text-slate-500 dark:text-slate-400 font-mono text-[11px] flex-wrap">
+                    <span>Stake: <strong className="text-amber-500">{run.stakeAmount}</strong></span>
+                    <span>Odds: <strong>{run.totalOdds}x</strong></span>
+                    <span>Payout: <strong className={run.status === 'won' ? 'text-emerald-500 font-bold' : 'line-through'}>{run.potentialReturn}</strong></span>
+                    <span>Net: <strong className={run.status === 'won' ? 'text-emerald-500 font-bold' : 'text-rose-500 font-bold'}>{run.netProfit}</strong></span>
+                    <span>Score: <strong>{run.settledScore}</strong></span>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 self-end sm:self-auto">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (window.confirm(`Delete Run #${run.runNumber} from ledger?`)) {
+                        deleteSyndicateRun(run.id);
+                        showToast(`Run #${run.runNumber} removed.`);
+                      }
+                    }}
+                    className="p-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 transition-colors"
+                    title="Delete Run"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        </div>
       )}
 
       {/* ── TAB 0B: AD NETWORK & MONETIZATION ── */}
@@ -2218,7 +2318,7 @@ export default function AdminPage({ onNavigate }) {
               <button
                 onClick={async () => {
                   try {
-                    const data = { ladder, tickets, codeCatalogue, punters, announcements, markets, whaleSlip, adSettings };
+                    const data = { ladder, tickets, codeCatalogue, punters, announcements, markets, whaleSlip, adSettings, syndicateArchive };
                     const res = await fetch('/api/state', {
                       method: 'POST',
                       headers: {
@@ -2272,7 +2372,7 @@ export default function AdminPage({ onNavigate }) {
             <div className="flex items-center gap-3 pt-2">
             <button
               onClick={() => {
-                const data = { ladder, tickets, codeCatalogue, punters, announcements, markets, whaleSlip, adSettings };
+                const data = { ladder, tickets, codeCatalogue, punters, announcements, markets, whaleSlip, adSettings, syndicateArchive };
                 const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
                 const url = URL.createObjectURL(blob);
                   const a = document.createElement('a');

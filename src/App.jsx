@@ -139,7 +139,7 @@ export default function App() {
       case 'ticket':
         return <TicketDetailPage ticketId={param} onNavigate={navigate} />;
       case 'results':
-        return <ResultsArchivePage onNavigate={navigate} />;
+        return <ResultsArchivePage initialTab={param} onNavigate={navigate} />;
       case 'bookmakers':
         return <BookmakersPage onNavigate={navigate} />;
       case 'about':
