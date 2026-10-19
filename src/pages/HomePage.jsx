@@ -8,7 +8,7 @@ import {
   TrendingUp, CheckCircle, Clock, Zap, Target, Copy, Check, 
   BarChart2, ChevronDown, ChevronUp, Layers, Lock, Eye, Shield, 
   Users, BookOpen, ExternalLink, Award, AlertCircle, Gift, DollarSign,
-  Smartphone, Wallet, ArrowUpRight, Star
+  Smartphone, Wallet, ArrowUpRight, Star, Plus, Trash2, X
 } from 'lucide-react';
 
 export default function HomePage({ onNavigate }) {
@@ -17,6 +17,8 @@ export default function HomePage({ onNavigate }) {
     punters, 
     ladder, 
     marketCodes, 
+    addMarketCode,
+    deleteMarketCode,
     triggerCopyModal, 
     adSettings 
   } = usePredictions();
@@ -24,6 +26,55 @@ export default function HomePage({ onNavigate }) {
   const [copiedCode, setCopiedCode] = useState(null);
   const [selectedBookieTab, setSelectedBookieTab] = useState('sporty'); // 'sporty' | 'bet9ja' | '1xbet'
   const [activeMarketFilter, setActiveMarketFilter] = useState('all');
+  const [showMarketAddForm, setShowMarketAddForm] = useState(false);
+  const [newMarketSlipForm, setNewMarketSlipForm] = useState({
+    marketId: 'over-15-goals',
+    bookmaker: 'sportybet',
+    code: '',
+    odds: '',
+    gamesCount: ''
+  });
+
+  const handleAddMarketSlipSubmit = (e) => {
+    e.preventDefault();
+    if (!newMarketSlipForm.code.trim()) return;
+
+    const cleanCode = newMarketSlipForm.code.trim().toUpperCase();
+    const cleanOdds = parseFloat(newMarketSlipForm.odds) || 2.00;
+    const cleanGames = newMarketSlipForm.gamesCount.trim() ? (parseInt(newMarketSlipForm.gamesCount, 10) || null) : null;
+    const bName = newMarketSlipForm.bookmaker === 'footballcom' ? 'Football.com' : newMarketSlipForm.bookmaker === 'bet9ja' ? 'Bet9ja' : newMarketSlipForm.bookmaker === '1xbet' ? '1xBet' : newMarketSlipForm.bookmaker === 'betking' ? 'BetKing' : 'SportyBet';
+    const mNames = {
+      'over-15-goals': 'Over 1.5 Goals',
+      'over-25-goals': 'Over 2.5 Goals',
+      'double-chance': 'Double Chance (1X/X2)',
+      'both-teams-to-score': 'Both Teams to Score (GG)',
+      '1x2-match-result': '1X2 Match Winner',
+      'total-corners': 'Total Corners'
+    };
+
+    addMarketCode({
+      id: `mcode-${Date.now()}-${cleanCode.toLowerCase()}`,
+      marketId: newMarketSlipForm.marketId,
+      code: cleanCode,
+      odds: cleanOdds,
+      bookmaker: newMarketSlipForm.bookmaker,
+      bookmakerName: bName,
+      title: `${mNames[newMarketSlipForm.marketId] || 'Market'} (${cleanOdds}x ${bName})`,
+      eventsCount: cleanGames,
+      status: 'active',
+      dropTime: 'Just Now'
+    });
+
+    setNewMarketSlipForm({ marketId: 'over-15-goals', bookmaker: 'sportybet', code: '', odds: '', gamesCount: '' });
+    setShowMarketAddForm(false);
+  };
+
+  const handleDeleteMarketSlip = (e, codeId, codeText) => {
+    e.stopPropagation();
+    if (window.confirm(`Are you sure you want to remove code ${codeText} from this market?`)) {
+      deleteMarketCode(codeId);
+    }
+  };
 
   const currentStep = ladder?.currentDay || 4;
   const currentPot = ladder?.currentBalance || 3375;
@@ -634,7 +685,7 @@ export default function HomePage({ onNavigate }) {
 
       {/* ── 5. LIVE BOOKING CODES VAULT (OVER 1.5, DOUBLE CHANCE, BTTS) ── */}
       <section className="space-y-3 bg-white dark:bg-[#0E1626] border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 shadow-sm">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-3">
           <div className="flex items-center gap-2">
             <span className="text-lg">⚡</span>
             <div>
@@ -647,22 +698,140 @@ export default function HomePage({ onNavigate }) {
             </div>
           </div>
 
-          <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none self-start sm:self-auto">
-            {['all', 'over-15-goals', 'double-chance', 'both-teams-to-score'].map(cat => (
+          <div className="flex items-center gap-2 overflow-x-auto scrollbar-none self-start sm:self-auto">
+            <button
+              onClick={() => setShowMarketAddForm(!showMarketAddForm)}
+              className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-display font-black text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-sm transition-all flex-shrink-0"
+            >
+              {showMarketAddForm ? <X className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
+              <span>{showMarketAddForm ? 'Cancel' : 'Add Code to Market'}</span>
+            </button>
+
+            {[
+              { id: 'all', label: 'All Slips' },
+              { id: 'over-15-goals', label: 'Over 1.5' },
+              { id: 'over-25-goals', label: 'Over 2.5' },
+              { id: 'double-chance', label: 'Double Chance' },
+              { id: 'both-teams-to-score', label: 'GG / BTTS' },
+              { id: '1x2-match-result', label: '1X2 Winner' }
+            ].map(cat => (
               <button
-                key={cat}
-                onClick={() => setActiveMarketFilter(cat)}
-                className={`px-3 py-1 rounded-xl text-xs font-mono font-bold uppercase transition-all ${
-                  activeMarketFilter === cat
+                key={cat.id}
+                onClick={() => setActiveMarketFilter(cat.id)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold uppercase transition-all whitespace-nowrap ${
+                  activeMarketFilter === cat.id
                     ? 'bg-[#E41B13] text-white shadow-sm'
                     : 'bg-slate-100 dark:bg-[#162238] text-slate-600 dark:text-slate-400 hover:text-white'
                 }`}
               >
-                {cat === 'all' ? 'All Slips' : cat.replace(/-/g, ' ')}
+                {cat.label}
               </button>
             ))}
           </div>
         </div>
+
+        {/* ── INLINE ADD CODE TO MARKET FORM ── */}
+        {showMarketAddForm && (
+          <form 
+            onSubmit={handleAddMarketSlipSubmit}
+            className="p-4 rounded-2xl border-2 border-emerald-500/40 bg-emerald-50/40 dark:bg-emerald-950/20 backdrop-blur-sm space-y-3 shadow-md"
+          >
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-mono font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
+                ➕ Add New Code Directly to Market
+              </span>
+              <span className="text-[11px] text-slate-400 font-mono">
+                Auto-creates Football.com twin if SportyBet
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-5 gap-3">
+              <div>
+                <label className="text-[11px] font-mono font-bold text-slate-500 uppercase block mb-1">Market</label>
+                <select
+                  value={newMarketSlipForm.marketId}
+                  onChange={(e) => setNewMarketSlipForm({ ...newMarketSlipForm, marketId: e.target.value })}
+                  className="w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-sm font-bold text-slate-900 dark:text-white"
+                >
+                  <option value="over-15-goals">⚽ Over 1.5 Goals</option>
+                  <option value="over-25-goals">⚽ Over 2.5 Goals</option>
+                  <option value="double-chance">🛡️ Double Chance (1X/X2)</option>
+                  <option value="both-teams-to-score">🎯 Both Teams to Score (GG)</option>
+                  <option value="1x2-match-result">🏆 1X2 Match Winner</option>
+                  <option value="total-corners">🚩 Total Corners</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="text-[11px] font-mono font-bold text-slate-500 uppercase block mb-1">Bookmaker</label>
+                <select
+                  value={newMarketSlipForm.bookmaker}
+                  onChange={(e) => setNewMarketSlipForm({ ...newMarketSlipForm, bookmaker: e.target.value })}
+                  className="w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-sm font-bold text-slate-900 dark:text-white"
+                >
+                  <option value="sportybet">🔴 SportyBet</option>
+                  <option value="footballcom">🟢 Football.com</option>
+                  <option value="bet9ja">🟡 Bet9ja</option>
+                  <option value="1xbet">🔵 1xBet</option>
+                  <option value="betking">👑 BetKing</option>
+                  <option value="msport">⚡ MSport</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="text-[11px] font-mono font-bold text-slate-500 uppercase block mb-1">Booking Code *</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. PZ6US6"
+                  value={newMarketSlipForm.code}
+                  onChange={(e) => setNewMarketSlipForm({ ...newMarketSlipForm, code: e.target.value.toUpperCase() })}
+                  className="w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-sm font-mono font-black text-slate-900 dark:text-white uppercase"
+                />
+              </div>
+
+              <div>
+                <label className="text-[11px] font-mono font-bold text-slate-500 uppercase block mb-1">Total Odds *</label>
+                <input
+                  type="number"
+                  step="0.01"
+                  required
+                  placeholder="e.g. 2.50"
+                  value={newMarketSlipForm.odds}
+                  onChange={(e) => setNewMarketSlipForm({ ...newMarketSlipForm, odds: e.target.value })}
+                  className="w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-sm font-mono font-bold text-slate-900 dark:text-white"
+                />
+              </div>
+
+              <div>
+                <label className="text-[11px] font-mono font-bold text-slate-500 uppercase block mb-1">Games Count (Optional)</label>
+                <input
+                  type="number"
+                  placeholder="Leave empty to skip"
+                  value={newMarketSlipForm.gamesCount}
+                  onChange={(e) => setNewMarketSlipForm({ ...newMarketSlipForm, gamesCount: e.target.value })}
+                  className="w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-sm font-mono font-bold text-slate-900 dark:text-white"
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => setShowMarketAddForm(false)}
+                className="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-500 hover:text-slate-900 dark:hover:text-white"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-display font-black text-xs uppercase tracking-wider shadow-sm transition-all"
+              >
+                Publish Code to Market
+              </button>
+            </div>
+          </form>
+        )}
 
         {/* Market codes list */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 pt-1">
@@ -698,7 +867,7 @@ export default function HomePage({ onNavigate }) {
                     </div>
 
                     <div className="text-[11px] font-mono text-slate-400">
-                      {codeItem.eventsCount || 4} Legs &bull; {codeItem.dropTime || '02:00 AM WAT'}
+                      {codeItem.eventsCount ? `${codeItem.eventsCount} Legs • ` : ''}{codeItem.dropTime || 'Live Today'}
                     </div>
                   </div>
 
@@ -722,6 +891,14 @@ export default function HomePage({ onNavigate }) {
                       <span>Load</span>
                       <ExternalLink className="w-3 h-3" />
                     </a>
+
+                    <button
+                      onClick={(e) => handleDeleteMarketSlip(e, codeItem.id, codeItem.code)}
+                      className="p-1.5 rounded-lg bg-rose-50 dark:bg-rose-950/30 hover:bg-rose-100 dark:hover:bg-rose-900/50 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-900 transition-all"
+                      title="Remove code from this market"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
                   </div>
                 </div>
               );
