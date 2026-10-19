@@ -217,6 +217,249 @@ async function handleApiRequest(request, env, url) {
     if (method === 'POST') {
       try {
         const update = await request.json();
+        const botToken = env.TELEGRAM_BOT_TOKEN || '8443187787:AAGui3m2Kq6ck-RCQFBqVJirIs-uepWVSd8';
+
+        // ── FETCH STATE HELPER ──
+        const getState = async () => {
+          let s = null;
+          if (kv) s = await kv.get('bryme_global_state', { type: 'json' });
+          if (!s) s = { codeCatalogue: [], punters: [], marketCodes: [], ladder: null };
+          if (!s.codeCatalogue) s.codeCatalogue = [];
+          if (!s.punters) s.punters = [];
+          if (!s.marketCodes) s.marketCodes = [];
+          return s;
+        };
+
+        const saveState = async (s) => {
+          if (kv) await kv.put('bryme_global_state', JSON.stringify(s));
+        };
+
+        const getSession = async (userId) => {
+          if (kv && userId) return await kv.get(`tgsess_${userId}`, { type: 'json' });
+          return null;
+        };
+
+        const saveSession = async (userId, data) => {
+          if (kv && userId) await kv.put(`tgsess_${userId}`, JSON.stringify(data), { expirationTtl: 3600 });
+        };
+
+        const clearSession = async (userId) => {
+          if (kv && userId) await kv.delete(`tgsess_${userId}`);
+        };
+
+        // ══════════════════════════════════════════════════════════════
+        // ── 1. INLINE KEYBOARD CALLBACK QUERIES (BUTTON CLICKS) ──
+        // ══════════════════════════════════════════════════════════════
+        if (update.callback_query) {
+          const cb = update.callback_query;
+          const callbackId = cb.id;
+          const chatId = cb.message?.chat?.id;
+          const messageId = cb.message?.message_id;
+          const userId = cb.from?.id;
+          const data = cb.data || '';
+
+          await answerTelegramCallback(botToken, callbackId);
+
+          // 1.1 Main Menu
+          if (data === 'menu_main') {
+            await clearSession(userId);
+            await editTelegramMessage(botToken, chatId, messageId, getMainMenuText(), getMainMenuKeyboard());
+            return jsonResponse({ ok: true, action: 'main_menu' });
+          }
+
+          // 1.2 Start Code Hub Wizard
+          if (data === 'wiz_hub') {
+            await saveSession(userId, { flow: 'hub', step: 'bookmaker' });
+            const text = `<b>➕ Add New Code (Step 1/4)</b>\n\nWhich bookmaker is this code for?`;
+            await editTelegramMessage(botToken, chatId, messageId, text, getBookmakerKeyboard());
+            return jsonResponse({ ok: true, action: 'wiz_hub_step1' });
+          }
+
+          // 1.3 Start Market Wizard
+          if (data === 'wiz_mkt') {
+            await saveSession(userId, { flow: 'market', step: 'bookmaker' });
+            const text = `<b>⚽ Attach Code to Market (Step 1/5)</b>\n\nWhich bookmaker is this slip for?`;
+            await editTelegramMessage(botToken, chatId, messageId, text, getBookmakerKeyboard());
+            return jsonResponse({ ok: true, action: 'wiz_mkt_step1' });
+          }
+
+          // 1.4 Cancel Wizard
+          if (data === 'wiz_cancel') {
+            await clearSession(userId);
+            await editTelegramMessage(botToken, chatId, messageId, `❌ <i>Operation cancelled.</i>\n\nTap below to start again:`, getMainMenuKeyboard());
+            return jsonResponse({ ok: true, action: 'cancelled' });
+          }
+
+          // 1.5 Select Bookmaker
+          if (data.startsWith('bk_')) {
+            const bookie = data.replace('bk_', '');
+            const session = (await getSession(userId)) || { flow: 'hub' };
+            session.bookmaker = bookie;
+            session.step = 'awaiting_code';
+            await saveSession(userId, session);
+
+            const bName = bookie === 'footballcom' ? 'Football.com' : bookie === 'bet9ja' ? 'Bet9ja' : bookie === '1xbet' ? '1xBet' : bookie === 'betking' ? 'BetKing' : 'SportyBet';
+            const text = `<b>${session.flow === 'market' ? '⚽ Market Slip' : '➕ Code Hub'} (Step 2)</b>\n` +
+              `Bookmaker: <b>${bName}</b>\n\n` +
+              `👉 <b>Type & send the Booking Code now:</b>\n` +
+              `<i>(e.g. <code>PZ6US6</code> or <code>5WGQPQ3</code>)</i>`;
+            await editTelegramMessage(botToken, chatId, messageId, text, getCancelKeyboard());
+            return jsonResponse({ ok: true, action: 'step_code' });
+          }
+
+          // 1.6 Odds Preset Selected
+          if (data.startsWith('odds_')) {
+            const val = parseFloat(data.replace('odds_', ''));
+            const session = await getSession(userId);
+            if (session) {
+              session.odds = val;
+              session.step = 'awaiting_games';
+              await saveSession(userId, session);
+
+              const text = `<b>Games Count (Step 4)</b>\n` +
+                `Code: <code>${session.code}</code> | Odds: <b>${val}x</b>\n\n` +
+                `How many matches are in this slip?\n` +
+                `<i>Tap <b>Skip</b> if you do NOT want to show a game count.</i>`;
+              await editTelegramMessage(botToken, chatId, messageId, text, getGamesKeyboard());
+              return jsonResponse({ ok: true, action: 'step_games' });
+            }
+          }
+
+          // 1.7 Games Count Selected or Skipped
+          if (data.startsWith('games_')) {
+            const val = data.replace('games_', '');
+            const session = await getSession(userId);
+            if (session) {
+              session.gamesCount = val === 'skip' ? null : parseInt(val, 10);
+              session.step = 'awaiting_punter';
+              await saveSession(userId, session);
+
+              const text = `<b>Select Punter / Source (Step ${session.flow === 'market' ? '4/5' : 'Final'})</b>\n` +
+                `Code: <code>${session.code}</code> | Odds: <b>${session.odds}x</b>` +
+                (session.gamesCount ? ` | Games: <b>${session.gamesCount}</b>\n\n` : `\n\n`) +
+                `Who dropped this slip?`;
+              await editTelegramMessage(botToken, chatId, messageId, text, getPuntersKeyboard());
+              return jsonResponse({ ok: true, action: 'step_punter' });
+            }
+          }
+
+          // 1.8 Punter Selected
+          if (data.startsWith('punter_')) {
+            const pKey = data.replace('punter_', '');
+            const pMap = {
+              'mrbanks': { name: 'Mr banks', id: 'punter-mrbanks' },
+              'tallman': { name: 'Tall man', id: 'punter-tallman' },
+              'bosstips': { name: 'Boss Tips', id: 'punter-bosstips' },
+              'drzeh': { name: 'Dr zeh', id: 'punter-drzeh' },
+              'cindymodel': { name: 'Cindymodel', id: 'punter-cindymodel' },
+              '39billion': { name: '39billion', id: 'punter-39billion' },
+              'lightbet': { name: 'Lightbet', id: 'punter-lightbet' },
+              'mrbayo': { name: 'Mr bayo', id: 'punter-mrbayo' },
+              'talentedfight': { name: 'Talented fight', id: 'punter-talentedfight' },
+              'bossolamilekan': { name: 'Bossolamilekan', id: 'punter-bossolamilekan' },
+              'general': { name: 'BRYME Desk', id: null }
+            };
+            const pObj = pMap[pKey] || { name: 'BRYME Desk', id: null };
+
+            const session = await getSession(userId);
+            if (session) {
+              session.punterName = pObj.name;
+              session.punterId = pObj.id;
+
+              // If market flow, ask for market
+              if (session.flow === 'market') {
+                session.step = 'awaiting_market';
+                await saveSession(userId, session);
+                const text = `<b>⚽ Target Football Market (Step 5/5)</b>\n` +
+                  `Code: <code>${session.code}</code> | By: <b>${pObj.name}</b>\n\n` +
+                  `Which market does this slip belong to?`;
+                await editTelegramMessage(botToken, chatId, messageId, text, getMarketsKeyboard());
+                return jsonResponse({ ok: true, action: 'step_market' });
+              }
+
+              // Otherwise execute Code Hub Publish!
+              const state = await getState();
+              publishToState(state, session);
+              await saveState(state);
+              await clearSession(userId);
+
+              const summaryText = formatPublishSuccess(session);
+              await editTelegramMessage(botToken, chatId, messageId, summaryText, getSuccessKeyboard());
+              return jsonResponse({ ok: true, action: 'published_hub' });
+            }
+          }
+
+          // 1.9 Market Selected (Finalize Market Slip)
+          if (data.startsWith('mkt_')) {
+            const mKey = data.replace('mkt_', '');
+            const mNames = {
+              'over-15-goals': 'Over 1.5 Total Goals',
+              'over-25-goals': 'Over 2.5 Total Goals',
+              'both-teams-to-score': 'Both Teams to Score (GG)',
+              'double-chance': 'Double Chance (1X/X2)',
+              '1x2-match-result': '1X2 Match Result',
+              'total-corners': 'Total Corners',
+              'draw-no-bet': 'Draw No Bet',
+              'multigoals': 'Multi-Goals (2-5 Goals)'
+            };
+
+            const session = await getSession(userId);
+            if (session) {
+              session.marketId = mKey;
+              session.marketName = mNames[mKey] || 'Football Market';
+
+              const state = await getState();
+              publishToState(state, session);
+              await saveState(state);
+              await clearSession(userId);
+
+              const summaryText = formatPublishSuccess(session);
+              await editTelegramMessage(botToken, chatId, messageId, summaryText, getSuccessKeyboard());
+              return jsonResponse({ ok: true, action: 'published_market' });
+            }
+          }
+
+          // 1.10 Commands from Buttons
+          if (data === 'cmd_status') {
+            const state = await getState();
+            const l = state.ladder || {};
+            const hubCount = state.codeCatalogue?.length || 0;
+            const marketCount = state.marketCodes?.length || 0;
+            const recent3 = (state.codeCatalogue || []).slice(0, 3).map(c => `• <code>${c.code}</code> (${c.bookmaker}) - ${c.odds}x${c.eventsCount ? ` (${c.eventsCount}G)` : ''}`).join('\n') || 'None';
+
+            const statusMsg = `📊 <b>BRYME Live Status</b>\n\n` +
+              `🔄 <b>Rollover Challenge:</b> Day <b>${l.currentDay || 1}</b> / 18 | Code: <code>${l.todaysCode || 'None'}</code>\n` +
+              `• Balance: <b>₦${(l.currentBalance || 1000).toLocaleString()}</b>\n\n` +
+              `📌 <b>Code Hub:</b> <b>${hubCount}</b> active slips\n${recent3}\n\n` +
+              `⚽ <b>Market Slips Attached:</b> <b>${marketCount}</b> slips\n\n` +
+              `🌐 <b>predictions.thebryme.com</b>`;
+            await editTelegramMessage(botToken, chatId, messageId, statusMsg, getMainMenuKeyboard());
+            return jsonResponse({ ok: true, action: 'status' });
+          }
+
+          if (data === 'cmd_codes') {
+            const state = await getState();
+            const list = (state.codeCatalogue || []).slice(0, 8).map((c, i) => 
+              `${i + 1}. <b>${c.bookmaker?.toUpperCase()}</b>: <code>${c.code}</code> (${c.odds}x)${c.eventsCount ? ` [${c.eventsCount} Games]` : ''} — <i>${c.author || c.punterName || 'Desk'}</i>`
+            ).join('\n');
+            const listMsg = `📌 <b>Top Live Booking Codes (Newest First):</b>\n\n${list || 'No codes active'}\n\nTo delete: <code>/del CODE</code>`;
+            await editTelegramMessage(botToken, chatId, messageId, listMsg, getMainMenuKeyboard());
+            return jsonResponse({ ok: true, action: 'codes' });
+          }
+
+          if (data === 'help_bulk') {
+            const bulkHelp = `📋 <b>Bulk Drop Mode</b>\n\n` +
+              `To drop 5, 20, or 100 codes at once, just send or paste a multi-line message:\n\n` +
+              `<code>PZ6US6 10000 Tall man 16 games\n5WGQPQ3 200 Cindy 12 games\nTZUMDQ 365 Mr banks 24 games\nW6XDM5 148 Mr bayo\nQ7S287 1.54 Mr banks</code>\n\n` +
+              `The bot will automatically extract all codes, create Football.com twins, and publish them to the top instantly!`;
+            await editTelegramMessage(botToken, chatId, messageId, bulkHelp, getMainMenuKeyboard());
+            return jsonResponse({ ok: true, action: 'help_bulk' });
+          }
+        }
+
+        // ══════════════════════════════════════════════════════════════
+        // ── 2. TEXT MESSAGES (COMMANDS, WIZARD INPUTS & BULK DROPS) ──
+        // ══════════════════════════════════════════════════════════════
         const msg = update.message || update.channel_post;
         if (!msg || (!msg.text && !msg.caption)) {
           return jsonResponse({ ok: true, ignored: 'no_text' });
@@ -224,120 +467,132 @@ async function handleApiRequest(request, env, url) {
 
         const text = (msg.text || msg.caption || '').trim();
         const chatId = msg.chat?.id;
+        const userId = msg.from?.id;
         const forwardFrom = msg.forward_from_chat?.title || msg.forward_from?.first_name || '';
-        const botToken = env.TELEGRAM_BOT_TOKEN || '8443187787:AAGui3m2Kq6ck-RCQFBqVJirIs-uepWVSd8';
 
-        // ── A. COMMAND: /start OR /help ──
-        if (text.startsWith('/start') || text.startsWith('/help') || text.toLowerCase() === 'help') {
-          const helpMsg = `👑 <b>BRYME Predictions Management Bot</b>\n\n` +
-            `You can fully manage the Code Hub, Markets, and Rollover directly from this chat:\n\n` +
-            `<b>1. 📌 ADD CODE TO HUB:</b>\n` +
-            `• <code>Tall man PZ6US6 10000 odds 16 games</code>\n` +
-            `• <code>Cindy Bet9ja 5WGQPQ3 200 odds</code>\n` +
-            `• <code>/add sportybet TZUMDQ 365 24 games Mr banks</code>\n` +
-            `<i>(Note: If you don't include number of games, it will NOT be added)</i>\n\n` +
-            `<b>2. ⚽ ATTACH CODE TO MARKET:</b>\n` +
-            `• <code>/market over15 sportybet Q7S287 1.54</code>\n` +
-            `• <code>/market over25 sportybet TZ01SR 2694 20 games</code>\n` +
-            `• <code>/market btts sportybet W6XDM5 148</code>\n` +
-            `• <code>/market dc bet9ja 5WGQKM6 20</code>\n` +
-            `• <code>/market corners sportybet PZ6US6 2.30</code>\n` +
-            `<i>Markets: over15, over25, btts/gg, dc, 1x2, corners, dnb, multigoals</i>\n\n` +
-            `<b>3. 🔄 ROLLOVER CHALLENGE:</b>\n` +
-            `• <code>/rollover Day 1 1.50 Q7S288 SportyBet</code>\n` +
-            `• <code>/rollover reset</code> (Resets to Day 1 with ₦1,000)\n\n` +
-            `<b>4. 🗑 DELETE CODE:</b>\n` +
-            `• <code>/del PZ6US6</code> (Purges code from Hub, Markets & Punters)\n\n` +
-            `<b>5. 📊 LIVE OVERVIEW:</b>\n` +
-            `• <code>/status</code> (Live status of Rollover, Hub & Markets)\n` +
-            `• <code>/codes</code> (List 10 newest codes)`;
-          if (chatId && botToken) await sendTelegramReply(botToken, chatId, helpMsg);
+        // Check if user is in an interactive wizard step
+        const session = await getSession(userId);
+
+        // 2.1 Handle Active Wizard Step Input
+        if (session && session.step) {
+          // If awaiting code:
+          if (session.step === 'awaiting_code') {
+            const codeCandidate = text.toUpperCase().replace(/[^A-Z0-9]/g, '');
+            if (codeCandidate.length < 4) {
+              if (chatId) await sendTelegramReply(botToken, chatId, `⚠️ That doesn't look like a valid code. Send code again (e.g. <code>PZ6US6</code>):`, getCancelKeyboard());
+              return jsonResponse({ ok: false, error: 'short_code' });
+            }
+            session.code = codeCandidate;
+            session.step = 'awaiting_odds';
+            await saveSession(userId, session);
+
+            const promptText = `<b>Total Odds (Step 3)</b>\n` +
+              `Code: <code>${session.code}</code>\n\n` +
+              `👉 <b>Type the total odds</b> (e.g. <code>10000</code> or <code>2.50</code>) or tap a preset:`;
+            if (chatId) await sendTelegramReply(botToken, chatId, promptText, getOddsKeyboard());
+            return jsonResponse({ ok: true, action: 'saved_code' });
+          }
+
+          // If awaiting odds:
+          if (session.step === 'awaiting_odds') {
+            const numMatch = text.match(/([\d,]+(?:\.\d+)?)/);
+            let odds = 2.00;
+            if (numMatch) odds = parseFloat(numMatch[1].replace(/,/g, '')) || 2.00;
+
+            session.odds = odds;
+            session.step = 'awaiting_games';
+            await saveSession(userId, session);
+
+            const promptText = `<b>Games Count (Step 4)</b>\n` +
+              `Code: <code>${session.code}</code> | Odds: <b>${odds}x</b>\n\n` +
+              `How many games in this ticket?\n` +
+              `<i>Tap <b>Skip</b> if you do NOT want to show a game count.</i>`;
+            if (chatId) await sendTelegramReply(botToken, chatId, promptText, getGamesKeyboard());
+            return jsonResponse({ ok: true, action: 'saved_odds' });
+          }
+
+          // If awaiting games count:
+          if (session.step === 'awaiting_games') {
+            if (text.toLowerCase() === 'skip') {
+              session.gamesCount = null;
+            } else {
+              const gNum = parseInt(text.replace(/[^0-9]/g, ''), 10);
+              session.gamesCount = !isNaN(gNum) && gNum > 0 ? gNum : null;
+            }
+            session.step = 'awaiting_punter';
+            await saveSession(userId, session);
+
+            const promptText = `<b>Select Punter / Source (Step ${session.flow === 'market' ? '4/5' : 'Final'})</b>\n` +
+              `Code: <code>${session.code}</code> | Odds: <b>${session.odds}x</b>` +
+              (session.gamesCount ? ` | Games: <b>${session.gamesCount}</b>\n\n` : `\n\n`) +
+              `Who dropped this slip? Tap below or type a name:`;
+            if (chatId) await sendTelegramReply(botToken, chatId, promptText, getPuntersKeyboard());
+            return jsonResponse({ ok: true, action: 'saved_games' });
+          }
+        }
+
+        // 2.2 Menu / Start / Help
+        if (text.startsWith('/start') || text.startsWith('/menu') || text.toLowerCase() === 'menu' || text.startsWith('/help')) {
+          await clearSession(userId);
+          if (chatId) await sendTelegramReply(botToken, chatId, getMainMenuText(), getMainMenuKeyboard());
           return jsonResponse({ ok: true, action: 'help' });
         }
 
-        // Fetch current KV state
-        let state = null;
-        if (kv) {
-          state = await kv.get('bryme_global_state', { type: 'json' });
-        }
-        if (!state) {
-          state = { codeCatalogue: [], punters: [], marketCodes: [], ladder: null };
-        }
-        if (!state.codeCatalogue) state.codeCatalogue = [];
-        if (!state.punters) state.punters = [];
-        if (!state.marketCodes) state.marketCodes = [];
-
-        // ── B. COMMAND: /status OR /stats ──
+        // 2.3 Status / Stats
         if (text.startsWith('/status') || text.startsWith('/stats')) {
+          const state = await getState();
           const l = state.ladder || {};
           const hubCount = state.codeCatalogue?.length || 0;
           const marketCount = state.marketCodes?.length || 0;
-          const recent3 = (state.codeCatalogue || []).slice(0, 3).map(c => `• <code>${c.code}</code> (${c.bookmaker}) - ${c.odds || c.totalOdds}x${c.eventsCount || c.gamesCount ? ` (${c.eventsCount || c.gamesCount}G)` : ''}`).join('\n') || 'None';
+          const recent3 = (state.codeCatalogue || []).slice(0, 3).map(c => `• <code>${c.code}</code> (${c.bookmaker}) - ${c.odds}x${c.eventsCount ? ` (${c.eventsCount}G)` : ''}`).join('\n') || 'None';
 
-          const statusMsg = `📊 <b>BRYME Predictions Live Status</b>\n\n` +
-            `🔄 <b>Rollover Challenge:</b>\n` +
-            `• Status: <b>${(l.status || 'Active').toUpperCase()}</b>\n` +
-            `• Step: Day <b>${l.currentDay || 1}</b> / 18\n` +
-            `• Balance: <b>₦${(l.currentBalance || 1000).toLocaleString()}</b>\n` +
-            `• Active Code: <code>${l.todaysCode || 'None'}</code>\n\n` +
-            `📌 <b>Code Hub:</b> <b>${hubCount}</b> active slips\n` +
-            `<b>Latest Additions:</b>\n${recent3}\n\n` +
+          const statusMsg = `📊 <b>BRYME Live Status</b>\n\n` +
+            `🔄 <b>Rollover Challenge:</b> Day <b>${l.currentDay || 1}</b> / 18 | Code: <code>${l.todaysCode || 'None'}</code>\n` +
+            `• Balance: <b>₦${(l.currentBalance || 1000).toLocaleString()}</b>\n\n` +
+            `📌 <b>Code Hub:</b> <b>${hubCount}</b> active slips\n${recent3}\n\n` +
             `⚽ <b>Market Slips Attached:</b> <b>${marketCount}</b> slips\n\n` +
-            `🌐 Live: <b>predictions.thebryme.com</b>`;
-          if (chatId && botToken) await sendTelegramReply(botToken, chatId, statusMsg);
+            `🌐 <b>predictions.thebryme.com</b>`;
+          if (chatId) await sendTelegramReply(botToken, chatId, statusMsg, getMainMenuKeyboard());
           return jsonResponse({ ok: true, action: 'status' });
         }
 
-        // ── C. COMMAND: /codes OR /list ──
+        // 2.4 List Codes
         if (text.startsWith('/codes') || text.startsWith('/list')) {
+          const state = await getState();
           const list = (state.codeCatalogue || []).slice(0, 8).map((c, i) => 
-            `${i + 1}. <b>${c.bookmaker?.toUpperCase()}</b>: <code>${c.code}</code> (${c.odds || c.totalOdds}x)${c.eventsCount || c.gamesCount ? ` [${c.eventsCount || c.gamesCount} Games]` : ''} — <i>${c.author || c.punterName || 'Desk'}</i>`
+            `${i + 1}. <b>${c.bookmaker?.toUpperCase()}</b>: <code>${c.code}</code> (${c.odds}x)${c.eventsCount ? ` [${c.eventsCount} Games]` : ''} — <i>${c.author || c.punterName || 'Desk'}</i>`
           ).join('\n');
-          const listMsg = `📌 <b>Top Live Booking Codes (Newest First):</b>\n\n${list || 'No codes active'}\n\nTo delete any code: <code>/del CODE</code>`;
-          if (chatId && botToken) await sendTelegramReply(botToken, chatId, listMsg);
-          return jsonResponse({ ok: true, action: 'list' });
+          const listMsg = `📌 <b>Top Live Booking Codes (Newest First):</b>\n\n${list || 'No codes active'}\n\nTo delete: <code>/del CODE</code>`;
+          if (chatId) await sendTelegramReply(botToken, chatId, listMsg, getMainMenuKeyboard());
+          return jsonResponse({ ok: true, action: 'codes' });
         }
 
-        // ── D. COMMAND: /del OR /delete <code> ──
+        // 2.5 Delete Code (/del, /delete, /remove)
         if (text.startsWith('/del ') || text.startsWith('/delete ') || text.startsWith('/remove ')) {
-          const parts = text.split(/\s+/);
-          const targetCode = parts[1]?.trim().toUpperCase();
+          const targetCode = text.split(/\s+/)[1]?.trim().toUpperCase();
           if (!targetCode) {
-            if (chatId && botToken) await sendTelegramReply(botToken, chatId, '⚠️ Please specify a code to delete. Example: <code>/del PZ6US6</code>');
+            if (chatId) await sendTelegramReply(botToken, chatId, '⚠️ Please specify code: <code>/del PZ6US6</code>');
             return jsonResponse({ ok: false, error: 'no_code' });
           }
 
+          const state = await getState();
           const beforeHub = state.codeCatalogue.length;
           state.codeCatalogue = state.codeCatalogue.filter(c => c.code?.toUpperCase() !== targetCode);
-          const removedFromHub = beforeHub - state.codeCatalogue.length;
-
-          const beforeMarket = state.marketCodes.length;
           state.marketCodes = state.marketCodes.filter(c => c.code?.toUpperCase() !== targetCode);
-          const removedFromMarket = beforeMarket - state.marketCodes.length;
-
-          // Also remove from punters
           for (const p of state.punters) {
-            if (p.dailyCodes) {
-              p.dailyCodes = p.dailyCodes.filter(c => c.code?.toUpperCase() !== targetCode);
-            }
+            if (p.dailyCodes) p.dailyCodes = p.dailyCodes.filter(c => c.code?.toUpperCase() !== targetCode);
           }
+          await saveState(state);
 
-          if (kv) {
-            await kv.put('bryme_global_state', JSON.stringify(state));
-          }
-
-          const replyMsg = `🗑 <b>Code Purged:</b> <code>${targetCode}</code>\n` +
-            `• Removed from Code Hub: ${removedFromHub}\n` +
-            `• Removed from Market Slips: ${removedFromMarket}\n\n` +
-            `Updated live across predictions.thebryme.com!`;
-          if (chatId && botToken) await sendTelegramReply(botToken, chatId, replyMsg);
-          return jsonResponse({ ok: true, action: 'delete', code: targetCode });
+          const replyMsg = `🗑 <b>Code Purged:</b> <code>${targetCode}</code>\nRemoved from Code Hub, Market Slips & Punters!`;
+          if (chatId) await sendTelegramReply(botToken, chatId, replyMsg, getMainMenuKeyboard());
+          return jsonResponse({ ok: true, action: 'deleted', code: targetCode });
         }
 
-        // ── E. COMMAND: /rollover <day> <odds> <code> [bookie] OR /rollover reset ──
+        // 2.6 Rollover Command (/rollover, /ladder)
         if (text.startsWith('/rollover') || text.startsWith('/ladder')) {
-          const parts = text.split(/\s+/);
-          if (parts[1]?.toLowerCase() === 'reset') {
+          const state = await getState();
+          if (text.includes('reset')) {
             if (!state.ladder) state.ladder = {};
             state.ladder.challengeNumber = (state.ladder.challengeNumber || 50) + 1;
             state.ladder.currentDay = 1;
@@ -352,7 +607,7 @@ async function handleApiRequest(request, env, url) {
             state.ladder.selections = [
               {
                 match: 'Day 1 Banker Double',
-                league: 'European Domestic & Champions League Football',
+                league: 'European Top-Flight Competitions',
                 kickoff: 'Tomorrow 16:30 WAT',
                 market: 'Double Chance & Total Goals',
                 pick: 'Analysis in Progress (Drops 11:00 AM WAT)',
@@ -362,38 +617,28 @@ async function handleApiRequest(request, env, url) {
             ];
             state.ladder.daysHistory = [];
 
-            if (kv) await kv.put('bryme_global_state', JSON.stringify(state));
-            if (chatId && botToken) {
-              await sendTelegramReply(botToken, chatId, `🔄 <b>Rollover Challenge Reset to Day 1!</b>\n• Challenge: #${state.ladder.challengeNumber}\n• Starting Capital: ₦1,000\n• Status: Ready for tomorrow's Day 1 drop.`);
-            }
+            await saveState(state);
+            if (chatId) await sendTelegramReply(botToken, chatId, `🔄 <b>Rollover Reset to Day 1!</b>\nStarting Capital: ₦1,000 | Challenge #${state.ladder.challengeNumber}`, getMainMenuKeyboard());
             return jsonResponse({ ok: true, action: 'rollover_reset' });
           }
 
-          // Format: /rollover [Day] <dayNum> <odds> <code> [bookmaker]
-          // e.g. /rollover Day 1 1.50 Q7S288 SportyBet
           let day = 1;
           let odds = 1.50;
           let code = '';
           let bookie = 'SportyBet';
 
-          // Extract day
           const dayMatch = text.match(/day\s*(\d+)/i) || text.match(/\/rollover\s+(\d+)/i);
           if (dayMatch) day = parseInt(dayMatch[1], 10);
 
-          // Extract odds
-          const oddsMatch = text.match(/(\d+(?:\.\d+)?)\s*(?:odds|odd|x)?\b/);
-          // Look for decimal number like 1.50 or 1.54
           const decMatch = text.match(/\b(1\.\d{2})\b/);
           if (decMatch) odds = parseFloat(decMatch[1]);
 
-          // Extract code: 6-char alphanumeric
           const codeMatch = text.match(/\b([A-Z0-9]{6})\b/i);
           if (codeMatch && !['SPORTS', 'TICKET', 'BANKER', 'LADDER'].includes(codeMatch[1].toUpperCase())) {
             code = codeMatch[1].toUpperCase();
           }
 
           if (text.toLowerCase().includes('bet9ja')) bookie = 'Bet9ja';
-          else if (text.toLowerCase().includes('1xbet')) bookie = '1xBet';
           else if (text.toLowerCase().includes('football.com')) bookie = 'Football.com';
 
           if (!state.ladder) state.ladder = {};
@@ -409,178 +654,116 @@ async function handleApiRequest(request, env, url) {
           state.ladder.currentBalance = Math.round(1000 * Math.pow(odds, day - 1));
           state.ladder.nextPotentialBalance = Math.round(state.ladder.currentBalance * odds);
 
-          if (kv) await kv.put('bryme_global_state', JSON.stringify(state));
-
-          const rMsg = `🚀 <b>Rollover Challenge Updated!</b>\n\n` +
-            `• <b>Day:</b> ${day} / 18\n` +
-            `• <b>Odds:</b> ${odds}x\n` +
-            `• <b>Code:</b> <code>${code || state.ladder.todaysCode}</code> (${bookie})\n` +
-            `• <b>Pot Balance:</b> ₦${state.ladder.currentBalance.toLocaleString()} ➔ Target: ₦${state.ladder.nextPotentialBalance.toLocaleString()}\n\n` +
-            `Live on <b>predictions.thebryme.com</b>!`;
-          if (chatId && botToken) await sendTelegramReply(botToken, chatId, rMsg);
-          return jsonResponse({ ok: true, action: 'rollover_update' });
+          await saveState(state);
+          const rMsg = `🚀 <b>Rollover Challenge Updated!</b>\nDay ${day} @ ${odds}x | Code: <code>${code || state.ladder.todaysCode}</code> (${bookie})`;
+          if (chatId) await sendTelegramReply(botToken, chatId, rMsg, getMainMenuKeyboard());
+          return jsonResponse({ ok: true, action: 'rollover_updated' });
         }
 
-        // ── F. COMMAND: /market OR market ... (ATTACH CODE TO MARKET) ──
+        // 2.7 Market Command (/market)
         if (text.startsWith('/market') || text.toLowerCase().startsWith('market ')) {
-          const marketResolution = parseMarketCommand(text);
-          if (!marketResolution.marketId) {
-            const errReply = `⚠️ Could not identify market.\nSupported markets: <code>over15</code>, <code>over25</code>, <code>btts</code>, <code>dc</code>, <code>1x2</code>, <code>corners</code>, <code>dnb</code>, <code>multigoals</code>.\n\nExample:\n<code>/market over15 sportybet Q7S287 1.54</code>`;
-            if (chatId && botToken) await sendTelegramReply(botToken, chatId, errReply);
-            return jsonResponse({ ok: false, error: 'unknown_market' });
+          const res = parseMarketCommand(text);
+          if (!res.marketId || !res.code) {
+            const errReply = `⚠️ Format: <code>/market over15 sportybet Q7S287 1.54</code>\n(Markets: over15, over25, btts, dc, 1x2, corners, dnb, multigoals)`;
+            if (chatId) await sendTelegramReply(botToken, chatId, errReply, getMainMenuKeyboard());
+            return jsonResponse({ ok: false, error: 'invalid_market_cmd' });
           }
 
-          const { marketId, marketName, bookmaker, code, odds, gamesCount } = marketResolution;
-
-          if (!code) {
-            if (chatId && botToken) await sendTelegramReply(botToken, chatId, `⚠️ No booking code found in market command.\nExample: <code>/market ${marketId} sportybet Q7S287 1.54</code>`);
-            return jsonResponse({ ok: false, error: 'missing_code' });
-          }
-
-          // 1. Add to marketCodes
-          const newMarketEntry = {
-            id: `mcode-${Date.now()}-${code.toLowerCase()}`,
-            marketId,
-            code,
-            odds,
-            bookmaker: bookmaker.toLowerCase(),
-            bookmakerName: bookmaker === 'footballcom' ? 'Football.com' : bookmaker === 'bet9ja' ? 'Bet9ja' : bookmaker === '1xbet' ? '1xBet' : bookmaker === 'betking' ? 'BetKing' : 'SportyBet',
-            title: `${marketName} (${odds}x ${bookmaker})`,
-            eventsCount: gamesCount, // ONLY SET IF USER INCLUDED IT
-            status: 'active',
-            dropTime: 'Live Today'
-          };
-
-          // Prepend ahead of all others
-          state.marketCodes.unshift(newMarketEntry);
-
-          // If SportyBet, also create Football.com twin in markets
-          if (bookmaker.toLowerCase() === 'sportybet') {
-            state.marketCodes.unshift({
-              ...newMarketEntry,
-              id: `mcode-${Date.now()}-${code.toLowerCase()}-fb`,
-              bookmaker: 'footballcom',
-              bookmakerName: 'Football.com',
-              title: `${marketName} (${odds}x Football.com)`
-            });
-          }
-
-          // 2. Also ensure it's in codeCatalogue at the very top
-          state.codeCatalogue.unshift({
-            id: `code-cat-${Date.now()}`,
-            bookmaker: bookmaker.toLowerCase(),
-            bookmakerName: newMarketEntry.bookmakerName,
-            code,
-            title: `${marketName} Verified Slip`,
-            odds,
-            eventsCount: gamesCount, // ONLY SET IF USER INCLUDED IT
-            categoryName: marketName,
-            status: 'active',
-            dropTime: 'Just Now',
-            author: 'BRYME Desk',
-            isNew: true
+          const state = await getState();
+          publishToState(state, {
+            flow: 'market',
+            marketId: res.marketId,
+            marketName: res.marketName,
+            bookmaker: res.bookmaker,
+            code: res.code,
+            odds: res.odds,
+            gamesCount: res.gamesCount,
+            punterName: 'BRYME Desk'
           });
+          await saveState(state);
 
-          if (bookmaker.toLowerCase() === 'sportybet') {
-            state.codeCatalogue.unshift({
-              id: `code-cat-${Date.now()}-fb`,
-              bookmaker: 'footballcom',
-              bookmakerName: 'Football.com',
-              code,
-              title: `${marketName} Verified Slip (Football.com)`,
-              odds,
-              eventsCount: gamesCount, // ONLY SET IF USER INCLUDED IT
-              categoryName: marketName,
-              status: 'active',
-              dropTime: 'Just Now',
-              author: 'BRYME Desk',
-              isNew: true
-            });
-          }
-
-          if (kv) await kv.put('bryme_global_state', JSON.stringify(state));
-
-          const marketReply = `⚽ <b>Market Slip Attached!</b>\n\n` +
-            `• <b>Market:</b> ${marketName}\n` +
-            `• <b>Bookmaker:</b> ${bookmaker.toUpperCase()}\n` +
-            `• <b>Code:</b> <code>${code}</code>\n` +
-            `• <b>Odds:</b> ${odds}x\n` +
-            (gamesCount ? `• <b>Games Count:</b> ${gamesCount} Games\n` : `• <i>(No games count specified - none added)</i>\n`) +
-            `\n🌐 Live on market directory & code hub at <b>predictions.thebryme.com</b>`;
-          if (chatId && botToken) await sendTelegramReply(botToken, chatId, marketReply);
-          return jsonResponse({ ok: true, action: 'market_added', marketId, code });
+          const rMsg = `⚽ <b>Market Slip Attached!</b>\n\n` +
+            `• <b>Market:</b> ${res.marketName}\n` +
+            `• <b>Code:</b> <code>${res.code}</code> (${res.bookmaker.toUpperCase()})\n` +
+            `• <b>Odds:</b> ${res.odds}x\n` +
+            (res.gamesCount ? `• <b>Games Count:</b> ${res.gamesCount} Games\n` : `• <i>(No games count specified - none added)</i>\n`) +
+            `\n🌐 Live on market directory & code hub!`;
+          if (chatId) await sendTelegramReply(botToken, chatId, rMsg, getSuccessKeyboard());
+          return jsonResponse({ ok: true, action: 'market_added' });
         }
 
-        // ── G. GENERAL / NATURAL LANGUAGE INGESTION ──
-        const parsed = parseTelegramMessage(text, forwardFrom);
+        // 2.8 Bulk Multi-Line Ingestion Or Single Drop
+        const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 3);
+        const state = await getState();
+        let totalPublished = 0;
+        const publishedItems = [];
 
-        if (!parsed || parsed.codes.length === 0) {
-          if (chatId && botToken) {
-            await sendTelegramReply(botToken, chatId, `⚠️ No valid booking codes detected.\nFormat examples:\n• <code>Tall man PZ6US6 10000 odds 16 games</code>\n• <code>Cindy Bet9ja 5WGQPQ3 200 odds</code>\n• Send <code>/help</code> for all commands.`);
-          }
-          return jsonResponse({ ok: true, detected: 0 });
-        }
-
-        let publishedCount = 0;
-        for (const item of parsed.codes) {
-          // Avoid duplicates
-          const exists = state.codeCatalogue.some(c => c.code === item.code && c.bookmaker === item.bookmaker);
-          if (!exists) {
-            state.codeCatalogue.unshift({
-              id: `auto-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-              code: item.code,
-              bookmaker: item.bookmaker,
-              bookmakerName: item.bookmaker === 'footballcom' ? 'Football.com' : item.bookmaker === 'bet9ja' ? 'Bet9ja' : item.bookmaker === '1xbet' ? '1xBet' : item.bookmaker === 'betking' ? 'BetKing' : 'SportyBet',
-              title: `${item.punterName} ${item.odds}x Slip`,
-              odds: item.odds || 2.00,
-              totalOdds: item.odds || 2.00,
-              eventsCount: item.gamesCount, // STRICT: NULL IF NOT INCLUDED
-              gamesCount: item.gamesCount,  // STRICT: NULL IF NOT INCLUDED
-              categoryName: item.marketCategory || 'Verified Punter Slip',
-              status: 'active',
-              dropTime: 'Just Now',
-              author: item.punterName,
-              punterName: item.punterName,
-              isNew: true
-            });
-            publishedCount++;
-          }
-
-          // Attach to punter profile if identified
-          if (item.punterId) {
-            const p = state.punters.find(p => p.id === item.punterId);
-            if (p) {
-              if (!p.dailyCodes) p.dailyCodes = [];
-              const pExists = p.dailyCodes.some(c => c.code === item.code);
-              if (!pExists) {
-                p.dailyCodes.unshift({
-                  id: `pcode-auto-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-                  bookmaker: item.bookmaker,
+        for (const line of lines) {
+          const parsed = parseTelegramMessage(line, forwardFrom);
+          if (parsed && parsed.codes.length > 0) {
+            for (const item of parsed.codes) {
+              const exists = state.codeCatalogue.some(c => c.code === item.code && c.bookmaker === item.bookmaker);
+              if (!exists) {
+                state.codeCatalogue.unshift({
+                  id: `auto-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
                   code: item.code,
-                  marketType: `${item.punterName} Pick`,
-                  gamesCount: item.gamesCount, // STRICT: NULL IF NOT INCLUDED
+                  bookmaker: item.bookmaker,
+                  bookmakerName: item.bookmaker === 'footballcom' ? 'Football.com' : item.bookmaker === 'bet9ja' ? 'Bet9ja' : item.bookmaker === '1xbet' ? '1xBet' : item.bookmaker === 'betking' ? 'BetKing' : 'SportyBet',
+                  title: `${item.punterName} ${item.odds}x Slip`,
+                  odds: item.odds || 2.00,
                   totalOdds: item.odds || 2.00,
+                  eventsCount: item.gamesCount, // STRICT: NULL IF NOT INCLUDED
+                  gamesCount: item.gamesCount,  // STRICT: NULL IF NOT INCLUDED
+                  categoryName: item.marketCategory || 'Verified Punter Slip',
                   status: 'active',
-                  dropTime: 'Just Now'
+                  dropTime: 'Just Now',
+                  author: item.punterName,
+                  punterName: item.punterName,
+                  isNew: true
                 });
+                totalPublished++;
+                publishedItems.push(item);
+              }
+
+              // Punter profile
+              if (item.punterId) {
+                const p = state.punters.find(p => p.id === item.punterId);
+                if (p) {
+                  if (!p.dailyCodes) p.dailyCodes = [];
+                  if (!p.dailyCodes.some(c => c.code === item.code)) {
+                    p.dailyCodes.unshift({
+                      id: `pcode-auto-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+                      bookmaker: item.bookmaker,
+                      code: item.code,
+                      marketType: `${item.punterName} Pick`,
+                      gamesCount: item.gamesCount,
+                      totalOdds: item.odds || 2.00,
+                      status: 'active',
+                      dropTime: 'Just Now'
+                    });
+                  }
+                }
               }
             }
           }
         }
 
-        if (kv) {
-          await kv.put('bryme_global_state', JSON.stringify(state));
-        }
-
-        // Send confirmation back to Telegram
-        if (chatId && botToken) {
-          const summary = parsed.codes.map(c => 
+        if (totalPublished > 0) {
+          await saveState(state);
+          const summary = publishedItems.map(c => 
             `• <b>${c.bookmaker.toUpperCase()}</b>: <code>${c.code}</code> (${c.odds}x)${c.gamesCount ? ` • ${c.gamesCount} Games` : ''} — <i>${c.punterName}</i>`
           ).join('\n');
-          await sendTelegramReply(botToken, chatId, `✅ <b>Successfully Published to BRYME!</b>\n\n${summary}\n\n🌐 Live at the top of <b>predictions.thebryme.com</b>`);
+          const reply = `✅ <b>Published ${totalPublished} Slips to BRYME!</b>\n\n${summary}\n\n🌐 Live at the top of <b>predictions.thebryme.com</b>`;
+          if (chatId) await sendTelegramReply(botToken, chatId, reply, getSuccessKeyboard());
+          return jsonResponse({ ok: true, published: totalPublished });
         }
 
-        return jsonResponse({ ok: true, published: publishedCount, items: parsed.codes });
+        // If no code detected at all
+        if (chatId) {
+          await sendTelegramReply(botToken, chatId, `⚠️ No booking code found in your message.\nTap below to add a code step-by-step:`, getMainMenuKeyboard());
+        }
+        return jsonResponse({ ok: true, detected: 0 });
+
       } catch (err) {
         return jsonResponse({ ok: false, error: err.message }, 500);
       }
@@ -827,19 +1010,366 @@ function parseMarketCommand(rawText) {
   return { marketId, marketName, bookmaker, code, odds, gamesCount };
 }
 
-async function sendTelegramReply(botToken, chatId, text) {
+// ── TELEGRAM API & UI HELPERS ──
+function getMainMenuText() {
+  return `👑 <b>BRYME Code & Market Control Center</b>\n\n` +
+    `Tap any button below to manage codes, attach to markets, or drop slips in bulk:`;
+}
+
+function getMainMenuKeyboard() {
+  return {
+    inline_keyboard: [
+      [
+        { text: '➕ Add Code (Step-by-Step)', callback_data: 'wiz_hub' },
+        { text: '⚽ Attach to Market', callback_data: 'wiz_mkt' }
+      ],
+      [
+        { text: '📋 Bulk Drop Mode', callback_data: 'help_bulk' },
+        { text: '📊 Live Status', callback_data: 'cmd_status' }
+      ],
+      [
+        { text: '📌 View Top 8 Codes', callback_data: 'cmd_codes' }
+      ]
+    ]
+  };
+}
+
+function getBookmakerKeyboard() {
+  return {
+    inline_keyboard: [
+      [
+        { text: '🔴 SportyBet (+Football.com)', callback_data: 'bk_sportybet' },
+        { text: '🟢 Football.com', callback_data: 'bk_footballcom' }
+      ],
+      [
+        { text: '🟡 Bet9ja', callback_data: 'bk_bet9ja' },
+        { text: '🔵 1xBet', callback_data: 'bk_1xbet' }
+      ],
+      [
+        { text: '👑 BetKing', callback_data: 'bk_betking' },
+        { text: '⚡ MSport', callback_data: 'bk_msport' }
+      ],
+      [
+        { text: '❌ Cancel', callback_data: 'wiz_cancel' }
+      ]
+    ]
+  };
+}
+
+function getOddsKeyboard() {
+  return {
+    inline_keyboard: [
+      [
+        { text: '1.50x', callback_data: 'odds_1.50' },
+        { text: '2.00x', callback_data: 'odds_2.00' },
+        { text: '3.50x', callback_data: 'odds_3.50' }
+      ],
+      [
+        { text: '5.00x', callback_data: 'odds_5.00' },
+        { text: '10.0x', callback_data: 'odds_10.0' },
+        { text: '50.0x', callback_data: 'odds_50.0' }
+      ],
+      [
+        { text: '100x', callback_data: 'odds_100.0' },
+        { text: '1000x', callback_data: 'odds_1000.0' },
+        { text: '10000x', callback_data: 'odds_10000.0' }
+      ],
+      [
+        { text: '❌ Cancel', callback_data: 'wiz_cancel' }
+      ]
+    ]
+  };
+}
+
+function getGamesKeyboard() {
+  return {
+    inline_keyboard: [
+      [
+        { text: '2 Games', callback_data: 'games_2' },
+        { text: '3 Games', callback_data: 'games_3' },
+        { text: '4 Games', callback_data: 'games_4' }
+      ],
+      [
+        { text: '6 Games', callback_data: 'games_6' },
+        { text: '8 Games', callback_data: 'games_8' },
+        { text: '10 Games', callback_data: 'games_10' }
+      ],
+      [
+        { text: '12 Games', callback_data: 'games_12' },
+        { text: '16 Games', callback_data: 'games_16' },
+        { text: '20 Games', callback_data: 'games_20' }
+      ],
+      [
+        { text: '⏭️ Skip (No Game Count)', callback_data: 'games_skip' }
+      ],
+      [
+        { text: '❌ Cancel', callback_data: 'wiz_cancel' }
+      ]
+    ]
+  };
+}
+
+function getPuntersKeyboard() {
+  return {
+    inline_keyboard: [
+      [
+        { text: 'Mr banks 📌', callback_data: 'punter_mrbanks' },
+        { text: 'Tall man', callback_data: 'punter_tallman' }
+      ],
+      [
+        { text: 'Boss Tips', callback_data: 'punter_bosstips' },
+        { text: 'Dr zeh', callback_data: 'punter_drzeh' }
+      ],
+      [
+        { text: 'Cindymodel', callback_data: 'punter_cindymodel' },
+        { text: '39billion', callback_data: 'punter_39billion' }
+      ],
+      [
+        { text: 'Lightbet', callback_data: 'punter_lightbet' },
+        { text: 'Mr bayo', callback_data: 'punter_mrbayo' }
+      ],
+      [
+        { text: 'Talented fight', callback_data: 'punter_talentedfight' },
+        { text: 'Bossolamilekan', callback_data: 'punter_bossolamilekan' }
+      ],
+      [
+        { text: '🏢 BRYME General Desk', callback_data: 'punter_general' }
+      ],
+      [
+        { text: '❌ Cancel', callback_data: 'wiz_cancel' }
+      ]
+    ]
+  };
+}
+
+function getMarketsKeyboard() {
+  return {
+    inline_keyboard: [
+      [
+        { text: '⚽ Over 1.5 Goals', callback_data: 'mkt_over-15-goals' },
+        { text: '⚽ Over 2.5 Goals', callback_data: 'mkt_over-25-goals' }
+      ],
+      [
+        { text: '🎯 Both Teams to Score (GG)', callback_data: 'mkt_both-teams-to-score' },
+        { text: '🛡️ Double Chance (1X/X2)', callback_data: 'mkt_double-chance' }
+      ],
+      [
+        { text: '🏆 Match Winner (1X2)', callback_data: 'mkt_1x2-match-result' },
+        { text: '🚩 Total Corners', callback_data: 'mkt_total-corners' }
+      ],
+      [
+        { text: '⚖️ Draw No Bet', callback_data: 'mkt_draw-no-bet' },
+        { text: '⚡ Multi-Goals (2-5 Goals)', callback_data: 'mkt_multigoals' }
+      ],
+      [
+        { text: '❌ Cancel', callback_data: 'wiz_cancel' }
+      ]
+    ]
+  };
+}
+
+function getSuccessKeyboard() {
+  return {
+    inline_keyboard: [
+      [
+        { text: '➕ Add Another Code', callback_data: 'wiz_hub' },
+        { text: '⚽ Attach Another Market', callback_data: 'wiz_mkt' }
+      ],
+      [
+        { text: '📊 View Status', callback_data: 'cmd_status' },
+        { text: '🏠 Main Menu', callback_data: 'menu_main' }
+      ]
+    ]
+  };
+}
+
+function getCancelKeyboard() {
+  return {
+    inline_keyboard: [
+      [
+        { text: '❌ Cancel', callback_data: 'wiz_cancel' }
+      ]
+    ]
+  };
+}
+
+function publishToState(state, session) {
+  const code = session.code.toUpperCase();
+  const bookmaker = session.bookmaker.toLowerCase();
+  const odds = session.odds || 2.00;
+  const gamesCount = session.gamesCount || null;
+  const pName = session.punterName || 'BRYME Desk';
+  const pId = session.punterId || null;
+
+  // 1. Add to Code Hub at the top (unshift)
+  state.codeCatalogue.unshift({
+    id: `auto-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+    code,
+    bookmaker,
+    bookmakerName: bookmaker === 'footballcom' ? 'Football.com' : bookmaker === 'bet9ja' ? 'Bet9ja' : bookmaker === '1xbet' ? '1xBet' : bookmaker === 'betking' ? 'BetKing' : 'SportyBet',
+    title: `${pName} ${odds}x Slip`,
+    odds,
+    totalOdds: odds,
+    eventsCount: gamesCount, // STRICT: ONLY IF INCLUDED
+    gamesCount: gamesCount,  // STRICT: ONLY IF INCLUDED
+    categoryName: session.marketName || 'Verified Punter Slip',
+    status: 'active',
+    dropTime: 'Just Now',
+    author: pName,
+    punterName: pName,
+    isNew: true
+  });
+
+  // If SportyBet, auto duplicate to Football.com
+  if (bookmaker === 'sportybet') {
+    state.codeCatalogue.unshift({
+      id: `auto-${Date.now()}-${Math.random().toString(36).slice(2, 6)}-fb`,
+      code,
+      bookmaker: 'footballcom',
+      bookmakerName: 'Football.com',
+      title: `${pName} ${odds}x Slip (Football.com)`,
+      odds,
+      totalOdds: odds,
+      eventsCount: gamesCount,
+      gamesCount: gamesCount,
+      categoryName: session.marketName || 'Football.com Twin',
+      status: 'active',
+      dropTime: 'Just Now',
+      author: pName,
+      punterName: pName,
+      isNew: true
+    });
+  }
+
+  // 2. If market flow, add to marketCodes
+  if (session.marketId) {
+    state.marketCodes.unshift({
+      id: `mcode-${Date.now()}-${code.toLowerCase()}`,
+      marketId: session.marketId,
+      code,
+      odds,
+      bookmaker,
+      bookmakerName: bookmaker === 'footballcom' ? 'Football.com' : bookmaker === 'bet9ja' ? 'Bet9ja' : bookmaker === '1xbet' ? '1xBet' : 'SportyBet',
+      title: `${session.marketName} (${odds}x ${bookmaker.toUpperCase()})`,
+      eventsCount: gamesCount,
+      status: 'active',
+      dropTime: 'Just Now'
+    });
+
+    if (bookmaker === 'sportybet') {
+      state.marketCodes.unshift({
+        id: `mcode-${Date.now()}-${code.toLowerCase()}-fb`,
+        marketId: session.marketId,
+        code,
+        odds,
+        bookmaker: 'footballcom',
+        bookmakerName: 'Football.com',
+        title: `${session.marketName} (${odds}x Football.com)`,
+        eventsCount: gamesCount,
+        status: 'active',
+        dropTime: 'Just Now'
+      });
+    }
+  }
+
+  // 3. Attach to punter profile
+  if (pId) {
+    const p = state.punters.find(p => p.id === pId);
+    if (p) {
+      if (!p.dailyCodes) p.dailyCodes = [];
+      p.dailyCodes.unshift({
+        id: `pcode-auto-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+        bookmaker,
+        code,
+        marketType: `${pName} Pick`,
+        gamesCount,
+        totalOdds: odds,
+        status: 'active',
+        dropTime: 'Just Now'
+      });
+      if (bookmaker === 'sportybet') {
+        p.dailyCodes.unshift({
+          id: `pcode-auto-${Date.now()}-${Math.random().toString(36).slice(2, 6)}-fb`,
+          bookmaker: 'footballcom',
+          code,
+          marketType: `${pName} Pick (Football.com)`,
+          gamesCount,
+          totalOdds: odds,
+          status: 'active',
+          dropTime: 'Just Now'
+        });
+      }
+    }
+  }
+}
+
+function formatPublishSuccess(session) {
+  const bUpper = session.bookmaker.toUpperCase();
+  const twinNotice = session.bookmaker === 'sportybet' ? ` (+ Football.com twin)` : '';
+  const gamesNotice = session.gamesCount ? `• <b>Games Count:</b> ${session.gamesCount} Games\n` : `• <i>(No games count specified - none added)</i>\n`;
+  const marketNotice = session.marketName ? `• <b>Market:</b> ${session.marketName}\n` : '';
+
+  return `✅ <b>Successfully Published to BRYME!</b>\n\n` +
+    `• <b>Bookmaker:</b> ${bUpper}${twinNotice}\n` +
+    `• <b>Code:</b> <code>${session.code}</code>\n` +
+    `• <b>Odds:</b> ${session.odds}x\n` +
+    gamesNotice +
+    `• <b>Punter:</b> ${session.punterName || 'BRYME Desk'}\n` +
+    marketNotice +
+    `\n🌐 Live at the top of <b>predictions.thebryme.com</b>`;
+}
+
+async function sendTelegramReply(botToken, chatId, text, replyMarkup = null) {
   try {
+    const body = {
+      chat_id: chatId,
+      text,
+      parse_mode: 'HTML'
+    };
+    if (replyMarkup) body.reply_markup = replyMarkup;
+
     await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        chat_id: chatId,
-        text,
-        parse_mode: 'HTML'
-      })
+      body: JSON.stringify(body)
     });
   } catch (err) {
     console.error('Telegram reply error:', err);
+  }
+}
+
+async function editTelegramMessage(botToken, chatId, messageId, text, replyMarkup = null) {
+  try {
+    const body = {
+      chat_id: chatId,
+      message_id: messageId,
+      text,
+      parse_mode: 'HTML'
+    };
+    if (replyMarkup) body.reply_markup = replyMarkup;
+
+    await fetch(`https://api.telegram.org/bot${botToken}/editMessageText`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+  } catch (err) {
+    console.error('Telegram editMessageText error:', err);
+  }
+}
+
+async function answerTelegramCallback(botToken, callbackQueryId, text = '') {
+  try {
+    await fetch(`https://api.telegram.org/bot${botToken}/answerCallbackQuery`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        callback_query_id: callbackQueryId,
+        text
+      })
+    });
+  } catch (err) {
+    console.error('Telegram answerCallbackQuery error:', err);
   }
 }
 
