@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { usePredictions } from '../context/PredictionsContext';
 import { MARKETS } from '../data/markets';
 import TicketCard from '../components/TicketCard';
+import BookingCodesHub from '../components/BookingCodesHub';
 import AdBanner from '../components/AdBanner';
 import { 
   Filter, X, RotateCcw, Flame, Zap, ArrowRight, Copy, Check, 
@@ -10,6 +11,7 @@ import {
 
 export default function PredictionsPage({ onNavigate }) {
   const { tickets, codeCatalogue, triggerCopyModal } = usePredictions();
+  const [activeView, setActiveView] = useState('hub'); // 'hub' | 'tickets'
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedBookmaker, setSelectedBookmaker] = useState('all');
   const [selectedStatus, setSelectedStatus] = useState('all');
@@ -114,8 +116,40 @@ export default function PredictionsPage({ onNavigate }) {
             </button>
           </div>
         </div>
+
+        {/* Master View Mode Switcher */}
+        <div className="flex items-center gap-2 mt-4 overflow-x-auto scrollbar-none pb-1">
+          <button
+            onClick={() => setActiveView('hub')}
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-display font-black uppercase transition-all whitespace-nowrap ${
+              activeView === 'hub'
+                ? 'bg-gradient-to-r from-[#E41B13] to-red-600 text-white shadow-md ring-2 ring-red-400/40'
+                : 'bg-white dark:bg-[#131C2E] text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-slate-800'
+            }`}
+          >
+            <span>⚡</span>
+            <span>BRYME Code Hub ({codeCatalogue?.length || 0} Punters &amp; Daily Slips)</span>
+          </button>
+
+          <button
+            onClick={() => setActiveView('tickets')}
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-display font-black uppercase transition-all whitespace-nowrap ${
+              activeView === 'tickets'
+                ? 'bg-gradient-to-r from-[#E41B13] to-red-600 text-white shadow-md ring-2 ring-red-400/40'
+                : 'bg-white dark:bg-[#131C2E] text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-slate-800'
+            }`}
+          >
+            <span>🎟️</span>
+            <span>Detailed Match Tickets ({tickets?.length || 0})</span>
+          </button>
+        </div>
       </div>
 
+      {/* ── CONDITIONAL VIEW: CODE HUB VS TICKETS ── */}
+      {activeView === 'hub' ? (
+        <BookingCodesHub onNavigate={onNavigate} />
+      ) : (
+        <>
       {/* ── 2. CATALOGUE CONTROLS & FILTER BAR ── */}
       <div className="space-y-3 bg-white dark:bg-[#0E1626] border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-sm">
         
@@ -348,6 +382,8 @@ export default function PredictionsPage({ onNavigate }) {
             Clear All Filters
           </button>
         </div>
+      )}
+      </>
       )}
 
       {/* MID-PAGE 300x250 BANNER */}

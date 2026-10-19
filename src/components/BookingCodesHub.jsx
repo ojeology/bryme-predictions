@@ -89,6 +89,7 @@ export default function BookingCodesHub({ onNavigate }) {
           {[
             { id: 'all', label: 'All Codes' },
             { id: 'sportybet', label: '🔴 SportyBet' },
+            { id: 'footballcom', label: '⚽ Football.com' },
             { id: 'bet9ja', label: '🟢 Bet9ja' },
             { id: '1xbet', label: '🔵 1xBet' },
             { id: 'betking', label: '👑 BetKing' }
@@ -120,6 +121,7 @@ export default function BookingCodesHub({ onNavigate }) {
         {filteredCodes.map(item => {
           const isSporty = item.bookmaker === 'sportybet';
           const isBet9ja = item.bookmaker === 'bet9ja';
+          const isFootball = item.bookmaker === 'footballcom';
 
           return (
             <div
@@ -132,6 +134,8 @@ export default function BookingCodesHub({ onNavigate }) {
                   <span className={`px-2 py-0.5 rounded text-[10px] font-display font-black uppercase tracking-wider ${
                     isSporty 
                       ? 'bg-[#E41B13] text-white shadow-sm'
+                      : isFootball
+                      ? 'bg-[#008751] text-white shadow-sm'
                       : isBet9ja
                       ? 'bg-[#00C250] text-black font-black'
                       : 'bg-blue-600 text-white'

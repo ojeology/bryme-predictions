@@ -446,7 +446,29 @@ export function PredictionsProvider({ children }) {
 
   // ── CODE CATALOGUE ACTIONS ──
   const addCatalogueCode = (newEntry) => {
-    setCodeCatalogueState(prev => [newEntry, ...prev]);
+    const timestamp = Date.now();
+    const entry = {
+      ...newEntry,
+      id: newEntry.id || `code-cat-${timestamp}`,
+      createdAt: timestamp,
+      status: newEntry.status || 'active'
+    };
+
+    // Rule: New codes are placed ahead of all other codes!
+    // For every sportybet code create a football.com duplicate ahead as well
+    if (newEntry.bookmaker === 'sportybet') {
+      const fbTwin = {
+        ...entry,
+        id: `code-cat-${timestamp}-fb`,
+        bookmaker: 'footballcom',
+        bookmakerName: 'Football.com',
+        title: entry.title?.replace('SportyBet', 'Football.com') || `${entry.title} (Football.com)`,
+        createdAt: timestamp + 1
+      };
+      setCodeCatalogueState(prev => [entry, fbTwin, ...prev]);
+    } else {
+      setCodeCatalogueState(prev => [entry, ...prev]);
+    }
   };
 
   const updateCatalogueCode = (id, updatedFields) => {
@@ -471,15 +493,54 @@ export function PredictionsProvider({ children }) {
   };
 
   const addPunterCode = (punterId, codeObj) => {
+    // 1. Add to punter's dailyCodes at the very beginning (ahead of all others)
     setPuntersState(prev => prev.map(p => {
       if (p.id === punterId) {
         return {
           ...p,
+          dailyCodes: [codeObj, ...(p.dailyCodes || [])],
           todayCodes: [codeObj, ...(p.todayCodes || [])]
         };
       }
       return p;
     }));
+
+    // 2. Mirror directly into the Code Hub (codeCatalogue) ahead of all other codes!
+    const targetPunter = punters.find(p => p.id === punterId);
+    const pName = targetPunter ? targetPunter.displayName : 'Verified Punter';
+    const timestamp = Date.now();
+    const isSporty = codeObj.bookmaker === 'sportybet';
+
+    const catEntry = {
+      id: `code-cat-punter-${timestamp}`,
+      bookmaker: codeObj.bookmaker,
+      bookmakerName: codeObj.bookmaker === 'footballcom' ? 'Football.com' : codeObj.bookmaker === 'bet9ja' ? 'Bet9ja' : codeObj.bookmaker === '1xbet' ? '1xBet' : codeObj.bookmaker === 'betking' ? 'BetKing' : 'SportyBet',
+      code: codeObj.code.toUpperCase(),
+      title: `${pName} ${codeObj.marketType || 'Special Slip'}`,
+      odds: parseFloat(codeObj.totalOdds) || 2.00,
+      eventsCount: parseInt(codeObj.gamesCount, 10) || 3,
+      category: 'mega',
+      categoryName: codeObj.marketType || 'Punter Pick',
+      status: 'active',
+      highlightMatch: `${pName} Daily Selection`,
+      dropTime: 'Live Today',
+      author: pName,
+      createdAt: timestamp
+    };
+
+    if (isSporty) {
+      const fbTwin = {
+        ...catEntry,
+        id: `code-cat-punter-${timestamp}-fb`,
+        bookmaker: 'footballcom',
+        bookmakerName: 'Football.com',
+        title: `${pName} ${codeObj.marketType || 'Special Slip'} (Football.com)`,
+        createdAt: timestamp + 1
+      };
+      setCodeCatalogueState(prev => [catEntry, fbTwin, ...prev]);
+    } else {
+      setCodeCatalogueState(prev => [catEntry, ...prev]);
+    }
   };
 
   const deletePunterCode = (punterId, codeIndex) => {
