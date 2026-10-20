@@ -1856,8 +1856,8 @@ function getCancelKeyboard() {
 }
 
 function publishToState(state, session) {
-  const code = session.code.toUpperCase();
-  const bookmaker = session.bookmaker.toLowerCase();
+  const code = (session.code || 'CODE').toUpperCase();
+  const bookmaker = (session.bookmaker || 'sportybet').toLowerCase();
   const bName = session.bookmakerName || (bookmaker === 'footballcom' ? 'Football.com' : bookmaker === 'bet9ja' ? 'Bet9ja' : bookmaker === '1xbet' ? '1xBet' : bookmaker === '22bet' ? '22Bet' : bookmaker === 'betking' ? 'BetKing' : bookmaker === 'msport' ? 'MSport' : bookmaker.charAt(0).toUpperCase() + bookmaker.slice(1));
   const odds = session.odds ? (typeof session.odds === 'number' ? session.odds : (parseFloat(session.odds) || session.odds)) : null;
   const gamesCount = session.gamesCount || null;
@@ -2006,7 +2006,7 @@ function publishToState(state, session) {
 }
 
 function formatPublishSuccess(session) {
-  const bName = session.bookmakerName || session.bookmaker.toUpperCase();
+  const bName = session.bookmakerName || session.bookmaker?.toUpperCase() || 'SPORTYBET';
   const twinNotice = session.bookmaker === 'sportybet' ? ` (+ Football.com twin)` : '';
   const gamesNotice = session.gamesCount ? `• <b>Games Count:</b> ${session.gamesCount} Games\n` : `• <i>(No games count specified - none added)</i>\n`;
   const oddsNotice = session.odds ? `• <b>Odds:</b> ${session.odds}${typeof session.odds === 'number' ? 'x' : ''}\n` : `• <b>Odds:</b> Open / Unspecified\n`;
