@@ -1224,11 +1224,47 @@ async function handleApiRequest(request, env, url) {
           return jsonResponse({ ok: true, action: 'market_added' });
         }
 
+        // 2.7.B Direct Code Command (/code or /addcode)
+        if (text.startsWith('/code') || text.startsWith('/addcode') || text.toLowerCase().startsWith('add code')) {
+          const parsed = parseTelegramMessage(text, forwardFrom);
+          if (parsed && parsed.codes.length > 0) {
+            const state = await getState();
+            for (const item of parsed.codes) {
+              publishToState(state, {
+                flow: item.marketId ? 'market' : 'hub',
+                marketId: item.marketId,
+                marketName: item.marketName,
+                bookmaker: item.bookmaker,
+                bookmakerName: item.bookmakerName,
+                code: item.code,
+                odds: item.odds,
+                gamesCount: item.gamesCount,
+                punterName: item.punterName,
+                punterId: item.punterId
+              });
+            }
+            await saveState(state);
+            const first = parsed.codes[0];
+            const summary = formatPublishSuccess({
+              code: first.code,
+              bookmaker: first.bookmaker,
+              bookmakerName: first.bookmakerName,
+              odds: first.odds,
+              gamesCount: first.gamesCount,
+              punterName: first.punterName,
+              marketName: first.marketName
+            });
+            if (chatId) await sendTelegramReply(botToken, chatId, summary, getSuccessKeyboard());
+            return jsonResponse({ ok: true, action: 'code_published', code: first.code });
+          }
+        }
+
         // 2.8 Bulk Multi-Line Ingestion Or Single Drop
         const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 3);
         const state = await getState();
         let totalPublished = 0;
         const publishedItems = [];
+        const todayDateStr = '2026-10-20';
 
         for (const line of lines) {
           const parsed = parseTelegramMessage(line, forwardFrom);
@@ -1236,23 +1272,77 @@ async function handleApiRequest(request, env, url) {
             for (const item of parsed.codes) {
               const exists = state.codeCatalogue.some(c => c.code === item.code && c.bookmaker === item.bookmaker);
               if (!exists) {
+                const timestamp = Date.now();
+                const bName = item.bookmakerName || (item.bookmaker === 'footballcom' ? 'Football.com' : item.bookmaker === 'bet9ja' ? 'Bet9ja' : item.bookmaker === '1xbet' ? '1xBet' : item.bookmaker === '22bet' ? '22Bet' : item.bookmaker === 'betking' ? 'BetKing' : item.bookmaker === 'msport' ? 'MSport' : 'SportyBet');
+                
                 state.codeCatalogue.unshift({
-                  id: `auto-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+                  id: `auto-${timestamp}-${Math.random().toString(36).slice(2, 6)}`,
                   code: item.code,
                   bookmaker: item.bookmaker,
-                  bookmakerName: item.bookmaker === 'footballcom' ? 'Football.com' : item.bookmaker === 'bet9ja' ? 'Bet9ja' : item.bookmaker === '1xbet' ? '1xBet' : item.bookmaker === 'betking' ? 'BetKing' : 'SportyBet',
-                  title: `${item.punterName} ${item.odds}x Slip`,
-                  odds: item.odds || 2.00,
-                  totalOdds: item.odds || 2.00,
+                  bookmakerName: bName,
+                  title: `${item.punterName} ${item.odds ? item.odds + 'x ' : ''}Slip (${bName})`,
+                  odds: item.odds,
+                  totalOdds: item.odds,
                   eventsCount: item.gamesCount, // STRICT: NULL IF NOT INCLUDED
                   gamesCount: item.gamesCount,  // STRICT: NULL IF NOT INCLUDED
-                  categoryName: item.marketCategory || 'Verified Punter Slip',
+                  categoryName: item.marketName || item.marketCategory || 'Verified Punter Slip',
                   status: 'active',
-                  dropTime: 'Just Now',
+                  assignedDate: todayDateStr,
+                  dropTime: 'Today, Oct 20',
+                  formattedDate: 'Today, Oct 20',
+                  createdAt: timestamp,
                   author: item.punterName,
                   punterName: item.punterName,
+                  isToday: true,
                   isNew: true
                 });
+
+                // Attach to market codes if market detected
+                if (item.marketId || item.marketName) {
+                  const mId = item.marketId || item.marketName.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-');
+                  const mName = item.marketName || mId;
+                  
+                  // Ensure market exists in state.markets
+                  if (!state.markets) state.markets = [];
+                  if (!state.markets.some(m => m.id === mId || m.slug === mId)) {
+                    state.markets.push({
+                      id: mId,
+                      slug: mId,
+                      name: mName,
+                      shortName: mName,
+                      category: 'specials',
+                      badge: 'Verified Model',
+                      riskLevel: 'Medium Risk',
+                      typicalOddsRange: item.odds ? `${item.odds}x` : '1.50 - 2.50',
+                      averageHitRate: '75%',
+                      bestLeagues: ['English Premier League', 'Spanish La Liga', 'German Bundesliga', 'UEFA Champions League'],
+                      bookmakerSupport: ['SportyBet', 'Football.com', 'Bet9ja', '1xBet', '22Bet', 'BetKing', 'MSport'],
+                      description: `${mName} specialized betting market.`,
+                      tacticalTip: `Statistical edge on ${mName}.`,
+                      presets: ['Standard Acca', 'Rollover'],
+                      howItWorks: `Wager settled on ${mName} conditions.`
+                    });
+                  }
+
+                  if (!state.marketCodes) state.marketCodes = [];
+                  state.marketCodes.unshift({
+                    id: `mcode-${timestamp}-${item.code.toLowerCase()}`,
+                    marketId: mId,
+                    code: item.code,
+                    odds: item.odds,
+                    bookmaker: item.bookmaker,
+                    bookmakerName: bName,
+                    title: `${mName} (${item.odds ? item.odds + 'x ' : ''}${bName})`,
+                    eventsCount: item.gamesCount,
+                    status: 'active',
+                    assignedDate: todayDateStr,
+                    dropTime: 'Today, Oct 20',
+                    formattedDate: 'Today, Oct 20',
+                    createdAt: timestamp,
+                    isToday: true
+                  });
+                }
+
                 totalPublished++;
                 publishedItems.push(item);
               }
@@ -1266,12 +1356,18 @@ async function handleApiRequest(request, env, url) {
                     p.dailyCodes.unshift({
                       id: `pcode-auto-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
                       bookmaker: item.bookmaker,
+                      bookmakerName: item.bookmakerName || (item.bookmaker === 'footballcom' ? 'Football.com' : item.bookmaker === 'bet9ja' ? 'Bet9ja' : item.bookmaker === '1xbet' ? '1xBet' : item.bookmaker === '22bet' ? '22Bet' : item.bookmaker === 'betking' ? 'BetKing' : 'SportyBet'),
                       code: item.code,
-                      marketType: `${item.punterName} Pick`,
+                      marketType: item.marketName || `${item.punterName} Pick`,
                       gamesCount: item.gamesCount,
-                      totalOdds: item.odds || 2.00,
+                      totalOdds: item.odds,
+                      odds: item.odds,
                       status: 'active',
-                      dropTime: 'Just Now'
+                      assignedDate: todayDateStr,
+                      dropTime: 'Today, Oct 20',
+                      formattedDate: 'Today, Oct 20',
+                      createdAt: Date.now(),
+                      isToday: true
                     });
                   }
                 }
@@ -1283,7 +1379,7 @@ async function handleApiRequest(request, env, url) {
         if (totalPublished > 0) {
           await saveState(state);
           const summary = publishedItems.map(c => 
-            `• <b>${c.bookmaker.toUpperCase()}</b>: <code>${c.code}</code> (${c.odds}x)${c.gamesCount ? ` • ${c.gamesCount} Games` : ''} — <i>${c.punterName}</i>`
+            `• <b>${(c.bookmakerName || c.bookmaker || 'SportyBet').toUpperCase()}</b>: <code>${c.code}</code> (${c.odds ? c.odds + 'x' : 'Open'})${c.gamesCount ? ` • ${c.gamesCount} Games` : ''}${c.marketName ? ` • <i>${c.marketName}</i>` : ''} — <i>${c.punterName}</i>`
           ).join('\n');
           const reply = `✅ <b>Published ${totalPublished} Slips to BRYME!</b>\n\n${summary}\n\n🌐 Live at the top of <b>predictions.thebryme.com</b>`;
           if (chatId) await sendTelegramReply(botToken, chatId, reply, getSuccessKeyboard());
@@ -1314,7 +1410,11 @@ function parseTelegramMessage(rawText, forwardSource = '') {
   let punterName = 'BRYME Verified Punter';
   let punterId = null;
 
-  if (combined.includes('banks') || combined.includes('mr banks')) {
+  const explicitPunter = text.match(/(?:punter|author|by|analyst):\s*([^\n,|]+)/i);
+  if (explicitPunter) {
+    punterName = explicitPunter[1].trim();
+    punterId = `punter-${punterName.toLowerCase().replace(/[^a-z0-9]/g, '')}`;
+  } else if (combined.includes('banks') || combined.includes('mr banks')) {
     punterName = 'Mr banks';
     punterId = 'punter-mrbanks';
   } else if (combined.includes('tall') || combined.includes('tallman') || combined.includes('tall man')) {
@@ -1355,18 +1455,96 @@ function parseTelegramMessage(rawText, forwardSource = '') {
     punterId = 'punter-pandev';
   }
 
-  // 2. Identify odds
-  let odds = 2.00;
-  const oddsMatch = text.match(/([\d,]+(?:\.\d+)?)\s*(?:odds|odd|x)\b/i) || text.match(/@\s*([\d,]+(?:\.\d+)?)/i);
-  if (oddsMatch) {
-    const cleanNum = oddsMatch[1].replace(/,/g, '');
-    const parsedOdds = parseFloat(cleanNum);
-    if (!isNaN(parsedOdds) && parsedOdds > 1.0) {
-      odds = parsedOdds;
-    }
+  // 2. Identify market
+  let marketId = null;
+  let marketName = null;
+
+  const explicitMkt = text.match(/(?:market|mkt):\s*([^\n,|]+)/i);
+  if (explicitMkt) {
+    marketName = explicitMkt[1].trim();
+    marketId = marketName.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-');
+  } else if (combined.includes('assist')) {
+    marketId = 'match-assist';
+    marketName = 'Match Assist (Player Props)';
+  } else if (combined.includes('goalscorer') || combined.includes('scorer') || combined.includes('anytime goal')) {
+    marketId = 'anytime-goalscorer';
+    marketName = 'Anytime Goalscorer (Player Props)';
+  } else if (combined.includes('shot') || combined.includes('sot')) {
+    marketId = 'player-shots-on-target';
+    marketName = 'Player Shots on Target';
+  } else if (combined.includes('over 1.5') || combined.includes('over15') || combined.includes('o15')) {
+    marketId = 'over-15-goals';
+    marketName = 'Over 1.5 Total Goals';
+  } else if (combined.includes('over 2.5') || combined.includes('over25') || combined.includes('o25')) {
+    marketId = 'over-25-goals';
+    marketName = 'Over 2.5 Total Goals';
+  } else if (combined.includes('under 2.5') || combined.includes('under25') || combined.includes('u25')) {
+    marketId = 'under-25-goals';
+    marketName = 'Under 2.5 Total Goals';
+  } else if (combined.includes('btts') || combined.includes(' gg') || combined.includes('goal-goal') || combined.includes('both teams')) {
+    marketId = 'both-teams-to-score';
+    marketName = 'Both Teams to Score (GG)';
+  } else if (combined.includes('double chance') || combined.includes('1x') || combined.includes('x2') || combined.includes(' dc')) {
+    marketId = 'double-chance';
+    marketName = 'Double Chance (1X/X2)';
+  } else if (combined.includes('1x2') || combined.includes('straight win') || combined.includes('winner')) {
+    marketId = '1x2-match-result';
+    marketName = '1X2 Match Result';
+  } else if (combined.includes('corner') || combined.includes('corners')) {
+    marketId = 'total-corners';
+    marketName = 'Total Corners';
+  } else if (combined.includes('dnb') || combined.includes('draw no bet')) {
+    marketId = 'draw-no-bet';
+    marketName = 'Draw No Bet';
+  } else if (combined.includes('card') || combined.includes('cards')) {
+    marketId = 'cards-over-35';
+    marketName = 'Total Match Cards';
+  } else if (combined.includes('tackle') || combined.includes('tackles')) {
+    marketId = 'player-tackles';
+    marketName = 'Player Tackles';
+  } else if (combined.includes('foul') || combined.includes('fouls')) {
+    marketId = 'total-fouls';
+    marketName = 'Total Fouls';
+  } else if (combined.includes('multigoal') || combined.includes('multi-goal')) {
+    marketId = 'multigoals';
+    marketName = 'Multi-Goals (2-5 Goals)';
   }
 
-  // 3. Identify number of games (STRICT RULE: ONLY IF INCLUDED BY USER)
+  // 3. Identify bookmaker
+  let detectedBookmaker = null;
+  let detectedBookmakerName = null;
+
+  const explicitBookie = text.match(/(?:bookmaker|bookie):\s*([^\n,|]+)/i);
+  if (explicitBookie) {
+    detectedBookmakerName = explicitBookie[1].trim();
+    detectedBookmaker = detectedBookmakerName.toLowerCase().replace(/[^a-z0-9]/g, '');
+  } else if (combined.includes('22bet') || combined.includes('22 bet')) {
+    detectedBookmaker = '22bet';
+    detectedBookmakerName = '22Bet';
+  } else if (combined.includes('betking') || combined.includes('bet king')) {
+    detectedBookmaker = 'betking';
+    detectedBookmakerName = 'BetKing';
+  } else if (combined.includes('msport')) {
+    detectedBookmaker = 'msport';
+    detectedBookmakerName = 'MSport';
+  } else if (combined.includes('betway')) {
+    detectedBookmaker = 'betway';
+    detectedBookmakerName = 'Betway';
+  } else if (combined.includes('1xbet') || combined.includes('1x bet')) {
+    detectedBookmaker = '1xbet';
+    detectedBookmakerName = '1xBet';
+  } else if (combined.includes('football.com') || combined.includes('footballcom')) {
+    detectedBookmaker = 'footballcom';
+    detectedBookmakerName = 'Football.com';
+  } else if (combined.includes('bet9ja')) {
+    detectedBookmaker = 'bet9ja';
+    detectedBookmakerName = 'Bet9ja';
+  } else if (combined.includes('sportybet') || combined.includes('sporty')) {
+    detectedBookmaker = 'sportybet';
+    detectedBookmakerName = 'SportyBet';
+  }
+
+  // 4. Identify number of games (STRICT RULE: ONLY IF INCLUDED BY USER)
   let gamesCount = null;
   const gamesMatch = text.match(/(\d+)\s*(?:games?|legs?|folds?|matches|selections|teams)\b/i);
   if (gamesMatch) {
@@ -1376,75 +1554,159 @@ function parseTelegramMessage(rawText, forwardSource = '') {
     }
   }
 
-  // 4. Extract codes
+  // 5. Identify odds (STRICT: NO 2.00 FALLBACK)
+  let odds = null;
+  const oddsMatch = text.match(/([\d,]+(?:\.\d+)?)\s*(?:odds|odd|x)\b/i) || text.match(/@\s*([\d,]+(?:\.\d+)?)/i);
+  if (oddsMatch) {
+    const cleanNum = oddsMatch[1].replace(/,/g, '');
+    const parsedOdds = parseFloat(cleanNum);
+    if (!isNaN(parsedOdds) && parsedOdds > 1.0) {
+      odds = parsedOdds;
+    }
+  } else {
+    const rawTokens = text.match(/\b([1-9]\d*(?:\.\d{1,2})?)\b/g) || [];
+    const decCandidate = rawTokens.find(s => {
+      if (!s.includes('.')) return false;
+      const num = parseFloat(s);
+      if (isNaN(num) || num <= 1.0) return false;
+      if (gamesCount && num === gamesCount) return false;
+      return true;
+    });
+
+    if (decCandidate) {
+      odds = parseFloat(decCandidate);
+    } else {
+      const intCandidate = rawTokens.find(s => {
+        const num = parseInt(s, 10);
+        if (isNaN(num) || num < 2) return false;
+        if (gamesCount && num === gamesCount) return false;
+        if (num === 22 && text.toLowerCase().includes('22bet')) return false;
+        if (num === 15 || num === 25 || num === 35) return false;
+        return num >= 10;
+      });
+      if (intCandidate) odds = parseInt(intCandidate, 10);
+    }
+  }
+
+  // 6. Extract codes
   const foundCodes = [];
+  const ignoredWords = new Set([
+    'BET9JA', 'SPORTY', 'SPORTS', 'TICKET', 'BANKER', 'SOCCER', 'TODAY', 'BETTING', 
+    'FRIDAY', 'SUNDAY', 'MONDAY', 'STREAM', 'FOLLOW', 'WINNER', 'CHANCE', 'MARKET', 
+    'ONLINE', 'MOBILE', 'FOOTY', 'FOOTBALL', 'PROFIT', 'WEALTH', 'ROLLOVER', 'MONSTER',
+    'JACKPOT', 'STRIKE', 'UPDATE', 'LOADED', 'BOOKING', 'CHALLENGE', 'TELEGRAM', 'TWITTER',
+    'MATCH', 'ASSIST', 'GAMES', 'SCORE', 'CORNER', 'DOUBLE', 'TOTAL', 'SELECT', '22BET',
+    'BETWAY', 'BETKING', 'MSPORT'
+  ]);
+
+  // Check explicit code: e.g. "code: ABC123"
+  const explicitCodeMatch = text.match(/(?:code|slip):\s*([A-Z0-9]{4,12})\b/i);
+  if (explicitCodeMatch) {
+    const c = explicitCodeMatch[1].toUpperCase();
+    const bk = detectedBookmaker || (c.startsWith('5W') ? 'bet9ja' : 'sportybet');
+    const bkName = detectedBookmakerName || (bk === 'footballcom' ? 'Football.com' : bk === 'bet9ja' ? 'Bet9ja' : bk === '1xbet' ? '1xBet' : bk === '22bet' ? '22Bet' : bk === 'betking' ? 'BetKing' : bk === 'msport' ? 'MSport' : 'SportyBet');
+    foundCodes.push({
+      code: c,
+      bookmaker: bk,
+      bookmakerName: bkName,
+      punterName,
+      punterId,
+      odds,
+      gamesCount,
+      marketId,
+      marketName: marketName || 'Verified Punter Slip'
+    });
+    if (bk === 'sportybet') {
+      foundCodes.push({
+        code: c,
+        bookmaker: 'footballcom',
+        bookmakerName: 'Football.com',
+        punterName,
+        punterId,
+        odds,
+        gamesCount,
+        marketId,
+        marketName: marketName ? `${marketName} (Football.com)` : 'Football.com Twin'
+      });
+    }
+    return { punterName, punterId, codes: foundCodes };
+  }
 
   // Bet9ja: starts with 5W followed by 5 alphanumeric characters (e.g. 5WGQPQ3)
-  const bet9jaMatches = text.match(/\b(5W[A-Z0-9]{5})\b/gi);
+  const bet9jaMatches = text.match(/\b(5W[A-Z0-9]{5,6})\b/gi);
   if (bet9jaMatches) {
     for (const code of bet9jaMatches) {
       foundCodes.push({
         code: code.toUpperCase(),
         bookmaker: 'bet9ja',
+        bookmakerName: 'Bet9ja',
         punterName,
         punterId,
         odds,
-        gamesCount, // null if user didn't write it
-        marketCategory: 'Bet9ja Value Ticket'
+        gamesCount,
+        marketId,
+        marketName: marketName || 'Bet9ja Value Ticket'
       });
     }
   }
 
-  // SportyBet / Football.com: 6 alphanumeric characters (must contain at least one number and one letter, not common words)
-  const ignoredWords = new Set([
-    'BET9JA', 'SPORTY', 'SPORTS', 'TICKET', 'BANKER', 'SOCCER', 'TODAY', 'BETTING', 
-    'FRIDAY', 'SUNDAY', 'MONDAY', 'STREAM', 'FOLLOW', 'WINNER', 'CHANCE', 'MARKET', 
-    'ONLINE', 'MOBILE', 'FOOTY', 'FOOTBALL', 'PROFIT', 'WEALTH', 'ROLLOVER', 'MONSTER',
-    'JACKPOT', 'STRIKE', 'UPDATE', 'LOADED', 'BOOKING', 'CHALLENGE', 'TELEGRAM', 'TWITTER'
-  ]);
-  const sportyMatches = text.match(/\b([A-Z0-9]{6})\b/gi);
-  if (sportyMatches) {
-    for (const raw of sportyMatches) {
+  // SportyBet / Football.com / Generic 6-char codes (letters, numbers, or alphanumeric)
+  const sixCharMatches = text.match(/\b([A-Z0-9]{6})\b/gi);
+  if (sixCharMatches) {
+    for (const raw of sixCharMatches) {
       const code = raw.toUpperCase();
-      if (!ignoredWords.has(code) && !code.startsWith('5W') && /[0-9]/.test(code) && /[A-Z]/.test(code)) {
-        // Add SportyBet slip
+      if (!ignoredWords.has(code) && !code.startsWith('5W') && !foundCodes.some(c => c.code === code)) {
+        const bk = detectedBookmaker || 'sportybet';
+        const bkName = detectedBookmakerName || (bk === 'footballcom' ? 'Football.com' : bk === '1xbet' ? '1xBet' : bk === '22bet' ? '22Bet' : bk === 'betking' ? 'BetKing' : bk === 'msport' ? 'MSport' : 'SportyBet');
+
         foundCodes.push({
           code,
-          bookmaker: 'sportybet',
+          bookmaker: bk,
+          bookmakerName: bkName,
           punterName,
           punterId,
           odds,
-          gamesCount, // null if user didn't write it
-          marketCategory: 'SportyBet Multiplier Slip'
+          gamesCount,
+          marketId,
+          marketName: marketName || `${bkName} Slip`
         });
-        // User rule: SportyBet & Football.com share exact same codes, create twin!
-        foundCodes.push({
-          code,
-          bookmaker: 'footballcom',
-          punterName,
-          punterId,
-          odds,
-          gamesCount, // null if user didn't write it
-          marketCategory: 'Football.com Twin Multiplier'
-        });
+
+        // If SportyBet, always auto-twin to Football.com
+        if (bk === 'sportybet') {
+          foundCodes.push({
+            code,
+            bookmaker: 'footballcom',
+            bookmakerName: 'Football.com',
+            punterName,
+            punterId,
+            odds,
+            gamesCount,
+            marketId,
+            marketName: marketName ? `${marketName} (Football.com)` : 'Football.com Twin'
+          });
+        }
       }
     }
   }
 
-  // 1xBet: 5 uppercase alphanumeric
-  const onexMatches = text.match(/\b([A-Z0-9]{5})\b/gi);
-  if (onexMatches && combined.includes('1x')) {
-    for (const raw of onexMatches) {
+  // 1xBet / 22Bet: 5 uppercase alphanumeric
+  const fiveMatches = text.match(/\b([A-Z0-9]{5})\b/gi);
+  if (fiveMatches && (combined.includes('1x') || combined.includes('22bet') || detectedBookmaker === '1xbet' || detectedBookmaker === '22bet')) {
+    const bk = detectedBookmaker || (combined.includes('22bet') ? '22bet' : '1xbet');
+    const bkName = detectedBookmakerName || (bk === '22bet' ? '22Bet' : '1xBet');
+    for (const raw of fiveMatches) {
       const code = raw.toUpperCase();
-      if (!['TODAY', 'GAMES', 'MATCH'].includes(code)) {
+      if (!ignoredWords.has(code) && !foundCodes.some(c => c.code === code)) {
         foundCodes.push({
           code,
-          bookmaker: '1xbet',
+          bookmaker: bk,
+          bookmakerName: bkName,
           punterName,
           punterId,
           odds,
-          gamesCount, // null if user didn't write it
-          marketCategory: '1xBet High-Multiplier Slip'
+          gamesCount,
+          marketId,
+          marketName: marketName || `${bkName} Slip`
         });
       }
     }

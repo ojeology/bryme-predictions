@@ -9,11 +9,47 @@ import {
 } from 'lucide-react';
 
 export default function MarketsDirectoryPage({ onNavigate }) {
-  const { markets, marketCodes } = usePredictions();
+  const { markets, marketCodes, addMarket } = usePredictions();
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('hitRate'); // 'hitRate', 'oddsAsc', 'risk', 'name'
   const [viewMode, setViewMode] = useState('grid'); // 'grid' | 'dense'
+  const [showAddMarketModal, setShowAddMarketModal] = useState(false);
+  const [newMarketForm, setNewMarketForm] = useState({
+    name: '',
+    category: 'goals',
+    typicalOdds: '',
+    description: ''
+  });
+
+  const handleCreateMarket = (e) => {
+    e.preventDefault();
+    if (!newMarketForm.name.trim()) return;
+
+    const mName = newMarketForm.name.trim();
+    const slug = mName.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-');
+
+    addMarket({
+      id: slug,
+      slug,
+      name: mName,
+      shortName: mName,
+      category: newMarketForm.category || 'specials',
+      badge: 'Verified Model',
+      riskLevel: 'Medium Risk',
+      typicalOddsRange: newMarketForm.typicalOdds.trim() || '1.40 - 2.20',
+      averageHitRate: '75%',
+      bestLeagues: ['English Premier League', 'Spanish La Liga', 'German Bundesliga', 'UEFA Champions League'],
+      bookmakerSupport: ['SportyBet', 'Football.com', 'Bet9ja', '1xBet', '22Bet', 'BetKing', 'MSport'],
+      description: newMarketForm.description.trim() || `${mName} betting market line for European and continental football fixtures.`,
+      tacticalTip: `Statistical edge on ${mName}.`,
+      presets: ['Standard Acca', 'Rollover'],
+      howItWorks: `Wager settled on ${mName} conditions.`
+    });
+
+    setNewMarketForm({ name: '', category: 'goals', typicalOdds: '', description: '' });
+    setShowAddMarketModal(false);
+  };
 
   // Bulletproof fallback ensuring an array always exists
   const marketList = Array.isArray(markets) && markets.length > 0 ? markets : FALLBACK_MARKETS;
@@ -103,7 +139,14 @@ export default function MarketsDirectoryPage({ onNavigate }) {
             </p>
           </div>
 
-          <div className="flex items-center gap-2 self-start sm:self-auto">
+          <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap">
+            <button
+              onClick={() => setShowAddMarketModal(!showAddMarketModal)}
+              className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-display font-black uppercase tracking-wider flex items-center gap-1.5 transition-all shadow-md"
+            >
+              <span>{showAddMarketModal ? '✕ Cancel' : '➕ Add Market Type'}</span>
+            </button>
+
             <button
               onClick={() => onNavigate('punters')}
               className="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-display font-black uppercase tracking-wider flex items-center gap-1.5 transition-colors shadow-sm"
@@ -122,6 +165,88 @@ export default function MarketsDirectoryPage({ onNavigate }) {
           </div>
         </div>
       </div>
+
+      {/* ── INLINE ADD NEW MARKET TYPE FORM ── */}
+      {showAddMarketModal && (
+        <form
+          onSubmit={handleCreateMarket}
+          className="p-5 rounded-2xl border-2 border-emerald-500/50 bg-white dark:bg-[#0E1626] shadow-xl space-y-3"
+        >
+          <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
+            <h3 className="font-display font-black text-sm uppercase text-slate-900 dark:text-white flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+              <span>Register New Betting Market Type</span>
+            </h3>
+            <button
+              type="button"
+              onClick={() => setShowAddMarketModal(false)}
+              className="text-slate-400 hover:text-white text-xs font-bold"
+            >
+              ✕
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+            <div>
+              <label className="text-[11px] font-mono font-bold text-slate-500 uppercase block mb-1">
+                Market Name *
+              </label>
+              <input
+                type="text"
+                required
+                placeholder="e.g. Player Tackles Over 2.5"
+                value={newMarketForm.name}
+                onChange={(e) => setNewMarketForm({ ...newMarketForm, name: e.target.value })}
+                className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white font-bold text-xs"
+              />
+            </div>
+
+            <div>
+              <label className="text-[11px] font-mono font-bold text-slate-500 uppercase block mb-1">
+                Category
+              </label>
+              <select
+                value={newMarketForm.category}
+                onChange={(e) => setNewMarketForm({ ...newMarketForm, category: e.target.value })}
+                className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white font-bold text-xs"
+              >
+                {MARKET_CATEGORIES.filter(c => c.id !== 'all').map(cat => (
+                  <option key={cat.id} value={cat.id}>{cat.label}</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="text-[11px] font-mono font-bold text-slate-500 uppercase block mb-1">
+                Typical Odds (Optional)
+              </label>
+              <input
+                type="text"
+                placeholder="e.g. 1.80 - 2.50"
+                value={newMarketForm.typicalOdds}
+                onChange={(e) => setNewMarketForm({ ...newMarketForm, typicalOdds: e.target.value })}
+                className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white font-bold text-xs"
+              />
+            </div>
+          </div>
+
+          <div className="flex items-center justify-end gap-2 pt-2">
+            <button
+              type="button"
+              onClick={() => setShowAddMarketModal(false)}
+              className="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="px-4 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-display font-black text-xs uppercase tracking-wider shadow-md"
+            >
+              Add Market to Catalogue &amp; Telegram
+            </button>
+          </div>
+        </form>
+      )}
 
       {/* TOP SPONSOR BANNER */}
       <AdBanner slot="top-banner" label="Sponsored Partner" />

@@ -291,21 +291,29 @@ export default function AdminPage({ onNavigate }) {
     };
 
     const targetMarket = (markets || []).find(m => m.id === selectedMarketForCode || m.slug === selectedMarketForCode);
+    const cleanOdds = marketCodeForm.odds.trim() ? (parseFloat(marketCodeForm.odds) || marketCodeForm.odds.trim()) : null;
+    const cleanGames = marketCodeForm.eventsCount.trim() ? (parseInt(marketCodeForm.eventsCount, 10) || null) : null;
+
     const newEntry = {
       id: `mcode-${Date.now()}`,
       marketId: selectedMarketForCode,
       code: marketCodeForm.code.trim().toUpperCase(),
-      odds: parseFloat(marketCodeForm.odds) || 2.00,
+      odds: cleanOdds,
+      totalOdds: cleanOdds,
       bookmaker: marketCodeForm.bookmaker,
       bookmakerName: bNameMap[marketCodeForm.bookmaker] || marketCodeForm.bookmaker,
       title: marketCodeForm.title.trim() || `${targetMarket?.name || 'Market'} Value Slip`,
-      eventsCount: parseInt(marketCodeForm.eventsCount, 10) || 4,
+      eventsCount: cleanGames,
+      gamesCount: cleanGames,
       status: 'active',
-      dropTime: 'Today'
+      assignedDate: '2026-10-20',
+      dropTime: 'Today, Oct 20',
+      formattedDate: 'Today, Oct 20',
+      isToday: true
     };
 
     addMarketCode(newEntry);
-    showToast(`Code ${newEntry.code} (${newEntry.odds}x) added to ${targetMarket?.name || 'market'}!`);
+    showToast(`Code ${newEntry.code} (${cleanOdds ? cleanOdds + 'x' : 'Open'}) added to ${targetMarket?.name || 'market'}!`);
     setMarketCodeForm({
       code: '',
       odds: '2.50',
@@ -324,15 +332,24 @@ export default function AdminPage({ onNavigate }) {
     }
 
     const bookieObj = SUPPORTED_BOOKMAKERS.find(b => b.id === hubCodeForm.bookmaker);
+    const cleanHubOdds = hubCodeForm.totalOdds.trim() ? (parseFloat(hubCodeForm.totalOdds) || hubCodeForm.totalOdds.trim()) : null;
+    const cleanHubGames = hubCodeForm.gamesCount.trim() ? (parseInt(hubCodeForm.gamesCount, 10) || null) : null;
+
     addCatalogueCode({
       bookmaker: hubCodeForm.bookmaker,
       bookmakerName: bookieObj ? bookieObj.name : hubCodeForm.bookmaker,
       code: hubCodeForm.code.toUpperCase(),
       categoryName: hubCodeForm.marketType,
-      title: hubCodeForm.title.trim() || `${hubCodeForm.marketType} (${hubCodeForm.gamesCount} Games)`,
-      odds: parseFloat(hubCodeForm.totalOdds) || 2.00,
-      eventsCount: parseInt(hubCodeForm.gamesCount, 10) || 3,
-      author: hubCodeForm.author || 'Admin Desk'
+      title: hubCodeForm.title.trim() || `${hubCodeForm.marketType}${cleanHubGames ? ` (${cleanHubGames} Games)` : ''}`,
+      odds: cleanHubOdds,
+      totalOdds: cleanHubOdds,
+      eventsCount: cleanHubGames,
+      gamesCount: cleanHubGames,
+      author: hubCodeForm.author || 'Admin Desk',
+      assignedDate: '2026-10-20',
+      dropTime: 'Today, Oct 20',
+      formattedDate: 'Today, Oct 20',
+      isToday: true
     });
 
     setHubCodeForm({
@@ -378,12 +395,16 @@ export default function AdminPage({ onNavigate }) {
       return;
     }
 
+    const cleanPunterOdds = punterCodeForm.totalOdds.trim() ? (parseFloat(punterCodeForm.totalOdds) || punterCodeForm.totalOdds.trim()) : null;
+    const cleanPunterGames = punterCodeForm.gamesCount.trim() ? (parseInt(punterCodeForm.gamesCount, 10) || null) : null;
+
     addPunterCode(punterCodeForm.punterId, {
       bookmaker: punterCodeForm.bookmaker,
       code: punterCodeForm.code.toUpperCase(),
       marketType: punterCodeForm.marketType,
-      gamesCount: parseInt(punterCodeForm.gamesCount, 10) || 3,
-      totalOdds: parseFloat(punterCodeForm.totalOdds) || 2.00
+      gamesCount: cleanPunterGames,
+      totalOdds: cleanPunterOdds,
+      odds: cleanPunterOdds
     });
 
     setPunterCodeForm({
@@ -1150,15 +1171,13 @@ export default function AdminPage({ onNavigate }) {
 
               <div>
                 <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
-                  3. Number of Games (Events Count)
+                  3. Number of Games (Optional)
                 </label>
                 <input
                   type="number"
-                  min="1"
-                  max="50"
-                  required
                   value={hubCodeForm.gamesCount}
                   onChange={(e) => setHubCodeForm({ ...hubCodeForm, gamesCount: e.target.value })}
+                  placeholder="Optional (leave blank to omit)"
                   className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono font-bold text-center"
                 />
               </div>
@@ -1172,23 +1191,24 @@ export default function AdminPage({ onNavigate }) {
                   onChange={(e) => setHubCodeForm({ ...hubCodeForm, marketType: e.target.value })}
                   className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold"
                 >
+                  {(markets || []).map(m => (
+                    <option key={m.id || m.slug} value={m.name}>{m.name}</option>
+                  ))}
                   {MARKET_PRESETS.map((m, idx) => (
-                    <option key={idx} value={m}>{m}</option>
+                    <option key={`preset-${idx}`} value={m}>{m}</option>
                   ))}
                 </select>
               </div>
 
               <div>
                 <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
-                  5. Total Odds
+                  5. Total Odds (Optional)
                 </label>
                 <input
-                  type="number"
-                  step="0.01"
-                  required
+                  type="text"
                   value={hubCodeForm.totalOdds}
                   onChange={(e) => setHubCodeForm({ ...hubCodeForm, totalOdds: e.target.value })}
-                  placeholder="e.g. 2.45"
+                  placeholder="e.g. 2.45, 10000, or leave blank"
                   className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono font-black"
                 />
               </div>

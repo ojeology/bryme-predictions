@@ -3,16 +3,31 @@ import { usePredictions } from '../context/PredictionsContext';
 import { isTodayCode, formatCodeDateBadge } from '../utils/codeDates';
 import { 
   Copy, Check, Zap, Flame, ShieldCheck, ChevronRight, 
-  Share2, ArrowRight, Trophy, Sparkles, Search, Layers, Clock, ExternalLink, Calendar
+  Share2, ArrowRight, Trophy, Sparkles, Search, Layers, Clock, ExternalLink, Calendar, Plus, X
 } from 'lucide-react';
 
 export default function BookingCodesHub({ onNavigate }) {
-  const { codeCatalogue, triggerCopyModal } = usePredictions();
+  const { codeCatalogue, markets, punters, addCatalogueCode, addMarketCode, addMarket, triggerCopyModal } = usePredictions();
   const [selectedBookmaker, setSelectedBookmaker] = useState('all');
+  const [selectedMarketFilter, setSelectedMarketFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [inputLoadCode, setInputLoadCode] = useState('');
   const [copiedId, setCopiedId] = useState(null);
   const [activeColumnTab, setActiveColumnTab] = useState('both'); // 'both' | 'today' | 'yesterday'
+  const [showAddForm, setShowAddForm] = useState(false);
+
+  // New Code Form State
+  const [newCodeForm, setNewCodeForm] = useState({
+    bookmaker: 'sportybet',
+    customBookmaker: '',
+    code: '',
+    marketId: 'match-assist',
+    customMarket: '',
+    odds: '',
+    gamesCount: '',
+    punterId: 'punter-tallman',
+    customPunter: ''
+  });
 
   const handleCopy = (code, id, bookmaker = 'SportyBet', odds = '', title = 'Banker Acca') => {
     if (code) {
@@ -34,6 +49,114 @@ export default function BookingCodesHub({ onNavigate }) {
     setInputLoadCode('');
   };
 
+  const handlePublishCode = (e) => {
+    e.preventDefault();
+    if (!newCodeForm.code.trim()) return;
+
+    const rawCode = newCodeForm.code.trim().toUpperCase();
+    const isCustomBookie = newCodeForm.bookmaker === 'custom';
+    const bookmakerName = isCustomBookie 
+      ? (newCodeForm.customBookmaker.trim() || 'Custom Bookmaker')
+      : (newCodeForm.bookmaker === 'footballcom' ? 'Football.com' 
+        : newCodeForm.bookmaker === 'bet9ja' ? 'Bet9ja'
+        : newCodeForm.bookmaker === '1xbet' ? '1xBet'
+        : newCodeForm.bookmaker === '22bet' ? '22Bet'
+        : newCodeForm.bookmaker === 'betking' ? 'BetKing'
+        : newCodeForm.bookmaker === 'msport' ? 'MSport'
+        : 'SportyBet');
+    const bookmakerKey = isCustomBookie
+      ? bookmakerName.toLowerCase().replace(/[^a-z0-9]/g, '')
+      : newCodeForm.bookmaker;
+
+    // Market resolution
+    const isCustomMarket = newCodeForm.marketId === 'custom';
+    let targetMarketId = newCodeForm.marketId;
+    let targetMarketName = 'Verified Market Slip';
+
+    if (isCustomMarket) {
+      const cMktName = newCodeForm.customMarket.trim() || 'Custom Market';
+      targetMarketId = cMktName.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-');
+      targetMarketName = cMktName;
+
+      // Register new market type if not in list
+      if (!markets.some(m => m.id === targetMarketId || m.slug === targetMarketId)) {
+        addMarket({
+          id: targetMarketId,
+          slug: targetMarketId,
+          name: cMktName,
+          shortName: cMktName,
+          category: 'specials',
+          badge: 'Verified Model',
+          riskLevel: 'Medium Risk',
+          typicalOddsRange: newCodeForm.odds.trim() ? `${newCodeForm.odds.trim()}x` : '1.50 - 2.50',
+          averageHitRate: '75%',
+          bestLeagues: ['English Premier League', 'Spanish La Liga', 'German Bundesliga'],
+          bookmakerSupport: ['SportyBet', 'Football.com', 'Bet9ja', '1xBet', '22Bet', 'BetKing'],
+          description: `${cMktName} betting line.`,
+          tacticalTip: `Statistical edge on ${cMktName}.`,
+          presets: ['Standard Acca', 'Rollover'],
+          howItWorks: `Wager settled on ${cMktName} conditions.`
+        });
+      }
+    } else {
+      const foundM = markets.find(m => m.id === targetMarketId || m.slug === targetMarketId);
+      if (foundM) targetMarketName = foundM.name;
+    }
+
+    // Punter resolution
+    const isCustomPunter = newCodeForm.punterId === 'custom';
+    const targetPunterName = isCustomPunter
+      ? (newCodeForm.customPunter.trim() || 'BRYME Desk')
+      : (punters.find(p => p.id === newCodeForm.punterId)?.displayName || 'BRYME Desk');
+
+    // Odds: optional, no forced 2.00
+    const rawOdds = newCodeForm.odds.trim();
+    const cleanOdds = rawOdds ? (parseFloat(rawOdds) || rawOdds) : null;
+
+    // Games count: optional, strict
+    const rawGames = newCodeForm.gamesCount.trim();
+    const cleanGames = rawGames ? (parseInt(rawGames, 10) || null) : null;
+
+    const payload = {
+      code: rawCode,
+      bookmaker: bookmakerKey,
+      bookmakerName,
+      title: `${targetPunterName} ${cleanOdds ? cleanOdds + 'x ' : ''}Slip (${bookmakerName})`,
+      odds: cleanOdds,
+      totalOdds: cleanOdds,
+      eventsCount: cleanGames,
+      gamesCount: cleanGames,
+      categoryName: targetMarketName,
+      marketId: targetMarketId,
+      status: 'active',
+      author: targetPunterName,
+      punterName: targetPunterName,
+      punterId: isCustomPunter ? null : newCodeForm.punterId,
+      assignedDate: '2026-10-20',
+      dropTime: 'Today, Oct 20',
+      formattedDate: 'Today, Oct 20',
+      isToday: true,
+      isNew: true
+    };
+
+    // Add to Code Hub and to Market Codes
+    addCatalogueCode(payload);
+    addMarketCode(payload);
+
+    setNewCodeForm({
+      bookmaker: 'sportybet',
+      customBookmaker: '',
+      code: '',
+      marketId: 'match-assist',
+      customMarket: '',
+      odds: '',
+      gamesCount: '',
+      punterId: 'punter-tallman',
+      customPunter: ''
+    });
+    setShowAddForm(false);
+  };
+
   const filteredCodes = useMemo(() => {
     return (codeCatalogue || []).filter(item => {
       if (selectedBookmaker !== 'all') {
@@ -44,19 +167,32 @@ export default function BookingCodesHub({ onNavigate }) {
         if (selectedBookmaker === '1xbet' && b !== '1xbet') return false;
         if (selectedBookmaker === '22bet' && b !== '22bet') return false;
         if (selectedBookmaker === 'betking' && b !== 'betking') return false;
-        if (selectedBookmaker === 'other' && ['sportybet', 'footballcom', 'bet9ja', '1xbet', '22bet', 'betking'].includes(b)) return false;
+        if (selectedBookmaker === 'msport' && b !== 'msport') return false;
+        if (selectedBookmaker === 'other' && ['sportybet', 'footballcom', 'bet9ja', '1xbet', '22bet', 'betking', 'msport'].includes(b)) return false;
       }
+
+      if (selectedMarketFilter !== 'all') {
+        const target = selectedMarketFilter.toLowerCase();
+        const cat = (item.categoryName || '').toLowerCase();
+        const mId = (item.marketId || '').toLowerCase();
+        const tit = (item.title || '').toLowerCase();
+        if (!cat.includes(target) && !mId.includes(target) && !tit.includes(target)) {
+          return false;
+        }
+      }
+
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase();
         const inCode = item.code?.toLowerCase().includes(q);
         const inTitle = item.title?.toLowerCase().includes(q);
         const inCategory = item.categoryName?.toLowerCase().includes(q);
-        const inAuthor = item.author?.toLowerCase().includes(q);
-        if (!inCode && !inTitle && !inCategory && !inAuthor) return false;
+        const inAuthor = item.author?.toLowerCase().includes(q) || item.punterName?.toLowerCase().includes(q);
+        const inBookie = item.bookmakerName?.toLowerCase().includes(q) || item.bookmaker?.toLowerCase().includes(q);
+        if (!inCode && !inTitle && !inCategory && !inAuthor && !inBookie) return false;
       }
       return true;
     });
-  }, [codeCatalogue, selectedBookmaker, searchQuery]);
+  }, [codeCatalogue, selectedBookmaker, selectedMarketFilter, searchQuery]);
 
   const todayCodes = useMemo(() => filteredCodes.filter(isTodayCode), [filteredCodes]);
   const yesterdayCodes = useMemo(() => filteredCodes.filter(c => !isTodayCode(c)), [filteredCodes]);
@@ -173,18 +309,28 @@ export default function BookingCodesHub({ onNavigate }) {
   return (
     <div className="space-y-4">
       
-      {/* ── 1. SPORTYBET-STYLE SEARCH & LOAD CODE BAR ── */}
+      {/* ── 1. SPORTYBET-STYLE SEARCH & LOAD CODE BAR + ADD SLIP TOGGLE ── */}
       <div className="rounded-2xl border-2 border-[#E41B13]/30 dark:border-[#E41B13]/40 bg-gradient-to-r from-slate-900 via-[#1a2336] to-[#0A0F1D] p-3.5 sm:p-4 text-white shadow-lg space-y-3">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-[#00FF66] animate-ping"></span>
             <span className="text-[11px] font-mono font-black uppercase tracking-wider text-white">
-              BRYME CODE HUB &bull; QUICK LOAD
+              BRYME CODE HUB &bull; QUICK LOAD &bull; TOTAL CONTROL
             </span>
           </div>
-          <span className="text-[10px] font-mono text-emerald-400 font-bold">
-            📅 Active Date: Tuesday, Oct 20, 2026
-          </span>
+          
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] font-mono text-emerald-400 font-bold hidden sm:inline">
+              📅 Today: Oct 20, 2026
+            </span>
+            <button
+              onClick={() => setShowAddForm(!showAddForm)}
+              className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-display font-black text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-md transition-all"
+            >
+              {showAddForm ? <X className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
+              <span>{showAddForm ? 'Cancel Form' : '➕ Drop Code to Hub'}</span>
+            </button>
+          </div>
         </div>
 
         {/* Load Slip Input */}
@@ -206,6 +352,184 @@ export default function BookingCodesHub({ onNavigate }) {
         </form>
       </div>
 
+      {/* ── 1.B INLINE FORM: ADD CODE DIRECTLY TO CODE HUB & MARKETS ── */}
+      {showAddForm && (
+        <form 
+          onSubmit={handlePublishCode}
+          className="p-5 rounded-2xl border-2 border-emerald-500/50 bg-white dark:bg-[#0E1626] shadow-xl space-y-4"
+        >
+          <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+            <div>
+              <h3 className="font-display font-black text-base text-slate-900 dark:text-white flex items-center gap-2">
+                <Plus className="w-4 h-4 text-emerald-500" />
+                <span>Drop New Code into BRYME Code Hub &amp; Markets</span>
+              </h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                Instantly published to the top of Today's codes column, attached to market, and duplicated to Football.com if SportyBet.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowAddForm(false)}
+              className="text-slate-400 hover:text-slate-600 dark:hover:text-white p-1 rounded-lg"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+            {/* Bookmaker */}
+            <div>
+              <label className="text-[11px] font-mono font-bold text-slate-600 dark:text-slate-400 uppercase block mb-1">
+                1. Bookmaker
+              </label>
+              <select
+                value={newCodeForm.bookmaker}
+                onChange={(e) => setNewCodeForm({ ...newCodeForm, bookmaker: e.target.value })}
+                className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white font-bold"
+              >
+                <option value="sportybet">🔴 SportyBet (+Football.com)</option>
+                <option value="footballcom">🟢 Football.com</option>
+                <option value="22bet">🟢 22Bet (Affiliate)</option>
+                <option value="bet9ja">🟡 Bet9ja</option>
+                <option value="1xbet">🔵 1xBet</option>
+                <option value="betking">👑 BetKing</option>
+                <option value="msport">⚡ MSport</option>
+                <option value="custom">✏️ Other Bookmaker (Type Any)</option>
+              </select>
+              {newCodeForm.bookmaker === 'custom' && (
+                <input
+                  type="text"
+                  required
+                  placeholder="Type bookmaker name..."
+                  value={newCodeForm.customBookmaker}
+                  onChange={(e) => setNewCodeForm({ ...newCodeForm, customBookmaker: e.target.value })}
+                  className="mt-2 w-full p-2 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-emerald-500 text-slate-900 dark:text-white font-bold text-xs"
+                />
+              )}
+            </div>
+
+            {/* Booking Code */}
+            <div>
+              <label className="text-[11px] font-mono font-bold text-slate-600 dark:text-slate-400 uppercase block mb-1">
+                2. Booking Code *
+              </label>
+              <input
+                type="text"
+                required
+                placeholder="e.g. PZ6US6, 5WGQPQ3"
+                value={newCodeForm.code}
+                onChange={(e) => setNewCodeForm({ ...newCodeForm, code: e.target.value.toUpperCase() })}
+                className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white font-mono font-black text-sm tracking-wider uppercase"
+              />
+            </div>
+
+            {/* Market */}
+            <div>
+              <label className="text-[11px] font-mono font-bold text-slate-600 dark:text-slate-400 uppercase block mb-1">
+                3. Market Type
+              </label>
+              <select
+                value={newCodeForm.marketId}
+                onChange={(e) => setNewCodeForm({ ...newCodeForm, marketId: e.target.value })}
+                className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white font-bold"
+              >
+                {(markets || []).map(m => (
+                  <option key={m.id || m.slug} value={m.id || m.slug}>
+                    {m.name}
+                  </option>
+                ))}
+                <option value="custom">✏️ Other Market (Type Any)</option>
+              </select>
+              {newCodeForm.marketId === 'custom' && (
+                <input
+                  type="text"
+                  required
+                  placeholder="Type any market name (e.g. Match Assist)..."
+                  value={newCodeForm.customMarket}
+                  onChange={(e) => setNewCodeForm({ ...newCodeForm, customMarket: e.target.value })}
+                  className="mt-2 w-full p-2 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-emerald-500 text-slate-900 dark:text-white font-bold text-xs"
+                />
+              )}
+            </div>
+
+            {/* Total Odds */}
+            <div>
+              <label className="text-[11px] font-mono font-bold text-slate-600 dark:text-slate-400 uppercase block mb-1">
+                4. Total Odds (Optional)
+              </label>
+              <input
+                type="text"
+                placeholder="e.g. 3.45, 10000, or leave blank"
+                value={newCodeForm.odds}
+                onChange={(e) => setNewCodeForm({ ...newCodeForm, odds: e.target.value })}
+                className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white font-mono font-black"
+              />
+            </div>
+
+            {/* Games Count */}
+            <div>
+              <label className="text-[11px] font-mono font-bold text-slate-600 dark:text-slate-400 uppercase block mb-1">
+                5. Games Count (Optional)
+              </label>
+              <input
+                type="number"
+                placeholder="e.g. 12 (leave blank to omit)"
+                value={newCodeForm.gamesCount}
+                onChange={(e) => setNewCodeForm({ ...newCodeForm, gamesCount: e.target.value })}
+                className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white font-mono font-bold"
+              />
+            </div>
+
+            {/* Punter / Source */}
+            <div className="sm:col-span-2">
+              <label className="text-[11px] font-mono font-bold text-slate-600 dark:text-slate-400 uppercase block mb-1">
+                6. Dropped By (Punter)
+              </label>
+              <select
+                value={newCodeForm.punterId}
+                onChange={(e) => setNewCodeForm({ ...newCodeForm, punterId: e.target.value })}
+                className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white font-bold"
+              >
+                {(punters || []).map(p => (
+                  <option key={p.id} value={p.id}>
+                    {p.pinned ? '📌 ' : ''}{p.displayName} ({p.handle || p.specialty || 'Analyst'})
+                  </option>
+                ))}
+                <option value="custom">✏️ Other Punter / Source</option>
+              </select>
+              {newCodeForm.punterId === 'custom' && (
+                <input
+                  type="text"
+                  required
+                  placeholder="Type punter name..."
+                  value={newCodeForm.customPunter}
+                  onChange={(e) => setNewCodeForm({ ...newCodeForm, customPunter: e.target.value })}
+                  className="mt-2 w-full p-2 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-emerald-500 text-slate-900 dark:text-white font-bold text-xs"
+                />
+              )}
+            </div>
+          </div>
+
+          <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+            <button
+              type="button"
+              onClick={() => setShowAddForm(false)}
+              className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-display font-bold text-xs uppercase"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-display font-black text-xs uppercase tracking-wider shadow-md transition-all flex items-center gap-1.5"
+            >
+              <Zap className="w-3.5 h-3.5 fill-current" />
+              <span>Publish to Code Hub &amp; Markets</span>
+            </button>
+          </div>
+        </form>
+      )}
+
       {/* ── 2. FAST BOOKMAKER FILTER TABS ── */}
       <div className="flex items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-2 flex-wrap">
         <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none">
@@ -217,6 +541,7 @@ export default function BookingCodesHub({ onNavigate }) {
             { id: 'bet9ja', label: '🟢 Bet9ja' },
             { id: '1xbet', label: '🔵 1xBet' },
             { id: 'betking', label: '👑 BetKing' },
+            { id: 'msport', label: '⚡ MSport' },
             { id: 'other', label: '⚡ Other Books' }
           ].map(b => (
             <button
@@ -255,6 +580,37 @@ export default function BookingCodesHub({ onNavigate }) {
             Yesterday ({yesterdayCodes.length})
           </button>
         </div>
+      </div>
+
+      {/* ── 2.B DYNAMIC MARKET FILTER PILLS (UNRESTRICTED) ── */}
+      <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none pb-1">
+        <span className="text-[10px] font-mono text-slate-400 uppercase font-bold flex-shrink-0">
+          Market Filter:
+        </span>
+        {[
+          { id: 'all', label: 'All Markets' },
+          { id: 'assist', label: '👟 Match Assist' },
+          { id: 'goalscorer', label: '🎯 Anytime Goalscorer' },
+          { id: 'shots', label: '🎯 Shots on Target' },
+          { id: '1.5', label: '⚽ Over 1.5' },
+          { id: '2.5', label: '🔥 Over 2.5' },
+          { id: 'btts', label: '⚔️ Both Teams (GG)' },
+          { id: 'double', label: '🛡️ Double Chance' },
+          { id: 'corner', label: '🚩 Corners' },
+          { id: 'tackle', label: '🛡️ Tackles' }
+        ].map(m => (
+          <button
+            key={m.id}
+            onClick={() => setSelectedMarketFilter(m.id)}
+            className={`px-2.5 py-1 rounded-lg text-xs font-mono font-bold whitespace-nowrap transition-all ${
+              selectedMarketFilter === m.id
+                ? 'bg-blue-600 text-white shadow-sm'
+                : 'bg-slate-100 dark:bg-[#162238] text-slate-600 dark:text-slate-400 hover:text-white'
+            }`}
+          >
+            {m.label}
+          </button>
+        ))}
       </div>
 
       {/* ── 3. TWO-COLUMN SPLIT: TODAY CODES VS YESTERDAY CODES ── */}

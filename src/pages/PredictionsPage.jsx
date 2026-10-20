@@ -216,10 +216,13 @@ export default function PredictionsPage({ onNavigate }) {
         {/* Tier & Bookmaker Filter Ribbon */}
         <div className="flex items-center justify-between gap-2 border-t border-slate-100 dark:border-slate-800/80 pt-2.5 flex-wrap">
           
-          {/* Odds Tier Pills */}
+          {/* Odds Tier & Market Pills */}
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
             {[
               { id: 'all', label: 'All Slips' },
+              { id: 'match-assist', label: '👟 Match Assist' },
+              { id: 'anytime-goalscorer', label: '🎯 Anytime Goalscorer' },
+              { id: 'player-shots-on-target', label: '🎯 Shots on Target' },
               { id: 'banker', label: '🎯 2.00x Banker' },
               { id: 'ladder', label: '🪜 1.50x Rollover' },
               { id: 'accumulator', label: '🛡️ 5.00x Acca' },
@@ -259,9 +262,12 @@ export default function PredictionsPage({ onNavigate }) {
             >
               <option value="all">All Bookmakers</option>
               <option value="sportybet">🔴 SportyBet</option>
-              <option value="bet9ja">🟢 Bet9ja</option>
-              <option value="onexbet">🔵 1xBet</option>
+              <option value="footballcom">🟢 Football.com</option>
+              <option value="22bet">🟢 22Bet (Affiliate)</option>
+              <option value="bet9ja">🟡 Bet9ja</option>
+              <option value="1xbet">🔵 1xBet</option>
               <option value="betking">👑 BetKing</option>
+              <option value="msport">⚡ MSport</option>
             </select>
           </div>
 

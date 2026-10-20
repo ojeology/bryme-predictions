@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 
 export default function MarketDetailPage({ marketId, slug, onNavigate }) {
-  const { markets, marketCodes, addMarketCode, deleteMarketCode, triggerCopyModal, adSettings } = usePredictions();
+  const { markets, punters, marketCodes, addMarketCode, deleteMarketCode, triggerCopyModal, adSettings } = usePredictions();
   const currentKey = marketId || slug;
   const marketList = markets && markets.length > 0 ? markets : FALLBACK_MARKETS;
   const market = marketList.find(m => m.id === currentKey || m.slug === currentKey) || marketList[0];
@@ -30,9 +30,12 @@ export default function MarketDetailPage({ marketId, slug, onNavigate }) {
   const [showAddForm, setShowAddForm] = useState(false);
   const [newCodeForm, setNewCodeForm] = useState({
     bookmaker: 'sportybet',
+    customBookmaker: '',
     code: '',
     odds: '',
-    gamesCount: ''
+    gamesCount: '',
+    punterId: 'punter-tallman',
+    customPunter: ''
   });
 
   const handleAddSubmit = (e) => {
@@ -40,24 +43,57 @@ export default function MarketDetailPage({ marketId, slug, onNavigate }) {
     if (!newCodeForm.code.trim()) return;
 
     const cleanCode = newCodeForm.code.trim().toUpperCase();
-    const cleanOdds = parseFloat(newCodeForm.odds) || 2.00;
+    const cleanOdds = newCodeForm.odds.trim() ? (parseFloat(newCodeForm.odds) || newCodeForm.odds.trim()) : null;
     const cleanGames = newCodeForm.gamesCount.trim() ? (parseInt(newCodeForm.gamesCount, 10) || null) : null;
-    const bName = newCodeForm.bookmaker === 'footballcom' ? 'Football.com' : newCodeForm.bookmaker === 'bet9ja' ? 'Bet9ja' : newCodeForm.bookmaker === '1xbet' ? '1xBet' : newCodeForm.bookmaker === 'betking' ? 'BetKing' : 'SportyBet';
+    
+    const isCustomBookie = newCodeForm.bookmaker === 'custom';
+    const bName = isCustomBookie 
+      ? (newCodeForm.customBookmaker.trim() || 'Custom Bookmaker')
+      : (newCodeForm.bookmaker === 'footballcom' ? 'Football.com' 
+        : newCodeForm.bookmaker === 'bet9ja' ? 'Bet9ja' 
+        : newCodeForm.bookmaker === '1xbet' ? '1xBet' 
+        : newCodeForm.bookmaker === '22bet' ? '22Bet'
+        : newCodeForm.bookmaker === 'betking' ? 'BetKing' 
+        : newCodeForm.bookmaker === 'msport' ? 'MSport'
+        : 'SportyBet');
+    const bookmakerKey = isCustomBookie 
+      ? bName.toLowerCase().replace(/[^a-z0-9]/g, '')
+      : newCodeForm.bookmaker;
+
+    const isCustomPunter = newCodeForm.punterId === 'custom';
+    const pName = isCustomPunter
+      ? (newCodeForm.customPunter.trim() || 'BRYME Desk')
+      : (punters?.find(p => p.id === newCodeForm.punterId)?.displayName || 'BRYME Desk');
 
     addMarketCode({
       id: `mcode-${Date.now()}-${cleanCode.toLowerCase()}`,
       marketId: market.id || market.slug,
       code: cleanCode,
       odds: cleanOdds,
-      bookmaker: newCodeForm.bookmaker,
+      totalOdds: cleanOdds,
+      bookmaker: bookmakerKey,
       bookmakerName: bName,
-      title: `${market.name} (${cleanOdds}x ${bName})`,
+      title: `${market.name} (${cleanOdds ? cleanOdds + 'x ' : ''}${bName})`,
       eventsCount: cleanGames,
+      gamesCount: cleanGames,
+      author: pName,
+      punterName: pName,
       status: 'active',
-      dropTime: 'Just Now'
+      assignedDate: '2026-10-20',
+      dropTime: 'Today, Oct 20',
+      formattedDate: 'Today, Oct 20',
+      isToday: true
     });
 
-    setNewCodeForm({ bookmaker: 'sportybet', code: '', odds: '', gamesCount: '' });
+    setNewCodeForm({ 
+      bookmaker: 'sportybet', 
+      customBookmaker: '', 
+      code: '', 
+      odds: '', 
+      gamesCount: '', 
+      punterId: 'punter-tallman', 
+      customPunter: '' 
+    });
     setShowAddForm(false);
   };
 
@@ -240,7 +276,7 @@ export default function MarketDetailPage({ marketId, slug, onNavigate }) {
               </span>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
               <div>
                 <label className="text-[11px] font-mono font-bold text-slate-500 uppercase block mb-1">Bookmaker</label>
                 <select
@@ -250,11 +286,23 @@ export default function MarketDetailPage({ marketId, slug, onNavigate }) {
                 >
                   <option value="sportybet">🔴 SportyBet</option>
                   <option value="footballcom">🟢 Football.com</option>
+                  <option value="22bet">🟢 22Bet (Affiliate)</option>
                   <option value="bet9ja">🟡 Bet9ja</option>
                   <option value="1xbet">🔵 1xBet</option>
                   <option value="betking">👑 BetKing</option>
                   <option value="msport">⚡ MSport</option>
+                  <option value="custom">✏️ Other Bookmaker</option>
                 </select>
+                {newCodeForm.bookmaker === 'custom' && (
+                  <input
+                    type="text"
+                    required
+                    placeholder="Type bookmaker..."
+                    value={newCodeForm.customBookmaker}
+                    onChange={(e) => setNewCodeForm({ ...newCodeForm, customBookmaker: e.target.value })}
+                    className="mt-2 w-full px-2 py-1.5 rounded-lg bg-white dark:bg-slate-900 border border-emerald-500 text-xs font-bold text-slate-900 dark:text-white"
+                  />
+                )}
               </div>
 
               <div>
@@ -270,15 +318,13 @@ export default function MarketDetailPage({ marketId, slug, onNavigate }) {
               </div>
 
               <div>
-                <label className="text-[11px] font-mono font-bold text-slate-500 uppercase block mb-1">Total Odds *</label>
+                <label className="text-[11px] font-mono font-bold text-slate-500 uppercase block mb-1">Total Odds (Optional)</label>
                 <input
-                  type="number"
-                  step="0.01"
-                  required
-                  placeholder="e.g. 2.50"
+                  type="text"
+                  placeholder="e.g. 2.50, 10000, or blank"
                   value={newCodeForm.odds}
                   onChange={(e) => setNewCodeForm({ ...newCodeForm, odds: e.target.value })}
-                  className="w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-sm font-mono font-bold text-slate-900 dark:text-white"
+                  className="w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-sm font-mono font-black text-slate-900 dark:text-white"
                 />
               </div>
 
@@ -291,6 +337,32 @@ export default function MarketDetailPage({ marketId, slug, onNavigate }) {
                   onChange={(e) => setNewCodeForm({ ...newCodeForm, gamesCount: e.target.value })}
                   className="w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-sm font-mono font-bold text-slate-900 dark:text-white"
                 />
+              </div>
+
+              <div>
+                <label className="text-[11px] font-mono font-bold text-slate-500 uppercase block mb-1">Punter / Source</label>
+                <select
+                  value={newCodeForm.punterId}
+                  onChange={(e) => setNewCodeForm({ ...newCodeForm, punterId: e.target.value })}
+                  className="w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-sm font-bold text-slate-900 dark:text-white"
+                >
+                  {(punters || []).map(p => (
+                    <option key={p.id} value={p.id}>
+                      {p.pinned ? '📌 ' : ''}{p.displayName}
+                    </option>
+                  ))}
+                  <option value="custom">✏️ Other Punter</option>
+                </select>
+                {newCodeForm.punterId === 'custom' && (
+                  <input
+                    type="text"
+                    required
+                    placeholder="Type analyst name..."
+                    value={newCodeForm.customPunter}
+                    onChange={(e) => setNewCodeForm({ ...newCodeForm, customPunter: e.target.value })}
+                    className="mt-2 w-full px-2 py-1.5 rounded-lg bg-white dark:bg-slate-900 border border-emerald-500 text-xs font-bold text-slate-900 dark:text-white"
+                  />
+                )}
               </div>
             </div>
 

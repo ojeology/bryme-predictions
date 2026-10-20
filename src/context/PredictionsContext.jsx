@@ -367,18 +367,101 @@ export function PredictionsProvider({ children }) {
 
   // ── MARKET BOOKING CODES CRUD ACTIONS ──
   const addMarketCode = (newEntry) => {
+    const timestamp = Date.now();
+    const todayDateStr = '2026-10-20';
     const isSporty = newEntry.bookmaker?.toLowerCase() === 'sportybet';
+
+    const entry = {
+      ...newEntry,
+      id: newEntry.id || `mcode-${timestamp}-${(newEntry.code || '').toLowerCase()}`,
+      assignedDate: newEntry.assignedDate || todayDateStr,
+      isToday: true,
+      dropTime: newEntry.dropTime || 'Today, Oct 20',
+      formattedDate: 'Today, Oct 20',
+      createdAt: timestamp
+    };
+
     if (isSporty) {
       const fbTwin = {
-        ...newEntry,
-        id: `${newEntry.id || 'mcode-' + Date.now()}-fb`,
+        ...entry,
+        id: `${entry.id}-fb`,
         bookmaker: 'footballcom',
         bookmakerName: 'Football.com',
-        title: `${newEntry.title?.replace('SportyBet', 'Football.com') || 'Football.com Twin'}`
+        title: `${entry.title?.replace('SportyBet', 'Football.com') || 'Football.com Twin'}`,
+        createdAt: timestamp + 1
       };
-      setMarketCodesState(prev => [newEntry, fbTwin, ...prev]);
+      setMarketCodesState(prev => [entry, fbTwin, ...prev]);
+
+      // Mirror into Code Hub
+      setCodeCatalogueState(prev => {
+        const hasMain = prev.some(c => c.code === entry.code && c.bookmaker === entry.bookmaker);
+        const toAdd = [];
+        if (!hasMain) {
+          toAdd.push({
+            id: `cat-${entry.id}`,
+            code: entry.code,
+            bookmaker: entry.bookmaker,
+            bookmakerName: entry.bookmakerName,
+            title: entry.title,
+            odds: entry.odds,
+            totalOdds: entry.odds,
+            eventsCount: entry.eventsCount || entry.gamesCount,
+            gamesCount: entry.eventsCount || entry.gamesCount,
+            categoryName: entry.title || 'Market Slip',
+            status: 'active',
+            assignedDate: todayDateStr,
+            dropTime: 'Today, Oct 20',
+            formattedDate: 'Today, Oct 20',
+            createdAt: timestamp,
+            isToday: true
+          });
+          toAdd.push({
+            id: `cat-${entry.id}-fb`,
+            code: entry.code,
+            bookmaker: 'footballcom',
+            bookmakerName: 'Football.com',
+            title: `${entry.title?.replace('SportyBet', 'Football.com') || 'Football.com Twin'}`,
+            odds: entry.odds,
+            totalOdds: entry.odds,
+            eventsCount: entry.eventsCount || entry.gamesCount,
+            gamesCount: entry.eventsCount || entry.gamesCount,
+            categoryName: 'Football.com Twin',
+            status: 'active',
+            assignedDate: todayDateStr,
+            dropTime: 'Today, Oct 20',
+            formattedDate: 'Today, Oct 20',
+            createdAt: timestamp + 1,
+            isToday: true
+          });
+        }
+        return [...toAdd, ...prev];
+      });
     } else {
-      setMarketCodesState(prev => [newEntry, ...prev]);
+      setMarketCodesState(prev => [entry, ...prev]);
+
+      // Mirror into Code Hub
+      setCodeCatalogueState(prev => {
+        const hasMain = prev.some(c => c.code === entry.code && c.bookmaker === entry.bookmaker);
+        if (hasMain) return prev;
+        return [{
+          id: `cat-${entry.id}`,
+          code: entry.code,
+          bookmaker: entry.bookmaker,
+          bookmakerName: entry.bookmakerName,
+          title: entry.title,
+          odds: entry.odds,
+          totalOdds: entry.odds,
+          eventsCount: entry.eventsCount || entry.gamesCount,
+          gamesCount: entry.eventsCount || entry.gamesCount,
+          categoryName: entry.title || 'Market Slip',
+          status: 'active',
+          assignedDate: todayDateStr,
+          dropTime: 'Today, Oct 20',
+          formattedDate: 'Today, Oct 20',
+          createdAt: timestamp,
+          isToday: true
+        }, ...prev];
+      });
     }
   };
 
@@ -463,12 +546,37 @@ export function PredictionsProvider({ children }) {
   // ── CODE CATALOGUE ACTIONS ──
   const addCatalogueCode = (newEntry) => {
     const timestamp = Date.now();
+    const todayDateStr = '2026-10-20';
     const entry = {
       ...newEntry,
       id: newEntry.id || `code-cat-${timestamp}`,
       createdAt: timestamp,
-      status: newEntry.status || 'active'
+      status: newEntry.status || 'active',
+      assignedDate: newEntry.assignedDate || todayDateStr,
+      isToday: true,
+      dropTime: newEntry.dropTime || 'Today, Oct 20',
+      formattedDate: 'Today, Oct 20'
     };
+
+    // If marketId is provided, also add to marketCodes!
+    if (newEntry.marketId) {
+      setMarketCodesState(prev => [{
+        id: `mcode-${timestamp}-${entry.code.toLowerCase()}`,
+        marketId: newEntry.marketId,
+        code: entry.code,
+        odds: entry.odds,
+        bookmaker: entry.bookmaker,
+        bookmakerName: entry.bookmakerName,
+        title: entry.title,
+        eventsCount: entry.eventsCount || entry.gamesCount,
+        status: 'active',
+        assignedDate: todayDateStr,
+        dropTime: 'Today, Oct 20',
+        formattedDate: 'Today, Oct 20',
+        createdAt: timestamp,
+        isToday: true
+      }, ...prev]);
+    }
 
     // Rule: New codes are placed ahead of all other codes!
     // For every sportybet code create a football.com duplicate ahead as well
@@ -482,6 +590,25 @@ export function PredictionsProvider({ children }) {
         createdAt: timestamp + 1
       };
       setCodeCatalogueState(prev => [entry, fbTwin, ...prev]);
+
+      if (newEntry.marketId) {
+        setMarketCodesState(prev => [{
+          id: `mcode-${timestamp}-${entry.code.toLowerCase()}-fb`,
+          marketId: newEntry.marketId,
+          code: entry.code,
+          odds: entry.odds,
+          bookmaker: 'footballcom',
+          bookmakerName: 'Football.com',
+          title: `${entry.title?.replace('SportyBet', 'Football.com') || 'Football.com Twin'}`,
+          eventsCount: entry.eventsCount || entry.gamesCount,
+          status: 'active',
+          assignedDate: todayDateStr,
+          dropTime: 'Today, Oct 20',
+          formattedDate: 'Today, Oct 20',
+          createdAt: timestamp + 1,
+          isToday: true
+        }, ...prev]);
+      }
     } else {
       setCodeCatalogueState(prev => [entry, ...prev]);
     }
@@ -525,23 +652,32 @@ export function PredictionsProvider({ children }) {
     const targetPunter = punters.find(p => p.id === punterId);
     const pName = targetPunter ? targetPunter.displayName : 'Verified Punter';
     const timestamp = Date.now();
+    const todayDateStr = '2026-10-20';
     const isSporty = codeObj.bookmaker === 'sportybet';
+    const cleanOdds = codeObj.totalOdds !== undefined && codeObj.totalOdds !== null && codeObj.totalOdds !== '' 
+      ? (parseFloat(codeObj.totalOdds) || codeObj.totalOdds) 
+      : null;
 
     const catEntry = {
       id: `code-cat-punter-${timestamp}`,
       bookmaker: codeObj.bookmaker,
-      bookmakerName: codeObj.bookmaker === 'footballcom' ? 'Football.com' : codeObj.bookmaker === 'bet9ja' ? 'Bet9ja' : codeObj.bookmaker === '1xbet' ? '1xBet' : codeObj.bookmaker === 'betking' ? 'BetKing' : 'SportyBet',
+      bookmakerName: codeObj.bookmaker === 'footballcom' ? 'Football.com' : codeObj.bookmaker === 'bet9ja' ? 'Bet9ja' : codeObj.bookmaker === '1xbet' ? '1xBet' : codeObj.bookmaker === '22bet' ? '22Bet' : codeObj.bookmaker === 'betking' ? 'BetKing' : 'SportyBet',
       code: codeObj.code.toUpperCase(),
       title: `${pName} ${codeObj.marketType || 'Special Slip'}`,
-      odds: parseFloat(codeObj.totalOdds) || 2.00,
+      odds: cleanOdds,
+      totalOdds: cleanOdds,
       eventsCount: codeObj.gamesCount ? (parseInt(codeObj.gamesCount, 10) || null) : null,
+      gamesCount: codeObj.gamesCount ? (parseInt(codeObj.gamesCount, 10) || null) : null,
       category: 'mega',
       categoryName: codeObj.marketType || 'Punter Pick',
       status: 'active',
       highlightMatch: `${pName} Daily Selection`,
-      dropTime: 'Live Today',
+      assignedDate: todayDateStr,
+      dropTime: 'Today, Oct 20',
+      formattedDate: 'Today, Oct 20',
       author: pName,
-      createdAt: timestamp
+      createdAt: timestamp,
+      isToday: true
     };
 
     if (isSporty) {
