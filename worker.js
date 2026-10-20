@@ -528,24 +528,28 @@ async function handleApiRequest(request, env, url) {
 
           // 1.9 Market Selected (Finalize Market Slip)
           if (data.startsWith('mkt_')) {
+            if (data === 'mkt_other') {
+              const session = (await getSession(userId)) || { flow: 'market' };
+              session.step = 'awaiting_custom_market';
+              await saveSession(userId, session);
+
+              const text = `<b>✏️ Custom Betting Market (Step 5b)</b>\n\n` +
+                `👉 <b>Type the name of any betting market:</b>\n` +
+                `<i>(e.g. <code>Match Assist</code>, <code>Anytime Goalscorer</code>, <code>Player Tackles</code>, <code>Total Fouls</code>, <code>Corners Over 8.5</code>, <code>Half Time 1X2</code>)</i>`;
+              await editTelegramMessage(botToken, chatId, messageId, text, getCancelKeyboard());
+              return jsonResponse({ ok: true, action: 'step_custom_market' });
+            }
+
             const mKey = data.replace('mkt_', '');
-            const mNames = {
-              'over-15-goals': 'Over 1.5 Total Goals',
-              'over-25-goals': 'Over 2.5 Total Goals',
-              'both-teams-to-score': 'Both Teams to Score (GG)',
-              'double-chance': 'Double Chance (1X/X2)',
-              '1x2-match-result': '1X2 Match Result',
-              'total-corners': 'Total Corners',
-              'draw-no-bet': 'Draw No Bet',
-              'multigoals': 'Multi-Goals (2-5 Goals)'
-            };
+            const state = await getState();
+            const targetMarket = (state.markets || []).find(m => m.id === mKey || m.slug === mKey);
+            const mName = targetMarket?.name || targetMarket?.shortName || mKey;
 
             const session = await getSession(userId);
             if (session) {
               session.marketId = mKey;
-              session.marketName = mNames[mKey] || 'Football Market';
+              session.marketName = mName;
 
-              const state = await getState();
               publishToState(state, session);
               await saveState(state);
               await clearSession(userId);
@@ -804,6 +808,96 @@ async function handleApiRequest(request, env, url) {
               `Who dropped this slip? Tap below or type a name:`;
             if (chatId) await sendTelegramReply(botToken, chatId, promptText, getPuntersKeyboard(state.punters || []));
             return jsonResponse({ ok: true, action: 'saved_games' });
+          }
+
+          // If awaiting custom market or user typed market name:
+          if (session.step === 'awaiting_custom_market' || (session.step === 'awaiting_market' && text && !text.startsWith('/'))) {
+            const mktInput = text.trim();
+            const state = await getState();
+            let mObj = (state.markets || []).find(m => 
+              m.id?.toLowerCase() === mktInput.toLowerCase() || 
+              m.slug?.toLowerCase() === mktInput.toLowerCase() || 
+              m.name?.toLowerCase() === mktInput.toLowerCase() ||
+              m.shortName?.toLowerCase() === mktInput.toLowerCase() ||
+              m.name?.toLowerCase().includes(mktInput.toLowerCase())
+            );
+
+            let marketId;
+            let marketName;
+            if (mObj) {
+              marketId = mObj.id || mObj.slug;
+              marketName = mObj.name;
+            } else {
+              // Automatically create this new market on the fly!
+              const slug = mktInput.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-');
+              marketId = slug;
+              marketName = mktInput;
+              if (!state.markets) state.markets = [];
+              state.markets.push({
+                id: slug,
+                slug: slug,
+                name: mktInput,
+                shortName: mktInput,
+                category: 'specials',
+                badge: 'Verified Model',
+                riskLevel: 'Medium Risk',
+                typicalOddsRange: session.odds ? `${session.odds}x` : '1.50 - 2.50',
+                averageHitRate: '75%',
+                bestLeagues: ['English Premier League', 'Spanish La Liga', 'German Bundesliga', 'UEFA Champions League'],
+                bookmakerSupport: ['SportyBet', 'Football.com', 'Bet9ja', '1xBet', '22Bet', 'BetKing', 'MSport'],
+                description: `${mktInput} specialized betting market.`,
+                tacticalTip: `Statistical edge on ${mktInput}.`,
+                presets: ['Standard Acca', 'Rollover'],
+                howItWorks: `Wager settled on ${mktInput} conditions.`
+              });
+            }
+
+            session.marketId = marketId;
+            session.marketName = marketName;
+
+            publishToState(state, session);
+            await saveState(state);
+            await clearSession(userId);
+
+            const summaryText = formatPublishSuccess(session);
+            if (chatId) await sendTelegramReply(botToken, chatId, summaryText, getSuccessKeyboard());
+            return jsonResponse({ ok: true, action: 'published_market', marketId, marketName });
+          }
+
+          // If awaiting punter selection via text:
+          if (session.step === 'awaiting_punter' && text && !text.startsWith('/')) {
+            const pInput = text.trim();
+            const state = await getState();
+            let pObj = (state.punters || []).find(p => 
+              p.id?.toLowerCase() === pInput.toLowerCase() ||
+              p.displayName?.toLowerCase() === pInput.toLowerCase() ||
+              p.handle?.toLowerCase() === pInput.toLowerCase()
+            );
+            const punterName = pObj?.displayName || pInput;
+            const punterId = pObj?.id || `punter-${pInput.toLowerCase().replace(/[^a-z0-9]/g, '')}`;
+
+            session.punterName = punterName;
+            session.punterId = punterId;
+
+            // If market flow, ask for market
+            if (session.flow === 'market') {
+              session.step = 'awaiting_market';
+              await saveSession(userId, session);
+              const promptText = `<b>⚽ Target Football Market (Step 5/5)</b>\n` +
+                `Code: <code>${session.code}</code> | By: <b>${punterName}</b>\n\n` +
+                `Which market does this slip belong to? Tap below or type ANY market name (e.g. <code>Match Assist</code>, <code>Over 2.5</code>, <code>Corners</code>):`;
+              if (chatId) await sendTelegramReply(botToken, chatId, promptText, getMarketsKeyboard(state.markets || []));
+              return jsonResponse({ ok: true, action: 'step_market' });
+            }
+
+            // Otherwise publish to Hub!
+            publishToState(state, session);
+            await saveState(state);
+            await clearSession(userId);
+
+            const summaryText = formatPublishSuccess(session);
+            if (chatId) await sendTelegramReply(botToken, chatId, summaryText, getSuccessKeyboard());
+            return jsonResponse({ ok: true, action: 'published_hub' });
           }
         }
 
@@ -1693,44 +1787,45 @@ function getPuntersKeyboard(puntersList = []) {
 }
 
 function getMarketsKeyboard(marketsList = []) {
-  if (Array.isArray(marketsList) && marketsList.length > 0) {
-    const rows = [];
-    const list = marketsList.slice(0, 16);
+  const rows = [];
+  const list = Array.isArray(marketsList) && marketsList.length > 0 ? marketsList.slice(0, 20) : [];
+  
+  if (list.length > 0) {
     for (let i = 0; i < list.length; i += 2) {
       const row = [];
-      row.push({ text: `⚽ ${list[i].shortName || list[i].name}`, callback_data: `mkt_${list[i].slug || list[i].id}` });
+      const m1 = list[i];
+      const m1Name = (m1.shortName || m1.name || '').slice(0, 18);
+      row.push({ text: `⚽ ${m1Name}`, callback_data: `mkt_${m1.slug || m1.id}` });
       if (list[i + 1]) {
-        row.push({ text: `⚽ ${list[i + 1].shortName || list[i + 1].name}`, callback_data: `mkt_${list[i + 1].slug || list[i + 1].id}` });
+        const m2 = list[i + 1];
+        const m2Name = (m2.shortName || m2.name || '').slice(0, 18);
+        row.push({ text: `⚽ ${m2Name}`, callback_data: `mkt_${m2.slug || m2.id}` });
       }
       rows.push(row);
     }
-    rows.push([{ text: '❌ Cancel', callback_data: 'wiz_cancel' }]);
-    return { inline_keyboard: rows };
+  } else {
+    rows.push([
+      { text: '⚽ Over 1.5 Goals', callback_data: 'mkt_over-15-goals' },
+      { text: '⚽ Over 2.5 Goals', callback_data: 'mkt_over-25-goals' }
+    ]);
+    rows.push([
+      { text: '🎯 Both Teams to Score (GG)', callback_data: 'mkt_both-teams-to-score' },
+      { text: '🛡️ Double Chance (1X/X2)', callback_data: 'mkt_double-chance' }
+    ]);
+    rows.push([
+      { text: '👟 Match Assist', callback_data: 'mkt_match-assist' },
+      { text: '🎯 Anytime Goalscorer', callback_data: 'mkt_anytime-goalscorer' }
+    ]);
+    rows.push([
+      { text: '🏆 Match Winner (1X2)', callback_data: 'mkt_1x2-match-result' },
+      { text: '🚩 Total Corners', callback_data: 'mkt_total-corners' }
+    ]);
   }
 
-  return {
-    inline_keyboard: [
-      [
-        { text: '⚽ Over 1.5 Goals', callback_data: 'mkt_over-15-goals' },
-        { text: '⚽ Over 2.5 Goals', callback_data: 'mkt_over-25-goals' }
-      ],
-      [
-        { text: '🎯 Both Teams to Score (GG)', callback_data: 'mkt_both-teams-to-score' },
-        { text: '🛡️ Double Chance (1X/X2)', callback_data: 'mkt_double-chance' }
-      ],
-      [
-        { text: '🏆 Match Winner (1X2)', callback_data: 'mkt_1x2-match-result' },
-        { text: '🚩 Total Corners', callback_data: 'mkt_total-corners' }
-      ],
-      [
-        { text: '⚖️ Draw No Bet', callback_data: 'mkt_draw-no-bet' },
-        { text: '⚡ Multi-Goals (2-5 Goals)', callback_data: 'mkt_multigoals' }
-      ],
-      [
-        { text: '❌ Cancel', callback_data: 'wiz_cancel' }
-      ]
-    ]
-  };
+  // Always append custom market button so user can type Match Assist or any other market!
+  rows.push([{ text: '✏️ Other Market (Type Any Name)', callback_data: 'mkt_other' }]);
+  rows.push([{ text: '❌ Cancel', callback_data: 'wiz_cancel' }]);
+  return { inline_keyboard: rows };
 }
 
 function getSuccessKeyboard() {

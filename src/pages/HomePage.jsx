@@ -17,6 +17,8 @@ export default function HomePage({ onNavigate }) {
     whaleSlip, 
     punters, 
     ladder, 
+    markets,
+    addMarket,
     marketCodes, 
     addMarketCode,
     deleteMarketCode,
@@ -30,7 +32,9 @@ export default function HomePage({ onNavigate }) {
   const [showMarketAddForm, setShowMarketAddForm] = useState(false);
   const [newMarketSlipForm, setNewMarketSlipForm] = useState({
     marketId: 'over-15-goals',
+    customMarket: '',
     bookmaker: 'sportybet',
+    customBookmaker: '',
     code: '',
     odds: '',
     gamesCount: ''
@@ -41,32 +45,68 @@ export default function HomePage({ onNavigate }) {
     if (!newMarketSlipForm.code.trim()) return;
 
     const cleanCode = newMarketSlipForm.code.trim().toUpperCase();
-    const cleanOdds = parseFloat(newMarketSlipForm.odds) || 2.00;
+    const cleanOdds = newMarketSlipForm.odds.trim() ? (parseFloat(newMarketSlipForm.odds) || newMarketSlipForm.odds.trim()) : null;
     const cleanGames = newMarketSlipForm.gamesCount.trim() ? (parseInt(newMarketSlipForm.gamesCount, 10) || null) : null;
-    const bName = newMarketSlipForm.bookmaker === 'footballcom' ? 'Football.com' : newMarketSlipForm.bookmaker === 'bet9ja' ? 'Bet9ja' : newMarketSlipForm.bookmaker === '1xbet' ? '1xBet' : newMarketSlipForm.bookmaker === 'betking' ? 'BetKing' : 'SportyBet';
-    const mNames = {
-      'over-15-goals': 'Over 1.5 Goals',
-      'over-25-goals': 'Over 2.5 Goals',
-      'double-chance': 'Double Chance (1X/X2)',
-      'both-teams-to-score': 'Both Teams to Score (GG)',
-      '1x2-match-result': '1X2 Match Winner',
-      'total-corners': 'Total Corners'
-    };
+    
+    // Determine Bookmaker
+    let finalBookmaker = newMarketSlipForm.bookmaker;
+    let bName = 'SportyBet';
+    if (finalBookmaker === 'custom' && newMarketSlipForm.customBookmaker.trim()) {
+      bName = newMarketSlipForm.customBookmaker.trim();
+      finalBookmaker = bName.toLowerCase().replace(/[^a-z0-9]/g, '');
+    } else {
+      bName = finalBookmaker === 'footballcom' ? 'Football.com' : finalBookmaker === 'bet9ja' ? 'Bet9ja' : finalBookmaker === '1xbet' ? '1xBet' : finalBookmaker === '22bet' ? '22Bet' : finalBookmaker === 'betking' ? 'BetKing' : finalBookmaker === 'msport' ? 'MSport' : 'SportyBet';
+    }
+
+    // Determine Market
+    let selectedMarketId = newMarketSlipForm.marketId;
+    let selectedMarketName = 'Market Slip';
+
+    if (selectedMarketId === 'custom') {
+      const customName = (newMarketSlipForm.customMarket || '').trim() || 'Custom Market';
+      const slug = customName.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-');
+      selectedMarketId = slug;
+      selectedMarketName = customName;
+      if (addMarket) {
+        addMarket({
+          id: slug,
+          slug: slug,
+          name: customName,
+          shortName: customName,
+          category: 'specials',
+          badge: 'Verified Model',
+          riskLevel: 'Medium Risk',
+          typicalOddsRange: cleanOdds ? `${cleanOdds}x` : '1.50 - 2.50',
+          averageHitRate: '75%',
+          bestLeagues: ['European Top-Flight Competitions'],
+          bookmakerSupport: ['SportyBet', 'Football.com', 'Bet9ja', '1xBet', '22Bet', 'BetKing'],
+          description: `${customName} betting market.`,
+          tacticalTip: `Statistical model edge on ${customName}.`,
+          presets: ['Standard Acca'],
+          howItWorks: `Wager settled on ${customName} conditions.`
+        });
+      }
+    } else {
+      const found = (markets || []).find(m => m.id === selectedMarketId || m.slug === selectedMarketId);
+      selectedMarketName = found?.name || found?.shortName || selectedMarketId;
+    }
 
     addMarketCode({
       id: `mcode-${Date.now()}-${cleanCode.toLowerCase()}`,
-      marketId: newMarketSlipForm.marketId,
+      marketId: selectedMarketId,
       code: cleanCode,
       odds: cleanOdds,
-      bookmaker: newMarketSlipForm.bookmaker,
+      bookmaker: finalBookmaker,
       bookmakerName: bName,
-      title: `${mNames[newMarketSlipForm.marketId] || 'Market'} (${cleanOdds}x ${bName})`,
+      title: `${selectedMarketName} (${cleanOdds ? cleanOdds + 'x ' : ''}${bName})`,
       eventsCount: cleanGames,
       status: 'active',
-      dropTime: 'Just Now'
+      assignedDate: '2026-10-20',
+      dropTime: 'Today, Oct 20',
+      isToday: true
     });
 
-    setNewMarketSlipForm({ marketId: 'over-15-goals', bookmaker: 'sportybet', code: '', odds: '', gamesCount: '' });
+    setNewMarketSlipForm({ marketId: 'over-15-goals', customMarket: '', bookmaker: 'sportybet', customBookmaker: '', code: '', odds: '', gamesCount: '' });
     setShowMarketAddForm(false);
   };
 
@@ -699,7 +739,7 @@ export default function HomePage({ onNavigate }) {
             </div>
           </div>
 
-          <div className="flex items-center gap-2 overflow-x-auto scrollbar-none self-start sm:self-auto">
+          <div className="flex items-center gap-2 overflow-x-auto scrollbar-none self-start sm:self-auto pb-1">
             <button
               onClick={() => setShowMarketAddForm(!showMarketAddForm)}
               className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-display font-black text-xs uppercase tracking-wider flex items-center gap-1.5 shadow-sm transition-all flex-shrink-0"
@@ -710,11 +750,14 @@ export default function HomePage({ onNavigate }) {
 
             {[
               { id: 'all', label: 'All Slips' },
+              { id: 'match-assist', label: '👟 Match Assist' },
+              { id: 'anytime-goalscorer', label: '🎯 Goalscorer' },
               { id: 'over-15-goals', label: 'Over 1.5' },
               { id: 'over-25-goals', label: 'Over 2.5' },
               { id: 'double-chance', label: 'Double Chance' },
               { id: 'both-teams-to-score', label: 'GG / BTTS' },
-              { id: '1x2-match-result', label: '1X2 Winner' }
+              { id: '1x2-match-result', label: '1X2 Winner' },
+              { id: 'total-corners', label: '🚩 Corners' }
             ].map(cat => (
               <button
                 key={cat.id}
@@ -731,7 +774,7 @@ export default function HomePage({ onNavigate }) {
           </div>
         </div>
 
-        {/* ── INLINE ADD CODE TO MARKET FORM ── */}
+        {/* ── INLINE ADD CODE TO MARKET FORM (SUPPORTS ANY MARKET & BOOKMAKER) ── */}
         {showMarketAddForm && (
           <form 
             onSubmit={handleAddMarketSlipSubmit}
@@ -739,7 +782,7 @@ export default function HomePage({ onNavigate }) {
           >
             <div className="flex items-center justify-between">
               <span className="text-xs font-mono font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
-                ➕ Add New Code Directly to Market
+                ➕ Add New Code to Any Market (Including Match Assist & Custom)
               </span>
               <span className="text-[11px] text-slate-400 font-mono">
                 Auto-creates Football.com twin if SportyBet
@@ -754,13 +797,27 @@ export default function HomePage({ onNavigate }) {
                   onChange={(e) => setNewMarketSlipForm({ ...newMarketSlipForm, marketId: e.target.value })}
                   className="w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-sm font-bold text-slate-900 dark:text-white"
                 >
-                  <option value="over-15-goals">⚽ Over 1.5 Goals</option>
-                  <option value="over-25-goals">⚽ Over 2.5 Goals</option>
-                  <option value="double-chance">🛡️ Double Chance (1X/X2)</option>
-                  <option value="both-teams-to-score">🎯 Both Teams to Score (GG)</option>
-                  <option value="1x2-match-result">🏆 1X2 Match Winner</option>
-                  <option value="total-corners">🚩 Total Corners</option>
+                  <option value="match-assist">👟 Match Assist (Player Props)</option>
+                  <option value="anytime-goalscorer">🎯 Anytime Goalscorer</option>
+                  <option value="player-shots-on-target">🎯 Player Shots on Target</option>
+                  {(markets || []).map(m => (
+                    <option key={m.id || m.slug} value={m.slug || m.id}>
+                      ⚽ {m.name}
+                    </option>
+                  ))}
+                  <option value="custom">✏️ + Add Custom Market (Type Name)</option>
                 </select>
+
+                {newMarketSlipForm.marketId === 'custom' && (
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Player Tackles, Corner Match Bet"
+                    value={newMarketSlipForm.customMarket}
+                    onChange={(e) => setNewMarketSlipForm({ ...newMarketSlipForm, customMarket: e.target.value })}
+                    className="w-full mt-1.5 px-3 py-1.5 rounded-lg bg-white dark:bg-slate-900 border border-emerald-500 text-xs font-bold text-slate-900 dark:text-white"
+                  />
+                )}
               </div>
 
               <div>
@@ -772,11 +829,24 @@ export default function HomePage({ onNavigate }) {
                 >
                   <option value="sportybet">🔴 SportyBet</option>
                   <option value="footballcom">🟢 Football.com</option>
+                  <option value="22bet">🟢 22Bet (Affiliate)</option>
                   <option value="bet9ja">🟡 Bet9ja</option>
                   <option value="1xbet">🔵 1xBet</option>
                   <option value="betking">👑 BetKing</option>
                   <option value="msport">⚡ MSport</option>
+                  <option value="custom">✏️ Other Bookmaker</option>
                 </select>
+
+                {newMarketSlipForm.bookmaker === 'custom' && (
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. BangBet, Betway, PariPesa"
+                    value={newMarketSlipForm.customBookmaker}
+                    onChange={(e) => setNewMarketSlipForm({ ...newMarketSlipForm, customBookmaker: e.target.value })}
+                    className="w-full mt-1.5 px-3 py-1.5 rounded-lg bg-white dark:bg-slate-900 border border-emerald-500 text-xs font-bold text-slate-900 dark:text-white"
+                  />
+                )}
               </div>
 
               <div>
@@ -792,12 +862,10 @@ export default function HomePage({ onNavigate }) {
               </div>
 
               <div>
-                <label className="text-[11px] font-mono font-bold text-slate-500 uppercase block mb-1">Total Odds *</label>
+                <label className="text-[11px] font-mono font-bold text-slate-500 uppercase block mb-1">Total Odds (Optional)</label>
                 <input
-                  type="number"
-                  step="0.01"
-                  required
-                  placeholder="e.g. 2.50"
+                  type="text"
+                  placeholder="e.g. 2.50 or leave blank"
                   value={newMarketSlipForm.odds}
                   onChange={(e) => setNewMarketSlipForm({ ...newMarketSlipForm, odds: e.target.value })}
                   className="w-full px-3 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-sm font-mono font-bold text-slate-900 dark:text-white"
