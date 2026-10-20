@@ -609,6 +609,8 @@ async function handleApiRequest(request, env, url) {
             await editTelegramMessage(botToken, chatId, messageId, bulkHelp, getMainMenuKeyboard());
             return jsonResponse({ ok: true, action: 'help_bulk' });
           }
+
+          return jsonResponse({ ok: true, action: 'callback_processed', data });
         }
 
         // ══════════════════════════════════════════════════════════════
