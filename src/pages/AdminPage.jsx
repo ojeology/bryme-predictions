@@ -158,10 +158,12 @@ export default function AdminPage({ onNavigate }) {
   // ── 1. CODE HUB FORM STATE ──
   const [hubCodeForm, setHubCodeForm] = useState({
     bookmaker: 'sportybet',
+    customBookmaker: '',
     code: '',
-    marketType: 'Over 1.5 Goals High-Frequency Radar',
-    gamesCount: 4,
-    totalOdds: '2.40',
+    marketType: 'Match Assist (Player Props)',
+    customMarketType: '',
+    gamesCount: '',
+    totalOdds: '',
     title: '',
     author: 'BRYME Official'
   });
@@ -178,11 +180,14 @@ export default function AdminPage({ onNavigate }) {
   // ── 3. ASSIGN CODE TO PUNTER FORM STATE ──
   const [punterCodeForm, setPunterCodeForm] = useState({
     punterId: punters[0]?.id || 'punter-mrbanks',
+    customPunter: '',
     bookmaker: 'sportybet',
+    customBookmaker: '',
     code: '',
-    marketType: 'Over 1.5 Goals Radar',
-    gamesCount: 3,
-    totalOdds: '2.15'
+    marketType: 'Match Assist (Player Props)',
+    customMarketType: '',
+    gamesCount: '',
+    totalOdds: ''
   });
 
   // ── 4. PREDICTIONS HUB TICKET EDITOR STATE ──
@@ -268,41 +273,82 @@ export default function AdminPage({ onNavigate }) {
   };
 
   // ── MARKET BOOKING CODES FORM STATE ──
-  const [selectedMarketForCode, setSelectedMarketForCode] = useState('over-15-goals');
+  const [selectedMarketForCode, setSelectedMarketForCode] = useState('match-assist');
+  const [customMarketForCode, setCustomMarketForCode] = useState('');
   const [marketCodeFilter, setMarketCodeFilter] = useState('all');
   const [marketCodeForm, setMarketCodeForm] = useState({
     code: '',
-    odds: '47.00',
+    odds: '',
     bookmaker: 'sportybet',
+    customBookmaker: '',
     title: '',
-    eventsCount: 8
+    eventsCount: ''
   });
 
   const handleAddMarketBookingCode = (e) => {
     e.preventDefault();
     if (!marketCodeForm.code.trim()) return;
 
-    const bNameMap = {
-      sportybet: 'SportyBet',
-      bet9ja: 'Bet9ja',
-      '1xbet': '1xBet',
-      msport: 'MSport',
-      betking: 'BetKing'
-    };
+    let finalMarketId = selectedMarketForCode;
+    let finalMarketName = 'Market';
 
-    const targetMarket = (markets || []).find(m => m.id === selectedMarketForCode || m.slug === selectedMarketForCode);
+    if (selectedMarketForCode === 'custom') {
+      const customName = customMarketForCode.trim() || 'Custom Market';
+      finalMarketId = customName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+      finalMarketName = customName;
+
+      // Auto-register new market into state if it does not exist
+      if (!markets.some(m => m.id === finalMarketId || m.slug === finalMarketId)) {
+        addMarket({
+          id: finalMarketId,
+          slug: finalMarketId,
+          name: customName,
+          shortName: customName,
+          category: 'specials',
+          badge: 'Verified Model',
+          riskLevel: 'Medium Risk',
+          typicalOddsRange: marketCodeForm.odds.trim() ? `${marketCodeForm.odds.trim()}x` : '1.50 - 2.50',
+          averageHitRate: '75%',
+          bestLeagues: ['English Premier League', 'Spanish La Liga', 'German Bundesliga'],
+          bookmakerSupport: ['SportyBet', 'Football.com', 'Bet9ja', '1xBet', '22Bet', 'BetKing'],
+          description: `${customName} betting market line.`,
+          tacticalTip: `Statistical edge on ${customName}.`,
+          presets: ['Standard Acca', 'Rollover'],
+          howItWorks: `Wager settled on ${customName} conditions.`
+        });
+      }
+    } else {
+      const targetMarket = (markets || []).find(m => m.id === selectedMarketForCode || m.slug === selectedMarketForCode);
+      if (targetMarket) finalMarketName = targetMarket.name;
+    }
+
+    const isCustomBookie = marketCodeForm.bookmaker === 'custom';
+    const finalBookmakerName = isCustomBookie
+      ? (marketCodeForm.customBookmaker.trim() || 'Custom Bookmaker')
+      : (marketCodeForm.bookmaker === 'footballcom' ? 'Football.com'
+        : marketCodeForm.bookmaker === 'bet9ja' ? 'Bet9ja'
+        : marketCodeForm.bookmaker === '1xbet' ? '1xBet'
+        : marketCodeForm.bookmaker === '22bet' ? '22Bet'
+        : marketCodeForm.bookmaker === 'betking' ? 'BetKing'
+        : marketCodeForm.bookmaker === 'msport' ? 'MSport'
+        : marketCodeForm.bookmaker === 'betway' ? 'Betway'
+        : 'SportyBet');
+    const finalBookmakerKey = isCustomBookie
+      ? finalBookmakerName.toLowerCase().replace(/[^a-z0-9]/g, '')
+      : marketCodeForm.bookmaker;
+
     const cleanOdds = marketCodeForm.odds.trim() ? (parseFloat(marketCodeForm.odds) || marketCodeForm.odds.trim()) : null;
     const cleanGames = marketCodeForm.eventsCount.trim() ? (parseInt(marketCodeForm.eventsCount, 10) || null) : null;
 
     const newEntry = {
       id: `mcode-${Date.now()}`,
-      marketId: selectedMarketForCode,
+      marketId: finalMarketId,
       code: marketCodeForm.code.trim().toUpperCase(),
       odds: cleanOdds,
       totalOdds: cleanOdds,
-      bookmaker: marketCodeForm.bookmaker,
-      bookmakerName: bNameMap[marketCodeForm.bookmaker] || marketCodeForm.bookmaker,
-      title: marketCodeForm.title.trim() || `${targetMarket?.name || 'Market'} Value Slip`,
+      bookmaker: finalBookmakerKey,
+      bookmakerName: finalBookmakerName,
+      title: marketCodeForm.title.trim() || `${finalMarketName} Value Slip (${finalBookmakerName})`,
       eventsCount: cleanGames,
       gamesCount: cleanGames,
       status: 'active',
@@ -313,14 +359,16 @@ export default function AdminPage({ onNavigate }) {
     };
 
     addMarketCode(newEntry);
-    showToast(`Code ${newEntry.code} (${cleanOdds ? cleanOdds + 'x' : 'Open'}) added to ${targetMarket?.name || 'market'}!`);
+    showToast(`Code ${newEntry.code} (${cleanOdds ? cleanOdds + 'x' : 'Open'}) added to ${finalMarketName}!`);
     setMarketCodeForm({
       code: '',
-      odds: '2.50',
+      odds: '',
       bookmaker: 'sportybet',
+      customBookmaker: '',
       title: '',
-      eventsCount: 4
+      eventsCount: ''
     });
+    setCustomMarketForCode('');
   };
 
   // ── HANDLERS ──
@@ -331,16 +379,28 @@ export default function AdminPage({ onNavigate }) {
       return;
     }
 
-    const bookieObj = SUPPORTED_BOOKMAKERS.find(b => b.id === hubCodeForm.bookmaker);
+    const isCustomBookie = hubCodeForm.bookmaker === 'custom';
+    const finalBookieName = isCustomBookie
+      ? (hubCodeForm.customBookmaker.trim() || 'Custom Bookmaker')
+      : (SUPPORTED_BOOKMAKERS.find(b => b.id === hubCodeForm.bookmaker)?.name || hubCodeForm.bookmaker);
+    const finalBookieKey = isCustomBookie
+      ? finalBookieName.toLowerCase().replace(/[^a-z0-9]/g, '')
+      : hubCodeForm.bookmaker;
+
+    const isCustomMarket = hubCodeForm.marketType === 'custom';
+    const finalMarketName = isCustomMarket
+      ? (hubCodeForm.customMarketType.trim() || 'Custom Market')
+      : hubCodeForm.marketType;
+
     const cleanHubOdds = hubCodeForm.totalOdds.trim() ? (parseFloat(hubCodeForm.totalOdds) || hubCodeForm.totalOdds.trim()) : null;
     const cleanHubGames = hubCodeForm.gamesCount.trim() ? (parseInt(hubCodeForm.gamesCount, 10) || null) : null;
 
     addCatalogueCode({
-      bookmaker: hubCodeForm.bookmaker,
-      bookmakerName: bookieObj ? bookieObj.name : hubCodeForm.bookmaker,
+      bookmaker: finalBookieKey,
+      bookmakerName: finalBookieName,
       code: hubCodeForm.code.toUpperCase(),
-      categoryName: hubCodeForm.marketType,
-      title: hubCodeForm.title.trim() || `${hubCodeForm.marketType}${cleanHubGames ? ` (${cleanHubGames} Games)` : ''}`,
+      categoryName: finalMarketName,
+      title: hubCodeForm.title.trim() || `${finalMarketName}${cleanHubGames ? ` (${cleanHubGames} Games)` : ''} [${finalBookieName}]`,
       odds: cleanHubOdds,
       totalOdds: cleanHubOdds,
       eventsCount: cleanHubGames,
@@ -354,15 +414,17 @@ export default function AdminPage({ onNavigate }) {
 
     setHubCodeForm({
       bookmaker: 'sportybet',
+      customBookmaker: '',
       code: '',
-      marketType: 'Over 1.5 Goals High-Frequency Radar',
-      gamesCount: 4,
-      totalOdds: '2.40',
+      marketType: 'Match Assist (Player Props)',
+      customMarketType: '',
+      gamesCount: '',
+      totalOdds: '',
       title: '',
       author: 'BRYME Official'
     });
 
-    showToast('Code successfully published to SportyBet Code Hub & Catalogue!');
+    showToast('Code successfully published to Code Hub & Catalogue!');
   };
 
   const handleCreatePunter = (e) => {
@@ -395,24 +457,58 @@ export default function AdminPage({ onNavigate }) {
       return;
     }
 
+    const isCustomPunter = punterCodeForm.punterId === 'custom';
+    const targetPunterName = isCustomPunter
+      ? (punterCodeForm.customPunter.trim() || 'BRYME Analyst')
+      : (punters.find(p => p.id === punterCodeForm.punterId)?.displayName || 'BRYME Analyst');
+    const targetPunterId = isCustomPunter ? `punter-${targetPunterName.toLowerCase().replace(/[^a-z0-9]/g, '')}` : punterCodeForm.punterId;
+
+    const isCustomBookie = punterCodeForm.bookmaker === 'custom';
+    const finalBookieName = isCustomBookie
+      ? (punterCodeForm.customBookmaker.trim() || 'Custom Bookmaker')
+      : (punterCodeForm.bookmaker === 'footballcom' ? 'Football.com'
+        : punterCodeForm.bookmaker === '22bet' ? '22Bet'
+        : punterCodeForm.bookmaker === 'bet9ja' ? 'Bet9ja'
+        : punterCodeForm.bookmaker === '1xbet' ? '1xBet'
+        : punterCodeForm.bookmaker === 'betking' ? 'BetKing'
+        : punterCodeForm.bookmaker === 'msport' ? 'MSport'
+        : punterCodeForm.bookmaker === 'betway' ? 'Betway'
+        : 'SportyBet');
+    const finalBookieKey = isCustomBookie
+      ? finalBookieName.toLowerCase().replace(/[^a-z0-9]/g, '')
+      : punterCodeForm.bookmaker;
+
+    const isCustomMarket = punterCodeForm.marketType === 'custom';
+    const finalMarketName = isCustomMarket
+      ? (punterCodeForm.customMarketType.trim() || 'Custom Market')
+      : punterCodeForm.marketType;
+
     const cleanPunterOdds = punterCodeForm.totalOdds.trim() ? (parseFloat(punterCodeForm.totalOdds) || punterCodeForm.totalOdds.trim()) : null;
     const cleanPunterGames = punterCodeForm.gamesCount.trim() ? (parseInt(punterCodeForm.gamesCount, 10) || null) : null;
 
-    addPunterCode(punterCodeForm.punterId, {
-      bookmaker: punterCodeForm.bookmaker,
+    addPunterCode(targetPunterId, {
+      bookmaker: finalBookieKey,
+      bookmakerName: finalBookieName,
       code: punterCodeForm.code.toUpperCase(),
-      marketType: punterCodeForm.marketType,
+      marketType: finalMarketName,
       gamesCount: cleanPunterGames,
       totalOdds: cleanPunterOdds,
       odds: cleanPunterOdds
     });
 
     setPunterCodeForm({
-      ...punterCodeForm,
-      code: ''
+      punterId: punters[0]?.id || 'punter-mrbanks',
+      customPunter: '',
+      bookmaker: 'sportybet',
+      customBookmaker: '',
+      code: '',
+      marketType: 'Match Assist (Player Props)',
+      customMarketType: '',
+      gamesCount: '',
+      totalOdds: ''
     });
 
-    showToast('Daily booking code assigned to punter & mirrored to Code Hub!');
+    showToast(`Booking code assigned to ${targetPunterName} & mirrored to Code Hub!`);
   };
 
   const handleSaveTicketEdits = (e) => {
@@ -1152,12 +1248,23 @@ export default function AdminPage({ onNavigate }) {
                   {SUPPORTED_BOOKMAKERS.map(b => (
                     <option key={b.id} value={b.id}>{b.badge}</option>
                   ))}
+                  <option value="custom">✏️ Type Any Other Bookmaker</option>
                 </select>
+                {hubCodeForm.bookmaker === 'custom' && (
+                  <input
+                    type="text"
+                    required
+                    placeholder="Type bookmaker name..."
+                    value={hubCodeForm.customBookmaker}
+                    onChange={(e) => setHubCodeForm({ ...hubCodeForm, customBookmaker: e.target.value })}
+                    className="mt-2 w-full p-2 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-emerald-500 text-slate-900 dark:text-white font-bold text-xs"
+                  />
+                )}
               </div>
 
               <div>
                 <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
-                  2. Booking Code
+                  2. Booking Code *
                 </label>
                 <input
                   type="text"
@@ -1197,7 +1304,18 @@ export default function AdminPage({ onNavigate }) {
                   {MARKET_PRESETS.map((m, idx) => (
                     <option key={`preset-${idx}`} value={m}>{m}</option>
                   ))}
+                  <option value="custom">✏️ Type Any Custom Market Name</option>
                 </select>
+                {hubCodeForm.marketType === 'custom' && (
+                  <input
+                    type="text"
+                    required
+                    placeholder="Type market name (e.g. Match Assist, Player Tackles)..."
+                    value={hubCodeForm.customMarketType}
+                    onChange={(e) => setHubCodeForm({ ...hubCodeForm, customMarketType: e.target.value })}
+                    className="mt-2 w-full p-2 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-emerald-500 text-slate-900 dark:text-white font-bold text-xs"
+                  />
+                )}
               </div>
 
               <div>
@@ -1330,7 +1448,18 @@ export default function AdminPage({ onNavigate }) {
                       {m.name} ({m.category})
                     </option>
                   ))}
+                  <option value="custom">✏️ Type Any Custom Market Name</option>
                 </select>
+                {selectedMarketForCode === 'custom' && (
+                  <input
+                    type="text"
+                    required
+                    placeholder="Type market name (e.g. Match Assist, Player Tackles)..."
+                    value={customMarketForCode}
+                    onChange={(e) => setCustomMarketForCode(e.target.value)}
+                    className="mt-2 w-full p-2 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-emerald-500 text-slate-900 dark:text-white font-bold text-xs"
+                  />
+                )}
               </div>
 
               <div>
@@ -1344,16 +1473,29 @@ export default function AdminPage({ onNavigate }) {
                 >
                   <option value="sportybet">🔴 SportyBet</option>
                   <option value="footballcom">🟢 Football.com</option>
-                  <option value="1xbet">🔵 1xBet</option>
-                  <option value="msport">🟢 MSport</option>
+                  <option value="22bet">🟢 22Bet (Affiliate)</option>
                   <option value="bet9ja">🟡 Bet9ja</option>
+                  <option value="1xbet">🔵 1xBet</option>
                   <option value="betking">👑 BetKing</option>
+                  <option value="msport">⚡ MSport</option>
+                  <option value="betway">⚪ Betway</option>
+                  <option value="custom">✏️ Type Any Other Bookmaker</option>
                 </select>
+                {marketCodeForm.bookmaker === 'custom' && (
+                  <input
+                    type="text"
+                    required
+                    placeholder="Type bookmaker name..."
+                    value={marketCodeForm.customBookmaker}
+                    onChange={(e) => setMarketCodeForm({ ...marketCodeForm, customBookmaker: e.target.value })}
+                    className="mt-2 w-full p-2 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-emerald-500 text-slate-900 dark:text-white font-bold text-xs"
+                  />
+                )}
               </div>
 
               <div>
                 <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
-                  Booking Code
+                  Booking Code *
                 </label>
                 <input
                   type="text"
@@ -1367,30 +1509,26 @@ export default function AdminPage({ onNavigate }) {
 
               <div>
                 <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
-                  Total Odds
+                  Total Odds (Optional)
                 </label>
                 <input
-                  type="number"
-                  step="0.01"
-                  required
+                  type="text"
                   value={marketCodeForm.odds}
                   onChange={(e) => setMarketCodeForm({ ...marketCodeForm, odds: e.target.value })}
-                  placeholder="e.g. 47.00"
+                  placeholder="e.g. 47.00, 10000, or leave blank"
                   className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono font-black"
                 />
               </div>
 
               <div>
                 <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
-                  Number of Games (Legs)
+                  Number of Games (Optional)
                 </label>
                 <input
                   type="number"
-                  min="1"
-                  max="40"
-                  required
                   value={marketCodeForm.eventsCount}
                   onChange={(e) => setMarketCodeForm({ ...marketCodeForm, eventsCount: e.target.value })}
+                  placeholder="Leave blank to omit"
                   className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono font-bold text-center"
                 />
               </div>
@@ -1895,7 +2033,18 @@ export default function AdminPage({ onNavigate }) {
                   {punters.map(p => (
                     <option key={p.id} value={p.id}>{p.displayName} ({p.region})</option>
                   ))}
+                  <option value="custom">✏️ Type Any Analyst / Source</option>
                 </select>
+                {punterCodeForm.punterId === 'custom' && (
+                  <input
+                    type="text"
+                    required
+                    placeholder="Type punter name..."
+                    value={punterCodeForm.customPunter}
+                    onChange={(e) => setPunterCodeForm({ ...punterCodeForm, customPunter: e.target.value })}
+                    className="mt-2 w-full p-2 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-emerald-500 text-slate-900 dark:text-white font-bold text-xs"
+                  />
+                )}
               </div>
 
               <div>
@@ -1908,15 +2057,30 @@ export default function AdminPage({ onNavigate }) {
                   className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold"
                 >
                   <option value="sportybet">🔴 SportyBet</option>
-                  <option value="bet9ja">🟢 Bet9ja</option>
+                  <option value="footballcom">🟢 Football.com</option>
+                  <option value="22bet">🟢 22Bet (Affiliate)</option>
+                  <option value="bet9ja">🟡 Bet9ja</option>
                   <option value="1xbet">🔵 1xBet</option>
                   <option value="betking">👑 BetKing</option>
+                  <option value="msport">⚡ MSport</option>
+                  <option value="betway">⚪ Betway</option>
+                  <option value="custom">✏️ Type Any Other Bookmaker</option>
                 </select>
+                {punterCodeForm.bookmaker === 'custom' && (
+                  <input
+                    type="text"
+                    required
+                    placeholder="Type bookmaker name..."
+                    value={punterCodeForm.customBookmaker}
+                    onChange={(e) => setPunterCodeForm({ ...punterCodeForm, customBookmaker: e.target.value })}
+                    className="mt-2 w-full p-2 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-emerald-500 text-slate-900 dark:text-white font-bold text-xs"
+                  />
+                )}
               </div>
 
               <div>
                 <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
-                  Booking Code
+                  Booking Code *
                 </label>
                 <input
                   type="text"
@@ -1934,40 +2098,35 @@ export default function AdminPage({ onNavigate }) {
                 </label>
                 <input
                   type="text"
-                  required
                   value={punterCodeForm.marketType}
                   onChange={(e) => setPunterCodeForm({ ...punterCodeForm, marketType: e.target.value })}
-                  placeholder="e.g. Over 1.5 Goals Radar"
+                  placeholder="e.g. Match Assist, Over 1.5 Goals"
                   className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-bold"
                 />
               </div>
 
               <div>
                 <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
-                  Number of Games (Legs)
+                  Number of Games (Optional)
                 </label>
                 <input
                   type="number"
-                  min="1"
-                  max="40"
-                  required
                   value={punterCodeForm.gamesCount}
                   onChange={(e) => setPunterCodeForm({ ...punterCodeForm, gamesCount: e.target.value })}
+                  placeholder="Leave blank to omit"
                   className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono font-bold text-center"
                 />
               </div>
 
               <div>
                 <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
-                  Total Odds
+                  Total Odds (Optional)
                 </label>
                 <input
-                  type="number"
-                  step="0.01"
-                  required
+                  type="text"
                   value={punterCodeForm.totalOdds}
                   onChange={(e) => setPunterCodeForm({ ...punterCodeForm, totalOdds: e.target.value })}
-                  placeholder="e.g. 2.15"
+                  placeholder="e.g. 2.15, 10000, or leave blank"
                   className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white font-mono font-black"
                 />
               </div>

@@ -689,9 +689,10 @@ export const INITIAL_CODE_CATALOGUE = [
 export const SUPPORTED_BOOKMAKERS = [
   { id: 'sportybet', name: 'SportyBet', badge: '🔴 SportyBet', color: '#E41B13' },
   { id: 'footballcom', name: 'Football.com', badge: '⚽ Football.com', color: '#008751' },
+  { id: '22bet', name: '22Bet', badge: '🟢 22Bet (Affiliate)', color: '#008575' },
   { id: 'bet9ja', name: 'Bet9ja', badge: '🟢 Bet9ja', color: '#00C250' },
   { id: '1xbet', name: '1xBet', badge: '🔵 1xBet', color: '#1B64DA' },
   { id: 'betking', name: 'BetKing', badge: '👑 BetKing', color: '#004DB8' },
-  { id: 'betway', name: 'Betway', badge: '⚪ Betway', color: '#2B2B2B' },
-  { id: 'msport', name: 'MSport', badge: '🟡 MSport', color: '#E5A000' }
+  { id: 'msport', name: 'MSport', badge: '⚡ MSport', color: '#E5A000' },
+  { id: 'betway', name: 'Betway', badge: '⚪ Betway', color: '#2B2B2B' }
 ];
