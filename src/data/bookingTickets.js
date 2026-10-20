@@ -14,6 +14,86 @@ export const DAILY_DROP_SCHEDULE = {
 
 export const DAILY_BOOKING_TICKETS = [
   {
+    id: 'ticket-2-odds-whale-shot',
+    badge: '2 ODDS WHALE SHOT',
+    title: 'European 2.02x Shots on Target Whale Shot',
+    category: 'banker',
+    riskLevel: 'Sharp Edge',
+    totalOdds: 2.02,
+    date: '2026-10-20',
+    status: 'pending',
+    dropTime: 'Today',
+    confidence: '95% Model Rating',
+    description: 'High-volume attack radar: Liverpool home target assault, Barcelona away pressure, and Man City relentless home attempts.',
+    codes: {
+      '22bet': '7fpl3',
+      twentytwobet: '7fpl3',
+      sportybet: '7FPL3',
+      footballcom: '7FPL3'
+    },
+    selections: [
+      {
+        match: 'Liverpool vs Villarreal',
+        league: '🇪🇺 European Football',
+        kickoff: 'Today 20:00 WAT',
+        pick: 'Liverpool Home Over 4.5 Shots on Target',
+        odds: 1.27,
+        analysis: 'Liverpool average 7.8 shots on target per home match under current tactical setup.'
+      },
+      {
+        match: 'PSG vs Barcelona',
+        league: '🇪🇺 European Football',
+        kickoff: 'Today 20:00 WAT',
+        pick: 'Barcelona Away Over 4.5 Shots on Target',
+        odds: 1.24,
+        analysis: 'Barcelona transition attacking pace tests opposition goalkeepers with high direct volume.'
+      },
+      {
+        match: 'Man City vs AEK Athens',
+        league: '🇪🇺 European Football',
+        kickoff: 'Today 20:00 WAT',
+        pick: 'Man City Home Over 6.5 Shots on Target',
+        odds: 1.28,
+        analysis: 'Manchester City dominate box territory and average 9+ shots on target in home European clashes.'
+      }
+    ]
+  },
+  {
+    id: 'ticket-ladder-challenge',
+    badge: 'BRYME ROLLOVER',
+    title: 'BRYME Rollover Step 1/18 (₦1,000 Starting Stake → ₦1,600 Payout)',
+    category: 'ladder',
+    riskLevel: 'Ultra Conservative',
+    totalOdds: 1.60,
+    date: '2026-10-20',
+    status: 'pending',
+    dropTime: '11:00 AM WAT',
+    confidence: '98% Model Rating',
+    description: '₦1,000 to ₦1,000,000 Journey. Target 1.50-1.60 daily odds. 50% capital banked at Day 6.',
+    codes: {
+      sportybet: 'HLLFK9',
+      footballcom: 'HLLFK9'
+    },
+    selections: [
+      {
+        match: 'Berrettini Matteo vs Opponent',
+        league: '🎾 ATP Tennis Tour',
+        kickoff: 'Today 15:00 WAT',
+        pick: 'Berrettini Matteo to Win a Set',
+        odds: 1.26,
+        analysis: 'Berrettini commanding first serve provides high service game hold security.'
+      },
+      {
+        match: 'Cassone Murphy vs Opponent',
+        league: '🎾 ATP / Challenger Circuit',
+        kickoff: 'Today 16:30 WAT',
+        pick: 'Cassone Murphy to Win a Set',
+        odds: 1.27,
+        analysis: 'Cassone Murphy exhibiting high break-point resilience and consistent baseline depth.'
+      }
+    ]
+  },
+  {
     id: 'ticket-2-odds-banker',
     badge: 'SIGNATURE 2.00 ODDS',
     title: 'European 2.00x Banker Double',
@@ -47,43 +127,6 @@ export const DAILY_BOOKING_TICKETS = [
         pick: 'Inter Milan X2 (Double Chance)',
         odds: 1.44,
         analysis: 'Inter Milan are undefeated in their last 8 consecutive visits to Stadio Olimpico against Roma.'
-      }
-    ]
-  },
-  {
-    id: 'ticket-ladder-challenge',
-    badge: 'BRYME ROLLOVER',
-    title: 'BRYME Rollover Step 4/18 (₦3,375 Purse → ₦5,198 Payout)',
-    category: 'ladder',
-    riskLevel: 'Ultra Conservative',
-    totalOdds: 1.54,
-    date: '2026-10-19',
-    status: 'pending',
-    dropTime: '11:00 AM WAT',
-    confidence: '98% Model Rating',
-    description: '₦1,000 to ₦1,000,000 Journey. Target 1.54 daily odds. 50% capital banked at Day 6.',
-    codes: {
-      sportybet: 'Q7S287',
-      footballcom: 'Q7S287',
-      bet9ja: '5WGQKM6',
-      onexbet: '23PUC'
-    },
-    selections: [
-      {
-        match: 'Ribecai Michele vs Vasami',
-        league: '🎾 Tennis Professional Circuit',
-        kickoff: 'Today 14:00 WAT',
-        pick: 'Home to Win a Set',
-        odds: 1.26,
-        analysis: 'Ribecai has won at least one set in 9 of his last 10 competitive appearances.'
-      },
-      {
-        match: 'Cecchinato vs Gaubas, Vilius',
-        league: '🎾 Tennis ATP / Challenger Tour',
-        kickoff: 'Today 16:30 WAT',
-        pick: 'Away to Win a Set',
-        odds: 1.22,
-        analysis: 'Gaubas in top baseline form; secured set-winning points in 8 straight Challenger clashes.'
       }
     ]
   },

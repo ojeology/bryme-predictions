@@ -31,6 +31,63 @@ export const AFRICAN_REGIONS = [
 ];
 
 export const TICKETS = [
+  // ── LATEST VERIFIED VALUE TICKETS (OCT 20) ──
+  {
+    id: 'ticket-whale-shot-sot',
+    title: '2.02x European Shots on Target Whale Shot',
+    marketId: 'player-shots-on-target',
+    leagueId: 'ucl',
+    region: 'ucl',
+    date: '2026-10-20',
+    publishedAt: '2026-10-20 14:00 WAT',
+    source: 'BRYME European Desk',
+    punterId: 'whale-shot-desk',
+    punterName: 'Whale Shot Syndicate',
+    bookmaker: '22bet',
+    bookingCode: '7fpl3',
+    sportyCode: '7FPL3',
+    totalOdds: 2.02,
+    status: 'pending',
+    editorialNote: 'European target blitz: Liverpool home target dominance, Barcelona away transition threat, and Man City relentless box siege.',
+    selections: [
+      {
+        id: 'sot-liv',
+        match: 'Liverpool vs Villarreal',
+        homeTeam: 'Liverpool',
+        awayTeam: 'Villarreal',
+        league: 'European Top-Flight',
+        kickoff: '20:00 WAT',
+        market: 'Shots on Target',
+        pick: 'Liverpool Home Over 4.5 Shots on Target',
+        odds: 1.27,
+        status: 'pending'
+      },
+      {
+        id: 'sot-barca',
+        match: 'PSG vs Barcelona',
+        homeTeam: 'PSG',
+        awayTeam: 'Barcelona',
+        league: 'European Top-Flight',
+        kickoff: '20:00 WAT',
+        market: 'Shots on Target',
+        pick: 'Barcelona Away Over 4.5 Shots on Target',
+        odds: 1.24,
+        status: 'pending'
+      },
+      {
+        id: 'sot-mancity',
+        match: 'Man City vs AEK Athens',
+        homeTeam: 'Man City',
+        awayTeam: 'AEK Athens',
+        league: 'European Top-Flight',
+        kickoff: '20:00 WAT',
+        market: 'Shots on Target',
+        pick: 'Man City Home Over 6.5 Shots on Target',
+        odds: 1.28,
+        status: 'pending'
+      }
+    ]
+  },
   // ───────────────────────────────────────────────
   // 1. ENGLISH PREMIER LEAGUE (EPL)
   // ───────────────────────────────────────────────

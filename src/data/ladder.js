@@ -35,26 +35,35 @@ export const LADDER_CONFIG = {
 
 export const ACTIVE_CHALLENGE = {
   challengeNumber: 51,
-  status: 'pending',
+  status: 'active',
   startDate: '2026-10-20',
   currentDay: 1,
   startingStake: 1000,
   currentBalance: 1000,
-  nextPotentialBalance: 1500,
+  nextPotentialBalance: 1600,
   bankedAmount: 0,
-  todaysCode: 'DROPS 11:00 AM',
+  todaysCode: 'HLLFK9',
   bookmaker: 'SportyBet',
-  sportyCode: 'DROPS 11:00 AM',
-  footballCode: 'DROPS 11:00 AM',
-  dailyOdds: 1.50,
+  sportyCode: 'HLLFK9',
+  footballCode: 'HLLFK9',
+  dailyOdds: 1.60,
   selections: [
     {
-      match: 'Day 1 Banker Double (UEFA Champions League / Domestic Top Flights)',
-      league: 'European Top-Flight Competitions',
-      kickoff: 'Tomorrow 16:30 WAT',
-      market: 'Double Chance & Total Goals',
-      pick: 'Analysis in Progress (Drops 11:00 AM WAT)',
-      odds: 1.50,
+      match: 'Berrettini Matteo vs Opponent',
+      league: 'ATP Tennis Tour',
+      kickoff: 'Today 15:00 WAT',
+      market: 'To Win a Set',
+      pick: 'Berrettini Matteo to Win a Set',
+      odds: 1.26,
+      status: 'pending'
+    },
+    {
+      match: 'Cassone Murphy vs Opponent',
+      league: 'ATP / Challenger Tour',
+      kickoff: 'Today 16:30 WAT',
+      market: 'To Win a Set',
+      pick: 'Cassone Murphy to Win a Set',
+      odds: 1.27,
       status: 'pending'
     }
   ],

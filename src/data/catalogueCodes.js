@@ -4,6 +4,61 @@
  */
 
 export const INITIAL_CODE_CATALOGUE = [
+  // ── LATEST FRESH DROPS: 2 ODDS WHALE SHOT & 1.5X ROLLOVER LADDER (OCT 20) ──
+  {
+    id: 'code-cat-22bet-7fpl3',
+    bookmaker: '22bet',
+    bookmakerName: '22Bet',
+    code: '7fpl3',
+    title: '2 Odds Whale Shot: Liverpool, PSG-Barca & Man City SOT (22Bet)',
+    odds: 2.02,
+    eventsCount: 3,
+    category: 'specials',
+    categoryName: '🎯 Shots on Target',
+    status: 'active',
+    highlightMatch: 'Liverpool Home O4.5 SOT (1.27), Barca Away O4.5 SOT (1.24), Man City Home O6.5 SOT (1.28)',
+    assignedDate: '2026-10-20',
+    isToday: true,
+    dropTime: 'Today, Oct 20',
+    convertedFrom: '22bet',
+    author: 'BRYME Whale Shot'
+  },
+  {
+    id: 'code-cat-rollover-hllfk9-sporty',
+    bookmaker: 'sportybet',
+    bookmakerName: 'SportyBet',
+    code: 'HLLFK9',
+    title: 'BRYME 1.60x Rollover Step 1/18 (SportyBet)',
+    odds: 1.60,
+    eventsCount: 2,
+    category: 'ladder',
+    categoryName: '🪜 BRYME Rollover',
+    status: 'active',
+    highlightMatch: 'Berrettini to Win a Set (1.26) + Cassone Murphy to Win a Set (1.27)',
+    assignedDate: '2026-10-20',
+    isToday: true,
+    dropTime: 'Today, Oct 20',
+    convertedFrom: 'sportybet',
+    author: 'BRYME Rollover Desk'
+  },
+  {
+    id: 'code-cat-rollover-hllfk9-footballcom',
+    bookmaker: 'footballcom',
+    bookmakerName: 'Football.com',
+    code: 'HLLFK9',
+    title: 'BRYME 1.60x Rollover Step 1/18 (Football.com)',
+    odds: 1.60,
+    eventsCount: 2,
+    category: 'ladder',
+    categoryName: '🪜 BRYME Rollover',
+    status: 'active',
+    highlightMatch: 'Berrettini to Win a Set (1.26) + Cassone Murphy to Win a Set (1.27)',
+    assignedDate: '2026-10-20',
+    isToday: true,
+    dropTime: 'Today, Oct 20',
+    convertedFrom: 'sportybet',
+    author: 'BRYME Rollover Desk'
+  },
   // ── PUNTER SPECIAL DROPS (TALL MAN, BOSS TIPS, LIGHTBET, 39BILLION, CINDYMODEL, PANDEV) ──
   {
     id: 'code-cat-tm-pz6us6-sporty',

@@ -4,6 +4,49 @@
  */
 
 export const INITIAL_MARKET_CODES = [
+  // ── LATEST DROPS: 2 ODDS WHALE SHOT & 1.5X ROLLOVER LADDER (OCT 20) ──
+  {
+    id: 'mcode-7fpl3-22bet',
+    marketId: 'player-shots-on-target',
+    code: '7fpl3',
+    odds: 2.02,
+    bookmaker: '22bet',
+    bookmakerName: '22Bet',
+    title: '2 Odds Whale Shot: Liverpool, PSG-Barca & Man City SOT (22Bet)',
+    eventsCount: 3,
+    status: 'active',
+    assignedDate: '2026-10-20',
+    isToday: true,
+    dropTime: 'Today, Oct 20',
+  },
+  {
+    id: 'mcode-hllfk9-sporty',
+    marketId: 'win-either-half',
+    code: 'HLLFK9',
+    odds: 1.60,
+    bookmaker: 'sportybet',
+    bookmakerName: 'SportyBet',
+    title: '1.50x Rollover: Berrettini & Cassone to Win a Set (SportyBet)',
+    eventsCount: 2,
+    status: 'active',
+    assignedDate: '2026-10-20',
+    isToday: true,
+    dropTime: 'Today, Oct 20',
+  },
+  {
+    id: 'mcode-hllfk9-footballcom',
+    marketId: 'win-either-half',
+    code: 'HLLFK9',
+    odds: 1.60,
+    bookmaker: 'footballcom',
+    bookmakerName: 'Football.com',
+    title: '1.50x Rollover: Berrettini & Cassone to Win a Set (Football.com)',
+    eventsCount: 2,
+    status: 'active',
+    assignedDate: '2026-10-20',
+    isToday: true,
+    dropTime: 'Today, Oct 20',
+  },
   // ── 0. NEW HIGH-ODDS VERIFIED COMMUNITY SLIPS (SportyBet & Football.com) ──
   {
     id: 'mcode-tz01sr-sporty',
