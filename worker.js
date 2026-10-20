@@ -1216,8 +1216,8 @@ async function handleApiRequest(request, env, url) {
 
           const rMsg = `⚽ <b>Market Slip Attached!</b>\n\n` +
             `• <b>Market:</b> ${res.marketName}\n` +
-            `• <b>Code:</b> <code>${res.code}</code> (${res.bookmaker.toUpperCase()})\n` +
-            `• <b>Odds:</b> ${res.odds}x\n` +
+            `• <b>Code:</b> <code>${res.code}</code> (${(res.bookmaker || 'SPORTYBET').toUpperCase()})\n` +
+            `• <b>Odds:</b> ${res.odds ? res.odds + 'x' : 'Open / Unspecified'}\n` +
             (res.gamesCount ? `• <b>Games Count:</b> ${res.gamesCount} Games\n` : `• <i>(No games count specified - none added)</i>\n`) +
             `\n🌐 Live on market directory & code hub!`;
           if (chatId) await sendTelegramReply(botToken, chatId, rMsg, getSuccessKeyboard());
@@ -1461,7 +1461,16 @@ function parseMarketCommand(rawText) {
   let marketId = null;
   let marketName = null;
 
-  if (lower.includes('over15') || lower.includes('over 1.5') || lower.includes('o15')) {
+  if (lower.includes('assist')) {
+    marketId = 'match-assist';
+    marketName = 'Match Assist (Player Props)';
+  } else if (lower.includes('goalscorer') || lower.includes('scorer') || lower.includes('anytime goal')) {
+    marketId = 'anytime-goalscorer';
+    marketName = 'Anytime Goalscorer (Player Props)';
+  } else if (lower.includes('shot') || lower.includes('sot')) {
+    marketId = 'player-shots-on-target';
+    marketName = 'Player Shots on Target';
+  } else if (lower.includes('over15') || lower.includes('over 1.5') || lower.includes('o15')) {
     marketId = 'over-15-goals';
     marketName = 'Over 1.5 Total Goals';
   } else if (lower.includes('over25') || lower.includes('over 2.5') || lower.includes('o25')) {
@@ -1492,7 +1501,8 @@ function parseMarketCommand(rawText) {
 
   // Bookmaker
   let bookmaker = 'sportybet';
-  if (lower.includes('bet9ja')) bookmaker = 'bet9ja';
+  if (lower.includes('22bet')) bookmaker = '22bet';
+  else if (lower.includes('bet9ja')) bookmaker = 'bet9ja';
   else if (lower.includes('1xbet')) bookmaker = '1xbet';
   else if (lower.includes('football.com') || lower.includes('footballcom')) bookmaker = 'footballcom';
   else if (lower.includes('betking')) bookmaker = 'betking';
@@ -1516,8 +1526,8 @@ function parseMarketCommand(rawText) {
     }
   }
 
-  // Odds
-  let odds = 2.00;
+  // Odds (strictly only if provided, no forced 2.00)
+  let odds = null;
   const oddsMatch = text.match(/([\d,]+(?:\.\d+)?)\s*(?:odds|odd|x)\b/i) || text.match(/@\s*([\d,]+(?:\.\d+)?)/i);
   if (oddsMatch) {
     const clean = oddsMatch[1].replace(/,/g, '');
