@@ -22,23 +22,25 @@ export default function CopySuccessModal({ isOpen, onClose, code, bookmaker, tit
     ? 'BetKing'
     : bookmaker || 'Bookmaker';
 
-  const bookieUrl = bLower.includes('sporty')
-    ? (adSettings?.sportyAffiliateUrl || 'https://www.sportybet.com/ng/')
-    : bLower.includes('bet9ja')
-    ? (adSettings?.bet9jaAffiliateUrl || 'https://register.bet9ja.com/')
-    : bLower.includes('msport')
-    ? (adSettings?.msportAffiliateUrl || 'https://www.msport.com/')
-    : bLower.includes('22bet')
+  const bookieUrl = bLower.includes('22bet')
     ? (adSettings?.twentyTwoBetAffiliateUrl || 'https://che.fluxbrox.com/redirect.aspx?pid=199669&bid=1488&lpid=25')
+    : bLower.includes('sporty')
+    ? 'https://www.sportybet.com/ng/'
+    : bLower.includes('football')
+    ? 'https://www.football.com/ng/'
+    : bLower.includes('bet9ja')
+    ? 'https://sports.bet9ja.com/'
+    : bLower.includes('msport')
+    ? 'https://www.msport.com/ng/'
     : bLower.includes('1x')
-    ? (adSettings?.oneXBetAffiliateUrl || 'https://1xbet.ng/')
+    ? 'https://1xbet.ng/'
     : bLower.includes('king')
-    ? (adSettings?.betkingAffiliateUrl || 'https://www.betking.com/')
-    : (adSettings?.sportyAffiliateUrl || 'https://www.sportybet.com/ng/');
+    ? 'https://www.betking.com/'
+    : 'https://www.sportybet.com/ng/';
 
   const shareText = `🔥 BRYME PREDICTIONS: Verified ${bookieName} Code Dropped!
 🎟️ Booking Code: ${code}
-🎯 Target Odds: ${odds ? odds + 'x' : '1.50x Banker'}
+🎯 Target Odds: ${odds ? odds + 'x' : 'Open Odds'}
 👉 Open full ladder & daily codes: https://predictions.thebryme.com`;
 
   const handleWhatsAppShare = () => {

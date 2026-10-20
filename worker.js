@@ -424,32 +424,46 @@ async function handleApiRequest(request, env, url) {
 
           // 1.5 Select Bookmaker
           if (data.startsWith('bk_')) {
+            if (data === 'bk_other') {
+              const session = (await getSession(userId)) || { flow: 'hub' };
+              session.step = 'awaiting_custom_bookmaker';
+              await saveSession(userId, session);
+
+              const text = `<b>✏️ Custom Bookmaker (Step 1b)</b>\n\n` +
+                `👉 <b>Type & send the Bookmaker name:</b>\n` +
+                `<i>(e.g. <code>22Bet</code>, <code>BangBet</code>, <code>Betway</code>, <code>PariPesa</code>, <code>Melbet</code>, <code>BetBiga</code>)</i>`;
+              await editTelegramMessage(botToken, chatId, messageId, text, getCancelKeyboard());
+              return jsonResponse({ ok: true, action: 'step_custom_bookie' });
+            }
+
             const bookie = data.replace('bk_', '');
             const session = (await getSession(userId)) || { flow: 'hub' };
             session.bookmaker = bookie;
+            session.bookmakerName = bookie === 'footballcom' ? 'Football.com' : bookie === 'bet9ja' ? 'Bet9ja' : bookie === '1xbet' ? '1xBet' : bookie === '22bet' ? '22Bet' : bookie === 'betking' ? 'BetKing' : bookie === 'msport' ? 'MSport' : 'SportyBet';
             session.step = 'awaiting_code';
             await saveSession(userId, session);
 
-            const bName = bookie === 'footballcom' ? 'Football.com' : bookie === 'bet9ja' ? 'Bet9ja' : bookie === '1xbet' ? '1xBet' : bookie === 'betking' ? 'BetKing' : 'SportyBet';
             const text = `<b>${session.flow === 'market' ? '⚽ Market Slip' : '➕ Code Hub'} (Step 2)</b>\n` +
-              `Bookmaker: <b>${bName}</b>\n\n` +
+              `Bookmaker: <b>${session.bookmakerName}</b>\n\n` +
               `👉 <b>Type & send the Booking Code now:</b>\n` +
               `<i>(e.g. <code>PZ6US6</code> or <code>5WGQPQ3</code>)</i>`;
             await editTelegramMessage(botToken, chatId, messageId, text, getCancelKeyboard());
             return jsonResponse({ ok: true, action: 'step_code' });
           }
 
-          // 1.6 Odds Preset Selected
+          // 1.6 Odds Preset Selected or Skipped
           if (data.startsWith('odds_')) {
-            const val = parseFloat(data.replace('odds_', ''));
+            const rawVal = data.replace('odds_', '');
+            const val = rawVal === 'skip' ? null : (parseFloat(rawVal) || rawVal);
             const session = await getSession(userId);
             if (session) {
               session.odds = val;
               session.step = 'awaiting_games';
               await saveSession(userId, session);
 
+              const oddsLabel = val ? `${val}${typeof val === 'number' ? 'x' : ''}` : 'Open / Unspecified';
               const text = `<b>Games Count (Step 4)</b>\n` +
-                `Code: <code>${session.code}</code> | Odds: <b>${val}x</b>\n\n` +
+                `Code: <code>${session.code}</code> | Odds: <b>${oddsLabel}</b>\n\n` +
                 `How many matches are in this slip?\n` +
                 `<i>Tap <b>Skip</b> if you do NOT want to show a game count.</i>`;
               await editTelegramMessage(botToken, chatId, messageId, text, getGamesKeyboard());
@@ -467,8 +481,9 @@ async function handleApiRequest(request, env, url) {
               await saveSession(userId, session);
 
               const state = await getState();
+              const oddsLabel = session.odds ? `${session.odds}${typeof session.odds === 'number' ? 'x' : ''}` : 'Open';
               const text = `<b>Select Punter / Source (Step ${session.flow === 'market' ? '4/5' : 'Final'})</b>\n` +
-                `Code: <code>${session.code}</code> | Odds: <b>${session.odds}x</b>` +
+                `Code: <code>${session.code}</code> | Odds: <b>${oddsLabel}</b>` +
                 (session.gamesCount ? ` | Games: <b>${session.gamesCount}</b>\n\n` : `\n\n`) +
                 `Who dropped this slip?`;
               await editTelegramMessage(botToken, chatId, messageId, text, getPuntersKeyboard(state.punters || []));
@@ -706,6 +721,23 @@ async function handleApiRequest(request, env, url) {
             return jsonResponse({ ok: true, action: 'market_created' });
           }
 
+          // If awaiting custom bookmaker:
+          if (session.step === 'awaiting_custom_bookmaker' || (session.step === 'bookmaker' && text && !text.startsWith('/'))) {
+            const cleanBookieName = text.trim();
+            const cleanBookieKey = cleanBookieName.toLowerCase().replace(/[^a-z0-9]/g, '');
+            session.bookmaker = cleanBookieKey;
+            session.bookmakerName = cleanBookieName;
+            session.step = 'awaiting_code';
+            await saveSession(userId, session);
+
+            const promptText = `<b>${session.flow === 'market' ? '⚽ Market Slip' : '➕ Code Hub'} (Step 2)</b>\n` +
+              `Bookmaker: <b>${cleanBookieName}</b>\n\n` +
+              `👉 <b>Type & send the Booking Code now:</b>\n` +
+              `<i>(e.g. <code>PZ6US6</code> or <code>5WGQPQ3</code>)</i>`;
+            if (chatId) await sendTelegramReply(botToken, chatId, promptText, getCancelKeyboard());
+            return jsonResponse({ ok: true, action: 'saved_custom_bookie' });
+          }
+
           // If awaiting code:
           if (session.step === 'awaiting_code') {
             const codeCandidate = text.toUpperCase().replace(/[^A-Z0-9]/g, '');
@@ -719,23 +751,34 @@ async function handleApiRequest(request, env, url) {
 
             const promptText = `<b>Total Odds (Step 3)</b>\n` +
               `Code: <code>${session.code}</code>\n\n` +
-              `👉 <b>Type the total odds</b> (e.g. <code>10000</code> or <code>2.50</code>) or tap a preset:`;
+              `👉 <b>Type the total odds</b> (e.g. <code>10000</code>, <code>2.50</code>, or range <code>1.30-1.60</code>), or tap a preset:\n` +
+              `<i>(Send "skip" or "n/a" if odds are not available)</i>`;
             if (chatId) await sendTelegramReply(botToken, chatId, promptText, getOddsKeyboard());
             return jsonResponse({ ok: true, action: 'saved_code' });
           }
 
           // If awaiting odds:
           if (session.step === 'awaiting_odds') {
-            const numMatch = text.match(/([\d,]+(?:\.\d+)?)/);
-            let odds = 2.00;
-            if (numMatch) odds = parseFloat(numMatch[1].replace(/,/g, '')) || 2.00;
+            const lower = text.trim().toLowerCase();
+            let odds = null;
+            if (lower === 'skip' || lower === 'none' || lower === 'n/a' || lower === 'na' || lower === 'not available' || lower === 'no odds' || lower === 'no') {
+              odds = null;
+            } else {
+              const numMatch = text.match(/([\d,]+(?:\.\d+)?)/);
+              if (numMatch) {
+                odds = parseFloat(numMatch[1].replace(/,/g, '')) || text.trim();
+              } else {
+                odds = text.trim();
+              }
+            }
 
             session.odds = odds;
             session.step = 'awaiting_games';
             await saveSession(userId, session);
 
+            const oddsLabel = odds ? `${odds}${typeof odds === 'number' ? 'x' : ''}` : 'Open / Unspecified';
             const promptText = `<b>Games Count (Step 4)</b>\n` +
-              `Code: <code>${session.code}</code> | Odds: <b>${odds}x</b>\n\n` +
+              `Code: <code>${session.code}</code> | Odds: <b>${oddsLabel}</b>\n\n` +
               `How many games in this ticket?\n` +
               `<i>Tap <b>Skip</b> if you do NOT want to show a game count.</i>`;
             if (chatId) await sendTelegramReply(botToken, chatId, promptText, getGamesKeyboard());
@@ -754,8 +797,9 @@ async function handleApiRequest(request, env, url) {
             await saveSession(userId, session);
 
             const state = await getState();
+            const oddsLabel = session.odds ? `${session.odds}${typeof session.odds === 'number' ? 'x' : ''}` : 'Open';
             const promptText = `<b>Select Punter / Source (Step ${session.flow === 'market' ? '4/5' : 'Final'})</b>\n` +
-              `Code: <code>${session.code}</code> | Odds: <b>${session.odds}x</b>` +
+              `Code: <code>${session.code}</code> | Odds: <b>${oddsLabel}</b>` +
               (session.gamesCount ? ` | Games: <b>${session.gamesCount}</b>\n\n` : `\n\n`) +
               `Who dropped this slip? Tap below or type a name:`;
             if (chatId) await sendTelegramReply(botToken, chatId, promptText, getPuntersKeyboard(state.punters || []));
@@ -1526,8 +1570,12 @@ function getBookmakerKeyboard() {
         { text: '🔵 1xBet', callback_data: 'bk_1xbet' }
       ],
       [
-        { text: '👑 BetKing', callback_data: 'bk_betking' },
-        { text: '⚡ MSport', callback_data: 'bk_msport' }
+        { text: '🟢 22Bet (Affiliate)', callback_data: 'bk_22bet' },
+        { text: '👑 BetKing', callback_data: 'bk_betking' }
+      ],
+      [
+        { text: '⚡ MSport', callback_data: 'bk_msport' },
+        { text: '✏️ Other Bookmaker (Type Any)', callback_data: 'bk_other' }
       ],
       [
         { text: '❌ Cancel', callback_data: 'wiz_cancel' }
@@ -1553,6 +1601,9 @@ function getOddsKeyboard() {
         { text: '100x', callback_data: 'odds_100.0' },
         { text: '1000x', callback_data: 'odds_1000.0' },
         { text: '10000x', callback_data: 'odds_10000.0' }
+      ],
+      [
+        { text: '⏭️ Skip / Open Odds (No Odds)', callback_data: 'odds_skip' }
       ],
       [
         { text: '❌ Cancel', callback_data: 'wiz_cancel' }
@@ -1710,47 +1761,67 @@ function getCancelKeyboard() {
 function publishToState(state, session) {
   const code = session.code.toUpperCase();
   const bookmaker = session.bookmaker.toLowerCase();
-  const odds = session.odds || 2.00;
+  const bName = session.bookmakerName || (bookmaker === 'footballcom' ? 'Football.com' : bookmaker === 'bet9ja' ? 'Bet9ja' : bookmaker === '1xbet' ? '1xBet' : bookmaker === '22bet' ? '22Bet' : bookmaker === 'betking' ? 'BetKing' : bookmaker === 'msport' ? 'MSport' : bookmaker.charAt(0).toUpperCase() + bookmaker.slice(1));
+  const odds = session.odds ? (typeof session.odds === 'number' ? session.odds : (parseFloat(session.odds) || session.odds)) : null;
   const gamesCount = session.gamesCount || null;
   const pName = session.punterName || 'BRYME Desk';
   const pId = session.punterId || null;
+  const timestamp = Date.now();
+  const todayDateStr = '2026-10-20';
+
+  // Sanitize Mr banks: ensure no rollover slips
+  if (Array.isArray(state.punters)) {
+    for (const p of state.punters) {
+      if (p.id === 'punter-mrbanks' && Array.isArray(p.dailyCodes)) {
+        p.dailyCodes = p.dailyCodes.filter(c => c.code !== 'Q7S287' && !c.marketType?.toLowerCase().includes('rollover'));
+      }
+    }
+  }
 
   // 1. Add to Code Hub at the top (unshift)
   state.codeCatalogue.unshift({
-    id: `auto-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+    id: `auto-${timestamp}-${Math.random().toString(36).slice(2, 6)}`,
     code,
     bookmaker,
-    bookmakerName: bookmaker === 'footballcom' ? 'Football.com' : bookmaker === 'bet9ja' ? 'Bet9ja' : bookmaker === '1xbet' ? '1xBet' : bookmaker === 'betking' ? 'BetKing' : 'SportyBet',
-    title: `${pName} ${odds}x Slip`,
+    bookmakerName: bName,
+    title: `${pName} ${odds ? odds + 'x ' : ''}Slip (${bName})`,
     odds,
     totalOdds: odds,
     eventsCount: gamesCount, // STRICT: ONLY IF INCLUDED
     gamesCount: gamesCount,  // STRICT: ONLY IF INCLUDED
     categoryName: session.marketName || 'Verified Punter Slip',
     status: 'active',
-    dropTime: 'Just Now',
+    assignedDate: todayDateStr,
+    dropTime: 'Today, Oct 20',
+    formattedDate: 'Today, Oct 20',
+    createdAt: timestamp,
     author: pName,
     punterName: pName,
+    isToday: true,
     isNew: true
   });
 
   // If SportyBet, auto duplicate to Football.com
   if (bookmaker === 'sportybet') {
     state.codeCatalogue.unshift({
-      id: `auto-${Date.now()}-${Math.random().toString(36).slice(2, 6)}-fb`,
+      id: `auto-${timestamp}-${Math.random().toString(36).slice(2, 6)}-fb`,
       code,
       bookmaker: 'footballcom',
       bookmakerName: 'Football.com',
-      title: `${pName} ${odds}x Slip (Football.com)`,
+      title: `${pName} ${odds ? odds + 'x ' : ''}Slip (Football.com)`,
       odds,
       totalOdds: odds,
       eventsCount: gamesCount,
       gamesCount: gamesCount,
       categoryName: session.marketName || 'Football.com Twin',
       status: 'active',
-      dropTime: 'Just Now',
+      assignedDate: todayDateStr,
+      dropTime: 'Today, Oct 20',
+      formattedDate: 'Today, Oct 20',
+      createdAt: timestamp + 1,
       author: pName,
       punterName: pName,
+      isToday: true,
       isNew: true
     });
   }
@@ -1758,30 +1829,38 @@ function publishToState(state, session) {
   // 2. If market flow, add to marketCodes
   if (session.marketId) {
     state.marketCodes.unshift({
-      id: `mcode-${Date.now()}-${code.toLowerCase()}`,
+      id: `mcode-${timestamp}-${code.toLowerCase()}`,
       marketId: session.marketId,
       code,
       odds,
       bookmaker,
-      bookmakerName: bookmaker === 'footballcom' ? 'Football.com' : bookmaker === 'bet9ja' ? 'Bet9ja' : bookmaker === '1xbet' ? '1xBet' : 'SportyBet',
-      title: `${session.marketName} (${odds}x ${bookmaker.toUpperCase()})`,
+      bookmakerName: bName,
+      title: `${session.marketName} (${odds ? odds + 'x ' : ''}${bName})`,
       eventsCount: gamesCount,
       status: 'active',
-      dropTime: 'Just Now'
+      assignedDate: todayDateStr,
+      dropTime: 'Today, Oct 20',
+      formattedDate: 'Today, Oct 20',
+      createdAt: timestamp,
+      isToday: true
     });
 
     if (bookmaker === 'sportybet') {
       state.marketCodes.unshift({
-        id: `mcode-${Date.now()}-${code.toLowerCase()}-fb`,
+        id: `mcode-${timestamp}-${code.toLowerCase()}-fb`,
         marketId: session.marketId,
         code,
         odds,
         bookmaker: 'footballcom',
         bookmakerName: 'Football.com',
-        title: `${session.marketName} (${odds}x Football.com)`,
+        title: `${session.marketName} (${odds ? odds + 'x ' : ''}Football.com)`,
         eventsCount: gamesCount,
         status: 'active',
-        dropTime: 'Just Now'
+        assignedDate: todayDateStr,
+        dropTime: 'Today, Oct 20',
+        formattedDate: 'Today, Oct 20',
+        createdAt: timestamp + 1,
+        isToday: true
       });
     }
   }
@@ -1792,25 +1871,37 @@ function publishToState(state, session) {
     if (p) {
       if (!p.dailyCodes) p.dailyCodes = [];
       p.dailyCodes.unshift({
-        id: `pcode-auto-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+        id: `pcode-auto-${timestamp}-${Math.random().toString(36).slice(2, 6)}`,
         bookmaker,
+        bookmakerName: bName,
         code,
         marketType: `${pName} Pick`,
         gamesCount,
         totalOdds: odds,
+        odds: odds,
         status: 'active',
-        dropTime: 'Just Now'
+        assignedDate: todayDateStr,
+        dropTime: 'Today, Oct 20',
+        formattedDate: 'Today, Oct 20',
+        createdAt: timestamp,
+        isToday: true
       });
       if (bookmaker === 'sportybet') {
         p.dailyCodes.unshift({
-          id: `pcode-auto-${Date.now()}-${Math.random().toString(36).slice(2, 6)}-fb`,
+          id: `pcode-auto-${timestamp}-${Math.random().toString(36).slice(2, 6)}-fb`,
           bookmaker: 'footballcom',
+          bookmakerName: 'Football.com',
           code,
           marketType: `${pName} Pick (Football.com)`,
           gamesCount,
           totalOdds: odds,
+          odds: odds,
           status: 'active',
-          dropTime: 'Just Now'
+          assignedDate: todayDateStr,
+          dropTime: 'Today, Oct 20',
+          formattedDate: 'Today, Oct 20',
+          createdAt: timestamp + 1,
+          isToday: true
         });
       }
     }
@@ -1818,19 +1909,21 @@ function publishToState(state, session) {
 }
 
 function formatPublishSuccess(session) {
-  const bUpper = session.bookmaker.toUpperCase();
+  const bName = session.bookmakerName || session.bookmaker.toUpperCase();
   const twinNotice = session.bookmaker === 'sportybet' ? ` (+ Football.com twin)` : '';
   const gamesNotice = session.gamesCount ? `• <b>Games Count:</b> ${session.gamesCount} Games\n` : `• <i>(No games count specified - none added)</i>\n`;
+  const oddsNotice = session.odds ? `• <b>Odds:</b> ${session.odds}${typeof session.odds === 'number' ? 'x' : ''}\n` : `• <b>Odds:</b> Open / Unspecified\n`;
   const marketNotice = session.marketName ? `• <b>Market:</b> ${session.marketName}\n` : '';
 
   return `✅ <b>Successfully Published to BRYME!</b>\n\n` +
-    `• <b>Bookmaker:</b> ${bUpper}${twinNotice}\n` +
+    `• <b>Bookmaker:</b> ${bName}${twinNotice}\n` +
     `• <b>Code:</b> <code>${session.code}</code>\n` +
-    `• <b>Odds:</b> ${session.odds}x\n` +
+    `• <b>Assigned Date:</b> Today, Oct 20, 2026\n` +
+    oddsNotice +
     gamesNotice +
     `• <b>Punter:</b> ${session.punterName || 'BRYME Desk'}\n` +
     marketNotice +
-    `\n🌐 Live at the top of <b>predictions.thebryme.com</b>`;
+    `\n🌐 Live on <b>predictions.thebryme.com</b>`;
 }
 
 async function sendTelegramReply(botToken, chatId, text, replyMarkup = null) {

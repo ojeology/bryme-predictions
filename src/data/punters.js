@@ -23,32 +23,46 @@ export const INITIAL_PUNTERS = [
       {
         id: 'pcode-mb-01',
         bookmaker: 'sportybet',
-        code: 'Q7S287',
-        marketType: 'Rollover Step 4 Signature Banker (SportyBet)',
-        gamesCount: 2,
-        totalOdds: 1.54,
+        code: 'TZUMDQ',
+        marketType: '24 Folds 365-Odds 1X2 Win Markets (SportyBet)',
+        gamesCount: 24,
+        totalOdds: 365.00,
         status: 'active',
-        dropTime: '11:00 AM WAT'
+        assignedDate: '2026-10-20',
+        dropTime: 'Today, Oct 20'
       },
       {
         id: 'pcode-mb-01-fb',
         bookmaker: 'footballcom',
-        code: 'Q7S287',
-        marketType: 'Rollover Step 4 Signature Banker (Football.com)',
-        gamesCount: 2,
-        totalOdds: 1.54,
-        status: 'active',
-        dropTime: '11:00 AM WAT'
-      },
-      {
-        id: 'pcode-mb-02',
-        bookmaker: 'sportybet',
         code: 'TZUMDQ',
-        marketType: '24 Folds 365-Odds 1X2 Win Markets',
+        marketType: '24 Folds 365-Odds 1X2 Win Markets (Football.com)',
         gamesCount: 24,
         totalOdds: 365.00,
         status: 'active',
-        dropTime: 'Live Today'
+        assignedDate: '2026-10-20',
+        dropTime: 'Today, Oct 20'
+      },
+      {
+        id: 'pcode-mb-02',
+        bookmaker: 'bet9ja',
+        code: '88746X',
+        marketType: 'European Banker 2.15x High-Roller Double',
+        gamesCount: 2,
+        totalOdds: 2.15,
+        status: 'active',
+        assignedDate: '2026-10-20',
+        dropTime: 'Today, Oct 20'
+      },
+      {
+        id: 'pcode-mb-03',
+        bookmaker: '22bet',
+        code: '22B-BANKER',
+        marketType: 'Over 2.5 Goals Prime Banker',
+        gamesCount: 3,
+        totalOdds: 2.45,
+        status: 'active',
+        assignedDate: '2026-10-19',
+        dropTime: 'Yesterday, Oct 19'
       }
     ]
   },
@@ -74,7 +88,9 @@ export const INITIAL_PUNTERS = [
         gamesCount: 16,
         totalOdds: 10000.00,
         status: 'active',
-        dropTime: 'Live Today'
+        assignedDate: '2026-10-20',
+        isToday: true,
+        dropTime: 'Today, Oct 20'
       },
       {
         id: 'pcode-tm-00-fb',
@@ -84,7 +100,9 @@ export const INITIAL_PUNTERS = [
         gamesCount: 16,
         totalOdds: 10000.00,
         status: 'active',
-        dropTime: 'Live Today'
+        assignedDate: '2026-10-20',
+        isToday: true,
+        dropTime: 'Today, Oct 20'
       }
     ]
   },
@@ -110,7 +128,9 @@ export const INITIAL_PUNTERS = [
         gamesCount: 26,
         totalOdds: 90000.00,
         status: 'active',
-        dropTime: 'Live Today'
+        assignedDate: '2026-10-19',
+        isToday: false,
+        dropTime: 'Yesterday, Oct 19'
       },
       {
         id: 'pcode-bt-zne44s-fb',
@@ -120,7 +140,9 @@ export const INITIAL_PUNTERS = [
         gamesCount: 26,
         totalOdds: 90000.00,
         status: 'active',
-        dropTime: 'Live Today'
+        assignedDate: '2026-10-20',
+        isToday: true,
+        dropTime: 'Today, Oct 20'
       },
       {
         id: 'pcode-bt-5wfvhmq',
@@ -130,7 +152,9 @@ export const INITIAL_PUNTERS = [
         gamesCount: 8,
         totalOdds: 84.50,
         status: 'active',
-        dropTime: 'Live Today'
+        assignedDate: '2026-10-20',
+        isToday: true,
+        dropTime: 'Today, Oct 20'
       },
       {
         id: 'pcode-bt-5wfvjcs',
@@ -140,7 +164,9 @@ export const INITIAL_PUNTERS = [
         gamesCount: 10,
         totalOdds: 145.00,
         status: 'active',
-        dropTime: 'Live Today'
+        assignedDate: '2026-10-19',
+        isToday: false,
+        dropTime: 'Yesterday, Oct 19'
       },
       {
         id: 'pcode-bt-23puc',
@@ -150,7 +176,9 @@ export const INITIAL_PUNTERS = [
         gamesCount: 7,
         totalOdds: 224.00,
         status: 'active',
-        dropTime: 'Live Today'
+        assignedDate: '2026-10-20',
+        isToday: true,
+        dropTime: 'Today, Oct 20'
       }
     ]
   },
@@ -176,7 +204,9 @@ export const INITIAL_PUNTERS = [
         gamesCount: 22,
         totalOdds: 2694.00,
         status: 'active',
-        dropTime: 'Live Today'
+        assignedDate: '2026-10-20',
+        isToday: true,
+        dropTime: 'Today, Oct 20'
       },
       {
         id: 'pcode-dz-01-fb',
@@ -186,7 +216,9 @@ export const INITIAL_PUNTERS = [
         gamesCount: 22,
         totalOdds: 2694.00,
         status: 'active',
-        dropTime: 'Live Today'
+        assignedDate: '2026-10-19',
+        isToday: false,
+        dropTime: 'Yesterday, Oct 19'
       }
     ]
   },
@@ -212,7 +244,9 @@ export const INITIAL_PUNTERS = [
         gamesCount: 22,
         totalOdds: 68000.00,
         status: 'active',
-        dropTime: 'Live Today'
+        assignedDate: '2026-10-20',
+        isToday: true,
+        dropTime: 'Today, Oct 20'
       },
       {
         id: 'pcode-bo-01-fb',
@@ -222,7 +256,9 @@ export const INITIAL_PUNTERS = [
         gamesCount: 22,
         totalOdds: 68000.00,
         status: 'active',
-        dropTime: 'Live Today'
+        assignedDate: '2026-10-20',
+        isToday: true,
+        dropTime: 'Today, Oct 20'
       }
     ]
   },
@@ -248,7 +284,9 @@ export const INITIAL_PUNTERS = [
         gamesCount: 18,
         totalOdds: 10000.00,
         status: 'active',
-        dropTime: 'Live Today'
+        assignedDate: '2026-10-19',
+        isToday: false,
+        dropTime: 'Yesterday, Oct 19'
       },
       {
         id: 'pcode-lb-pkb6uh-fb',
@@ -258,7 +296,9 @@ export const INITIAL_PUNTERS = [
         gamesCount: 18,
         totalOdds: 10000.00,
         status: 'active',
-        dropTime: 'Live Today'
+        assignedDate: '2026-10-20',
+        isToday: true,
+        dropTime: 'Today, Oct 20'
       },
       {
         id: 'pcode-lb-s4met9',
@@ -268,7 +308,9 @@ export const INITIAL_PUNTERS = [
         gamesCount: 15,
         totalOdds: 6483.00,
         status: 'active',
-        dropTime: 'Live Today'
+        assignedDate: '2026-10-20',
+        isToday: true,
+        dropTime: 'Today, Oct 20'
       },
       {
         id: 'pcode-lb-s4met9-fb',
@@ -278,7 +320,9 @@ export const INITIAL_PUNTERS = [
         gamesCount: 15,
         totalOdds: 6483.00,
         status: 'active',
-        dropTime: 'Live Today'
+        assignedDate: '2026-10-19',
+        isToday: false,
+        dropTime: 'Yesterday, Oct 19'
       },
       {
         id: 'pcode-lb-qdw2nj',
@@ -288,7 +332,9 @@ export const INITIAL_PUNTERS = [
         gamesCount: 22,
         totalOdds: 68000.00,
         status: 'active',
-        dropTime: 'Live Today'
+        assignedDate: '2026-10-20',
+        isToday: true,
+        dropTime: 'Today, Oct 20'
       },
       {
         id: 'pcode-lb-qdw2nj-fb',
@@ -298,7 +344,9 @@ export const INITIAL_PUNTERS = [
         gamesCount: 22,
         totalOdds: 68000.00,
         status: 'active',
-        dropTime: 'Live Today'
+        assignedDate: '2026-10-20',
+        isToday: true,
+        dropTime: 'Today, Oct 20'
       },
       {
         id: 'pcode-lb-w6xdm5',
@@ -308,7 +356,9 @@ export const INITIAL_PUNTERS = [
         gamesCount: 8,
         totalOdds: 148.00,
         status: 'active',
-        dropTime: 'Live Today'
+        assignedDate: '2026-10-19',
+        isToday: false,
+        dropTime: 'Yesterday, Oct 19'
       },
       {
         id: 'pcode-lb-w6xdm5-fb',
@@ -318,7 +368,9 @@ export const INITIAL_PUNTERS = [
         gamesCount: 8,
         totalOdds: 148.00,
         status: 'active',
-        dropTime: 'Live Today'
+        assignedDate: '2026-10-20',
+        isToday: true,
+        dropTime: 'Today, Oct 20'
       }
     ]
   },
@@ -344,7 +396,9 @@ export const INITIAL_PUNTERS = [
         gamesCount: 16,
         totalOdds: 298.00,
         status: 'active',
-        dropTime: 'Live Today'
+        assignedDate: '2026-10-20',
+        isToday: true,
+        dropTime: 'Today, Oct 20'
       },
       {
         id: 'pcode-mw-01-fb',
@@ -354,7 +408,9 @@ export const INITIAL_PUNTERS = [
         gamesCount: 16,
         totalOdds: 298.00,
         status: 'active',
-        dropTime: 'Live Today'
+        assignedDate: '2026-10-19',
+        isToday: false,
+        dropTime: 'Yesterday, Oct 19'
       }
     ]
   },
@@ -380,7 +436,9 @@ export const INITIAL_PUNTERS = [
         gamesCount: 2,
         totalOdds: 1.54,
         status: 'active',
-        dropTime: 'Live Today'
+        assignedDate: '2026-10-20',
+        isToday: true,
+        dropTime: 'Today, Oct 20'
       },
       {
         id: 'pcode-jf-01-fb',
@@ -390,7 +448,9 @@ export const INITIAL_PUNTERS = [
         gamesCount: 2,
         totalOdds: 1.54,
         status: 'active',
-        dropTime: 'Live Today'
+        assignedDate: '2026-10-20',
+        isToday: true,
+        dropTime: 'Today, Oct 20'
       }
     ]
   },
@@ -416,7 +476,9 @@ export const INITIAL_PUNTERS = [
         gamesCount: 8,
         totalOdds: 148.00,
         status: 'active',
-        dropTime: 'Live Today'
+        assignedDate: '2026-10-19',
+        isToday: false,
+        dropTime: 'Yesterday, Oct 19'
       },
       {
         id: 'pcode-mbayo-01-fb',
@@ -426,7 +488,9 @@ export const INITIAL_PUNTERS = [
         gamesCount: 8,
         totalOdds: 148.00,
         status: 'active',
-        dropTime: 'Live Today'
+        assignedDate: '2026-10-20',
+        isToday: true,
+        dropTime: 'Today, Oct 20'
       }
     ]
   },
@@ -452,7 +516,9 @@ export const INITIAL_PUNTERS = [
         gamesCount: 30,
         totalOdds: 2335.00,
         status: 'active',
-        dropTime: 'Live Today'
+        assignedDate: '2026-10-20',
+        isToday: true,
+        dropTime: 'Today, Oct 20'
       },
       {
         id: 'pcode-tf-01-fb',
@@ -462,7 +528,9 @@ export const INITIAL_PUNTERS = [
         gamesCount: 30,
         totalOdds: 2335.00,
         status: 'active',
-        dropTime: 'Live Today'
+        assignedDate: '2026-10-19',
+        isToday: false,
+        dropTime: 'Yesterday, Oct 19'
       }
     ]
   },
@@ -488,7 +556,9 @@ export const INITIAL_PUNTERS = [
         gamesCount: 20,
         totalOdds: 10000.00,
         status: 'active',
-        dropTime: 'Live Today'
+        assignedDate: '2026-10-20',
+        isToday: true,
+        dropTime: 'Today, Oct 20'
       },
       {
         id: 'pcode-39b-zpmr5q-fb',
@@ -498,7 +568,9 @@ export const INITIAL_PUNTERS = [
         gamesCount: 20,
         totalOdds: 10000.00,
         status: 'active',
-        dropTime: 'Live Today'
+        assignedDate: '2026-10-20',
+        isToday: true,
+        dropTime: 'Today, Oct 20'
       },
       {
         id: 'pcode-39b-5wgm3nm',
@@ -508,7 +580,9 @@ export const INITIAL_PUNTERS = [
         gamesCount: 6,
         totalOdds: 890.00,
         status: 'active',
-        dropTime: 'Live Today'
+        assignedDate: '2026-10-19',
+        isToday: false,
+        dropTime: 'Yesterday, Oct 19'
       },
       {
         id: 'pcode-39b-5wgm7h7',
@@ -518,7 +592,9 @@ export const INITIAL_PUNTERS = [
         gamesCount: 6,
         totalOdds: 920.00,
         status: 'active',
-        dropTime: 'Live Today'
+        assignedDate: '2026-10-20',
+        isToday: true,
+        dropTime: 'Today, Oct 20'
       }
     ]
   },
@@ -544,7 +620,9 @@ export const INITIAL_PUNTERS = [
         gamesCount: 12,
         totalOdds: 200.00,
         status: 'active',
-        dropTime: 'Live Today'
+        assignedDate: '2026-10-20',
+        isToday: true,
+        dropTime: 'Today, Oct 20'
       },
       {
         id: 'pcode-cm-5wgqkm6',
@@ -554,7 +632,9 @@ export const INITIAL_PUNTERS = [
         gamesCount: 5,
         totalOdds: 20.00,
         status: 'active',
-        dropTime: 'Live Today'
+        assignedDate: '2026-10-19',
+        isToday: false,
+        dropTime: 'Yesterday, Oct 19'
       }
     ]
   },
@@ -580,7 +660,9 @@ export const INITIAL_PUNTERS = [
         gamesCount: 8,
         totalOdds: 65.00,
         status: 'active',
-        dropTime: 'Live Today'
+        assignedDate: '2026-10-20',
+        isToday: true,
+        dropTime: 'Today, Oct 20'
       },
       {
         id: 'pcode-pp-5wgfxkn',
@@ -590,7 +672,9 @@ export const INITIAL_PUNTERS = [
         gamesCount: 9,
         totalOdds: 110.00,
         status: 'active',
-        dropTime: 'Live Today'
+        assignedDate: '2026-10-20',
+        isToday: true,
+        dropTime: 'Today, Oct 20'
       }
     ]
   }

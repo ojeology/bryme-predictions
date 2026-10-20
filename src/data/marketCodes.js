@@ -15,7 +15,9 @@ export const INITIAL_MARKET_CODES = [
     title: 'All Over 2.5 Goals 2,694x Multiplier (SportyBet)',
     eventsCount: 20,
     status: 'active',
-    dropTime: 'Live Today'
+    assignedDate: '2026-10-20',
+    isToday: true,
+    dropTime: 'Today, Oct 20',
   },
   {
     id: 'mcode-tz01sr-footballcom',
@@ -27,7 +29,9 @@ export const INITIAL_MARKET_CODES = [
     title: 'All Over 2.5 Goals 2,694x Multiplier (Football.com)',
     eventsCount: 20,
     status: 'active',
-    dropTime: 'Live Today'
+    assignedDate: '2026-10-20',
+    isToday: true,
+    dropTime: 'Today, Oct 20',
   },
   {
     id: 'mcode-g0320z-sporty',
@@ -39,7 +43,9 @@ export const INITIAL_MARKET_CODES = [
     title: 'Over & Under Goals 860-Odds Mega Slip (SportyBet)',
     eventsCount: 16,
     status: 'active',
-    dropTime: 'Live Today'
+    assignedDate: '2026-10-20',
+    isToday: true,
+    dropTime: 'Today, Oct 20',
   },
   {
     id: 'mcode-g0320z-footballcom',
@@ -51,7 +57,9 @@ export const INITIAL_MARKET_CODES = [
     title: 'Over & Under Goals 860-Odds Mega Slip (Football.com)',
     eventsCount: 16,
     status: 'active',
-    dropTime: 'Live Today'
+    assignedDate: '2026-10-20',
+    isToday: true,
+    dropTime: 'Today, Oct 20',
   },
   {
     id: 'mcode-tzumdq-sporty',
@@ -63,7 +71,9 @@ export const INITIAL_MARKET_CODES = [
     title: '24 Folds 365-Odds 1X2 Win Markets (SportyBet)',
     eventsCount: 24,
     status: 'active',
-    dropTime: 'Live Today'
+    assignedDate: '2026-10-20',
+    isToday: true,
+    dropTime: 'Today, Oct 20',
   },
   {
     id: 'mcode-tzumdq-footballcom',
@@ -75,7 +85,9 @@ export const INITIAL_MARKET_CODES = [
     title: '24 Folds 365-Odds 1X2 Win Markets (Football.com)',
     eventsCount: 24,
     status: 'active',
-    dropTime: 'Live Today'
+    assignedDate: '2026-10-20',
+    isToday: true,
+    dropTime: 'Today, Oct 20',
   },
   {
     id: 'mcode-u0vb59-sporty',
@@ -87,7 +99,9 @@ export const INITIAL_MARKET_CODES = [
     title: 'Home Straight Wins 2,335-Odds Fortress (SportyBet)',
     eventsCount: 18,
     status: 'active',
-    dropTime: 'Live Today'
+    assignedDate: '2026-10-20',
+    isToday: true,
+    dropTime: 'Today, Oct 20',
   },
   {
     id: 'mcode-u0vb59-footballcom',
@@ -99,7 +113,9 @@ export const INITIAL_MARKET_CODES = [
     title: 'Home Straight Wins 2,335-Odds Fortress (Football.com)',
     eventsCount: 18,
     status: 'active',
-    dropTime: 'Live Today'
+    assignedDate: '2026-10-20',
+    isToday: true,
+    dropTime: 'Today, Oct 20',
   },
   {
     id: 'mcode-qm7nwd-sporty',
@@ -111,7 +127,9 @@ export const INITIAL_MARKET_CODES = [
     title: 'Europa & Conference League Favourites 1 Goal (SportyBet)',
     eventsCount: 14,
     status: 'active',
-    dropTime: 'Live Today'
+    assignedDate: '2026-10-20',
+    isToday: true,
+    dropTime: 'Today, Oct 20',
   },
   {
     id: 'mcode-qm7nwd-footballcom',
@@ -123,7 +141,9 @@ export const INITIAL_MARKET_CODES = [
     title: 'Europa & Conference League Favourites 1 Goal (Football.com)',
     eventsCount: 14,
     status: 'active',
-    dropTime: 'Live Today'
+    assignedDate: '2026-10-20',
+    isToday: true,
+    dropTime: 'Today, Oct 20',
   },
   {
     id: 'mcode-u1g51j-sporty',
@@ -135,7 +155,9 @@ export const INITIAL_MARKET_CODES = [
     title: 'Mixed Options 7,065.19 Mega Multiplier (SportyBet)',
     eventsCount: 22,
     status: 'active',
-    dropTime: 'Live Today'
+    assignedDate: '2026-10-20',
+    isToday: true,
+    dropTime: 'Today, Oct 20',
   },
   {
     id: 'mcode-u1g51j-footballcom',
@@ -147,7 +169,9 @@ export const INITIAL_MARKET_CODES = [
     title: 'Mixed Options 7,065.19 Mega Multiplier (Football.com)',
     eventsCount: 22,
     status: 'active',
-    dropTime: 'Live Today'
+    assignedDate: '2026-10-20',
+    isToday: true,
+    dropTime: 'Today, Oct 20',
   },
   {
     id: 'mcode-w6xdm5-sporty',
@@ -159,7 +183,9 @@ export const INITIAL_MARKET_CODES = [
     title: 'Both Teams to Score (GG Only) 148-Odds Wave (SportyBet)',
     eventsCount: 8,
     status: 'active',
-    dropTime: 'Live Today'
+    assignedDate: '2026-10-19',
+    isToday: false,
+    dropTime: 'Yesterday, Oct 19',
   },
   {
     id: 'mcode-w6xdm5-footballcom',
@@ -171,7 +197,9 @@ export const INITIAL_MARKET_CODES = [
     title: 'Both Teams to Score (GG Only) 148-Odds Wave (Football.com)',
     eventsCount: 8,
     status: 'active',
-    dropTime: 'Live Today'
+    assignedDate: '2026-10-19',
+    isToday: false,
+    dropTime: 'Yesterday, Oct 19',
   },
   {
     id: 'mcode-qdw2nj-sporty',
@@ -183,7 +211,9 @@ export const INITIAL_MARKET_CODES = [
     title: 'Double Chance & GG 68,000-Odds Mega Acca (SportyBet)',
     eventsCount: 22,
     status: 'active',
-    dropTime: 'Live Today'
+    assignedDate: '2026-10-19',
+    isToday: false,
+    dropTime: 'Yesterday, Oct 19',
   },
   {
     id: 'mcode-qdw2nj-footballcom',
@@ -195,7 +225,9 @@ export const INITIAL_MARKET_CODES = [
     title: 'Double Chance & GG 68,000-Odds Mega Acca (Football.com)',
     eventsCount: 22,
     status: 'active',
-    dropTime: 'Live Today'
+    assignedDate: '2026-10-19',
+    isToday: false,
+    dropTime: 'Yesterday, Oct 19',
   },
   {
     id: 'mcode-5wgqpq3-bet9ja',
@@ -207,7 +239,9 @@ export const INITIAL_MARKET_CODES = [
     title: 'Cindymodel 200-Odds Bet9ja Value Accumulator',
     eventsCount: 12,
     status: 'active',
-    dropTime: 'Live Today'
+    assignedDate: '2026-10-19',
+    isToday: false,
+    dropTime: 'Yesterday, Oct 19',
   },
   {
     id: 'mcode-5wgqkm6-bet9ja',
@@ -219,7 +253,9 @@ export const INITIAL_MARKET_CODES = [
     title: 'Cindymodel 20-Odds Bet9ja Solid Slip',
     eventsCount: 5,
     status: 'active',
-    dropTime: 'Live Today'
+    assignedDate: '2026-10-19',
+    isToday: false,
+    dropTime: 'Yesterday, Oct 19',
   },
   {
     id: 'mcode-5wfvhmq-bet9ja',
@@ -231,7 +267,9 @@ export const INITIAL_MARKET_CODES = [
     title: 'Boss Tips Random Picks Bet9ja Ticket',
     eventsCount: 8,
     status: 'active',
-    dropTime: 'Live Today'
+    assignedDate: '2026-10-19',
+    isToday: false,
+    dropTime: 'Yesterday, Oct 19',
   },
   {
     id: 'mcode-5wgm3nm-bet9ja',
@@ -243,6 +281,8 @@ export const INITIAL_MARKET_CODES = [
     title: '39billion Bet9ja Correct Multiscores Slip',
     eventsCount: 6,
     status: 'active',
-    dropTime: 'Live Today'
+    assignedDate: '2026-10-19',
+    isToday: false,
+    dropTime: 'Yesterday, Oct 19',
   }
 ];

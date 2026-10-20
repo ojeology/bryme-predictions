@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { usePredictions } from '../context/PredictionsContext';
 import { MARKETS as FALLBACK_MARKETS } from '../data/markets';
 import { TICKETS } from '../data/tickets';
+import { isTodayCode, formatCodeDateBadge } from '../utils/codeDates';
 import TicketCard from '../components/TicketCard';
 import AdBanner from '../components/AdBanner';
 import { 
@@ -311,109 +312,160 @@ export default function MarketDetailPage({ marketId, slug, onNavigate }) {
           </form>
         )}
 
-        {filteredCodes.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
-            {filteredCodes.map(codeItem => {
-              const isCopied = copiedCodeId === codeItem.id;
-              const bookieName = codeItem.bookmakerName || codeItem.bookmaker?.toUpperCase() || 'SportyBet';
-              const bookieLink = getBookmakerUrl(codeItem.bookmaker);
-              const badgeStyle = getBookmakerBadgeStyle(codeItem.bookmaker);
+        {/* Slips split into Today vs Yesterday Columns */}
+        {(() => {
+          const todaySlips = filteredCodes.filter(isTodayCode);
+          const yesterdaySlips = filteredCodes.filter(c => !isTodayCode(c));
 
-              return (
-                <div
-                  key={codeItem.id}
-                  className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1626] p-4 shadow-sm hover:border-amber-500/50 transition-all space-y-3 flex flex-col justify-between"
-                >
-                  <div className="space-y-2">
-                    {/* Header: Bookmaker & Odds */}
-                    <div className="flex items-center justify-between gap-2">
-                      <span className={`px-2.5 py-0.5 rounded-md text-[10px] font-display font-black uppercase tracking-wider ${badgeStyle} shadow-sm`}>
-                        {bookieName}
-                      </span>
+          const renderCard = (codeItem, isPast = false) => {
+            const isCopied = copiedCodeId === codeItem.id;
+            const bookieName = codeItem.bookmakerName || codeItem.bookmaker?.toUpperCase() || 'SportyBet';
+            const bookieLink = getBookmakerUrl(codeItem.bookmaker);
+            const badgeStyle = getBookmakerBadgeStyle(codeItem.bookmaker);
+            const dateBadge = formatCodeDateBadge(codeItem);
+            const hasOdds = codeItem.odds !== null && codeItem.odds !== undefined && codeItem.odds !== '';
+
+            return (
+              <div
+                key={codeItem.id}
+                className={`rounded-2xl border ${
+                  isPast 
+                    ? 'border-slate-200 dark:border-slate-800/80 bg-slate-50/70 dark:bg-[#0c1220] opacity-90' 
+                    : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1626]'
+                } p-4 shadow-sm hover:border-amber-500/50 transition-all space-y-3 flex flex-col justify-between`}
+              >
+                <div className="space-y-2">
+                  {/* Header: Bookmaker, Date Badge & Odds */}
+                  <div className="flex items-center justify-between gap-1.5 flex-wrap">
+                    <span className={`px-2.5 py-0.5 rounded-md text-[10px] font-display font-black uppercase tracking-wider ${badgeStyle} shadow-sm`}>
+                      {bookieName}
+                    </span>
+                    <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold ${dateBadge.badgeClass}`}>
+                      {dateBadge.label}
+                    </span>
+                    {hasOdds ? (
                       <span className="px-2.5 py-0.5 rounded-md bg-amber-500/15 text-amber-500 dark:text-amber-300 font-mono font-black text-xs border border-amber-500/30">
-                        {codeItem.odds}x Odds
+                        {codeItem.odds}{typeof codeItem.odds === 'number' ? 'x' : ''} Odds
                       </span>
-                    </div>
+                    ) : (
+                      <span className="px-2.5 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-400 font-mono text-[10px]">
+                        Open Odds
+                      </span>
+                    )}
+                  </div>
 
-                    {/* Slip Title */}
-                    <div>
-                      <h3 className="font-display font-bold text-sm text-slate-900 dark:text-white line-clamp-1">
-                        {codeItem.title || `${market.name} Value Acca`}
-                      </h3>
-                      <div className="flex items-center gap-2 text-xs font-mono text-slate-500 dark:text-slate-400 mt-0.5">
-                        {codeItem.eventsCount && <span>{codeItem.eventsCount} Legs (Matches)</span>}
-                        {codeItem.dropTime && <span>&bull; {codeItem.dropTime}</span>}
-                      </div>
-                    </div>
-
-                    {/* Booking Code Display */}
-                    <div className="p-3 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200/80 dark:border-slate-700/80 flex items-center justify-between gap-2">
-                      <div className="min-w-0">
-                        <span className="text-[9px] uppercase font-mono font-bold text-slate-400 block">
-                          Booking Code
-                        </span>
-                        <span className="font-mono font-black text-base tracking-wider text-slate-900 dark:text-white select-all">
-                          {codeItem.code}
-                        </span>
-                      </div>
-
-                      <button
-                        onClick={() => handleCopyCode(codeItem)}
-                        className={`p-2 rounded-xl text-xs font-display font-black uppercase tracking-wider flex items-center gap-1 transition-all ${
-                          isCopied
-                            ? 'bg-[#00FF66] text-slate-950 font-black'
-                            : 'bg-slate-200 dark:bg-[#1a253d] text-slate-900 dark:text-white hover:bg-[#E41B13] hover:text-white'
-                        }`}
-                        title="Copy code"
-                      >
-                        {isCopied ? <Check className="w-4 h-4 stroke-[3]" /> : <Copy className="w-4 h-4" />}
-                      </button>
+                  {/* Slip Title */}
+                  <div>
+                    <h3 className="font-display font-bold text-sm text-slate-900 dark:text-white line-clamp-1">
+                      {codeItem.title || `${market.name} Value Acca`}
+                    </h3>
+                    <div className="flex items-center gap-2 text-xs font-mono text-slate-500 dark:text-slate-400 mt-0.5">
+                      {codeItem.eventsCount && <span>{codeItem.eventsCount} Legs (Matches)</span>}
+                      {codeItem.dropTime && <span>&bull; {codeItem.dropTime}</span>}
                     </div>
                   </div>
 
-                  {/* Actions */}
-                  <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2">
+                  {/* Booking Code Display */}
+                  <div className="p-3 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200/80 dark:border-slate-700/80 flex items-center justify-between gap-2">
+                    <div className="min-w-0">
+                      <span className="text-[9px] uppercase font-mono font-bold text-slate-400 block">
+                        Booking Code
+                      </span>
+                      <span className="font-mono font-black text-base tracking-wider text-slate-900 dark:text-white select-all">
+                        {codeItem.code}
+                      </span>
+                    </div>
+
                     <button
                       onClick={() => handleCopyCode(codeItem)}
-                      className="flex-1 py-2 px-3 rounded-xl bg-[#E41B13] hover:bg-[#D01710] text-white font-display font-black text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 shadow-sm"
+                      className={`p-2 rounded-xl text-xs font-display font-black uppercase tracking-wider flex items-center gap-1 transition-all ${
+                        isCopied
+                          ? 'bg-[#00FF66] text-slate-950 font-black'
+                          : 'bg-slate-200 dark:bg-[#1a253d] text-slate-900 dark:text-white hover:bg-[#E41B13] hover:text-white'
+                      }`}
+                      title="Copy code"
                     >
-                      <span>{isCopied ? 'Copied!' : 'Copy Code'}</span>
-                    </button>
-
-                    <a
-                      href={bookieLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="py-2 px-3 rounded-xl bg-slate-100 dark:bg-[#162238] hover:bg-slate-200 dark:hover:bg-[#1f2d4a] text-slate-700 dark:text-slate-300 font-display font-bold text-xs uppercase tracking-wider transition-colors flex items-center gap-1"
-                      title={`Load slip directly on ${bookieName}`}
-                    >
-                      <span>Load</span>
-                      <ExternalLink className="w-3.5 h-3.5" />
-                    </a>
-
-                    <button
-                      onClick={(e) => handleDeleteCode(e, codeItem.id, codeItem.code)}
-                      className="p-2 rounded-xl bg-rose-50 dark:bg-rose-950/30 hover:bg-rose-100 dark:hover:bg-rose-900/50 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-900 transition-all"
-                      title="Remove code from this market"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
+                      {isCopied ? <Check className="w-4 h-4 stroke-[3]" /> : <Copy className="w-4 h-4" />}
                     </button>
                   </div>
                 </div>
-              );
-            })}
-          </div>
-        ) : (
-          <div className="bg-white dark:bg-[#0E1626] p-8 rounded-2xl border border-dashed border-slate-300 dark:border-slate-800 text-center space-y-2">
-            <Layers className="w-8 h-8 text-slate-400 mx-auto" />
-            <p className="text-sm font-bold text-slate-700 dark:text-slate-300">
-              No booking codes matching the filter right now.
-            </p>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
-              New slips for {market.name} are added daily by our analysts. Check back around 02:00 AM WAT.
-            </p>
-          </div>
-        )}
+
+                {/* Actions */}
+                <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2">
+                  <button
+                    onClick={() => handleCopyCode(codeItem)}
+                    className="flex-1 py-2 px-3 rounded-xl bg-[#E41B13] hover:bg-[#D01710] text-white font-display font-black text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 shadow-sm"
+                  >
+                    <span>{isCopied ? 'Copied!' : 'Copy Code'}</span>
+                  </button>
+
+                  <a
+                    href={bookieLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="py-2 px-3 rounded-xl bg-slate-100 dark:bg-[#162238] hover:bg-slate-200 dark:hover:bg-[#1f2d4a] text-slate-700 dark:text-slate-300 font-display font-bold text-xs uppercase tracking-wider transition-colors flex items-center gap-1"
+                    title={`Load slip directly on ${bookieName}`}
+                  >
+                    <span>Load</span>
+                    <ExternalLink className="w-3.5 h-3.5" />
+                  </a>
+
+                  <button
+                    onClick={(e) => handleDeleteCode(e, codeItem.id, codeItem.code)}
+                    className="p-2 rounded-xl bg-rose-50 dark:bg-rose-950/30 hover:bg-rose-100 dark:hover:bg-rose-900/50 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-900 transition-all"
+                    title="Remove code from this market"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
+            );
+          };
+
+          return (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 items-start">
+              {/* COLUMN 1: TODAY'S SLIPS */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between pb-1 border-b border-emerald-500/30">
+                  <span className="font-display font-black text-xs uppercase tracking-wider text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    🟢 Today's Codes ({todaySlips.length})
+                  </span>
+                  <span className="text-[10px] font-mono text-slate-400">Oct 20, 2026</span>
+                </div>
+                {todaySlips.length === 0 ? (
+                  <div className="p-6 rounded-xl border border-dashed border-slate-300 dark:border-slate-800 text-center text-xs text-slate-400 font-mono">
+                    No new codes attached today for this market.
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {todaySlips.map(c => renderCard(c, false))}
+                  </div>
+                )}
+              </div>
+
+              {/* COLUMN 2: YESTERDAY & EARLIER SLIPS */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between pb-1 border-b border-amber-500/30">
+                  <span className="font-display font-black text-xs uppercase tracking-wider text-amber-600 dark:text-amber-400 flex items-center gap-1.5">
+                    <Clock className="w-3.5 h-3.5" />
+                    🕒 Yesterday &amp; Earlier Slips ({yesterdaySlips.length})
+                  </span>
+                  <span className="text-[10px] font-mono text-slate-400">Oct 19 &amp; Earlier</span>
+                </div>
+                {yesterdaySlips.length === 0 ? (
+                  <div className="p-6 rounded-xl border border-dashed border-slate-300 dark:border-slate-800 text-center text-xs text-slate-400 font-mono">
+                    No archive slips in this market.
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {yesterdaySlips.map(c => renderCard(c, true))}
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        })()}
       </div>
 
       {/* MID-PAGE 300x250 BANNER */}

@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { usePredictions } from '../context/PredictionsContext';
+import { isTodayCode, formatCodeDateBadge } from '../utils/codeDates';
 import AdPlaceholder from '../components/AdPlaceholder';
 import { 
   ArrowLeft, Copy, Check, ExternalLink, Calendar, 
-  CheckCircle2, Share2, Shield, Flame, Users, Sparkles, ArrowRight
+  CheckCircle2, Share2, Shield, Flame, Users, Sparkles, ArrowRight, Clock
 } from 'lucide-react';
 
 export default function PunterProfilePage({ punterId, onNavigate }) {
@@ -126,90 +127,155 @@ export default function PunterProfilePage({ punterId, onNavigate }) {
           <div className="flex items-center gap-2">
             <span className="text-lg">🎟️</span>
             <h2 className="text-base sm:text-lg font-display font-black text-slate-900 dark:text-white">
-              Today's Ready-to-Load Codes by {punter.displayName}
+              Booking Codes by {punter.displayName}
             </h2>
           </div>
-          <span className="text-xs font-mono text-slate-400">
-            Updated 02:00 AM WAT
+          <span className="text-xs font-mono text-emerald-500 font-bold">
+            📅 Active Date: Oct 20, 2026
           </span>
         </div>
 
-        {punter.dailyCodes && punter.dailyCodes.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
-            {punter.dailyCodes.map((codeItem) => {
-              const isSporty = codeItem.bookmaker === 'sportybet';
-              const isBet9ja = codeItem.bookmaker === 'bet9ja';
+        {(() => {
+          const allCodes = punter.dailyCodes || [];
+          const todayCodes = allCodes.filter(isTodayCode);
+          const yesterdayCodes = allCodes.filter(c => !isTodayCode(c));
 
-              return (
-                <div
-                  key={codeItem.id}
-                  className="p-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1626] shadow-sm hover:shadow-md transition-all space-y-3 flex flex-col justify-between"
-                >
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between gap-2">
-                      <span className={`px-2.5 py-1 rounded-md text-[10px] font-display font-black uppercase ${
-                        isSporty 
-                          ? 'bg-[#E41B13] text-white' 
-                          : isBet9ja 
-                          ? 'bg-[#00C250] text-black font-black' 
-                          : 'bg-blue-600 text-white'
-                      }`}>
-                        {isSporty ? 'SportyBet' : isBet9ja ? 'Bet9ja' : codeItem.bookmaker?.toUpperCase()}
-                      </span>
+          const renderCard = (codeItem, isPast = false) => {
+            const isSporty = codeItem.bookmaker === 'sportybet';
+            const isBet9ja = codeItem.bookmaker === 'bet9ja';
+            const isFootball = codeItem.bookmaker === 'footballcom';
+            const is22Bet = codeItem.bookmaker === '22bet';
+            const dateBadge = formatCodeDateBadge(codeItem);
+            const oddsVal = codeItem.totalOdds ?? codeItem.odds;
+            const hasOdds = oddsVal !== null && oddsVal !== undefined && oddsVal !== '';
 
-                      <div className="flex items-center gap-1.5 font-mono text-xs">
-                        {codeItem.gamesCount ? (
-                          <>
-                            <span className="text-slate-500">{codeItem.gamesCount} Games</span>
-                            <span>&bull;</span>
-                          </>
-                        ) : null}
-                        <strong className="text-emerald-600 dark:text-emerald-400 font-black">{codeItem.totalOdds}x Odds</strong>
-                      </div>
-                    </div>
+            return (
+              <div
+                key={codeItem.id}
+                className={`p-4 rounded-2xl border ${
+                  isPast 
+                    ? 'border-slate-200 dark:border-slate-800/80 bg-slate-50/70 dark:bg-[#0c1220] opacity-90' 
+                    : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1626]'
+                } shadow-sm hover:shadow-md transition-all space-y-3 flex flex-col justify-between`}
+              >
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between gap-1.5 flex-wrap">
+                    <span className={`px-2.5 py-1 rounded-md text-[10px] font-display font-black uppercase ${
+                      isSporty 
+                        ? 'bg-[#E41B13] text-white' 
+                        : isFootball
+                        ? 'bg-[#008751] text-white'
+                        : is22Bet
+                        ? 'bg-teal-600 text-white font-bold'
+                        : isBet9ja 
+                        ? 'bg-[#00C250] text-black font-black' 
+                        : 'bg-blue-600 text-white'
+                    }`}>
+                      {codeItem.bookmakerName || (isSporty ? 'SportyBet' : isBet9ja ? 'Bet9ja' : isFootball ? 'Football.com' : codeItem.bookmaker?.toUpperCase())}
+                    </span>
 
-                    <h3 className="font-display font-black text-sm text-slate-900 dark:text-white">
-                      {codeItem.marketType}
-                    </h3>
-                  </div>
+                    <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold ${dateBadge.badgeClass}`}>
+                      {dateBadge.label}
+                    </span>
 
-                  <div className="pt-2.5 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-2">
-                    <div className="px-3 py-1.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 font-mono font-black text-sm text-slate-900 dark:text-white tracking-wider">
-                      {codeItem.code}
-                    </div>
-
-                    <button
-                      onClick={() => handleCopy(codeItem.code, codeItem.id, isSporty ? 'SportyBet' : isBet9ja ? 'Bet9ja' : '1xBet', codeItem.totalOdds, `${punter.displayName}'s ${codeItem.marketType}`)}
-                      className={`px-3.5 py-1.5 rounded-xl text-xs font-display font-black uppercase tracking-wider flex items-center gap-1.5 transition-all shadow-sm ${
-                        copiedCodeId === codeItem.id
-                          ? 'bg-[#00C250] text-black font-bold'
-                          : isSporty
-                          ? 'bg-[#E41B13] hover:bg-[#D01710] text-white'
-                          : 'bg-slate-900 dark:bg-slate-800 hover:bg-[#E41B13] text-white'
-                      }`}
-                    >
-                      {copiedCodeId === codeItem.id ? (
+                    <div className="flex items-center gap-1.5 font-mono text-xs">
+                      {codeItem.gamesCount ? (
                         <>
-                          <Check className="w-3.5 h-3.5 stroke-[3]" />
-                          <span>Copied!</span>
+                          <span className="text-slate-500">{codeItem.gamesCount} Games</span>
+                          <span>&bull;</span>
                         </>
+                      ) : null}
+                      {hasOdds ? (
+                        <strong className="text-emerald-600 dark:text-emerald-400 font-black">
+                          {oddsVal}{typeof oddsVal === 'number' ? 'x' : ''} Odds
+                        </strong>
                       ) : (
-                        <>
-                          <Copy className="w-3.5 h-3.5" />
-                          <span>Copy Code</span>
-                        </>
+                        <span className="text-slate-400 font-mono text-[10px]">Open Odds</span>
                       )}
-                    </button>
+                    </div>
                   </div>
+
+                  <h3 className="font-display font-black text-sm text-slate-900 dark:text-white">
+                    {codeItem.marketType || 'Verified Selection Slip'}
+                  </h3>
                 </div>
-              );
-            })}
-          </div>
-        ) : (
-          <div className="bg-white dark:bg-[#0E1626] p-8 rounded-2xl border border-slate-200 dark:border-slate-800 text-center text-xs text-slate-500 font-mono">
-            No active slips assigned for this analyst today. Midnight drop scheduled at 02:00 AM WAT.
-          </div>
-        )}
+
+                <div className="pt-2.5 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-2">
+                  <div className="px-3 py-1.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 font-mono font-black text-sm text-slate-900 dark:text-white tracking-wider">
+                    {codeItem.code}
+                  </div>
+
+                  <button
+                    onClick={() => handleCopy(codeItem.code, codeItem.id, codeItem.bookmakerName || codeItem.bookmaker, oddsVal, `${punter.displayName}'s Slip`)}
+                    className={`px-3.5 py-1.5 rounded-xl text-xs font-display font-black uppercase tracking-wider flex items-center gap-1.5 transition-all shadow-sm ${
+                      copiedCodeId === codeItem.id
+                        ? 'bg-[#00C250] text-black font-bold'
+                        : isSporty
+                        ? 'bg-[#E41B13] hover:bg-[#D01710] text-white'
+                        : 'bg-slate-900 dark:bg-slate-800 hover:bg-[#E41B13] text-white'
+                    }`}
+                  >
+                    {copiedCodeId === codeItem.id ? (
+                      <>
+                        <Check className="w-3.5 h-3.5 stroke-[3]" />
+                        <span>Copied!</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-3.5 h-3.5" />
+                        <span>Copy Code</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+            );
+          };
+
+          return (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 items-start">
+              {/* COLUMN 1: TODAY'S CODES */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between pb-1 border-b border-emerald-500/30">
+                  <span className="font-display font-black text-xs uppercase tracking-wider text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    🟢 Today's Codes ({todayCodes.length})
+                  </span>
+                  <span className="text-[10px] font-mono text-slate-400">Oct 20, 2026</span>
+                </div>
+                {todayCodes.length === 0 ? (
+                  <div className="p-6 rounded-xl border border-dashed border-slate-300 dark:border-slate-800 text-center text-xs text-slate-400 font-mono">
+                    No new slips dropped today by {punter.displayName} yet.
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {todayCodes.map(c => renderCard(c, false))}
+                  </div>
+                )}
+              </div>
+
+              {/* COLUMN 2: YESTERDAY & EARLIER SLIPS */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between pb-1 border-b border-amber-500/30">
+                  <span className="font-display font-black text-xs uppercase tracking-wider text-amber-600 dark:text-amber-400 flex items-center gap-1.5">
+                    <Clock className="w-3.5 h-3.5" />
+                    🕒 Yesterday &amp; Earlier Slips ({yesterdayCodes.length})
+                  </span>
+                  <span className="text-[10px] font-mono text-slate-400">Oct 19 &amp; Earlier</span>
+                </div>
+                {yesterdayCodes.length === 0 ? (
+                  <div className="p-6 rounded-xl border border-dashed border-slate-300 dark:border-slate-800 text-center text-xs text-slate-400 font-mono">
+                    No archived slips for this analyst.
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {yesterdayCodes.map(c => renderCard(c, true))}
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        })()}
       </div>
 
       {/* MID CONTENT IN-FEED AD */}

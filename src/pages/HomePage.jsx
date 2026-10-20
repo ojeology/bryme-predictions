@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { usePredictions } from '../context/PredictionsContext';
+import { isTodayCode, formatCodeDateBadge } from '../utils/codeDates';
 import AdBanner from '../components/AdBanner';
 import { WEEKEND_2_ODDS_STATS } from '../data/weekendArchive';
 import { LADDER_18_STEPS } from '../components/VisibleLadder';
@@ -101,11 +102,11 @@ export default function HomePage({ onNavigate }) {
   const getBookmakerUrl = (bName) => {
     const b = (bName || '').toLowerCase();
     if (b.includes('22bet')) return adSettings?.twentyTwoBetAffiliateUrl || 'https://che.fluxbrox.com/redirect.aspx?pid=199669&bid=1488&lpid=25';
-    if (b.includes('1x')) return adSettings?.oneXBetAffiliateUrl || 'https://1xbet.ng/?bf=bryme';
-    if (b.includes('msport')) return adSettings?.msportAffiliateUrl || 'https://www.msport.com/?ref=bryme';
-    if (b.includes('bet9ja')) return adSettings?.bet9jaAffiliateUrl || 'https://register.bet9ja.com/?promocode=bryme';
-    if (b.includes('king')) return adSettings?.betkingAffiliateUrl || 'https://www.betking.com/?aff=bryme';
-    return adSettings?.sportyAffiliateUrl || 'https://www.sportybet.com/ng/';
+    if (b.includes('1x')) return 'https://1xbet.ng/';
+    if (b.includes('msport')) return 'https://www.msport.com/ng/';
+    if (b.includes('bet9ja')) return 'https://sports.bet9ja.com/';
+    if (b.includes('king')) return 'https://www.betking.com/';
+    return 'https://www.sportybet.com/ng/';
   };
 
   // Emerging bookmakers bonus roster
@@ -115,7 +116,7 @@ export default function HomePage({ onNavigate }) {
       name: '22Bet Nigeria',
       bonus: '100% Welcome Bonus',
       maxAmount: 'Up to ₦207,500',
-      badge: 'TOP WELCOME PACK',
+      badge: 'OFFICIAL AFFILIATE PARTNER',
       badgeBg: 'bg-teal-600 text-white',
       accent: 'border-teal-500/50 hover:border-teal-400',
       description: 'Massive 100% sports welcome bonus up to ₦207,500 with high European odds, deep Asian handicaps, and weekly reload bonuses.',
@@ -132,9 +133,9 @@ export default function HomePage({ onNavigate }) {
       badgeBg: 'bg-blue-600 text-white',
       accent: 'border-blue-500/50 hover:border-blue-400',
       description: 'Exclusive 300% first deposit bonus + highest odds payout on football corners, cards, and combo accumulators.',
-      promoCode: 'BRYMEVIP',
+      promoCode: 'AUTO-APPLIED',
       perk: 'Lowest 5x accumulator wagering requirement',
-      url: adSettings?.oneXBetAffiliateUrl || 'https://1xbet.ng/?bf=bryme'
+      url: 'https://1xbet.ng/'
     },
     {
       id: 'msport',
@@ -147,7 +148,7 @@ export default function HomePage({ onNavigate }) {
       description: 'Instant Nigerian bank payouts in under 60 seconds + ₦500,000 in free betting vouchers upon registration.',
       promoCode: 'AUTO-APPLIED',
       perk: 'Fastest mobile app with super odds boosts',
-      url: adSettings?.msportAffiliateUrl || 'https://www.msport.com/?ref=bryme'
+      url: 'https://www.msport.com/ng/'
     },
     {
       id: 'betking',
@@ -158,9 +159,9 @@ export default function HomePage({ onNavigate }) {
       badgeBg: 'bg-purple-600 text-white',
       accent: 'border-purple-500/50 hover:border-purple-400',
       description: '100% money-back risk-free bet if your first ticket cuts + 300% accumulator multiplier bonus.',
-      promoCode: 'KINGVIP',
+      promoCode: 'AUTO-APPLIED',
       perk: 'Huge multi-match accumulator boosters',
-      url: adSettings?.betkingAffiliateUrl || 'https://www.betking.com/?aff=bryme'
+      url: 'https://www.betking.com/'
     },
     {
       id: 'bet9ja',
@@ -171,9 +172,9 @@ export default function HomePage({ onNavigate }) {
       badgeBg: 'bg-[#00C250] text-black',
       accent: 'border-emerald-500/50 hover:border-emerald-400',
       description: 'The household name for Nigerian punters. Solid weekend liquidity and instant retail/online code loading.',
-      promoCode: 'BET9JABRYME',
+      promoCode: 'AUTO-APPLIED',
       perk: 'Over 100,000 retail shops nationwide',
-      url: adSettings?.bet9jaAffiliateUrl || 'https://register.bet9ja.com/?promocode=bryme'
+      url: 'https://sports.bet9ja.com/'
     }
   ];
 
@@ -833,77 +834,146 @@ export default function HomePage({ onNavigate }) {
           </form>
         )}
 
-        {/* Market codes list */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 pt-1">
-          {(marketCodes || [])
-            .filter(c => activeMarketFilter === 'all' || c.marketId === activeMarketFilter)
-            .map(codeItem => {
-              const isCopied = copiedCode === codeItem.code;
-              const bookieUrl = getBookmakerUrl(codeItem.bookmaker);
+        {/* Market codes split into Today vs Yesterday Columns */}
+        {(() => {
+          const currentFiltered = (marketCodes || []).filter(c => activeMarketFilter === 'all' || c.marketId === activeMarketFilter);
+          const todaySlips = currentFiltered.filter(isTodayCode);
+          const yesterdaySlips = currentFiltered.filter(c => !isTodayCode(c));
 
-              return (
-                <div
-                  key={codeItem.id}
-                  className="p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#121B2F] flex flex-col justify-between gap-2.5 transition-all hover:border-amber-500/50"
-                >
-                  <div className="space-y-1">
-                    <div className="flex items-center justify-between">
-                      <span className={`px-2 py-0.5 rounded text-[10px] font-display font-black uppercase ${
-                        codeItem.bookmaker === 'sportybet' ? 'bg-[#E41B13] text-white' : codeItem.bookmaker === '1xbet' ? 'bg-blue-600 text-white' : 'bg-amber-500 text-black'
-                      }`}>
-                        {codeItem.bookmakerName || codeItem.bookmaker}
-                      </span>
+          const renderSlipCard = (codeItem, isPast = false) => {
+            const isCopied = copiedCode === codeItem.code;
+            const bookieUrl = getBookmakerUrl(codeItem.bookmaker);
+            const dateBadge = formatCodeDateBadge(codeItem);
+            const hasOdds = codeItem.odds !== null && codeItem.odds !== undefined && codeItem.odds !== '';
+
+            return (
+              <div
+                key={codeItem.id}
+                className={`p-3.5 rounded-xl border ${
+                  isPast 
+                    ? 'border-slate-200 dark:border-slate-800/80 bg-slate-50/70 dark:bg-[#0c1220] opacity-90' 
+                    : 'border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-[#121B2F]'
+                } flex flex-col justify-between gap-2.5 transition-all hover:border-amber-500/50`}
+              >
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between gap-1 flex-wrap">
+                    <span className={`px-2 py-0.5 rounded text-[10px] font-display font-black uppercase ${
+                      codeItem.bookmaker === 'sportybet' 
+                        ? 'bg-[#E41B13] text-white' 
+                        : codeItem.bookmaker === '1xbet' 
+                        ? 'bg-blue-600 text-white' 
+                        : codeItem.bookmaker === '22bet'
+                        ? 'bg-teal-600 text-white font-bold'
+                        : 'bg-amber-500 text-black'
+                    }`}>
+                      {codeItem.bookmakerName || codeItem.bookmaker}
+                    </span>
+
+                    <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold ${dateBadge.badgeClass}`}>
+                      {dateBadge.label}
+                    </span>
+
+                    {hasOdds ? (
                       <span className="font-mono font-black text-amber-500 text-xs">
-                        {codeItem.odds}x Odds
+                        {codeItem.odds}{typeof codeItem.odds === 'number' ? 'x' : ''}
                       </span>
-                    </div>
-
-                    <div className="font-mono font-black text-base text-slate-900 dark:text-white tracking-wider select-all pt-1">
-                      {codeItem.code}
-                    </div>
-
-                    <div className="text-xs font-bold text-slate-700 dark:text-slate-300 line-clamp-1">
-                      {codeItem.title || 'Market Slip'}
-                    </div>
-
-                    <div className="text-[11px] font-mono text-slate-400">
-                      {codeItem.eventsCount ? `${codeItem.eventsCount} Legs • ` : ''}{codeItem.dropTime || 'Live Today'}
-                    </div>
+                    ) : (
+                      <span className="font-mono text-[10px] text-slate-400">
+                        Open Odds
+                      </span>
+                    )}
                   </div>
 
-                  <div className="pt-2 border-t border-slate-200 dark:border-slate-800 flex items-center gap-2">
-                    <button
-                      onClick={() => handleCopy(codeItem.code, codeItem.bookmaker, codeItem.title, codeItem.odds)}
-                      className={`flex-1 py-1.5 px-3 rounded-lg text-xs font-display font-black uppercase tracking-wider flex items-center justify-center gap-1 transition-all ${
-                        isCopied ? 'bg-[#00FF66] text-slate-950' : 'bg-[#E41B13] hover:bg-[#D01710] text-white shadow-sm'
-                      }`}
-                    >
-                      {isCopied ? <Check className="w-3.5 h-3.5 stroke-[3]" /> : <Copy className="w-3.5 h-3.5" />}
-                      <span>{isCopied ? 'Copied' : 'Copy Code'}</span>
-                    </button>
+                  <div className="font-mono font-black text-base text-slate-900 dark:text-white tracking-wider select-all pt-1">
+                    {codeItem.code}
+                  </div>
 
-                    <a
-                      href={bookieUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="py-1.5 px-3 rounded-lg bg-slate-200 dark:bg-[#162238] hover:bg-slate-300 dark:hover:bg-[#1f2d4a] text-slate-800 dark:text-slate-200 font-display font-bold text-xs uppercase tracking-wider flex items-center gap-1 transition-colors"
-                    >
-                      <span>Load</span>
-                      <ExternalLink className="w-3 h-3" />
-                    </a>
+                  <div className="text-xs font-bold text-slate-700 dark:text-slate-300 line-clamp-1">
+                    {codeItem.title || 'Market Slip'}
+                  </div>
 
-                    <button
-                      onClick={(e) => handleDeleteMarketSlip(e, codeItem.id, codeItem.code)}
-                      className="p-1.5 rounded-lg bg-rose-50 dark:bg-rose-950/30 hover:bg-rose-100 dark:hover:bg-rose-900/50 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-900 transition-all"
-                      title="Remove code from this market"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
+                  <div className="text-[11px] font-mono text-slate-400">
+                    {codeItem.eventsCount ? `${codeItem.eventsCount} Legs • ` : ''}{codeItem.dropTime || dateBadge.label}
                   </div>
                 </div>
-              );
-            })}
-        </div>
+
+                <div className="pt-2 border-t border-slate-200 dark:border-slate-800 flex items-center gap-2">
+                  <button
+                    onClick={() => handleCopy(codeItem.code, codeItem.bookmaker, codeItem.title, codeItem.odds)}
+                    className={`flex-1 py-1.5 px-3 rounded-lg text-xs font-display font-black uppercase tracking-wider flex items-center justify-center gap-1 transition-all ${
+                      isCopied ? 'bg-[#00FF66] text-slate-950' : 'bg-[#E41B13] hover:bg-[#D01710] text-white shadow-sm'
+                    }`}
+                  >
+                    {isCopied ? <Check className="w-3.5 h-3.5 stroke-[3]" /> : <Copy className="w-3.5 h-3.5" />}
+                    <span>{isCopied ? 'Copied' : 'Copy Code'}</span>
+                  </button>
+
+                  <a
+                    href={bookieUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="py-1.5 px-3 rounded-lg bg-slate-200 dark:bg-[#162238] hover:bg-slate-300 dark:hover:bg-[#1f2d4a] text-slate-800 dark:text-slate-200 font-display font-bold text-xs uppercase tracking-wider flex items-center gap-1 transition-colors"
+                  >
+                    <span>Load</span>
+                    <ExternalLink className="w-3 h-3" />
+                  </a>
+
+                  <button
+                    onClick={(e) => handleDeleteMarketSlip(e, codeItem.id, codeItem.code)}
+                    className="p-1.5 rounded-lg bg-rose-50 dark:bg-rose-950/30 hover:bg-rose-100 dark:hover:bg-rose-900/50 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-900 transition-all"
+                    title="Remove code from this market"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
+            );
+          };
+
+          return (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 pt-1 items-start">
+              {/* COLUMN 1: TODAY'S MARKET SLIPS */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between pb-1 border-b border-emerald-500/30">
+                  <span className="font-display font-black text-xs uppercase tracking-wider text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    🟢 Today's Fresh Slips ({todaySlips.length})
+                  </span>
+                  <span className="text-[10px] font-mono text-slate-400">Oct 20, 2026</span>
+                </div>
+                {todaySlips.length === 0 ? (
+                  <div className="p-6 rounded-xl border border-dashed border-slate-300 dark:border-slate-800 text-center text-xs text-slate-400 font-mono">
+                    No new slips attached today for this filter.
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {todaySlips.map(c => renderSlipCard(c, false))}
+                  </div>
+                )}
+              </div>
+
+              {/* COLUMN 2: YESTERDAY & EARLIER SLIPS */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between pb-1 border-b border-amber-500/30">
+                  <span className="font-display font-black text-xs uppercase tracking-wider text-amber-600 dark:text-amber-400 flex items-center gap-1.5">
+                    <Clock className="w-3.5 h-3.5" />
+                    🕒 Yesterday &amp; Earlier Slips ({yesterdaySlips.length})
+                  </span>
+                  <span className="text-[10px] font-mono text-slate-400">Oct 19 &amp; Earlier</span>
+                </div>
+                {yesterdaySlips.length === 0 ? (
+                  <div className="p-6 rounded-xl border border-dashed border-slate-300 dark:border-slate-800 text-center text-xs text-slate-400 font-mono">
+                    No archive slips in this filter.
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {yesterdaySlips.map(c => renderSlipCard(c, true))}
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        })()}
       </section>
 
       {/* ── 6. BETTING ACADEMY: ARBITRAGE SUREBETS BANNER ── */}
