@@ -393,107 +393,184 @@ export default function HomePage({ onNavigate }) {
         </div>
 
         {/* CARD B: 🐋 TODAY'S WHALE 2-ODDS SYNDICATE STAKE */}
-        <div className="rounded-3xl border-2 border-emerald-500/70 bg-gradient-to-b from-[#0A2218] via-[#0E1B22] to-[#0A0D18] text-white p-5 sm:p-6 shadow-2xl relative overflow-hidden flex flex-col justify-between space-y-4">
-          <div className="absolute top-0 right-0 -mr-16 -mt-16 w-52 h-52 rounded-full bg-emerald-500/20 blur-3xl pointer-events-none" />
+        {(() => {
+          const isWon = whaleSlip?.status === 'won';
+          const activeOdds = whaleSlip?.totalOdds ? (typeof whaleSlip.totalOdds === 'number' ? whaleSlip.totalOdds.toFixed(2) : whaleSlip.totalOdds) : '2.02';
+          const activeReturn = whaleSlip?.potentialReturn || '₦1,010,000';
+          const activeStake = whaleSlip?.stakeAmount || '₦500,000';
+          const activeMatches = whaleSlip?.matches || [];
+          const code22Bet = whaleSlip?.twentyTwoBetCode || whaleSlip?.twoTwoBetCode || whaleSlip?.bet9jaCode || '7fpl3';
+          const codeSporty = whaleSlip?.sportyCode || '7FPL3';
 
-          <div className="space-y-3 relative z-10">
-            {/* Header Badge */}
-            <div className="flex items-center justify-between gap-2">
-              <span className="px-3 py-1 rounded-full bg-emerald-500 text-slate-950 font-display font-black text-xs uppercase tracking-wider shadow-md flex items-center gap-1.5">
-                <Check className="w-3.5 h-3.5 stroke-[3]" />
-                <span>SYNDICATE BET WON &amp; PAID OUT</span>
-              </span>
-              <span className="px-2.5 py-0.5 rounded-lg bg-emerald-500/20 text-[#00FF66] font-mono font-black text-xs border border-emerald-500/40">
-                100% SETTLED WIN
-              </span>
-            </div>
+          return (
+            <div className="rounded-3xl border-2 border-emerald-500/70 bg-gradient-to-b from-[#0A2218] via-[#0E1B22] to-[#0A0D18] text-white p-5 sm:p-6 shadow-2xl relative overflow-hidden flex flex-col justify-between space-y-4">
+              <div className="absolute top-0 right-0 -mr-16 -mt-16 w-52 h-52 rounded-full bg-emerald-500/20 blur-3xl pointer-events-none" />
 
-            {/* Title & Syndicate Big Numbers */}
-            <div>
-              <div className="flex items-center gap-2">
-                <h2 className="text-2xl sm:text-3xl font-display font-black tracking-tight text-white">
-                  ₦1,090,000 Cashed Out!
-                </h2>
-              </div>
-              <p className="text-xs text-slate-300 mt-1 leading-relaxed">
-                Backed by <strong>Lagos VIP Syndicate #04</strong>. Initial ₦500,000 high-roller stake cleanly cashed <strong>+₦590,000 pure net profit</strong>!
-              </p>
-            </div>
-
-            {/* Odds & Return Box */}
-            <div className="grid grid-cols-2 gap-2 p-3 rounded-2xl bg-black/50 border border-emerald-500/30 font-mono">
-              <div>
-                <span className="text-[10px] text-slate-400 uppercase block font-bold">Staked by Syndicate</span>
-                <span className="text-xl sm:text-2xl font-black text-white">₦500,000</span>
-              </div>
-              <div className="text-right">
-                <span className="text-[10px] text-emerald-400 uppercase block font-bold">Total Paid Out</span>
-                <span className="text-xl sm:text-2xl font-black text-[#00FF66]">₦1,090,000</span>
-              </div>
-            </div>
-
-            {/* Whale Match Selections With Verified Results */}
-            <div className="space-y-2 text-xs">
-              <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-between">
-                <div>
-                  <div className="font-bold text-white flex items-center gap-1.5">
-                    <span>Real Madrid vs Sevilla</span>
-                    <span className="px-1.5 py-0.2 rounded bg-emerald-500/30 text-emerald-300 font-mono text-[10px]">2-1 FT</span>
-                  </div>
-                  <div className="text-[10px] text-slate-300">Pick: Madrid Over 1.5 Team Goals</div>
+              <div className="space-y-3 relative z-10">
+                {/* Header Badge */}
+                <div className="flex items-center justify-between gap-2">
+                  {isWon ? (
+                    <span className="px-3 py-1 rounded-full bg-emerald-500 text-slate-950 font-display font-black text-xs uppercase tracking-wider shadow-md flex items-center gap-1.5">
+                      <Check className="w-3.5 h-3.5 stroke-[3]" />
+                      <span>SYNDICATE BET WON &amp; PAID OUT</span>
+                    </span>
+                  ) : (
+                    <span className="px-3 py-1 rounded-full bg-amber-500 text-slate-950 font-display font-black text-xs uppercase tracking-wider shadow-md flex items-center gap-1.5 animate-pulse">
+                      <Flame className="w-3.5 h-3.5 fill-current" />
+                      <span>LIVE SYNDICATE WHALE BET</span>
+                    </span>
+                  )}
+                  <span className="px-2.5 py-0.5 rounded-lg bg-emerald-500/20 text-[#00FF66] font-mono font-black text-xs border border-emerald-500/40">
+                    {isWon ? '100% SETTLED WIN' : '95% SHARP EDGE'}
+                  </span>
                 </div>
-                <span className="font-mono font-black text-emerald-400 flex items-center gap-1">
-                  <span>1.45x</span>
-                  <Check className="w-3.5 h-3.5 stroke-[3]" />
-                </span>
-              </div>
 
-              <div className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-between">
+                {/* Title & Syndicate Big Numbers */}
                 <div>
-                  <div className="font-bold text-white flex items-center gap-1.5">
-                    <span>Bayern Munich vs RB Leipzig</span>
-                    <span className="px-1.5 py-0.2 rounded bg-emerald-500/30 text-emerald-300 font-mono text-[10px]">3-2 FT</span>
+                  <div className="flex items-center gap-2">
+                    <h2 className="text-2xl sm:text-3xl font-display font-black tracking-tight text-white">
+                      {isWon ? `${activeReturn} Cashed Out!` : `${activeOdds}x Whale Syndicate Lock`}
+                    </h2>
                   </div>
-                  <div className="text-[10px] text-slate-300">Pick: Over 2.5 Total Goals</div>
+                  <p className="text-xs text-slate-300 mt-1 leading-relaxed">
+                    Backed by <strong>{whaleSlip?.staker || 'Lagos VIP Syndicate #04'}</strong>. {isWon ? `Initial ${activeStake} high-roller stake cleanly cashed pure net profit!` : `Confirmed high-roller stake ${activeStake} targeting ${activeReturn} (+${Math.round((parseFloat(activeOdds) - 1) * 100)}% Net ROI). European target dominance wave.`}
+                  </p>
                 </div>
-                <span className="font-mono font-black text-emerald-400 flex items-center gap-1">
-                  <span>1.50x</span>
-                  <Check className="w-3.5 h-3.5 stroke-[3]" />
-                </span>
+
+                {/* Odds & Return Box */}
+                <div className="grid grid-cols-2 gap-2 p-3 rounded-2xl bg-black/50 border border-emerald-500/30 font-mono">
+                  <div>
+                    <span className="text-[10px] text-slate-400 uppercase block font-bold">Staked by Syndicate</span>
+                    <span className="text-xl sm:text-2xl font-black text-white">{activeStake}</span>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-[10px] text-emerald-400 uppercase block font-bold">{isWon ? 'Total Paid Out' : 'Target Payout'}</span>
+                    <span className="text-xl sm:text-2xl font-black text-[#00FF66]">{activeReturn}</span>
+                  </div>
+                </div>
+
+                {/* Whale Match Selections */}
+                <div className="space-y-2 text-xs">
+                  {activeMatches.map((m, idx) => (
+                    <div key={m.id || idx} className="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-between">
+                      <div>
+                        <div className="font-bold text-white flex items-center gap-1.5">
+                          <span>{m.match}</span>
+                          {m.status === 'won' && (
+                            <span className="px-1.5 py-0.2 rounded bg-emerald-500/30 text-emerald-300 font-mono text-[10px]">WON</span>
+                          )}
+                        </div>
+                        <div className="text-[10px] text-slate-300">Pick: {m.pick}</div>
+                      </div>
+                      <span className="font-mono font-black text-emerald-400 flex items-center gap-1">
+                        <span>{m.odds}x</span>
+                        {m.status === 'won' && <Check className="w-3.5 h-3.5 stroke-[3]" />}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Booking Code Display & Actions */}
+                {!isWon ? (
+                  <div className="space-y-2 pt-1">
+                    <div className="p-3 rounded-xl bg-black border border-emerald-500/30 flex items-center justify-between gap-2">
+                      <div>
+                        <span className="text-[9px] uppercase font-mono font-bold text-emerald-400 block">
+                          22Bet Verified Booking Code
+                        </span>
+                        <span className="font-mono font-black text-lg text-emerald-300 tracking-wider">
+                          {code22Bet}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <button
+                          onClick={() => handleCopy(code22Bet, '22Bet', '2-Odds Whale Shot', activeOdds)}
+                          className="px-3 py-2 rounded-xl bg-[#008575] hover:bg-[#007063] text-white font-display font-black text-xs uppercase tracking-wider flex items-center gap-1 shadow-md transition-all"
+                        >
+                          {copiedCode === code22Bet ? (
+                            <>
+                              <Check className="w-4 h-4 stroke-[3]" />
+                              <span>Copied!</span>
+                            </>
+                          ) : (
+                            <>
+                              <Copy className="w-4 h-4" />
+                              <span>Copy 22Bet</span>
+                            </>
+                          )}
+                        </button>
+                        <a
+                          href={getBookmakerUrl('22bet')}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="px-3 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-display font-black text-xs uppercase tracking-wider flex items-center gap-1 shadow-md transition-all"
+                        >
+                          <span>Load ➔</span>
+                        </a>
+                      </div>
+                    </div>
+
+                    <div className="p-2.5 rounded-xl bg-black/60 border border-white/10 flex items-center justify-between text-xs">
+                      <div>
+                        <span className="text-[9px] uppercase font-mono font-bold text-slate-400 block">
+                          SportyBet Duplicate Code
+                        </span>
+                        <span className="font-mono font-black text-sm text-white tracking-wider">
+                          {codeSporty}
+                        </span>
+                      </div>
+                      <button
+                        onClick={() => handleCopy(codeSporty, 'SportyBet', '2-Odds Whale Shot', activeOdds)}
+                        className="px-2.5 py-1.5 rounded-lg bg-[#E41B13] hover:bg-[#D01710] text-white font-display font-bold text-[11px] uppercase tracking-wider flex items-center gap-1 transition-all"
+                      >
+                        {copiedCode === codeSporty ? (
+                          <>
+                            <Check className="w-3.5 h-3.5 stroke-[3]" />
+                            <span>Copied</span>
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="w-3.5 h-3.5" />
+                            <span>Copy SportyBet</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="p-3 rounded-xl bg-black border border-emerald-500/30 text-center">
+                    <span className="text-[10px] uppercase font-mono font-bold text-emerald-400 block mb-0.5">
+                      Next Whale Game Status:
+                    </span>
+                    <span className="font-display font-black text-sm text-white">
+                      Syndicate Compiling Next Lock &bull; Drops Before Next Matchday
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              {/* Action Row */}
+              <div className="pt-2 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs">
+                <button
+                  onClick={() => onNavigate('results/syndicate')}
+                  className="text-amber-300 hover:text-amber-200 font-mono font-bold flex items-center gap-1.5 text-xs transition-colors"
+                >
+                  <span>📜 Check Past Syndicate Wins &amp; Loss (85.7% Win Rate) &rarr;</span>
+                </button>
+
+                <a
+                  href={getBookmakerUrl('22bet')}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-emerald-400 hover:underline font-display font-bold flex items-center gap-1 text-xs"
+                >
+                  <span>Get 100% Bonus on 22Bet (Up to ₦207,500)</span>
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </a>
               </div>
             </div>
-
-            {/* Next Whale Status */}
-            <div className="p-3 rounded-xl bg-black border border-emerald-500/30 text-center">
-              <span className="text-[10px] uppercase font-mono font-bold text-emerald-400 block mb-0.5">
-                Next Whale Game Status:
-              </span>
-              <span className="font-display font-black text-sm text-white">
-                Syndicate Compiling Next Lock &bull; Drops Before Next Matchday
-              </span>
-            </div>
-          </div>
-
-          {/* Action Row */}
-          <div className="pt-2 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs">
-            <button
-              onClick={() => onNavigate('results/syndicate')}
-              className="text-amber-300 hover:text-amber-200 font-mono font-bold flex items-center gap-1.5 text-xs transition-colors"
-            >
-              <span>📜 Check Past Syndicate Wins &amp; Loss (85.7% Win Rate) &rarr;</span>
-            </button>
-
-            <a
-              href={getBookmakerUrl('1xbet')}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-emerald-400 hover:underline font-display font-bold flex items-center gap-1 text-xs"
-            >
-              <span>Get 300% Bonus on 1xBet for Next Whale</span>
-              <ExternalLink className="w-3.5 h-3.5" />
-            </a>
-          </div>
-        </div>
+          );
+        })()}
 
       </div>
 

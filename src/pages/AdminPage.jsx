@@ -843,6 +843,19 @@ export default function AdminPage({ onNavigate }) {
 
             <div>
               <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
+                22Bet Booking Code (Affiliate)
+              </label>
+              <input
+                type="text"
+                value={whaleForm.twentyTwoBetCode || ''}
+                onChange={(e) => setWhaleForm({ ...whaleForm, twentyTwoBetCode: e.target.value })}
+                placeholder="e.g. 7fpl3"
+                className="w-full p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200 dark:border-slate-700 text-emerald-400 font-mono font-bold text-xs"
+              />
+            </div>
+
+            <div>
+              <label className="block text-[11px] font-mono font-bold uppercase text-slate-600 dark:text-slate-400 mb-1">
                 SportyBet Booking Code
               </label>
               <input

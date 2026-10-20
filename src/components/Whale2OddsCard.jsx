@@ -8,6 +8,7 @@ import { SYNDICATE_ARCHIVE, SYNDICATE_STATS } from '../data/syndicateArchive';
 
 export default function Whale2OddsCard({ whaleSlip, onNavigate }) {
   const [copiedSporty, setCopiedSporty] = useState(false);
+  const [copied22Bet, setCopied22Bet] = useState(false);
   const [copiedBet9ja, setCopiedBet9ja] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
 
@@ -17,34 +18,44 @@ export default function Whale2OddsCard({ whaleSlip, onNavigate }) {
     title: "Today's Whale 2-Odds Syndicate Lock",
     staker: 'Lagos VIP Syndicate #04',
     stakeAmount: '₦500,000',
-    totalOdds: 2.18,
-    potentialReturn: '₦1,090,000',
-    confidence: '94%',
-    status: 'won',
-    sportyCode: 'Q7S287',
-    bet9jaCode: '5WGQKM6',
-    kickoffTime: 'Settled & Paid Out',
-    punterCount: 4210,
-    volumeStaked: '₦18,450,000',
-    intel: 'Syndicate placed ₦500k following sharp European liquidity drops. Madrid Over 1.5 Team Goals and Bayern Over 2.5 Goals landed before full time.',
+    totalOdds: 2.02,
+    potentialReturn: '₦1,010,000',
+    confidence: '95%',
+    status: 'pending',
+    sportyCode: '7FPL3',
+    twentyTwoBetCode: '7fpl3',
+    bet9jaCode: '7fpl3',
+    kickoffTime: 'Tonight 20:00 WAT',
+    punterCount: 4320,
+    volumeStaked: '₦19,200,000',
+    intel: 'Syndicate placed ₦500k backing European target volume: Liverpool home target assault (O4.5 SOT @ 1.27), Barcelona away transition pace (O4.5 SOT @ 1.24), and Manchester City box siege (O6.5 SOT @ 1.28). Available on 22bet with booking code 7fpl3.',
     matches: [
       {
         id: 'm1',
-        match: 'Real Madrid vs Sevilla (2-1 FT)',
-        league: 'Spanish La Liga',
-        kickoff: 'Full Time',
-        pick: 'Real Madrid Over 1.5 Team Goals',
-        odds: 1.45,
-        analysis: 'Madrid scored 2+ in 9 of last 10 home fixtures; won 2-1.'
+        match: 'Liverpool vs Villarreal',
+        league: 'European Top-Flight',
+        kickoff: '20:00 WAT',
+        pick: 'Liverpool Home Over 4.5 Shots on Target',
+        odds: 1.27,
+        analysis: 'Liverpool average 7.8 shots on target per home match under current tactical setup.'
       },
       {
         id: 'm2',
-        match: 'Bayern Munich vs RB Leipzig (3-2 FT)',
-        league: 'German Bundesliga',
-        kickoff: 'Full Time',
-        pick: 'Over 2.5 Total Goals',
-        odds: 1.50,
-        analysis: 'Explosive 5-goal match cleared the Over 2.5 line by the 52nd minute.'
+        match: 'PSG vs Barcelona',
+        league: 'European Top-Flight',
+        kickoff: '20:00 WAT',
+        pick: 'Barcelona Away Over 4.5 Shots on Target',
+        odds: 1.24,
+        analysis: 'Barcelona transition attack tests opposition goalkeepers with high direct volume.'
+      },
+      {
+        id: 'm3',
+        match: 'Man City vs AEK Athens',
+        league: 'European Top-Flight',
+        kickoff: '20:00 WAT',
+        pick: 'Man City Home Over 6.5 Shots on Target',
+        odds: 1.28,
+        analysis: 'Manchester City dominate box possession and average 9+ shots on target in home European clashes.'
       }
     ]
   };
@@ -52,7 +63,10 @@ export default function Whale2OddsCard({ whaleSlip, onNavigate }) {
   const handleCopy = (code, type) => {
     if (code) {
       navigator.clipboard.writeText(code);
-      if (type === 'sporty') {
+      if (type === '22bet') {
+        setCopied22Bet(true);
+        setTimeout(() => setCopied22Bet(false), 2200);
+      } else if (type === 'sporty') {
         setCopiedSporty(true);
         setTimeout(() => setCopiedSporty(false), 2200);
       } else {
@@ -202,55 +216,82 @@ export default function Whale2OddsCard({ whaleSlip, onNavigate }) {
       {slip.status === 'won' ? (
         <div className="p-4 rounded-2xl bg-emerald-950/40 border-2 border-emerald-500/40 text-center space-y-2 relative z-10">
           <div className="flex items-center justify-center gap-2 text-emerald-400 font-display font-black text-sm uppercase tracking-wider">
-            <span>🎉 ₦1,090,000 Payout Cashed Successfully</span>
+            <span>🎉 {slip.potentialReturn || '₦1,010,000'} Payout Cashed Successfully</span>
           </div>
           <p className="text-xs text-slate-300">
-            Both legs landed cleanly before full time. The next high-stake Whale 2-Odds syndicate lock is compiling and will drop before next kickoff.
+            All legs landed cleanly. The next high-stake Whale 2-Odds syndicate lock is compiling and will drop before next kickoff.
           </p>
         </div>
       ) : (
         <div className="pt-2 flex flex-col sm:flex-row items-center gap-3 relative z-10">
-          <button
-            onClick={() => handleCopy(slip.sportyCode, 'sporty')}
-            className={`flex-1 w-full py-3 px-4 rounded-xl font-display font-black text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-lg ${
-              copiedSporty
-                ? 'bg-emerald-600 text-white shadow-emerald-600/30'
-                : 'bg-gradient-to-r from-[#E41B13] to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white shadow-rose-900/40 active:scale-[0.98]'
-            }`}
-          >
-            {copiedSporty ? (
-              <>
-                <Check className="w-4 h-4" />
-                <span>SportyBet Code Copied!</span>
-              </>
-            ) : (
-              <>
-                <Copy className="w-4 h-4" />
-                <span>Copy SportyBet Code: {slip.sportyCode}</span>
-              </>
-            )}
-          </button>
+          {(slip.twentyTwoBetCode || slip.twoTwoBetCode || slip.code) && (
+            <button
+              onClick={() => handleCopy(slip.twentyTwoBetCode || slip.twoTwoBetCode || slip.code, '22bet')}
+              className={`flex-1 w-full py-3 px-4 rounded-xl font-display font-black text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-lg ${
+                copied22Bet
+                  ? 'bg-emerald-600 text-white shadow-emerald-600/30'
+                  : 'bg-gradient-to-r from-[#008575] to-teal-700 hover:from-[#007063] hover:to-teal-800 text-white shadow-teal-900/40 active:scale-[0.98]'
+              }`}
+            >
+              {copied22Bet ? (
+                <>
+                  <Check className="w-4 h-4" />
+                  <span>22Bet Code Copied!</span>
+                </>
+              ) : (
+                <>
+                  <Copy className="w-4 h-4" />
+                  <span>Copy 22Bet Code: {slip.twentyTwoBetCode || slip.twoTwoBetCode || slip.code}</span>
+                </>
+              )}
+            </button>
+          )}
 
-          <button
-            onClick={() => handleCopy(slip.bet9jaCode, 'bet9ja')}
-            className={`flex-1 w-full py-3 px-4 rounded-xl font-display font-black text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-lg ${
-              copiedBet9ja
-                ? 'bg-emerald-600 text-white shadow-emerald-600/30'
-                : 'bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white shadow-emerald-900/40 active:scale-[0.98]'
-            }`}
-          >
-            {copiedBet9ja ? (
-              <>
-                <Check className="w-4 h-4" />
-                <span>Bet9ja Code Copied!</span>
-              </>
-            ) : (
-              <>
-                <Copy className="w-4 h-4" />
-                <span>Copy Bet9ja Code: {slip.bet9jaCode}</span>
-              </>
-            )}
-          </button>
+          {slip.sportyCode && (
+            <button
+              onClick={() => handleCopy(slip.sportyCode, 'sporty')}
+              className={`flex-1 w-full py-3 px-4 rounded-xl font-display font-black text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-lg ${
+                copiedSporty
+                  ? 'bg-emerald-600 text-white shadow-emerald-600/30'
+                  : 'bg-gradient-to-r from-[#E41B13] to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white shadow-rose-900/40 active:scale-[0.98]'
+              }`}
+            >
+              {copiedSporty ? (
+                <>
+                  <Check className="w-4 h-4" />
+                  <span>SportyBet Code Copied!</span>
+                </>
+              ) : (
+                <>
+                  <Copy className="w-4 h-4" />
+                  <span>Copy SportyBet Code: {slip.sportyCode}</span>
+                </>
+              )}
+            </button>
+          )}
+
+          {slip.bet9jaCode && slip.bet9jaCode !== slip.twentyTwoBetCode && (
+            <button
+              onClick={() => handleCopy(slip.bet9jaCode, 'bet9ja')}
+              className={`flex-1 w-full py-3 px-4 rounded-xl font-display font-black text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-lg ${
+                copiedBet9ja
+                  ? 'bg-emerald-600 text-white shadow-emerald-600/30'
+                  : 'bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white shadow-emerald-900/40 active:scale-[0.98]'
+              }`}
+            >
+              {copiedBet9ja ? (
+                <>
+                  <Check className="w-4 h-4" />
+                  <span>Bet9ja Code Copied!</span>
+                </>
+              ) : (
+                <>
+                  <Copy className="w-4 h-4" />
+                  <span>Copy Bet9ja Code: {slip.bet9jaCode}</span>
+                </>
+              )}
+            </button>
+          )}
         </div>
       )}
 

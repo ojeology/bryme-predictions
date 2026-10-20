@@ -25,39 +25,49 @@ export const DEFAULT_WHALE_SLIP = {
   title: "Today's Whale 2-Odds Syndicate Lock",
   staker: 'Lagos VIP Syndicate #04',
   stakeAmount: '₦500,000',
-  totalOdds: 2.18,
-  potentialReturn: '₦1,090,000',
-  confidence: '94%',
-  status: 'won', // WON & CASHED OUT
-  payoutStatus: 'PAID OUT (₦1,090,000 CASHED)',
-  sportyCode: 'Q7S287',
-  bet9jaCode: '5WGQKM6',
-  kickoffTime: 'Settled & Won (Full Time)',
-  punterCount: 4210,
-  volumeStaked: '₦18,450,000',
-  intel: 'SYNDICATE BET WON & PAID OUT! Both Real Madrid Over 1.5 Team Goals (2-1 FT) and Bayern Munich vs RB Leipzig Over 2.5 Goals (3-2 FT) cashed cleanly before full time delivering ₦1,090,000 total payout. Next Whale 2-Odds game drops for the next match cycle.',
+  totalOdds: 2.02,
+  potentialReturn: '₦1,010,000',
+  confidence: '95%',
+  status: 'pending', // ACTIVE LIVE SYNDICATE BET
+  payoutStatus: 'LIVE TICKET (₦1,010,000 TARGET)',
+  sportyCode: '7FPL3',
+  bet9jaCode: '7fpl3',
+  twentyTwoBetCode: '7fpl3',
+  bookmaker: '22bet',
+  kickoffTime: 'Tonight 20:00 WAT',
+  punterCount: 4320,
+  volumeStaked: '₦19,200,000',
+  intel: 'Syndicate placed ₦500,000 backing European target volume: Liverpool home target assault (O4.5 SOT @ 1.27), Barcelona away transition pace (O4.5 SOT @ 1.24), and Manchester City heavy home box siege (O6.5 SOT @ 1.28). Available on 22bet with booking code 7fpl3.',
   matches: [
     {
       id: 'm1',
-      match: 'Real Madrid vs Sevilla (2-1 FT)',
-      league: 'Spanish La Liga',
-      kickoff: 'Full Time',
-      pick: 'Real Madrid Over 1.5 Team Goals',
-      odds: 1.45,
-      status: 'won',
-      resultScore: '2-1 FT (WON)',
-      analysis: 'Madrid dominated with 18 shots; 2-1 final score crossed the 1.5 team goal mark in minute 64.'
+      match: 'Liverpool vs Villarreal',
+      league: 'European Football',
+      kickoff: 'Tonight 20:00 WAT',
+      pick: 'Liverpool Home Over 4.5 Shots on Target',
+      odds: 1.27,
+      status: 'pending',
+      analysis: 'Liverpool average 7.8 shots on target per home match under current tactical setup.'
     },
     {
       id: 'm2',
-      match: 'Bayern Munich vs RB Leipzig (3-2 FT)',
-      league: 'German Bundesliga',
-      kickoff: 'Full Time',
-      pick: 'Over 2.5 Total Goals',
-      odds: 1.50,
-      status: 'won',
-      resultScore: '3-2 FT (WON)',
-      analysis: 'Explosive 5-goal thriller sealed the Over 2.5 line by the 52nd minute.'
+      match: 'PSG vs Barcelona',
+      league: 'European Football',
+      kickoff: 'Tonight 20:00 WAT',
+      pick: 'Barcelona Away Over 4.5 Shots on Target',
+      odds: 1.24,
+      status: 'pending',
+      analysis: 'Barcelona transition attack tests opposition goalkeepers with high direct volume.'
+    },
+    {
+      id: 'm3',
+      match: 'Man City vs AEK Athens',
+      league: 'European Football',
+      kickoff: 'Tonight 20:00 WAT',
+      pick: 'Man City Home Over 6.5 Shots on Target',
+      odds: 1.28,
+      status: 'pending',
+      analysis: 'Manchester City dominate box possession and average 9+ shots on target in home European ties.'
     }
   ]
 };
