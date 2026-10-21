@@ -5,21 +5,64 @@
  */
 
 export const SYNDICATE_STATS = {
-  totalRuns: 7,
-  won: 6,
+  totalRuns: 8,
+  won: 7,
   lost: 1,
-  hitRate: '85.7%',
-  accuracyRate: 85.7,
-  totalStakedNGN: '₦3,500,000',
-  totalPaidOutNGN: '₦7,180,000',
-  netProfitNGN: '+₦3,680,000',
-  avgOdds: '2.09x',
-  currentStreak: '2 Wins',
+  hitRate: '87.5%',
+  accuracyRate: 87.5,
+  totalStakedNGN: '₦4,000,000',
+  totalPaidOutNGN: '₦8,190,000',
+  netProfitNGN: '+₦4,190,000',
+  avgOdds: '2.08x',
+  currentStreak: '3 Wins',
   stakerIdentity: 'Lagos VIP Syndicate #04',
   verificationRule: 'All bets are published with odds and booking codes before European matchday kickoffs. Settled publicly at full-time.'
 };
 
 export const SYNDICATE_ARCHIVE = [
+  {
+    id: 'whale-run-08',
+    runNumber: 8,
+    date: 'Oct 20 - 21, 2026',
+    title: 'Run #08: European 2.02x Shots on Target Whale Lock',
+    staker: 'Lagos VIP Syndicate #04',
+    stakeAmount: '₦500,000',
+    totalOdds: 2.02,
+    potentialReturn: '₦1,010,000',
+    netProfit: '+₦510,000',
+    status: 'won',
+    settledScore: 'All 3 Target Lines Cleared FT',
+    sportyCode: '7FPL3',
+    twentyTwoBetCode: '7fpl3',
+    bet9jaCode: '7fpl3',
+    intel: 'Syndicate ₦500k stake landed cleanly: Liverpool Home O4.5 SOT (6 SOT), Barcelona Away O4.5 SOT (5 SOT), and Man City Home O6.5 SOT (8 SOT) delivering ₦1,010,000 payout.',
+    matches: [
+      {
+        match: 'Liverpool vs Villarreal',
+        league: 'European Top-Flight',
+        pick: 'Liverpool Home Over 4.5 Shots on Target',
+        odds: 1.27,
+        score: '6 SOT (WON)',
+        result: 'won'
+      },
+      {
+        match: 'PSG vs Barcelona',
+        league: 'European Top-Flight',
+        pick: 'Barcelona Away Over 4.5 Shots on Target',
+        odds: 1.24,
+        score: '5 SOT (WON)',
+        result: 'won'
+      },
+      {
+        match: 'Man City vs AEK Athens',
+        league: 'European Top-Flight',
+        pick: 'Man City Home Over 6.5 Shots on Target',
+        odds: 1.28,
+        score: '8 SOT (WON)',
+        result: 'won'
+      }
+    ]
+  },
   {
     id: 'whale-run-07',
     runNumber: 7,

@@ -34,36 +34,27 @@ export const LADDER_CONFIG = {
 };
 
 export const ACTIVE_CHALLENGE = {
-  challengeNumber: 51,
-  status: 'active',
-  startDate: '2026-10-20',
+  challengeNumber: 52,
+  status: 'pending',
+  startDate: '2026-10-21',
   currentDay: 1,
   startingStake: 1000,
   currentBalance: 1000,
-  nextPotentialBalance: 1600,
+  nextPotentialBalance: 1500,
   bankedAmount: 0,
-  todaysCode: 'HLLFK9',
+  todaysCode: 'DROPS 11:00 AM',
   bookmaker: 'SportyBet',
-  sportyCode: 'HLLFK9',
-  footballCode: 'HLLFK9',
-  dailyOdds: 1.60,
+  sportyCode: 'DROPS 11:00 AM',
+  footballCode: 'DROPS 11:00 AM',
+  dailyOdds: 1.50,
   selections: [
     {
-      match: 'Berrettini Matteo vs Opponent',
-      league: 'ATP Tennis Tour',
-      kickoff: 'Today 15:00 WAT',
-      market: 'To Win a Set',
-      pick: 'Berrettini Matteo to Win a Set',
-      odds: 1.26,
-      status: 'pending'
-    },
-    {
-      match: 'Cassone Murphy vs Opponent',
-      league: 'ATP / Challenger Tour',
+      match: 'Day 1 Banker Double (Top European & Domestic Leagues)',
+      league: 'European Top-Flight Competitions',
       kickoff: 'Today 16:30 WAT',
-      market: 'To Win a Set',
-      pick: 'Cassone Murphy to Win a Set',
-      odds: 1.27,
+      market: 'Double Chance & Over 1.5 Goals',
+      pick: 'Analysis in Progress (Drops 11:00 AM WAT)',
+      odds: 1.50,
       status: 'pending'
     }
   ],
@@ -71,6 +62,19 @@ export const ACTIVE_CHALLENGE = {
 };
 
 export const PAST_CHALLENGES = [
+  {
+    challengeNumber: 51,
+    startDate: '2026-10-20',
+    endDate: '2026-10-20',
+    startingStake: 1000,
+    dayReached: 1,
+    outcome: 'lost',
+    stakeLost: 1000,
+    bankedAmount: 0,
+    netReturn: -1000,
+    finalCode: 'HLLFK9',
+    fatalMatch: 'Day 1 Tennis Set Wager - Restarted Fresh for Day 1 Challenge 52'
+  },
   {
     challengeNumber: 50,
     startDate: '2026-10-14',

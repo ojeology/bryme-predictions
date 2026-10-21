@@ -15,16 +15,16 @@ export const DAILY_DROP_SCHEDULE = {
 export const DAILY_BOOKING_TICKETS = [
   {
     id: 'ticket-2-odds-whale-shot',
-    badge: '2 ODDS WHALE SHOT',
+    badge: '🏆 2 ODDS WHALE SHOT (WON)',
     title: 'European 2.02x Shots on Target Whale Shot',
     category: 'banker',
     riskLevel: 'Sharp Edge',
     totalOdds: 2.02,
     date: '2026-10-20',
-    status: 'pending',
-    dropTime: 'Today',
-    confidence: '95% Model Rating',
-    description: 'High-volume attack radar: Liverpool home target assault, Barcelona away pressure, and Man City relentless home attempts.',
+    status: 'won',
+    dropTime: 'Full Time',
+    confidence: '100% Settled Win',
+    description: 'High-volume attack radar: Liverpool home target assault (6 SOT), Barcelona away pressure (5 SOT), and Man City relentless home attempts (8 SOT).',
     codes: {
       '22bet': '7fpl3',
       twentytwobet: '7fpl3',
@@ -33,63 +33,59 @@ export const DAILY_BOOKING_TICKETS = [
     },
     selections: [
       {
-        match: 'Liverpool vs Villarreal',
+        match: 'Liverpool vs Villarreal (WON)',
         league: '🇪🇺 European Football',
-        kickoff: 'Today 20:00 WAT',
+        kickoff: 'Settled FT (6 SOT)',
         pick: 'Liverpool Home Over 4.5 Shots on Target',
         odds: 1.27,
-        analysis: 'Liverpool average 7.8 shots on target per home match under current tactical setup.'
+        status: 'won',
+        analysis: 'Liverpool registered 6 official shots on target, comfortably passing the line.'
       },
       {
-        match: 'PSG vs Barcelona',
+        match: 'PSG vs Barcelona (WON)',
         league: '🇪🇺 European Football',
-        kickoff: 'Today 20:00 WAT',
+        kickoff: 'Settled FT (5 SOT)',
         pick: 'Barcelona Away Over 4.5 Shots on Target',
         odds: 1.24,
-        analysis: 'Barcelona transition attacking pace tests opposition goalkeepers with high direct volume.'
+        status: 'won',
+        analysis: 'Barcelona transition attacking pace tested opposition goalkeeper with 5 shots on target.'
       },
       {
-        match: 'Man City vs AEK Athens',
+        match: 'Man City vs AEK Athens (WON)',
         league: '🇪🇺 European Football',
-        kickoff: 'Today 20:00 WAT',
+        kickoff: 'Settled FT (8 SOT)',
         pick: 'Man City Home Over 6.5 Shots on Target',
         odds: 1.28,
-        analysis: 'Manchester City dominate box territory and average 9+ shots on target in home European clashes.'
+        status: 'won',
+        analysis: 'Manchester City dominated box territory and recorded 8 shots on target.'
       }
     ]
   },
   {
     id: 'ticket-ladder-challenge',
     badge: 'BRYME ROLLOVER',
-    title: 'BRYME Rollover Step 1/18 (₦1,000 Starting Stake → ₦1,600 Payout)',
+    title: 'BRYME Rollover Step 1/18 (₦1,000 Starting Stake → ₦1,500 Target)',
     category: 'ladder',
     riskLevel: 'Ultra Conservative',
-    totalOdds: 1.60,
-    date: '2026-10-20',
+    totalOdds: 1.50,
+    date: '2026-10-21',
     status: 'pending',
     dropTime: '11:00 AM WAT',
     confidence: '98% Model Rating',
-    description: '₦1,000 to ₦1,000,000 Journey. Target 1.50-1.60 daily odds. 50% capital banked at Day 6.',
+    description: 'Fresh Challenge 52 Restart: ₦1,000 to ₦1,000,000 Journey. Target 1.50 daily odds. 50% capital banked at Day 6.',
     codes: {
-      sportybet: 'HLLFK9',
-      footballcom: 'HLLFK9'
+      sportybet: 'DROPS 11:00 AM',
+      footballcom: 'DROPS 11:00 AM'
     },
     selections: [
       {
-        match: 'Berrettini Matteo vs Opponent',
-        league: '🎾 ATP Tennis Tour',
-        kickoff: 'Today 15:00 WAT',
-        pick: 'Berrettini Matteo to Win a Set',
-        odds: 1.26,
-        analysis: 'Berrettini commanding first serve provides high service game hold security.'
-      },
-      {
-        match: 'Cassone Murphy vs Opponent',
-        league: '🎾 ATP / Challenger Circuit',
+        match: 'Day 1 Banker Double (Top European & Domestic Leagues)',
+        league: '⚽ European Top-Flight Competitions',
         kickoff: 'Today 16:30 WAT',
-        pick: 'Cassone Murphy to Win a Set',
-        odds: 1.27,
-        analysis: 'Cassone Murphy exhibiting high break-point resilience and consistent baseline depth.'
+        pick: 'Double Chance & Total Goals Banker',
+        odds: 1.50,
+        status: 'pending',
+        analysis: 'Model screening early kickoff fixtures for highest-frequency low-variance outcomes.'
       }
     ]
   },

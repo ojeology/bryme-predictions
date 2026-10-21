@@ -27,47 +27,50 @@ export const DEFAULT_WHALE_SLIP = {
   stakeAmount: '₦500,000',
   totalOdds: 2.02,
   potentialReturn: '₦1,010,000',
-  confidence: '95%',
-  status: 'pending', // ACTIVE LIVE SYNDICATE BET
-  payoutStatus: 'LIVE TICKET (₦1,010,000 TARGET)',
+  confidence: '100%',
+  status: 'won', // WON & CASHED OUT
+  payoutStatus: 'PAID OUT (₦1,010,000 CASHED)',
   sportyCode: '7FPL3',
   bet9jaCode: '7fpl3',
   twentyTwoBetCode: '7fpl3',
   bookmaker: '22bet',
-  kickoffTime: 'Tonight 20:00 WAT',
+  kickoffTime: 'Settled FT (WON)',
   punterCount: 4320,
   volumeStaked: '₦19,200,000',
-  intel: 'Syndicate placed ₦500,000 backing European target volume: Liverpool home target assault (O4.5 SOT @ 1.27), Barcelona away transition pace (O4.5 SOT @ 1.24), and Manchester City heavy home box siege (O6.5 SOT @ 1.28). Available on 22bet with booking code 7fpl3.',
+  intel: 'SYNDICATE BET WON & PAID OUT! All 3 European Shots on Target legs cleared cleanly: Liverpool Home O4.5 (6 SOT), Barcelona Away O4.5 (5 SOT), and Man City Home O6.5 (8 SOT) delivering ₦1,010,000 total payout (+₦510,000 profit).',
   matches: [
     {
       id: 'm1',
-      match: 'Liverpool vs Villarreal',
+      match: 'Liverpool vs Villarreal (WON)',
       league: 'European Football',
-      kickoff: 'Tonight 20:00 WAT',
+      kickoff: 'Settled FT',
       pick: 'Liverpool Home Over 4.5 Shots on Target',
       odds: 1.27,
-      status: 'pending',
-      analysis: 'Liverpool average 7.8 shots on target per home match under current tactical setup.'
+      status: 'won',
+      resultScore: '6 SOT (WON)',
+      analysis: 'Liverpool registered 6 official shots on target, comfortably passing the line.'
     },
     {
       id: 'm2',
-      match: 'PSG vs Barcelona',
+      match: 'PSG vs Barcelona (WON)',
       league: 'European Football',
-      kickoff: 'Tonight 20:00 WAT',
+      kickoff: 'Settled FT',
       pick: 'Barcelona Away Over 4.5 Shots on Target',
       odds: 1.24,
-      status: 'pending',
-      analysis: 'Barcelona transition attack tests opposition goalkeepers with high direct volume.'
+      status: 'won',
+      resultScore: '5 SOT (WON)',
+      analysis: 'Barcelona transition attack tests opposition goalkeepers with 5 shots on target.'
     },
     {
       id: 'm3',
-      match: 'Man City vs AEK Athens',
+      match: 'Man City vs AEK Athens (WON)',
       league: 'European Football',
-      kickoff: 'Tonight 20:00 WAT',
+      kickoff: 'Settled FT',
       pick: 'Man City Home Over 6.5 Shots on Target',
       odds: 1.28,
-      status: 'pending',
-      analysis: 'Manchester City dominate box possession and average 9+ shots on target in home European ties.'
+      status: 'won',
+      resultScore: '8 SOT (WON)',
+      analysis: 'Manchester City dominated box possession with 8 shots on target.'
     }
   ]
 };
