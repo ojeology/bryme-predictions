@@ -1,0 +1,10 @@
+date,comp,opponent,venue,bou_goals,opp_goals,bou_fouls,opp_fouls,bou_corners,opp_corners,bou_yellow,opp_yellow,bou_tackles,opp_tackles,referee,ref_fouls_avg,ref_yellow_avg,flag
+2026-08-23,Serie A,Torino,Away,2,1,11,13,4,4,2,2,16,15,Luca Zufferli,23.5,4.2,opener
+2026-08-28,Serie A,Venezia,Home,2,0,9,12,6,3,1,2,15,16,Gianluca Manganiello,23.0,4.0,played
+2026-09-06,Serie A,Juventus,Away,1,1,11,10,1,7,3,1,17,15,Maurizio Mariani,23.5,4.3,played
+2026-09-12,Serie A,Lazio,Away,2,2,14,15,5,2,3,2,16,16,Matteo Marcenaro,28.5,4.9,played
+2026-09-16,Europa League,Benfica,Home,0,2,14,11,10,1,1,2,18,16,Jarred Gillett,21.5,3.8,played
+2026-09-20,Serie A,Lecce,Home,3,0,9,15,2,3,0,1,15,16,Federico La Penna,24.5,4.4,played
+2026-10-11,Serie A,Sassuolo,Away,1,1,11,13,4,4,4,2,16,15,Serie A Ref,23.5,4.2,played
+2026-10-15,Europa League,RB Salzburg,Away,4,0,12,13,2,5,1,1,16,15,UEFA Ref,23.0,4.0,last2
+2026-10-18,Serie A,Atalanta,Home,3,2,3,10,2,2,1,2,15,14,Daniele Chiffi,22.0,3.9,last2
