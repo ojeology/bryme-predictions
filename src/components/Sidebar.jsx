@@ -1,129 +1,68 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { usePredictions } from '../context/PredictionsContext';
-import { WEEKEND_2_ODDS_STATS } from '../data/weekendArchive';
-import { 
-  Copy, Check, Send, ExternalLink, ChevronRight, HeartHandshake
-} from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 
 export default function Sidebar({ currentRoute, onNavigate }) {
   const { ladder } = usePredictions();
-  const [copiedSporty, setCopiedSporty] = useState(false);
-  const [copiedBet9ja, setCopiedBet9ja] = useState(false);
-
-  const sportyCode = ladder?.sportyCode || '2X-DAY1';
-  const bet9jaCode = ladder?.todaysCode || '2X-DAY1';
   const currentDay = ladder?.currentDay || 1;
   const currentBalance = ladder?.currentBalance || 1000;
-  const dailyOdds = ladder?.dailyOdds || 2.00;
-
-  const handleCopy = (code, type) => {
-    navigator.clipboard.writeText(code);
-    if (type === 'sporty') {
-      setCopiedSporty(true);
-      setTimeout(() => setCopiedSporty(false), 2000);
-    } else {
-      setCopiedBet9ja(true);
-      setTimeout(() => setCopiedBet9ja(false), 2000);
-    }
-  };
 
   const navItems = [
-    { id: 'home', label: '🔥 2.00x Ladder Challenge', icon: '🪜', badge: `Day ${currentDay}`, isFeatured: true },
-    { id: 'machine', label: '🤖 2-Team Behaviour Machine', icon: '🤖', badge: '100% 2-Team', isGreen: true },
-    { id: 'ladder', label: '🪜 10-Step 2.00x Board', icon: '⛰️', badge: 'Fresh Reset' },
-    { id: 'predictions', label: '📋 BRYME Code Hub', icon: '📋', badge: 'Daily Codes', isFeatured: true },
-    { id: 'articles', label: '📚 Betting Academy (Arbing)', icon: '📚', badge: 'Guides', isSpecial: true },
-    { id: 'results', label: '📊 Results & Hit Rate', icon: '📊', badge: '76.9% Won', isGreen: true },
-    { id: 'markets', label: '📂 35+ Markets Database', icon: '🗂️' },
-    { id: 'editor-picks', label: '🎯 Weekend 2.00x Banker', icon: '🎯' },
-    { id: 'weekend-hub', label: '🤝 Consensus Community Hub', icon: '👥' },
-    { id: 'bookmakers', label: '📱 Bookmakers & Codes', icon: '🎰' },
-    { id: 'admin', label: '⚡ Admin Control Deck', icon: '🛠️', badge: 'PIN Locked' },
-    { id: 'responsible-gambling', label: '🛡️ Responsible Gaming (18+)', icon: '🔒' }
+    { id: 'friday', label: '🗓️ Friday: Weekend Top-5', icon: '🏴󠁧󠁢󠁥󠁮󠁧󠁿', badge: '15 Matches', isGreen: true },
+    { id: 'thursday', label: '🗓️ Thursday: Europa & UECL', icon: '🟠', badge: '7/7 FT Won', isFeatured: true },
+    { id: 'tuesday', label: '🗓️ Tuesday: Champions League', icon: '🔵', badge: '8 Matches' },
+    { id: 'whynot', label: '🚫 Why NOT To Bet (Traps)', icon: '🛡️', badge: '6 Rules', isSpecial: true },
+    { id: 'challenge', label: '💎 2.00x & 5.00x Value Slips', icon: '🎯', badge: '2.31x / 5.10x' },
+    { id: 'ladder', label: '🪜 10-Step 2.00x Challenge', icon: '🪜', badge: `Day ${currentDay}` },
+    { id: 'clubs', label: '📊 18 Studied Club Logs', icon: '📂', badge: '90.4% Hit' },
+    { id: 'calculator', label: '🧮 Two-Team Calculator', icon: '🧮', badge: '109 Clubs' },
   ];
 
   return (
     <aside className="space-y-4">
       
-      {/* ── 1. SIGNATURE 2.00x LADDER MINI-HERO WIDGET ── */}
-      <div className="rounded-2xl bg-gradient-to-br from-[#121927] via-[#1a2336] to-[#0A0F1D] border-2 border-[#E41B13]/40 p-4 text-white shadow-xl space-y-3 relative overflow-hidden">
-        <div className="absolute top-0 right-0 -mr-6 -mt-6 w-28 h-28 rounded-full bg-[#E41B13]/20 blur-xl pointer-events-none" />
-
+      {/* ── 1. PERSONAL BOT SCORECARD & SCHEDULE WIDGET ── */}
+      <div className="rounded-2xl bg-gradient-to-br from-[#0D1829] via-[#132238] to-[#080E1A] border-2 border-emerald-500/40 p-4 text-white shadow-xl space-y-3">
         <div className="flex items-center justify-between">
-          <span className="inline-flex items-center gap-1 text-[10px] font-display font-black uppercase tracking-wider bg-[#E41B13] text-white px-2 py-0.5 rounded-full shadow-sm">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#00FF66] animate-ping"></span>
-            2.00x Challenge
+          <span className="inline-flex items-center gap-1 text-[10px] font-display font-black uppercase tracking-wider bg-emerald-500 text-slate-950 px-2 py-0.5 rounded-full">
+            2-Team Bot Scorecard
           </span>
-          <span className="text-[10px] font-mono text-amber-400 font-bold">
-            Day {currentDay}/10
+          <span className="text-[10px] font-mono text-emerald-400 font-bold">
+            v2 Self-Learning
           </span>
         </div>
 
-        <div>
-          <div className="text-xs text-slate-300 font-medium">Fresh Reset &bull; Active Stake</div>
-          <div className="text-2xl font-mono font-black text-amber-300 mt-0.5">
-            ₦{currentBalance.toLocaleString()}
+        <div className="grid grid-cols-2 gap-2 p-2.5 rounded-xl bg-black/50 border border-white/10 font-mono text-xs">
+          <div>
+            <span className="text-[9px] text-slate-400 uppercase block">2-Team Today</span>
+            <strong className="text-lg text-emerald-400 font-black">7/7 (100%)</strong>
           </div>
-          <div className="text-[10px] text-slate-400 font-mono mt-0.5">
-            Target: ₦1,024,000 (10 Steps @ 2.00x)
+          <div className="text-right">
+            <span className="text-[9px] text-slate-400 uppercase block">1-Sided Today</span>
+            <strong className="text-lg text-amber-300 font-black">5/7 (71.4%)</strong>
           </div>
         </div>
 
-        {/* 1-Tap Booking Codes */}
-        <div className="p-2.5 rounded-xl bg-black/60 border border-white/10 space-y-1.5">
-          <div className="flex items-center justify-between text-[11px]">
-            <span className="text-slate-400 font-mono">Today&apos;s 2.00x Target:</span>
-            <span className="text-[#00C250] font-bold font-mono">{Number(dailyOdds).toFixed(2)} Odds</span>
-          </div>
-
-          {/* Sporty Code Pill */}
-          <div className="flex items-center justify-between gap-1 text-xs font-mono bg-[#E41B13]/15 p-1.5 rounded-lg border border-[#E41B13]/30">
-            <div className="min-w-0">
-              <span className="text-[9px] text-rose-400 font-bold block uppercase leading-tight">SportyBet</span>
-              <span className="font-black text-white truncate block">{sportyCode}</span>
-            </div>
-            <button
-              onClick={() => handleCopy(sportyCode, 'sporty')}
-              className={`p-1.5 rounded text-xs transition-colors flex items-center gap-1 ${
-                copiedSporty ? 'bg-[#00C250] text-black font-bold' : 'bg-white/10 hover:bg-white/20 text-white'
-              }`}
-              title="Copy SportyBet code"
-            >
-              {copiedSporty ? <Check className="w-3.5 h-3.5 stroke-[3]" /> : <Copy className="w-3.5 h-3.5" />}
-            </button>
-          </div>
-
-          {/* Bet9ja Code Pill */}
-          <div className="flex items-center justify-between gap-1 text-xs font-mono bg-[#00C250]/15 p-1.5 rounded-lg border border-[#00C250]/30">
-            <div className="min-w-0">
-              <span className="text-[9px] text-emerald-400 font-bold block uppercase leading-tight">Bet9ja / 22Bet</span>
-              <span className="font-black text-white truncate block">{bet9jaCode}</span>
-            </div>
-            <button
-              onClick={() => handleCopy(bet9jaCode, 'bet9ja')}
-              className={`p-1.5 rounded text-xs transition-colors flex items-center gap-1 ${
-                copiedBet9ja ? 'bg-[#00C250] text-black font-bold' : 'bg-white/10 hover:bg-white/20 text-white'
-              }`}
-              title="Copy Bet9ja code"
-            >
-              {copiedBet9ja ? <Check className="w-3.5 h-3.5 stroke-[3]" /> : <Copy className="w-3.5 h-3.5" />}
-            </button>
-          </div>
+        <div className="p-2.5 rounded-xl bg-black/40 border border-white/10 text-[11px] font-mono space-y-1 text-slate-300">
+          <div className="text-amber-300 font-bold uppercase text-[10px]">Automated Analysis Schedule:</div>
+          <div>&bull; <strong className="text-white">Tuesday AM:</strong> Champions League</div>
+          <div>&bull; <strong className="text-white">Thursday AM:</strong> Europa &amp; Conference</div>
+          <div>&bull; <strong className="text-white">Friday AM:</strong> Top-5 Weekend Leagues</div>
         </div>
 
         <button
-          onClick={() => onNavigate('ladder')}
-          className="w-full py-2 bg-gradient-to-r from-[#E41B13] to-[#B01009] hover:from-[#D01710] hover:to-[#9A0D07] text-white font-display font-black text-xs uppercase tracking-wider rounded-xl transition-all shadow-md flex items-center justify-center gap-1.5"
+          onClick={() => onNavigate('whynot')}
+          className="w-full py-2 bg-rose-600 hover:bg-rose-500 text-white font-display font-black text-xs uppercase tracking-wider rounded-xl transition-all shadow-md flex items-center justify-center gap-1.5"
         >
-          <span>Open Day {currentDay} (2.00x) Board</span>
+          <span>Study &quot;Why NOT To Bet&quot; Rules</span>
           <ChevronRight className="w-3.5 h-3.5" />
         </button>
       </div>
 
-      {/* ── 2. PLATFORM DIRECTORY ── */}
+      {/* ── 2. RESEARCH LAB DIRECTORY ── */}
       <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#131C2E] p-3 shadow-sm space-y-1">
         <span className="text-[10px] uppercase font-mono font-bold text-slate-400 px-2.5 py-1 block">
-          Platform Directory
+          Bot Study Navigation
         </span>
 
         {navItems.map((item) => {
@@ -134,9 +73,7 @@ export default function Sidebar({ currentRoute, onNavigate }) {
               onClick={() => onNavigate(item.id)}
               className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-display font-bold transition-all text-left ${
                 isActive
-                  ? 'bg-blue-600 text-white shadow-sm'
-                  : item.isFeatured
-                  ? 'bg-rose-50 dark:bg-rose-950/20 text-[#E41B13] dark:text-rose-300 font-black hover:bg-rose-100 dark:hover:bg-rose-950/40'
+                  ? 'bg-emerald-500 text-slate-950 font-black shadow-sm'
                   : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#162032] hover:text-slate-900 dark:hover:text-white'
               }`}
             >
@@ -146,15 +83,13 @@ export default function Sidebar({ currentRoute, onNavigate }) {
               </div>
               {item.badge && (
                 <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded font-bold ${
-                  isActive 
-                    ? 'bg-white/20 text-white' 
-                    : item.isFeatured 
-                    ? 'bg-[#E41B13] text-white' 
+                  isActive
+                    ? 'bg-black/20 text-slate-950'
                     : item.isGreen
                     ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
                     : item.isSpecial
-                    ? 'bg-amber-400 text-slate-950 font-black'
-                    : 'bg-slate-100 dark:bg-[#1A2438] text-blue-600 dark:text-blue-400'
+                    ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
+                    : 'bg-slate-100 dark:bg-[#1A2438] text-amber-300'
                 }`}>
                   {item.badge}
                 </span>
@@ -164,67 +99,25 @@ export default function Sidebar({ currentRoute, onNavigate }) {
         })}
       </div>
 
-      {/* ── 3. TELEGRAM ALERT ── */}
-      <div className="rounded-2xl bg-gradient-to-br from-[#0B2545] to-[#134074] border border-blue-400/30 p-4 text-white space-y-2.5 shadow-md">
-        <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-blue-500/20 flex items-center justify-center">
-            <Send className="w-4 h-4 text-blue-300" />
-          </div>
-          <div>
-            <h4 className="font-display font-black text-xs uppercase tracking-wide">
-              2.00x Challenge Alerts
-            </h4>
-            <p className="text-[10px] text-blue-200">
-              Never miss the daily 2.00x Behaviour Lock
-            </p>
-          </div>
-        </div>
-
-        <p className="text-xs text-slate-200 leading-relaxed">
-          Two-Team Behaviour Machine picks drop daily. Receive the <strong>2.00x Ladder Challenge</strong> directly on Telegram.
-        </p>
-
-        <a
-          href="https://t.me"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="w-full py-2 bg-white text-slate-900 hover:bg-slate-100 font-display font-black text-xs uppercase tracking-wider rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-sm"
-        >
-          <span>Join Free Telegram Channel</span>
-          <ExternalLink className="w-3.5 h-3.5" />
-        </a>
-      </div>
-
-      {/* ── 4. VERIFIED HIT RATE STATS ── */}
-      <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#131C2E] p-3.5 shadow-sm space-y-2">
+      {/* ── 3. PERSONAL 2.00x CHALLENGE STATUS ── */}
+      <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#131C2E] p-4 shadow-sm space-y-2">
         <div className="flex items-center justify-between text-xs">
           <span className="font-display font-black text-slate-900 dark:text-white uppercase tracking-wider text-[11px]">
-            Weekend 2.00x Accuracy
+            2.00x Odds Challenge
           </span>
-          <span className="text-emerald-600 dark:text-emerald-400 font-mono font-bold">
-            {WEEKEND_2_ODDS_STATS.accuracyRate}%
+          <span className="text-emerald-500 font-mono font-bold">
+            Day {currentDay}/10
           </span>
         </div>
-
-        <div className="h-2 w-full bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-          <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${WEEKEND_2_ODDS_STATS.accuracyRate}%` }}></div>
+        <div className="text-xs font-mono text-slate-400">
+          Active Stake: <strong className="text-white">₦{currentBalance.toLocaleString()}</strong> &rarr; Day {currentDay} Target: <strong className="text-emerald-400">₦{(currentBalance * 2).toLocaleString()}</strong>
         </div>
-
-        <div className="flex items-center justify-between text-[10px] font-mono text-slate-500 dark:text-slate-400">
-          <span>{WEEKEND_2_ODDS_STATS.won} Won / {WEEKEND_2_ODDS_STATS.lost} Lost</span>
-          <span>+{WEEKEND_2_ODDS_STATS.roiUnits} Units</span>
-        </div>
-      </div>
-
-      {/* ── 5. RESPONSIBLE GAMBLING 18+ NOTICE ── */}
-      <div className="p-3 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-900 dark:text-amber-300 text-xs space-y-1">
-        <div className="flex items-center gap-1.5 font-bold text-[11px] uppercase">
-          <HeartHandshake className="w-3.5 h-3.5" />
-          <span>Strictly 18+ Only</span>
-        </div>
-        <p className="text-[10px] opacity-90 leading-tight">
-          Betting involves financial risk. Only wager discretionary funds you can afford to lose.
-        </p>
+        <button
+          onClick={() => onNavigate('ladder')}
+          className="w-full py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-mono font-bold text-amber-300"
+        >
+          Open 10-Step 2.00x Tracker &rarr;
+        </button>
       </div>
 
     </aside>

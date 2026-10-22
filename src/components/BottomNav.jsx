@@ -1,13 +1,13 @@
 import React from 'react';
-import { Trophy, BarChart2, Layers, Flame, Target } from 'lucide-react';
+import { Calendar, ShieldAlert, Trophy, Layers, Calculator } from 'lucide-react';
 
 export default function BottomNav({ currentRoute, onNavigate }) {
   const items = [
-    { id: 'home', label: '2x-Ladder', icon: Trophy, hasPulse: true },
-    { id: 'machine', label: 'Machine', icon: Layers, hasPulse: true },
-    { id: 'ladder', label: '10-Steps', icon: Target },
-    { id: 'predictions', label: 'Code Hub', icon: Flame },
-    { id: 'results', label: 'Results', icon: BarChart2 },
+    { id: 'friday', label: 'Fri Top-5', icon: Calendar, hasPulse: true },
+    { id: 'thursday', label: 'Thu UEFA', icon: Layers, hasPulse: true },
+    { id: 'tuesday', label: 'Tue UCL', icon: Calendar },
+    { id: 'whynot', label: 'Why Not', icon: ShieldAlert },
+    { id: 'ladder', label: '2x-Ladder', icon: Trophy },
   ];
 
   return (
@@ -15,14 +15,14 @@ export default function BottomNav({ currentRoute, onNavigate }) {
       <div className="flex items-center justify-around h-16 max-w-md mx-auto px-1">
         {items.map((item) => {
           const Icon = item.icon;
-          const isActive = currentRoute === item.id;
+          const isActive = currentRoute === item.id || (currentRoute === 'home' && item.id === 'friday');
           return (
             <button
               key={item.id}
               onClick={() => onNavigate(item.id)}
               className={`flex flex-col items-center justify-center flex-1 h-full py-1 transition-all relative ${
                 isActive 
-                  ? 'text-[#E41B13] dark:text-rose-400 font-black' 
+                  ? 'text-emerald-400 font-black' 
                   : 'text-slate-400 hover:text-white'
               }`}
             >
@@ -30,7 +30,7 @@ export default function BottomNav({ currentRoute, onNavigate }) {
                 <Icon className={`w-5 h-5 ${isActive ? 'stroke-[2.5] scale-110' : 'stroke-2'}`} />
                 {item.hasPulse && (
                   <span className="absolute -top-1 -right-1 flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#E41B13] opacity-75"></span>
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                     <span className="relative inline-flex rounded-full h-2 w-2 bg-[#00FF66]"></span>
                   </span>
                 )}

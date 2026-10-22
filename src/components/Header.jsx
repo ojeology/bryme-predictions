@@ -4,13 +4,13 @@ import ThemeToggle from './ThemeToggle';
 
 export default function Header({ currentRoute, onNavigate, onOpenSearch, onOpenSidebar }) {
   const topNav = [
-    { id: 'home', label: '🔥 2.00x Ladder Challenge', action: () => onNavigate('home'), isHook: true },
-    { id: 'machine', label: '🤖 2-Team Behaviour Machine', action: () => onNavigate('machine'), badge: '100% 2-Team', isResults: true },
-    { id: 'ladder', label: '🪜 2.00x Rollover Board', action: () => onNavigate('ladder'), badge: 'Day 1' },
-    { id: 'predictions', label: '📋 BRYME Code Hub', action: () => onNavigate('predictions'), badge: 'Daily' },
-    { id: 'articles', label: '📚 Academy (Arbing)', action: () => onNavigate('articles'), badge: 'Guides' },
-    { id: 'markets', label: '📂 35+ Markets DB', action: () => onNavigate('markets') },
-    { id: 'results', label: '📊 Results Ledger', action: () => onNavigate('results'), isResults: true },
+    { id: 'friday', label: '🗓️ Friday: Weekend Top-5', action: () => onNavigate('friday'), badge: '15 Matches', isHook: true },
+    { id: 'thursday', label: '🗓️ Thursday: Europa & UECL', action: () => onNavigate('thursday'), badge: '7/7 FT Won', isResults: true },
+    { id: 'tuesday', label: '🗓️ Tuesday: Champions League', action: () => onNavigate('tuesday'), badge: '8 Matches' },
+    { id: 'whynot', label: '🚫 Why NOT To Bet Lab', action: () => onNavigate('whynot'), badge: '6 Rules' },
+    { id: 'ladder', label: '🪜 2.00x Odds Challenge', action: () => onNavigate('ladder'), badge: 'Day 1' },
+    { id: 'clubs', label: '📊 18 Studied Clubs', action: () => onNavigate('clubs') },
+    { id: 'calculator', label: '🧮 2-Team Calculator', action: () => onNavigate('calculator') },
   ];
 
   return (
@@ -21,7 +21,6 @@ export default function Header({ currentRoute, onNavigate, onOpenSearch, onOpenS
         
         {/* Left: Mobile Menu Toggle + Logo */}
         <div className="flex items-center gap-2 sm:gap-3">
-          {/* Mobile Sidebar Trigger */}
           <button
             onClick={onOpenSidebar}
             className="lg:hidden p-2 rounded-xl bg-white/10 hover:bg-white/15 text-slate-200 transition-colors"
@@ -31,95 +30,82 @@ export default function Header({ currentRoute, onNavigate, onOpenSearch, onOpenS
             <Menu className="w-5 h-5" />
           </button>
 
-          {/* Logo and Tagline */}
           <div 
-            onClick={() => onNavigate('home')} 
+            onClick={() => onNavigate('friday')} 
             className="flex items-center gap-2 cursor-pointer select-none"
           >
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#E41B13] via-red-600 to-blue-600 text-white flex items-center justify-center font-display font-black text-xl shadow-lg border border-red-400/40 flex-shrink-0">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-500 via-teal-600 to-blue-600 text-slate-950 flex items-center justify-center font-display font-black text-xl shadow-lg border border-emerald-400/40 flex-shrink-0">
               B
             </div>
             <div>
               <div className="flex items-center gap-1.5 leading-none">
                 <span className="font-display font-black text-lg sm:text-xl tracking-tight text-white">
-                  BRYME
+                  BRYME BOT LAB
                 </span>
-                <span className="text-[9px] uppercase font-display font-black tracking-wider px-1.5 py-0.5 bg-[#E41B13] text-white rounded shadow-sm">
-                  2-ODDS CHALLENGE
+                <span className="text-[9px] uppercase font-display font-black tracking-wider px-1.5 py-0.5 bg-emerald-500 text-slate-950 rounded shadow-sm">
+                  PERSONAL RESEARCH
                 </span>
               </div>
               <p className="text-[10px] text-slate-300 font-medium tracking-tight mt-0.5 hidden xs:block">
-                Daily 2.00x Rollover Challenge (₦1K &rarr; ₦1.024M) &bull; Powered by Two-Team Behaviour Machine
+                Two-Team Walk-Forward Behaviour Machine &bull; Friday Top-5 &bull; Tuesday UCL &bull; Thursday UEL/UECL
               </p>
             </div>
           </div>
         </div>
 
-        {/* Controls: Admin Button, Drop Indicator, Search, Theme Toggle */}
+        {/* Right Controls */}
         <div className="flex items-center gap-2">
-          
-          {/* Quick Results Link Button (Visible on all devices) */}
           <button
-            onClick={() => onNavigate('results')}
+            onClick={() => onNavigate('whynot')}
             className={`px-2.5 py-1.5 rounded-xl border transition-all flex items-center gap-1 text-xs font-mono font-bold ${
-              currentRoute === 'results'
-                ? 'bg-emerald-600 text-white border-emerald-400 shadow-md ring-2 ring-emerald-400/40'
-                : 'bg-emerald-950/40 hover:bg-emerald-900/60 text-emerald-300 border-emerald-500/40'
+              currentRoute === 'whynot'
+                ? 'bg-rose-600 text-white border-rose-400 shadow-md'
+                : 'bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 border-rose-500/40'
             }`}
-            title="View Verified Results Ledger"
+            title="Why NOT To Bet & Trap Rules"
           >
-            <BarChart2 className="w-3.5 h-3.5 text-emerald-400" />
-            <span className="text-[11px] hidden sm:inline">Results</span>
+            <BarChart2 className="w-3.5 h-3.5 text-rose-400" />
+            <span className="text-[11px] hidden sm:inline">Trap Rules</span>
           </button>
 
-          {/* Admin Management Button */}
           <button
             onClick={() => onNavigate('admin')}
             className={`px-2.5 py-1.5 rounded-xl border transition-all flex items-center gap-1 text-xs font-mono font-bold ${
               currentRoute === 'admin'
-                ? 'bg-blue-600 text-white border-blue-400 shadow-md ring-2 ring-blue-400/40'
+                ? 'bg-blue-600 text-white border-blue-400 shadow-md'
                 : 'bg-white/10 hover:bg-white/15 text-cyan-300 border-cyan-400/30'
             }`}
-            title="Admin Deck: Add Booking Codes & Manage Ladder"
+            title="Admin Deck"
           >
             <ShieldCheck className="w-3.5 h-3.5 text-cyan-400" />
             <span className="text-[11px] hidden sm:inline">Admin</span>
           </button>
 
-          {/* Quick Search Button */}
           <button
             onClick={onOpenSearch}
             className="p-2 rounded-xl bg-white/10 hover:bg-white/15 text-slate-200 hover:text-white transition-colors"
-            title="Search tickets and codes"
+            title="Search clubs and matches"
           >
             <Search className="w-4 h-4" />
           </button>
 
-          {/* Light / Dark Mode Toggle */}
           <ThemeToggle />
-
         </div>
       </div>
 
-      {/* Horizontal Shortcuts Ribbon */}
+      {/* Horizontal Schedule & Research Ribbon */}
       <div className="bg-[#050914] border-t border-white/[0.06] overflow-x-auto scrollbar-none px-3 py-1.5">
         <div className="max-w-7xl mx-auto flex items-center gap-1.5">
           {topNav.map((item, idx) => {
-            const isSelected = currentRoute === item.id;
+            const isSelected = currentRoute === item.id || (currentRoute === 'home' && item.id === 'friday');
 
             return (
               <button
                 key={idx}
                 onClick={item.action}
                 className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-display font-bold uppercase whitespace-nowrap transition-all ${
-                  item.isHook && currentRoute === 'home'
-                    ? 'bg-[#E41B13] text-white shadow-sm ring-1 ring-red-400/50'
-                    : item.isResults && isSelected
-                    ? 'bg-emerald-600 text-white shadow-sm ring-1 ring-emerald-400/50'
-                    : isSelected
-                    ? 'bg-blue-600 text-white shadow-sm ring-1 ring-blue-400/50'
-                    : item.isResults
-                    ? 'bg-emerald-950/30 hover:bg-emerald-900/40 text-emerald-300 border border-emerald-500/20'
+                  isSelected
+                    ? 'bg-emerald-500 text-slate-950 font-black shadow-sm'
                     : 'bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white'
                 }`}
               >

@@ -8,12 +8,12 @@ import CopySuccessModal from './components/CopySuccessModal';
 import { usePredictions } from './context/PredictionsContext';
 import { X } from 'lucide-react';
 
-// Pages (Punters Hub removed entirely)
-import HomePage from './pages/HomePage';
+// Pages
+import BehaviourMachinePage from './pages/BehaviourMachinePage';
+import LadderPage from './pages/LadderPage';
 import PredictionsPage from './pages/PredictionsPage';
 import MarketsDirectoryPage from './pages/MarketsDirectoryPage';
 import MarketDetailPage from './pages/MarketDetailPage';
-import LadderPage from './pages/LadderPage';
 import WeekendHubPage from './pages/WeekendHubPage';
 import EditorPicksPage from './pages/EditorPicksPage';
 import TicketDetailPage from './pages/TicketDetailPage';
@@ -27,13 +27,12 @@ import AdminPage from './pages/AdminPage';
 import ConvertCodesPage from './pages/ConvertCodesPage';
 import ArticlesPage from './pages/ArticlesPage';
 import ArticleDetailPage from './pages/ArticleDetailPage';
-import BehaviourMachinePage from './pages/BehaviourMachinePage';
 
 export default function App() {
   const [currentHash, setCurrentHash] = useState(window.location.hash || '#/');
   const [searchOpen, setSearchOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { ladder, announcements, copyModal, closeCopyModal } = usePredictions();
+  const { copyModal, closeCopyModal } = usePredictions();
 
   useEffect(() => {
     const handleHashChange = () => {
@@ -55,53 +54,46 @@ export default function App() {
   // Parse route and parameter from hash
   const rawRoute = currentHash.replace(/^#\/?/, '').trim();
   const segments = rawRoute.split('/');
-  const mainRoute = segments[0] || 'home';
+  const mainRoute = segments[0] || 'friday';
   const param = segments[1] || '';
 
-  // Dynamic SEO Page Title for Google indexing and search snippets
   useEffect(() => {
-    const titles = {
-      home: 'BRYME Predictions | Daily 2.00x Odds Ladder Challenge & Two-Team Behaviour Machine',
-      ladder: '10-Step 2.00x Odds Rollover Challenge (₦1K → ₦1.024M) | BRYME Predictions',
-      predictions: 'SportyBet & Bet9ja Booking Codes Hub | BRYME Predictions',
-      convert: 'Convert Bet Codes (SportyBet, Bet9ja, 1xBet, BetKing) | BRYME',
-      markets: '35+ Football Betting Markets Catalogue & Hit Rates | BRYME',
-      results: 'Verified Results Ledger (76.9% Win Rate) | BRYME Predictions',
-      machine: 'Top-5 Leagues Two-Team Walk-Forward Behaviour Machine (Fouls, Cards, Corners, Tackles) | BRYME',
-      'editor-picks': 'Weekend 2.00x European Banker Double | BRYME Predictions',
-      'weekend-hub': 'Consensus Hub & Match Polls | BRYME',
-      admin: 'Admin Management Deck | BRYME Predictions'
-    };
-
-    if (titles[mainRoute]) {
-      document.title = titles[mainRoute];
-    } else if (mainRoute === 'ticket' && param) {
-      document.title = `Banker Slip Selections & Odds Breakdown | BRYME Predictions`;
-    } else if (mainRoute === 'market' && param) {
-      document.title = `${param.toUpperCase()} Football Market Statistics & Rules | BRYME`;
-    }
+    document.title = 'BRYME Bot Lab | Personal Two-Team Behaviour Machine & Pattern Discovery';
   }, [mainRoute, param]);
 
-  // Render appropriate view based on route (Punters routes removed -> redirect to HomePage)
+  // Render Personal Bot Study Lab by default on home & schedule routes
   const renderContent = () => {
     switch (mainRoute) {
       case 'home':
       case '':
-      case 'punters':
-      case 'punter':
-        return <HomePage onNavigate={navigate} />;
+      case 'friday':
+        return <BehaviourMachinePage initialTab="friday" onNavigate={navigate} />;
+      case 'thursday':
+        return <BehaviourMachinePage initialTab="thursday" onNavigate={navigate} />;
+      case 'tuesday':
+        return <BehaviourMachinePage initialTab="tuesday" onNavigate={navigate} />;
+      case 'whynot':
+        return <BehaviourMachinePage initialTab="whynot" onNavigate={navigate} />;
+      case 'challenge':
+        return <BehaviourMachinePage initialTab="challenge" onNavigate={navigate} />;
+      case 'clubs':
+        return <BehaviourMachinePage initialTab="clubs" onNavigate={navigate} />;
+      case 'calculator':
+        return <BehaviourMachinePage initialTab="calculator" onNavigate={navigate} />;
       case 'machine':
       case 'behaviour':
       case 'bot':
-        return <BehaviourMachinePage onNavigate={navigate} />;
+        return <BehaviourMachinePage initialTab={param || 'friday'} onNavigate={navigate} />;
+      case 'ladder':
+        return <LadderPage onNavigate={navigate} />;
+      case 'admin':
+        return <AdminPage onNavigate={navigate} />;
       case 'articles':
       case 'academy':
       case 'guides':
         return <ArticlesPage onNavigate={navigate} />;
       case 'article':
         return <ArticleDetailPage slug={param} onNavigate={navigate} />;
-      case 'admin':
-        return <AdminPage onNavigate={navigate} />;
       case 'convert':
       case 'converter':
       case 'catalogue':
@@ -112,8 +104,6 @@ export default function App() {
         return <MarketsDirectoryPage onNavigate={navigate} />;
       case 'market':
         return <MarketDetailPage marketId={param} onNavigate={navigate} />;
-      case 'ladder':
-        return <LadderPage onNavigate={navigate} />;
       case 'weekend-hub':
         return <WeekendHubPage onNavigate={navigate} />;
       case 'editor-picks':
@@ -133,14 +123,14 @@ export default function App() {
       case 'contact':
         return <ContactPage onNavigate={navigate} />;
       default:
-        return <HomePage onNavigate={navigate} />;
+        return <BehaviourMachinePage initialTab="friday" onNavigate={navigate} />;
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#F1F5F9] dark:bg-[#070B16] text-slate-900 dark:text-slate-100 flex flex-col font-sans transition-colors overflow-x-hidden w-full max-w-full">
+    <div className="min-h-screen bg-[#070B16] text-slate-100 flex flex-col font-sans transition-colors overflow-x-hidden w-full max-w-full">
       
-      {/* 1. Top Header with Midnight Navy & Navigation */}
+      {/* 1. Personal Research Lab Header */}
       <Header 
         currentRoute={mainRoute} 
         onNavigate={navigate} 
@@ -148,31 +138,24 @@ export default function App() {
         onOpenSidebar={() => setSidebarOpen(true)}
       />
 
-      {/* 2. Live Drop Marquee Ticker */}
+      {/* 2. Personal Study Status Ticker */}
       <div className="bg-[#050914] border-b border-blue-900/40 text-xs py-1.5 px-3 text-slate-300 overflow-x-auto scrollbar-none">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-4 text-[11px] font-mono whitespace-nowrap">
           <div className="flex items-center gap-2">
             <span className="flex h-2 w-2 relative">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
             </span>
-            <span className="font-bold text-white uppercase tracking-wider">{announcements?.tickerText || '★ 2.00x ODDS LADDER CHALLENGE RESET: Day 1 Live • Powered by 2-Team Behaviour Machine'}</span>
+            <span className="font-bold text-white uppercase tracking-wider">
+              PERSONAL BOT STUDY LAB &bull; TWO-TEAM ACCURACY TODAY: 7/7 (100%) ON FINISHED MATCHES
+            </span>
           </div>
 
           <div className="hidden sm:flex items-center gap-4 text-slate-400">
-            <span>2x Ladder: <strong className="text-white">Day {ladder?.currentDay || 1} (₦{(ladder?.currentBalance || 1000).toLocaleString()})</strong></span>
+            <span>Schedule: <strong className="text-emerald-400">Fri (Weekend Top-5) &bull; Tue (UCL) &bull; Thu (UEL/UECL)</strong></span>
             <span>&bull;</span>
-            <span>Target: <strong className="text-emerald-400">2.00x Daily</strong></span>
-            <span>&bull;</span>
-            <span>Slip: <strong className="text-white">{ladder?.sportyCode || '2X-DAY1'}</strong></span>
+            <span>2.00x Challenge: <strong className="text-amber-300">Day 1 Live</strong></span>
           </div>
-
-          <button 
-            onClick={() => navigate('admin')} 
-            className="text-cyan-400 hover:text-cyan-300 font-display font-bold uppercase text-[10px] underline ml-auto sm:ml-0"
-          >
-            Admin Panel &rarr;
-          </button>
         </div>
       </div>
 
@@ -207,12 +190,12 @@ export default function App() {
             <div>
               <div className="flex items-center justify-between pb-3 border-b border-slate-800 mb-4">
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-[#E41B13] text-white flex items-center justify-center font-black">
+                  <div className="w-8 h-8 rounded-lg bg-emerald-500 text-slate-950 flex items-center justify-center font-black">
                     B
                   </div>
                   <div>
-                    <h3 className="font-display font-black text-sm tracking-wide">BRYME PREDICTIONS</h3>
-                    <p className="text-[10px] text-slate-400 font-mono">2.00x Rollover Suite</p>
+                    <h3 className="font-display font-black text-sm tracking-wide">BRYME BOT LAB</h3>
+                    <p className="text-[10px] text-slate-400 font-mono">Personal Study &amp; Pattern Lab</p>
                   </div>
                 </div>
 
@@ -225,10 +208,6 @@ export default function App() {
               </div>
 
               <Sidebar currentRoute={mainRoute} onNavigate={(path) => { setSidebarOpen(false); navigate(path); }} />
-            </div>
-
-            <div className="pt-4 border-t border-slate-800 text-[10px] text-slate-500 text-center font-mono">
-              Strictly 18+ Only &bull; Play Responsibly
             </div>
           </div>
         </div>
