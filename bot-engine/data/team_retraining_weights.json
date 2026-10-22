@@ -1,9 +1,21 @@
 {
-  "last_updated": "2026-10-22T23:58:00Z",
-  "matches_graded": 45,
-  "early_7_two_team_accuracy": "7/7 (100.0%)",
-  "late_14_matches_with_winning_lock": "11/14 (78.6%)",
-  "mixed_slips_accuracy": "4/4 Slips WON (2.31x Fouls \u2705, 2.17x Corners \u2705, 4.28x 5-Leg Builder \u2705, 5.10x Value Builder \u2705)",
+  "last_updated": "2026-10-22T23:59:59Z",
+  "matches_graded": 54,
+  "overall_primary_accuracy": "44/54 (81.5%)",
+  "overall_primary_or_secondary_accuracy": "47/54 (87.0%)",
+  "thursday_36_accuracy": "31/36 (86.1%)",
+  "tuesday_ucl_9_raw_accuracy": "8/9 (88.9%)",
+  "wednesday_ucl_9_primary_accuracy": "7/9 (77.8%)",
+  "wednesday_ucl_9_primary_or_secondary_accuracy": "8/9 (88.9%)",
+  "favourite_sot_over_4_5_record": "15/16 (93.8% across all 54 UEFA matches: 8/8 Thu + 4/4 Tue UCL + 3/4 Wed UCL)",
+  "active_filters_v2": [
+    "Filter #1: Hostile Cauldron Under Fouls Ban (Turkey/Greece/Balkans)",
+    "Filter #2: Heavy Favourite (<= 1.45) Blowout Over Corners Ban -> Pivot to Favourite Over 4.5 SOT (Saved 2 more losses on Wed UCL: Inter 9 corners & Real Madrid 8 corners!)",
+    "Filter #3: Dual-Team >= 11.5 Foul Floor to Bet Over Fouls (Saved 6/6 on Wed UCL!)"
+  ],
+  "deleted_filters": [
+    "Filter #4 (0-Point UEFA Under Fouls/Cards Ban) — DELETED permanently after saving 0 losses and blocking 7 winners in prior 24 blind matches; deleting it unlocked 2 more winners on Wed UCL (Lille vs Galatasaray Cards Under 4.5 [4 cards] & Fouls Under 23.5 [19 fouls]; Inter vs Shakhtar Fouls Under 23.5 [19 fouls])."
+  ],
   "rules_learned": [
     "RULE 1 (Two-Sided Opponent Audit): Never predict total fouls/cards from one team's average alone. Blend 50% Team A + 50% Team B.",
     "RULE 2 (Clean Opponent Veto): If either team commits <=9.0 fouls/game or <=1.3 cards/game, VETO Over 22.5 Fouls and Over 3.5 Cards; pivot to Under Fouls/Cards.",
@@ -11,11 +23,8 @@
     "RULE 4 (Away Underdog Fouls Surge): When a central/southern European underdog visits or hosts an elite side in a tight 1-goal game (Lugano 23 fouls, Sturm Graz 23 fouls, Thun 23 fouls), underdog fouls surge +35%.",
     "RULE 5 (Possession Sterility vs Low Block): High possession away favourites (Brighton 64% at Jablonec) can be held to 0-0 with <10 corners if the host plays a passive 5-4-1.",
     "RULE 6 (Card Conversion Dampener): High fouls (24-26) only convert to 4+ cards if referee cards/foul ratio >= 0.16 (Juventus vs Rennes had 24 fouls -> only 2 cards).",
-    "RULE 7 (Domestic vs UEFA Desperation Foul Regime Split): Teams sitting on 0 points in UEFA League Phase (Anderlecht 20 fouls at Jagiellonia) foul +45% more than in domestic league games. Weight UEFA match logs 65% vs 35% domestic!",
-    "RULE 8 (Early 3-0 Blowout Corner & Card Suppression): When a heavy favourite goes 3-0 up in the first half against a lower-tier opponent (Real Sociedad 6-0 at Lillestr\u00f8m -> 6 corners, 14 fouls; Twente 4-1 at Lincoln -> 7 corners, 2 cards), 2nd-half corners and cards collapse. Prefer Fouls or 1st-Half lines over Full-Time Corners/Cards in heavy mismatches."
-  ],
-  "thursday_36_accuracy": "31/36 (86.1%)",
-  "tuesday_ucl_9_raw_accuracy": "8/9 (88.9%)",
-  "tuesday_ucl_9_filtered_primary_or_alt": "8/9 (88.9%)",
-  "favourite_sot_over_4_5_record": "12/12 (100.0% across Tuesday UCL + Thursday UEL/UECL)"
+    "RULE 7 (Clinical Central Transition Corner Trap): Teams that score through direct central transitions with low crosses (Liverpool 6-3 LASK -> 6 corners; Club Brugge 3-0 Lens -> 1 Brugge corner on 6 crosses, 6 total corners) fail Over 9.5 Corners even when pre-match corner averages look high. Require high crosses/g (>=16/g) before backing Over 9.5 Corners.",
+    "RULE 8 (Heavy Favourite <= 1.45 Blowout Corner Ban -> SOT Pivot): Filter #2 saved 2 more losses on Wednesday UCL (Inter 1-0 Shakhtar had 9 corners despite Forebet Over 9.74; Real Madrid 4-1 Leipzig had 8 corners despite Forebet Over 10.43) while the Favourite Over 4.5 SOT pivot went 3/4 on Wednesday (Inter 5, Real Madrid 11, Aston Villa 10; Sporting 4 on 16 shots & 3.16 xG) and is now 15/16 (93.8%) overall!",
+    "RULE 9 (Shock Underdog Lead Foul Spike): 0 points in the table does NOT cause high fouls (Lille vs Gala 19 fouls, Inter vs Shakhtar 19 fouls). High fouls in mismatches ONLY occur when a huge underdog (>= 6.00 odds, like LASK @ 11.00 leading 3-1 at Sporting CP) takes a shock lead and commits 20+ tactical/time-wasting fouls (LASK 22 fouls, 5 yellows) parking the bus."
+  ]
 }
