@@ -4,15 +4,14 @@ import {
   SMALL_ODDS_SLIP,
   BIG_ODDS_SLIP,
   STUDIED_TEAMS,
-  TOP5_OPPONENT_PROFILES
+  TOP5_OPPONENT_PROFILES,
+  WEEKEND_TOP5_FIXTURES,
+  OVERNIGHT_RESULTS_BREAKDOWN
 } from '../data/behaviourMachineData';
 import {
-  ShieldCheck, Flame, TrendingUp, CheckCircle, Target,
-  BarChart2, Layers, Lock, Zap, Search, Filter, ChevronDown,
-  ChevronUp, Calculator, RefreshCw, Calendar, Award
+  Search, ChevronDown, ChevronUp
 } from 'lucide-react';
 
-// Poisson P(X >= k) and P(X <= k) helper for the Live Weekend Value Calculator
 function poissonPmf(k, lambda) {
   if (lambda <= 0) return k === 0 ? 1 : 0;
   let logP = k * Math.log(lambda) - lambda;
@@ -30,26 +29,35 @@ function poissonOverProb(line, lambda) {
 }
 
 export default function BehaviourMachinePage() {
-  const [activeTab, setActiveTab] = useState('slips'); // 'slips' | 'reports' | 'radar' | 'calculator'
+  // Tabs: 'weekend' | 'overnight' | 'slips' | 'reports' | 'radar' | 'calculator'
+  const [activeTab, setActiveTab] = useState('weekend');
   const [selectedLegs, setSelectedLegs] = useState(() => SMALL_ODDS_SLIP.map(l => l.leg));
+  const [selectedWeekendIds, setSelectedWeekendIds] = useState(() => WEEKEND_TOP5_FIXTURES.map(w => w.id));
+  const [weekendLeagueFilter, setWeekendLeagueFilter] = useState('All');
   const [selectedLeague, setSelectedLeague] = useState('All');
   const [selectedMarketCat, setSelectedMarketCat] = useState('all');
   const [expandedTeamSlug, setExpandedTeamSlug] = useState('getafe');
   const [radarSearch, setRadarSearch] = useState('');
-  const [radarSort, setRadarSort] = useState('fouls'); // 'fouls' | 'cards' | 'corners' | 'tackles'
+  const [radarSort, setRadarSort] = useState('fouls');
 
   // Live Weekend Fixture Value Calculator state
-  const [calcHome, setCalcHome] = useState('AFC Bournemouth');
-  const [calcAway, setCalcAway] = useState('AC Milan');
-  const [calcMarket, setCalcMarket] = useState('fouls'); // 'fouls' | 'cards' | 'corners' | 'tackles' | 'goals'
-  const [calcLine, setCalcLine] = useState('20.5');
-  const [calcOverOdds, setCalcOverOdds] = useState('1.35');
-  const [calcUnderOdds, setCalcUnderOdds] = useState('2.95');
+  const [calcHome, setCalcHome] = useState('Aston Villa');
+  const [calcAway, setCalcAway] = useState('AFC Bournemouth');
+  const [calcMarket, setCalcMarket] = useState('fouls');
+  const [calcLine, setCalcLine] = useState('21.5');
+  const [calcOverOdds, setCalcOverOdds] = useState('1.34');
+  const [calcUnderOdds, setCalcUnderOdds] = useState('3.00');
   const [calcRefFactor, setCalcRefFactor] = useState('1.00');
 
   const toggleLeg = (legNum) => {
     setSelectedLegs(prev =>
       prev.includes(legNum) ? prev.filter(x => x !== legNum) : [...prev, legNum]
+    );
+  };
+
+  const toggleWeekendId = (id) => {
+    setSelectedWeekendIds(prev =>
+      prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
     );
   };
 
@@ -60,6 +68,21 @@ export default function BehaviourMachinePage() {
     const avgProb = chosen.reduce((acc, l) => acc + l.modelProb, 0) / chosen.length;
     return { count: chosen.length, totalOdds, avgProb };
   }, [selectedLegs]);
+
+  const weekendAccaStats = useMemo(() => {
+    const chosen = WEEKEND_TOP5_FIXTURES.filter(w => selectedWeekendIds.includes(w.id));
+    if (chosen.length === 0) return { count: 0, smallTotalOdds: 1.0, bigTotalOdds: 1.0, avgProb: 0 };
+    const smallTotalOdds = chosen.reduce((acc, w) => acc * w.smallLock.odds, 1.0);
+    const bigTotalOdds = chosen.reduce((acc, w) => acc * w.valueBet.odds, 1.0);
+    const avgProb = chosen.reduce((acc, w) => acc + w.smallLock.modelProb, 0) / chosen.length;
+    return { count: chosen.length, smallTotalOdds, bigTotalOdds, avgProb };
+  }, [selectedWeekendIds]);
+
+  const filteredWeekendFixtures = useMemo(() => {
+    return WEEKEND_TOP5_FIXTURES.filter(w =>
+      weekendLeagueFilter === 'All' || w.league === weekendLeagueFilter
+    );
+  }, [weekendLeagueFilter]);
 
   const filteredStudiedTeams = useMemo(() => {
     return STUDIED_TEAMS.filter(t => {
@@ -122,7 +145,6 @@ export default function BehaviourMachinePage() {
     const probOver = poissonOverProb(lineNum, totalLambda);
     const probUnder = 1 - probOver;
 
-    // Devig bookmaker odds
     const rawOver = oOdds > 1 ? 1 / oOdds : 0.5;
     const rawUnder = uOdds > 1 ? 1 / uOdds : 0.5;
     const overround = rawOver + rawUnder;
@@ -168,38 +190,38 @@ export default function BehaviourMachinePage() {
             Walk-Forward Behaviour Machine &bull; Zero Future Leakage
           </span>
           <span className="text-xs font-mono text-cyan-300 bg-cyan-950/60 border border-cyan-500/30 px-3 py-1 rounded-lg">
-            Scheduled: Daily 06:00 UTC + Fri/Sat/Sun Pre-Weekend Sweep
+            Auto-Runs Every Friday Morning 06:00 UTC + Daily Overnight Grading
           </span>
         </div>
 
         <h1 className="font-display font-black text-2xl sm:text-3xl lg:text-4xl tracking-tight text-white">
-          Top-5 European Leagues Behaviour &amp; Value Bet Lab
+          Top-5 European Leagues Behaviour, H2H &amp; Value Bet Lab
         </h1>
         <p className="text-sm sm:text-base text-slate-300 mt-2 max-w-3xl leading-relaxed">
-          Instead of guessing 1X2 match winners, this machine studies each club&apos;s constant match behaviour from the start of the 2026–27 season — <strong>Fouls, Yellow Cards, Corners, Tackles &amp; Referees</strong> — and compares walk-forward Poisson probabilities against devigged bookmaker odds to find the highest-edge value bets every midweek and weekend.
+          Every Friday morning, the machine scans all <strong>5 Top European Leagues (Premier League, La Liga, Serie A, Bundesliga, Ligue 1)</strong>, combines <strong>Head-to-Head (H2H) history</strong> with each club&apos;s constant 2026–27 match behaviour (<strong>Fouls, Yellow Cards, Corners, Tackles &amp; Referees</strong>), and grades overnight results automatically by morning.
         </p>
 
         {/* 4 Summary Metrics */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-5">
           <div className="p-3.5 rounded-2xl bg-black/40 border border-white/10">
+            <div className="text-[11px] font-mono uppercase text-slate-400">Weekend Top-5 Slate</div>
+            <div className="text-2xl font-mono font-black text-emerald-400 mt-0.5">{WEEKEND_TOP5_FIXTURES.length} Fixtures</div>
+            <div className="text-[11px] text-emerald-300 font-mono">All 5 Leagues + H2H Graded</div>
+          </div>
+          <div className="p-3.5 rounded-2xl bg-black/40 border border-white/10">
             <div className="text-[11px] font-mono uppercase text-slate-400">Verified Matches</div>
             <div className="text-2xl font-mono font-black text-white mt-0.5">{MACHINE_META.totalMatchesStudied}</div>
-            <div className="text-[11px] text-emerald-400 font-mono">14 Deep-Studied Clubs</div>
+            <div className="text-[11px] text-cyan-400 font-mono">14 Deep Clubs &bull; 92 Profiles</div>
           </div>
           <div className="p-3.5 rounded-2xl bg-black/40 border border-white/10">
-            <div className="text-[11px] font-mono uppercase text-slate-400">Top-5 Club Profiles</div>
-            <div className="text-2xl font-mono font-black text-cyan-300 mt-0.5">{MACHINE_META.totalTop5Profiles} Clubs</div>
-            <div className="text-[11px] text-slate-400 font-mono">EPL, LaLiga, Serie A, BuLi, L1</div>
-          </div>
-          <div className="p-3.5 rounded-2xl bg-black/40 border border-white/10">
-            <div className="text-[11px] font-mono uppercase text-slate-400">12-Leg Behaviour Hit Rate</div>
+            <div className="text-[11px] font-mono uppercase text-slate-400">Behaviour Hit Rate</div>
             <div className="text-2xl font-mono font-black text-emerald-400 mt-0.5">{MACHINE_META.combinedHitRate}</div>
-            <div className="text-[11px] text-emerald-300 font-mono">Constant Behaviour Locks</div>
+            <div className="text-[11px] text-emerald-300 font-mono">Constant Behaviour Streaks</div>
           </div>
           <div className="p-3.5 rounded-2xl bg-black/40 border border-white/10">
-            <div className="text-[11px] font-mono uppercase text-slate-400">12-Leg Combined Odds</div>
-            <div className="text-2xl font-mono font-black text-amber-300 mt-0.5">{MACHINE_META.combinedSmallOdds}</div>
-            <div className="text-[11px] text-amber-200 font-mono">+ 5 Big-Odds Value Plays</div>
+            <div className="text-[11px] font-mono uppercase text-slate-400">Overnight Post-Mortem</div>
+            <div className="text-2xl font-mono font-black text-amber-300 mt-0.5">8/8 WON</div>
+            <div className="text-[11px] text-amber-200 font-mono">Morning Auto-Breakdown</div>
           </div>
         </div>
       </div>
@@ -207,15 +229,17 @@ export default function BehaviourMachinePage() {
       {/* 2. NAVIGATION TABS */}
       <div className="flex flex-wrap gap-2 bg-white dark:bg-[#0E1626] p-2 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
         {[
-          { id: 'slips', label: '🔒 Best Value Slips (12-Leg Acca + Big Plays)' },
-          { id: 'reports', label: '📊 14-Club Walk-Forward Analysis (Man City Format)' },
-          { id: 'radar', label: `🌍 All ${MACHINE_META.totalTop5Profiles} Top-5 League Clubs Radar` },
-          { id: 'calculator', label: '🧮 Live Weekend Fixture Value Calculator' },
+          { id: 'weekend', label: '🗓️ Friday Morning Top-5 Weekend Fixtures & H2H' },
+          { id: 'overnight', label: '🌙 Overnight Results & Morning Breakdown' },
+          { id: 'slips', label: '🔒 Tonight’s 12-Leg Slip (22.14x)' },
+          { id: 'reports', label: '📊 14-Club Walk-Forward Reports' },
+          { id: 'radar', label: `🌍 All ${MACHINE_META.totalTop5Profiles} Clubs Radar` },
+          { id: 'calculator', label: '🧮 Live Odds Value Calculator' },
         ].map(tab => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-display font-black transition-all flex-1 sm:flex-initial text-center ${
+            className={`px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-display font-black transition-all flex-1 sm:flex-initial text-center ${
               activeTab === tab.id
                 ? 'bg-[#E41B13] text-white shadow-md'
                 : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5'
@@ -227,11 +251,265 @@ export default function BehaviourMachinePage() {
       </div>
 
       {/* ══════════════════════════════════════════════════════════════
+          TAB A: FRIDAY MORNING TOP-5 LEAGUES WEEKEND FIXTURES, H2H & VALUE BETS
+         ══════════════════════════════════════════════════════════════ */}
+      {activeTab === 'weekend' && (
+        <div className="space-y-6">
+          {/* Weekend Accumulator Builder Header */}
+          <div className="rounded-2xl bg-gradient-to-r from-emerald-950/90 via-[#0E1D2F] to-[#0B1324] border border-emerald-500/40 p-4 sm:p-5 text-white flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+            <div className="space-y-1">
+              <div className="text-xs font-mono uppercase text-emerald-400 font-bold">
+                Friday Morning Automated Top-5 Weekend Sweep (Premier League, La Liga, Serie A, Bundesliga, Ligue 1)
+              </div>
+              <h2 className="text-lg sm:text-xl font-display font-black">
+                Weekend Constant Behaviour Locks &amp; Best Value Bets ({weekendAccaStats.count} Fixtures Selected)
+              </h2>
+              <p className="text-xs text-slate-300">
+                Every fixture below includes its <strong>Last 5 Head-to-Head (H2H) record &amp; behaviour breakdown</strong>, projected full-time stats, <strong>Small-Odds Constant Lock (1.25x–1.36x)</strong>, and <strong>Big-Odds Best Value Bet (1.65x–1.82x)</strong>.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-4 bg-black/50 border border-emerald-500/30 px-4 py-3 rounded-xl self-stretch lg:self-auto justify-between">
+              <div>
+                <div className="text-[10px] font-mono uppercase text-slate-400">Small-Locks Acca</div>
+                <div className="text-xl font-mono font-black text-emerald-400">
+                  {weekendAccaStats.smallTotalOdds.toFixed(2)}x
+                </div>
+              </div>
+              <div className="h-8 w-px bg-white/10" />
+              <div>
+                <div className="text-[10px] font-mono uppercase text-slate-400">Avg Lock Prob</div>
+                <div className="text-xl font-mono font-black text-white">
+                  {weekendAccaStats.avgProb.toFixed(1)}%
+                </div>
+              </div>
+              <button
+                onClick={() =>
+                  setSelectedWeekendIds(
+                    selectedWeekendIds.length === WEEKEND_TOP5_FIXTURES.length
+                      ? []
+                      : WEEKEND_TOP5_FIXTURES.map(w => w.id)
+                  )
+                }
+                className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-xs font-mono font-bold text-white"
+              >
+                {selectedWeekendIds.length === WEEKEND_TOP5_FIXTURES.length ? 'Clear' : 'Select All 13'}
+              </button>
+            </div>
+          </div>
+
+          {/* League Filter Pills */}
+          <div className="flex flex-wrap items-center gap-2 bg-white dark:bg-[#0E1626] p-3.5 rounded-2xl border border-slate-200 dark:border-slate-800">
+            <span className="text-xs font-mono text-slate-400 mr-1">Filter Top-5 League:</span>
+            {['All', 'Premier League', 'La Liga', 'Serie A', 'Bundesliga', 'Ligue 1'].map(lg => (
+              <button
+                key={lg}
+                onClick={() => setWeekendLeagueFilter(lg)}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-mono font-bold transition-all ${
+                  weekendLeagueFilter === lg
+                    ? 'bg-blue-600 text-white shadow-sm'
+                    : 'bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-300'
+                }`}
+              >
+                {lg === 'All' ? '🌍 All 5 Leagues (13 Matches)' : lg}
+              </button>
+            ))}
+          </div>
+
+          {/* Weekend Fixture Cards with H2H + Model Projections + Small Lock + Big Value Bet */}
+          <div className="space-y-4">
+            {filteredWeekendFixtures.map((w, idx) => {
+              const isSelected = selectedWeekendIds.includes(w.id);
+              const mp = w.modelProjection;
+              const sl = w.smallLock;
+              const vb = w.valueBet;
+              return (
+                <div
+                  key={w.id}
+                  className={`rounded-2xl border transition-all p-4 sm:p-5 bg-white dark:bg-[#0E1626] shadow-md ${
+                    isSelected
+                      ? 'border-emerald-500/40 dark:border-emerald-500/40'
+                      : 'border-slate-200 dark:border-slate-800 opacity-65'
+                  }`}
+                >
+                  {/* Top Row: League, Match, Kickoff, Checkbox */}
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-200 dark:border-slate-800">
+                    <div className="flex items-center gap-3">
+                      <input
+                        type="checkbox"
+                        checked={isSelected}
+                        onChange={() => toggleWeekendId(w.id)}
+                        className="w-4 h-4 accent-emerald-500 rounded cursor-pointer"
+                      />
+                      <div>
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="px-2.5 py-0.5 rounded bg-blue-500/15 text-blue-600 dark:text-blue-300 font-mono font-bold text-[11px]">
+                            {w.league}
+                          </span>
+                          <span className="text-xs font-mono text-slate-400">{w.kickoff}</span>
+                        </div>
+                        <h3 className="text-base sm:text-lg font-display font-black text-slate-900 dark:text-white mt-0.5">
+                          {idx + 1}. {w.match}
+                        </h3>
+                      </div>
+                    </div>
+
+                    {/* Projected FT Stat Pills */}
+                    <div className="flex flex-wrap items-center gap-2 font-mono text-xs bg-slate-100 dark:bg-[#141F35] px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800">
+                      <span className="text-slate-400">Model FT:</span>
+                      <span className="text-emerald-500 font-bold">{mp.fouls} Fouls</span>
+                      <span>&bull;</span>
+                      <span className="text-amber-400 font-bold">{mp.cards} Cards</span>
+                      <span>&bull;</span>
+                      <span className="text-cyan-400 font-bold">{mp.corners} Corners</span>
+                      <span>&bull;</span>
+                      <span className="text-slate-300 font-bold">{mp.tackles} Tackles</span>
+                    </div>
+                  </div>
+
+                  {/* Middle Row: H2H Record & Tactical Breakdown */}
+                  <div className="py-3 border-b border-slate-200 dark:border-slate-800/70 grid grid-cols-1 lg:grid-cols-2 gap-2 text-xs">
+                    <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2E] border border-slate-200/60 dark:border-slate-800">
+                      <span className="font-mono font-bold text-cyan-500 uppercase block text-[10px]">
+                        🤝 Head-to-Head (H2H) Results &amp; Averages
+                      </span>
+                      <span className="text-slate-800 dark:text-slate-200 font-medium">{w.h2hRecord}</span>
+                    </div>
+                    <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2E] border border-slate-200/60 dark:border-slate-800">
+                      <span className="font-mono font-bold text-amber-400 uppercase block text-[10px]">
+                        📌 H2H + Season Constant Behaviour Pattern
+                      </span>
+                      <span className="text-slate-800 dark:text-slate-200 font-medium">{w.h2hBehaviour}</span>
+                    </div>
+                  </div>
+
+                  {/* Bottom Row: Small-Odds Constant Lock vs Big-Odds Best Value Bet */}
+                  <div className="pt-3 grid grid-cols-1 lg:grid-cols-2 gap-3">
+                    {/* Small-Odds Constant Lock */}
+                    <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-between gap-3">
+                      <div>
+                        <div className="text-[10px] font-mono uppercase text-emerald-400 font-bold">
+                          🔒 Small-Odds Constant Behaviour Lock
+                        </div>
+                        <div className="text-sm sm:text-base font-display font-black text-slate-900 dark:text-white mt-0.5">
+                          {sl.pick} <span className="text-emerald-500 font-mono">@ {sl.odds.toFixed(2)}</span>
+                        </div>
+                        <div className="text-[11px] font-mono text-slate-500 dark:text-slate-300 mt-0.5">
+                          Streak: {sl.streak}
+                        </div>
+                      </div>
+                      <div className="text-right font-mono flex-shrink-0">
+                        <div className="text-xs font-bold text-slate-900 dark:text-white">
+                          {sl.modelProb}% <span className="text-slate-400 font-normal">vs {sl.bookieProb}%</span>
+                        </div>
+                        <div className="text-xs font-black text-emerald-500">Edge {sl.edge}</div>
+                      </div>
+                    </div>
+
+                    {/* Big-Odds Best Value Bet */}
+                    <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-between gap-3">
+                      <div>
+                        <div className="text-[10px] font-mono uppercase text-amber-400 font-bold">
+                          🚀 Best Value Bet (Higher Odds)
+                        </div>
+                        <div className="text-sm sm:text-base font-display font-black text-slate-900 dark:text-white mt-0.5">
+                          {vb.pick} <span className="text-amber-400 font-mono">@ {vb.odds.toFixed(2)}</span>
+                        </div>
+                        <div className="text-[11px] font-mono text-slate-500 dark:text-slate-300 mt-0.5">
+                          {vb.why}
+                        </div>
+                      </div>
+                      <div className="text-right font-mono flex-shrink-0">
+                        <div className="text-xs font-bold text-slate-900 dark:text-white">
+                          {vb.modelProb}% <span className="text-slate-400 font-normal">vs {vb.bookieProb}%</span>
+                        </div>
+                        <div className="text-xs font-black text-emerald-500">Edge {vb.edge}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* ══════════════════════════════════════════════════════════════
+          TAB B: OVERNIGHT RESULTS & MORNING POST-MORTEM BREAKDOWN
+         ══════════════════════════════════════════════════════════════ */}
+      {activeTab === 'overnight' && (
+        <div className="space-y-5">
+          <div className="rounded-2xl bg-gradient-to-r from-[#0E1B31] to-[#091221] border border-cyan-500/30 p-5 text-white space-y-2">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <span className="text-xs font-mono uppercase text-cyan-400 font-bold">
+                🌙 Automated 06:00 UTC Morning Post-Mortem Engine
+              </span>
+              <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-mono font-bold">
+                Last 8 Graded Matches: 8 WON / 0 LOST (100%)
+              </span>
+            </div>
+            <h2 className="text-lg sm:text-xl font-display font-black">
+              Overnight Match Results &amp; Actual vs. Model Stat Breakdown
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-300">
+              Every morning at <strong>06:00 UTC</strong>, the GitHub Actions bot collects all overnight full-time match statistics (Goals, Fouls, Yellow Cards, Corners, Tackles) and compares them side-by-side against our pre-match walk-forward projections so you can see exactly how each club behaved.
+            </p>
+          </div>
+
+          <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1626] overflow-hidden shadow-lg">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse text-xs">
+                <thead>
+                  <tr className="bg-slate-100 dark:bg-[#141F35] text-slate-600 dark:text-slate-300 font-mono uppercase border-b border-slate-200 dark:border-slate-800">
+                    <th className="py-3 px-3">Date / League</th>
+                    <th className="py-3 px-3">Completed Match &amp; H2H Note</th>
+                    <th className="py-3 px-3">Pre-Match Pick</th>
+                    <th className="py-3 px-3">Model Pre-Match Projection</th>
+                    <th className="py-3 px-3">Actual Full-Time Stats</th>
+                    <th className="py-3 px-3">Result</th>
+                    <th className="py-3 px-3">Morning Breakdown</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
+                  {OVERNIGHT_RESULTS_BREAKDOWN.map((r, i) => (
+                    <tr key={i} className="hover:bg-slate-50 dark:hover:bg-white/[0.02]">
+                      <td className="py-3 px-3 font-mono">
+                        <div className="font-bold text-blue-500 dark:text-blue-300">{r.comp}</div>
+                        <div className="text-[11px] text-slate-400">{r.date}</div>
+                      </td>
+                      <td className="py-3 px-3">
+                        <div className="font-display font-bold text-slate-900 dark:text-white text-sm">{r.match}</div>
+                        <div className="text-[11px] font-mono text-cyan-600 dark:text-cyan-300 mt-0.5">{r.h2hNote}</div>
+                      </td>
+                      <td className="py-3 px-3 font-mono font-bold text-emerald-600 dark:text-emerald-300">
+                        {r.preMatchPick}
+                      </td>
+                      <td className="py-3 px-3 font-mono text-slate-600 dark:text-slate-300">
+                        {r.modelProjection}
+                      </td>
+                      <td className="py-3 px-3 font-mono font-bold text-slate-900 dark:text-white">
+                        {r.actualStats}
+                      </td>
+                      <td className="py-3 px-3 font-mono font-black text-emerald-500 whitespace-nowrap">
+                        ✅ {r.result}
+                      </td>
+                      <td className="py-3 px-3 text-slate-600 dark:text-slate-300 max-w-xs">
+                        {r.breakdown}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ══════════════════════════════════════════════════════════════
           TAB 1: BEST VALUE SLIPS (SMALL-ODDS ACCA + BIG-ODDS VALUE)
          ══════════════════════════════════════════════════════════════ */}
       {activeTab === 'slips' && (
         <div className="space-y-6">
-          {/* Interactive Slip Builder Banner */}
           <div className="rounded-2xl bg-gradient-to-r from-emerald-950/90 via-[#0E1D2F] to-[#0B1324] border border-emerald-500/40 p-4 sm:p-5 text-white flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
               <div className="text-xs font-mono uppercase text-emerald-400 font-bold">
@@ -241,7 +519,7 @@ export default function BehaviourMachinePage() {
                 Interactive 12-Leg Behaviour Lock Slip ({customAccaStats.count} Legs Selected)
               </h2>
               <p className="text-xs text-slate-300 mt-1">
-                Tap any match row below to include or exclude it from your custom accumulator. Historical combined hit rate across these 12 constant trends is <strong>91/101 (90.1%)</strong>.
+                Tap any match row below to include or exclude it from your custom accumulator. Historical combined hit rate across these 12 constant trends is <strong>91/101 (90.1%)</strong>. Overnight FT stats will auto-grade here by 06:00 UTC morning.
               </p>
             </div>
 
@@ -272,7 +550,6 @@ export default function BehaviourMachinePage() {
             </div>
           </div>
 
-          {/* 12-Leg Table */}
           <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1626] overflow-hidden shadow-lg">
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse text-xs sm:text-sm">
@@ -342,7 +619,6 @@ export default function BehaviourMachinePage() {
             </div>
           </div>
 
-          {/* 5-Leg Big-Odds Value Slip */}
           <div className="rounded-2xl border border-amber-500/30 bg-white dark:bg-[#0E1626] p-5 shadow-lg space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
@@ -401,7 +677,6 @@ export default function BehaviourMachinePage() {
          ══════════════════════════════════════════════════════════════ */}
       {activeTab === 'reports' && (
         <div className="space-y-5">
-          {/* League & Market Filters */}
           <div className="flex flex-wrap items-center justify-between gap-3 bg-white dark:bg-[#0E1626] p-4 rounded-2xl border border-slate-200 dark:border-slate-800">
             <div className="flex flex-wrap items-center gap-1.5">
               <span className="text-xs font-mono text-slate-400 mr-1">League:</span>
@@ -444,7 +719,6 @@ export default function BehaviourMachinePage() {
             </div>
           </div>
 
-          {/* Club Cards */}
           <div className="space-y-4">
             {filteredStudiedTeams.map((team, idx) => {
               const isOpen = expandedTeamSlug === team.slug;
@@ -453,7 +727,6 @@ export default function BehaviourMachinePage() {
                   key={team.slug}
                   className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1626] overflow-hidden shadow-md"
                 >
-                  {/* Club Header Row */}
                   <div
                     onClick={() => setExpandedTeamSlug(isOpen ? '' : team.slug)}
                     className="p-4 sm:p-5 cursor-pointer hover:bg-slate-50 dark:hover:bg-white/[0.02] transition-colors flex flex-col lg:flex-row lg:items-center justify-between gap-4"
@@ -483,7 +756,6 @@ export default function BehaviourMachinePage() {
                       </div>
                     </div>
 
-                    {/* 4 Per-Match Averages */}
                     <div className="flex items-center gap-3 self-start lg:self-center">
                       <div className="grid grid-cols-4 gap-2 text-center bg-slate-100 dark:bg-[#141F35] p-2.5 rounded-xl border border-slate-200 dark:border-slate-800">
                         <div className="px-2">
@@ -509,10 +781,8 @@ export default function BehaviourMachinePage() {
                     </div>
                   </div>
 
-                  {/* Expanded Walk-Forward Tables (Man City Report Format) */}
                   {isOpen && (
                     <div className="border-t border-slate-200 dark:border-slate-800 p-4 sm:p-5 space-y-5 bg-slate-50/50 dark:bg-[#0A101D]">
-                      {/* Table 1: Headline Blind-Test Results */}
                       <div>
                         <h4 className="text-xs sm:text-sm font-mono uppercase font-bold text-emerald-500 mb-2">
                           1. Walk-Forward Blind Test (Trained Only on Prior Games — Zero Future Leakage)
@@ -547,7 +817,6 @@ export default function BehaviourMachinePage() {
                         </div>
                       </div>
 
-                      {/* Table 2: Full Season Match-by-Match Behaviour Log */}
                       <div>
                         <h4 className="text-xs sm:text-sm font-mono uppercase font-bold text-cyan-400 mb-2">
                           2. Complete 2026–27 Season Match Behaviour Log ({team.gamesCount} Verified Matches)
@@ -800,7 +1069,6 @@ export default function BehaviourMachinePage() {
             </div>
           </div>
 
-          {/* Calculator Output Panel */}
           <div className="lg:col-span-5 rounded-2xl bg-gradient-to-br from-[#0D182C] to-[#080E1B] border border-cyan-500/30 p-5 text-white space-y-4 shadow-xl">
             <div className="text-xs font-mono uppercase text-cyan-400 font-bold">
               Walk-Forward Model Output

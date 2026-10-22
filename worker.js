@@ -665,6 +665,18 @@ async function handleApiRequest(request, env, url) {
             return jsonResponse({ ok: true, action: 'cmd_machine_teams' });
           }
 
+          if (data === 'cmd_machine_weekend') {
+            const bm = await getMachineState();
+            await editTelegramMessage(botToken, chatId, messageId, formatMachineWeekend(bm), getMachineMenuKeyboard());
+            return jsonResponse({ ok: true, action: 'cmd_machine_weekend' });
+          }
+
+          if (data === 'cmd_machine_overnight') {
+            const bm = await getMachineState();
+            await editTelegramMessage(botToken, chatId, messageId, formatMachineOvernight(bm), getMachineMenuKeyboard());
+            return jsonResponse({ ok: true, action: 'cmd_machine_overnight' });
+          }
+
           return jsonResponse({ ok: true, action: 'callback_processed', data });
         }
 
@@ -983,11 +995,23 @@ async function handleApiRequest(request, env, url) {
           return jsonResponse({ ok: true, action: 'status' });
         }
 
-        // 2.3.B Behaviour Machine (/machine, /locks, /bot, /team)
+        // 2.3.B Behaviour Machine (/machine, /locks, /bot, /weekend, /overnight, /team)
         if (text.startsWith('/machine') || text.startsWith('/locks') || text.startsWith('/bot')) {
           const bm = await getMachineState();
           if (chatId) await sendTelegramReply(botToken, chatId, formatMachineOverview(bm), getMachineMenuKeyboard());
           return jsonResponse({ ok: true, action: 'machine' });
+        }
+
+        if (text.startsWith('/weekend')) {
+          const bm = await getMachineState();
+          if (chatId) await sendTelegramReply(botToken, chatId, formatMachineWeekend(bm), getMachineMenuKeyboard());
+          return jsonResponse({ ok: true, action: 'weekend' });
+        }
+
+        if (text.startsWith('/overnight')) {
+          const bm = await getMachineState();
+          if (chatId) await sendTelegramReply(botToken, chatId, formatMachineOvernight(bm), getMachineMenuKeyboard());
+          return jsonResponse({ ok: true, action: 'overnight' });
         }
 
         if (text.startsWith('/team')) {
@@ -1934,6 +1958,10 @@ function getMachineMenuKeyboard() {
   return {
     inline_keyboard: [
       [
+        { text: '🗓️ Weekend Top-5 Value Bets', callback_data: 'cmd_machine_weekend' },
+        { text: '🌙 Overnight Breakdown', callback_data: 'cmd_machine_overnight' }
+      ],
+      [
         { text: '🔒 12-Leg Small-Odds Acca (22.14x)', callback_data: 'cmd_machine_small' }
       ],
       [
@@ -2034,6 +2062,29 @@ function formatMachineTeams(bm) {
     `<b>${idx + 1}. ${t.name}</b> (${t.league}) — <b>${t.record}</b> [ROI ${t.roi}]\n   • Avg: ${t.foulsAvg} Fouls | ${t.cardsAvg} Cards | ${t.cornersAvg} Corners | ${t.tacklesAvg} Tackles\n   • Lock: <i>${t.lock}</i>`
   ).join('\n\n');
   return `📊 <b>14-Team Walk-Forward Leaderboard (2026–27)</b>\n\n${lines || 'No teams synced yet.'}`;
+}
+
+function formatMachineWeekend(bm) {
+  const list = bm?.weekendTop5Fixtures || [];
+  const lines = list.map((w, i) =>
+    `<b>${i + 1}. [${w.league}] ${w.match}</b> (${w.kickoff})\n` +
+    `   🤝 <i>${w.h2hRecord}</i>\n` +
+    `   🔒 Lock: <b>${w.smallLock.pick} @ ${w.smallLock.odds}</b> (${w.smallLock.modelProb}% | ${w.smallLock.streak})\n` +
+    `   🚀 Value: <b>${w.valueBet.pick} @ ${w.valueBet.odds}</b> (Edge ${w.valueBet.edge})`
+  ).join('\n\n');
+  return `🗓️ <b>Friday Morning Top-5 Leagues Weekend Fixtures, H2H & Value Bets</b>\n\n${lines || 'Run sync_machine_to_kv.py to load weekend fixtures.'}`;
+}
+
+function formatMachineOvernight(bm) {
+  const list = bm?.overnightBreakdown || [];
+  const lines = list.map((r, i) =>
+    `<b>${i + 1}. ${r.match}</b> (${r.comp})\n` +
+    `   • Pick: <b>${r.preMatchPick}</b> -> ✅ <b>${r.result}</b>\n` +
+    `   • Model: ${r.modelProjection}\n` +
+    `   • Actual: <b>${r.actualStats}</b>\n` +
+    `   • <i>${r.breakdown}</i>`
+  ).join('\n\n');
+  return `🌙 <b>Overnight Results & Morning Post-Mortem Breakdown</b>\n\n${lines || 'No overnight matches graded yet.'}`;
 }
 
 function getPuntersMenuKeyboard() {

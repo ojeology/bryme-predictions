@@ -9,6 +9,7 @@ import json
 import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
+from weekend_top5_engine import OVERNIGHT_RESULTS_BREAKDOWN, WEEKEND_TOP5_FIXTURES
 
 ROOT = Path(__file__).resolve().parent.parent
 MASTER_CSV = ROOT / "data" / "master_top5_matches.csv"
@@ -69,6 +70,8 @@ def build_machine_payload() -> dict:
         "combinedHitRate": "91/101 (90.1%)",
         "smallOddsSlip": TONIGHT_SMALL_ODDS_SLIP,
         "bigOddsSlip": TONIGHT_BIG_ODDS_SLIP,
+        "weekendTop5Fixtures": WEEKEND_TOP5_FIXTURES,
+        "overnightBreakdown": OVERNIGHT_RESULTS_BREAKDOWN,
         "teams": TEAM_PROFILES,
     }
 

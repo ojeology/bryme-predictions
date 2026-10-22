@@ -1,0 +1,34 @@
+# Friday Morning Top-5 Leagues Weekend Fixture Analysis, H2H & Overnight Breakdown
+
+## 1. Overnight Results & Pre-Match Model Post-Mortem Breakdown
+
+| Date | Comp | Match | Pre-Match Pick | Model Projection | Actual FT Stats | Result |
+| :--- | :--- | :--- | :--- | :--- | :--- | :---: |
+| 20-21 Oct 2026 (Recent Completed Round) | Premier League | **Nottingham Forest 1-0 Crystal Palace** | `Fouls Under 24.5 @ 1.50` | 21.5 Fouls | 3.2 Cards | 9.6 Corners | 35.1 Tackles | **22 Fouls (11+11) | 3 Cards | 10 Corners | 36 Tackles** | ✅ **WON** |
+| 20 Oct 2026 (Recent Completed Round) | Premier League | **Wolves 1-2 Manchester City** | `Fouls Under 22.5 @ 1.85 & Corners Over 10.5 @ 1.85` | 20.4 Fouls | 3.4 Cards | 11.2 Corners | 29.0 Tackles | **19 Fouls (12+7) | 4 Cards | 13 Corners (2+11) | 28 Tackles** | ✅ **WON** |
+| 20 Oct 2026 (Recent Completed Round) | Ligue 1 | **Le Havre 0-4 Olympique Lyonnais** | `Corners Over 9.5 @ 1.85 & Tackles Under 31.5 @ 1.85` | 22.6 Fouls | 4.1 Cards | 10.7 Corners | 29.6 Tackles | **22 Fouls | 4 Cards | 10 Corners | 29 Tackles** | ✅ **WON** |
+| 19 Oct 2026 (Recent Completed Round) | Premier League | **AFC Bournemouth 2-0 Arsenal** | `Fouls Over 21.5 @ 1.85 & Cards Over 3.5 @ 1.75` | 24.3 Fouls | 4.8 Cards | 10.4 Corners | 34.8 Tackles | **24 Fouls (13+11) | 5 Cards (+1 Red) | 10 Corners | 35 Tackles** | ✅ **WON** |
+| 19 Oct 2026 (Recent Completed Round) | Serie A | **Juventus 1-0 Lazio** | `Fouls Over 21.5 @ 1.85 & Corners Over 8.5 @ 1.80` | 23.2 Fouls | 3.8 Cards | 9.4 Corners | 30.8 Tackles | **25 Fouls (12+13) | 4 Cards (+1 Red) | 9 Corners | 30 Tackles** | ✅ **WON** |
+| 19 Oct 2026 (Recent Completed Round) | Bundesliga | **Bayer Leverkusen 2-1 Eintracht Frankfurt** | `Fouls Over 20.5 @ 1.80 & Cards Under 5.5 @ 1.18` | 22.1 Fouls | 3.6 Cards | 9.2 Corners | 29.8 Tackles | **23 Fouls (11+12) | 4 Cards | 9 Corners | 30 Tackles** | ✅ **WON** |
+| 18 Oct 2026 (Recent Completed Round) | La Liga | **Athletic Club 1-1 Getafe CF** | `Cards Over 3.5 @ 1.55 & Tackles Under 31.5 @ 1.85` | 24.6 Fouls | 5.1 Cards | 8.8 Corners | 27.8 Tackles | **26 Fouls (11+15) | 5 Yellow Cards | 9 Corners | 28 Tackles** | ✅ **WON** |
+| 18 Oct 2026 (Recent Completed Round) | Ligue 1 | **Montpellier 0-5 Olympique Marseille** | `Fouls Over 21.5 @ 1.85` | 23.1 Fouls | 4.0 Cards | 9.0 Corners | 31.2 Tackles | **24 Fouls (13+11) | 4 Cards | 8 Corners | 31 Tackles** | ✅ **WON** |
+
+## 2. Friday Morning Top-5 European Leagues Weekend Fixtures (`Premier League`, `La Liga`, `Serie A`, `Bundesliga`, `Ligue 1`)
+
+| League | Match | H2H Behaviour Note | Small-Odds Constant Lock | Big-Odds Best Value Bet | Edge |
+| :--- | :--- | :--- | :--- | :--- | :---: |
+| **Premier League** | **Aston Villa vs AFC Bournemouth** (Sat 15:00 UTC) | Last 5 H2H: Villa 3W, 1D, Bournemouth 1W (Avg 3.2 Goals, 24.4 Fouls, 4.6 Cards) | **Fouls Over 21.5 @ 1.34** (8/9 Bournemouth games O21.5 fouls (88.9%)) | **Cards Over 3.5 @ 1.72** | `+14.6%` |
+| **Premier League** | **Crystal Palace vs Tottenham Hotspur** (Sun 14:00 UTC) | Last 5 H2H: Spurs 4W, Palace 1W (Avg 2.6 Goals, 21.2 Fouls, 3.4 Cards, 10.8 Corners) | **Fouls Under 24.5 @ 1.36** (8/8 Palace games <=24 fouls (100%)) | **Corners Over 9.5 @ 1.75** | `+12.9%` |
+| **Premier League** | **Manchester City vs Southampton** (Sat 15:00 UTC) | Last 5 H2H: City 4W, 1D (Avg 3.6 Goals, 19.4 Fouls, 11.4 Corners, 28.0 Tackles) | **Fouls Under 22.5 @ 1.33** (City averages 20.3 total fouls across 12 games) | **Man City Team Corners Over 6.5 @ 1.8** | `+13.0%` |
+| **Premier League** | **Brighton & Hove Albion vs Wolves** (Sat 15:00 UTC) | Last 5 H2H: Brighton 3W, 1D, Wolves 1W (Avg 3.0 Goals, 22.0 Fouls, 10.2 Corners) | **Fouls Under 24.5 @ 1.35** (7/8 Brighton games <=24 fouls (87.5%)) | **Corners Over 8.5 @ 1.65** | `+11.8%` |
+| **Premier League** | **Arsenal vs Liverpool** (Sun 16:30 UTC) | Last 5 H2H: Arsenal 2W, 2D, Liverpool 1W (Avg 3.4 Goals, 23.6 Fouls, 4.8 Cards) | **Fouls Over 20.5 @ 1.3** (4/5 H2H >=22 fouls; tactical midfield transition stops) | **Cards Over 3.5 @ 1.68** | `+11.4%` |
+| **La Liga** | **Getafe CF vs Valencia CF** (Sun 13:00 UTC) | Last 5 H2H: Getafe 2W, 1D, Valencia 2W (Avg 1.8 Goals, 27.4 Fouls, 6.4 Yellow Cards, 26.8 Tackles) | **Cards Over 3.5 @ 1.28** (7/7 Getafe games >=4 cards (100%, 5.29 avg)) | **Cards Over 4.5 (or Tackles U31.5) @ 1.75** | `+17.9%` |
+| **La Liga** | **Real Sociedad vs Osasuna** (Sun 20:00 UTC) | Last 5 H2H: Sociedad 3W, 1D, Osasuna 1W (Avg 2.2 Goals, 24.8 Fouls, 34.6 Tackles, 9.8 Corners) | **Fouls Over 20.5 @ 1.27** (6/7 Sociedad games O20.5 fouls (85.7%)) | **Tackles Over 31.5 @ 1.8** | `+19.0%` |
+| **La Liga** | **Real Madrid vs FC Barcelona (El Clásico)** (Sat 19:00 UTC) | Last 5 H2H: Real Madrid 4W, Barcelona 1W (Avg 3.8 Goals, 23.4 Fouls, 5.2 Cards, 10.6 Corners) | **Cards Over 3.5 @ 1.29** (5/5 H2H >=4 yellow cards (5.2 avg)) | **BTTS Yes & Over 2.5 Goals @ 1.72** | `+13.2%` |
+| **Serie A** | **Atalanta BC vs Hellas Verona** (Sat 18:45 UTC) | Last 5 H2H: Atalanta 4W, 1D (Avg 3.2 Goals, 21.4 Fouls, 3.2 Cards, 10.2 Corners) | **Fouls Under 24.5 @ 1.33** (8/8 Atalanta games <=24 fouls (100%)) | **Cards Under 3.5 @ 1.78** | `+16.5%` |
+| **Serie A** | **Inter Milan vs Juventus (Derby d'Italia)** (Sun 17:00 UTC) | Last 5 H2H: Inter 2W, 2D, Juventus 1W (Avg 2.0 Goals, 24.2 Fouls, 4.4 Cards, 9.6 Corners) | **Corners Over 7.5 @ 1.28** (11/13 Juventus games >=8 corners (84.6%)) | **Fouls Over 21.5 @ 1.76** | `+14.2%` |
+| **Bundesliga** | **Werder Bremen vs Bayer Leverkusen** (Sat 16:30 UTC) | Last 5 H2H: Leverkusen 4W, 1D (Avg 3.6 Goals, 20.8 Fouls, 3.4 Cards, 9.4 Corners) | **Cards Under 4.5 @ 1.26** (10/10 Leverkusen games <=5 cards (3.50 avg)) | **Fouls Under 22.5 @ 1.74** | `+12.0%` |
+| **Bundesliga** | **FC Augsburg vs Borussia Dortmund** (Sat 13:30 UTC) | Last 5 H2H: Dortmund 3W, 2D (Avg 3.8 Goals, 22.8 Fouls, 4.2 Cards, 10.4 Corners) | **Corners Over 8.5 @ 1.35** (4/5 H2H >=10 corners (10.4 avg)) | **Fouls Over 21.5 @ 1.78** | `+12.4%` |
+| **Ligue 1** | **Olympique Marseille vs PSG (Le Classique)** (Sun 19:45 UTC) | Last 5 H2H: PSG 4W, Marseille 1W (Avg 2.8 Goals, 24.6 Fouls, 4.8 Cards, 9.0 Corners) | **Fouls Over 20.5 @ 1.25** (7/7 Marseille walk-forward Fouls streak (100%)) | **Corners Under 10.5 (or Cards O3.5 @ 1.68) @ 1.68** | `+15.1%` |
+| **Ligue 1** | **OGC Nice vs AS Monaco (Derby de la Côte d'Azur)** (Sun 16:00 UTC) | Last 5 H2H: Monaco 3W, Nice 2W (Avg 3.2 Goals, 25.4 Fouls, 4.6 Cards, 9.4 Corners) | **Fouls Over 21.5 @ 1.29** (4/4 last Monaco games >=23 fouls (25.0 avg)) | **Fouls Over 23.5 @ 1.82** | `+15.0%` |
+| **Ligue 1** | **Olympique Lyonnais vs AJ Auxerre** (Sun 14:00 UTC) | Last 5 H2H: Lyon 4W, Auxerre 1W (Avg 3.4 Goals, 22.4 Fouls, 10.8 Corners, 29.4 Tackles) | **Corners Over 8.5 @ 1.36** (8/9 Lyon games >=10 corners (88.9%)) | **Corners Over 9.5 (or Tackles U31.5 @ 1.80) @ 1.76** | `+13.6%` |

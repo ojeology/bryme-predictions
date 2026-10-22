@@ -29,7 +29,9 @@ jobs:
         run: python3 bot-engine/src/top5_collector.py
 
       - name: Run Walk-Forward Behaviour Scanner & Update Website Data
-        run: python3 bot-engine/src/scanner.py
+        run: |
+          python3 bot-engine/src/scanner.py
+          python3 bot-engine/src/weekend_top5_engine.py
 
       - name: Sync Behaviour Machine to Cloudflare KV & Telegram Bot
         run: python3 bot-engine/src/sync_machine_to_kv.py || true
