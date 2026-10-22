@@ -41,8 +41,24 @@ def main():
         tot_m += n
         print(f"{name:<24} {lg:<20} {n:<8d} {wf:<18} {roi:<10}")
     print("-" * 86)
-    print(f"Total verified 2026-27 team-matches in database: {tot_m} | Opponent profiles: {sum(1 for _ in csv.DictReader(open(DATA / 'opponents.csv')))}")
+    n_opp = sum(1 for _ in csv.DictReader(open(DATA / 'opponents.csv')))
+    print(f"Total verified 2026-27 team-matches in database: {tot_m} | Opponent profiles: {n_opp}")
     print("=" * 86)
+
+    daily_md = ROOT / "DAILY_PICKS.md"
+    lines = [
+        "# Daily & Weekend Top-5 Leagues Walk-Forward Behaviour Report",
+        "",
+        f"- **Total Verified 2026–27 Team-Matches:** `{tot_m}`",
+        f"- **Total Top-5 & UEFA Opponent Profiles:** `{n_opp}`",
+        "",
+        "| Team | League | Matches | Walk-Forward Hit Rate | Real-Odds ROI |",
+        "| :--- | :--- | :---: | :---: | :---: |",
+    ]
+    for name, lg, fn, wf, roi in TEAMS:
+        n = sum(1 for _ in csv.DictReader(open(DATA / fn)))
+        lines.append(f"| **{name}** | {lg} | {n} | `{wf}` | `{roi}` |")
+    daily_md.write_text("\n".join(lines) + "\n")
 
 
 if __name__ == "__main__":

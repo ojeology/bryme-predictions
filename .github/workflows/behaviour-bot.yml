@@ -38,6 +38,5 @@ jobs:
         run: |
           git config user.name "Bryme-Behaviour-Bot"
           git config user.email "bot@predictions.thebryme.com"
-          git add bot-engine/data/*.csv bot-engine/DAILY_PICKS.md src/data/behaviourMachineData.js
-          git diff --staged --quiet || git commit -m "chore(bot): auto-update Top-5 match stats & weekend value picks"
-          git push
+          git add bot-engine/ src/data/behaviourMachineData.js
+          git diff --staged --quiet || (git pull --rebase origin main && git commit -m "chore(bot): auto-update Top-5 match stats & weekend value picks" && git push)
