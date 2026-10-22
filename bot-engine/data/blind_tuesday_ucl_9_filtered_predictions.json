@@ -1,0 +1,401 @@
+[
+  {
+    "match_id": "2026-10-20_FEN_SLA",
+    "match": "Fenerbah\u00e7e vs Slavia Praha",
+    "kickoff": "18:45 CET",
+    "exp_fouls": 26,
+    "exp_corners": 12,
+    "exp_cards": 4,
+    "exp_tackles": 31,
+    "raw_unfiltered_top": {
+      "market": "Total Corners Over 8.5",
+      "type": "OVER_CORNERS",
+      "prob": 0.8600774087763332,
+      "raw_prob": 0.8600774087763332,
+      "odds": 1.38,
+      "proj": "12.2 Corners (5.88+6.36)"
+    },
+    "rejected_traps": [
+      {
+        "market": "Total Cards Under 4.5",
+        "type": "UNDER_CARDS",
+        "prob": 0.6939666964602914,
+        "raw_prob": 0.7216633899674162,
+        "odds": 1.3,
+        "proj": "3.7 Cards",
+        "reasons": [
+          "FILTER #4 (0-Pt UEFA Desperation Ban: Team on 0 pts [1 vs 0])"
+        ]
+      }
+    ],
+    "post_filter_lock": {
+      "market": "Total Corners Over 8.5",
+      "type": "OVER_CORNERS",
+      "prob": 0.8600774087763332,
+      "raw_prob": 0.8600774087763332,
+      "odds": 1.38,
+      "proj": "12.2 Corners (5.88+6.36)"
+    },
+    "post_filter_alt": {
+      "market": "Total Fouls Over 21.5",
+      "type": "OVER_FOULS",
+      "prob": 0.825919506380868,
+      "raw_prob": 0.7994922857760931,
+      "odds": 1.32,
+      "proj": "26.3 Fouls (12.8+14.1)"
+    }
+  },
+  {
+    "match_id": "2026-10-20_SAB_BVB",
+    "match": "Sabah FK vs Borussia Dortmund",
+    "kickoff": "18:45 CET",
+    "exp_fouls": 23,
+    "exp_corners": 11,
+    "exp_cards": 3,
+    "exp_tackles": 29,
+    "raw_unfiltered_top": {
+      "market": "Total Cards Under 4.5",
+      "type": "UNDER_CARDS",
+      "prob": 0.789460280667674,
+      "raw_prob": 0.831777076319449,
+      "odds": 1.3,
+      "proj": "3.1 Cards"
+    },
+    "rejected_traps": [],
+    "post_filter_lock": {
+      "market": "Total Cards Under 4.5",
+      "type": "UNDER_CARDS",
+      "prob": 0.789460280667674,
+      "raw_prob": 0.831777076319449,
+      "odds": 1.3,
+      "proj": "3.1 Cards"
+    },
+    "post_filter_alt": {
+      "market": "Total Corners Over 8.5",
+      "type": "OVER_CORNERS",
+      "prob": 0.7852905011089066,
+      "raw_prob": 0.7852905011089066,
+      "odds": 1.38,
+      "proj": "11.2 Corners (5.0+6.2)"
+    }
+  },
+  {
+    "match_id": "2026-10-20_ROM_SLO",
+    "match": "AS Roma vs Slovan Bratislava",
+    "kickoff": "21:00 CET",
+    "exp_fouls": 21,
+    "exp_corners": 10,
+    "exp_cards": 3,
+    "exp_tackles": 25,
+    "raw_unfiltered_top": {
+      "market": "Total Cards Under 4.5",
+      "type": "UNDER_CARDS",
+      "prob": 0.8449404562570928,
+      "raw_prob": 0.8788338927183703,
+      "odds": 1.3,
+      "proj": "2.8 Cards"
+    },
+    "rejected_traps": [
+      {
+        "market": "Total Fouls Under 24.5",
+        "type": "UNDER_FOULS",
+        "prob": 0.7823665741372432,
+        "raw_prob": 0.839863280838852,
+        "odds": 1.33,
+        "proj": "21.0 Fouls (9.8+11.2)",
+        "reasons": [
+          "FILTER #4 (0-Pt UEFA Desperation Ban: Team on 0 pts [1 vs 0])"
+        ]
+      },
+      {
+        "market": "Total Cards Under 4.5",
+        "type": "UNDER_CARDS",
+        "prob": 0.8449404562570928,
+        "raw_prob": 0.8788338927183703,
+        "odds": 1.3,
+        "proj": "2.8 Cards",
+        "reasons": [
+          "FILTER #4 (0-Pt UEFA Desperation Ban: Team on 0 pts [1 vs 0])"
+        ]
+      }
+    ],
+    "post_filter_lock": {
+      "market": "AS Roma Over 4.5 Shots on Target",
+      "type": "TEAM_SOT",
+      "prob": 0.807969126149427,
+      "raw_prob": 0.807969126149427,
+      "odds": 1.33,
+      "proj": "6.8 Expected SOT"
+    },
+    "post_filter_alt": {
+      "market": "Total Corners Under 10.5",
+      "type": "UNDER_CORNERS",
+      "prob": 0.5955486584252704,
+      "raw_prob": 0.5955486584252704,
+      "odds": 1.33,
+      "proj": "9.9 Corners (6.5+3.4)"
+    }
+  },
+  {
+    "match_id": "2026-10-20_POR_PSV",
+    "match": "FC Porto vs PSV Eindhoven",
+    "kickoff": "21:00 CET",
+    "exp_fouls": 22,
+    "exp_corners": 11,
+    "exp_cards": 3,
+    "exp_tackles": 31,
+    "raw_unfiltered_top": {
+      "market": "Total Cards Under 4.5",
+      "type": "UNDER_CARDS",
+      "prob": 0.7612224011672751,
+      "raw_prob": 0.7964534619607448,
+      "odds": 1.3,
+      "proj": "3.3 Cards"
+    },
+    "rejected_traps": [
+      {
+        "market": "Total Cards Under 4.5",
+        "type": "UNDER_CARDS",
+        "prob": 0.7612224011672751,
+        "raw_prob": 0.7964534619607448,
+        "odds": 1.3,
+        "proj": "3.3 Cards",
+        "reasons": [
+          "FILTER #4 (0-Pt UEFA Desperation Ban: Team on 0 pts [0 vs 1])"
+        ]
+      }
+    ],
+    "post_filter_lock": {
+      "market": "Total Corners Over 8.5",
+      "type": "OVER_CORNERS",
+      "prob": 0.7852905011089066,
+      "raw_prob": 0.7852905011089066,
+      "odds": 1.38,
+      "proj": "11.2 Corners (5.0+6.2)"
+    },
+    "post_filter_alt": {
+      "market": "FC Porto Over 4.5 Shots on Target",
+      "type": "TEAM_SOT",
+      "prob": 0.6683504678659011,
+      "raw_prob": 0.6683504678659011,
+      "odds": 1.33,
+      "proj": "5.67 Expected SOT"
+    }
+  },
+  {
+    "match_id": "2026-10-20_LIV_VIL",
+    "match": "Liverpool vs Villarreal",
+    "kickoff": "21:00 CET",
+    "exp_fouls": 24,
+    "exp_corners": 10,
+    "exp_cards": 4,
+    "exp_tackles": 32,
+    "raw_unfiltered_top": {
+      "market": "Total Fouls Over 21.5",
+      "type": "OVER_FOULS",
+      "prob": 0.6915206025641274,
+      "raw_prob": 0.7913229386050782,
+      "odds": 1.32,
+      "proj": "24.1 Fouls (12.9+11.7)"
+    },
+    "rejected_traps": [],
+    "post_filter_lock": {
+      "market": "Liverpool Over 4.5 Shots on Target",
+      "type": "TEAM_SOT",
+      "prob": 0.7763281831885007,
+      "raw_prob": 0.7763281831885007,
+      "odds": 1.33,
+      "proj": "6.5 Expected SOT"
+    },
+    "post_filter_alt": {
+      "market": "Total Fouls Over 21.5",
+      "type": "OVER_FOULS",
+      "prob": 0.6915206025641274,
+      "raw_prob": 0.7913229386050782,
+      "odds": 1.32,
+      "proj": "24.1 Fouls (12.9+11.7)"
+    }
+  },
+  {
+    "match_id": "2026-10-20_MCI_AEK",
+    "match": "Manchester City vs AEK Athens",
+    "kickoff": "21:00 CET",
+    "exp_fouls": 20,
+    "exp_corners": 11,
+    "exp_cards": 3,
+    "exp_tackles": 31,
+    "raw_unfiltered_top": {
+      "market": "Manchester City Over 4.5 Shots on Target",
+      "type": "TEAM_SOT",
+      "prob": 0.8679381437122794,
+      "raw_prob": 0.8679381437122794,
+      "odds": 1.33,
+      "proj": "7.5 Expected SOT"
+    },
+    "rejected_traps": [
+      {
+        "market": "Total Corners Over 8.5",
+        "type": "OVER_CORNERS",
+        "prob": 0.733500742872387,
+        "raw_prob": 0.733500742872387,
+        "odds": 1.38,
+        "proj": "10.6 Corners (6.43+4.2)",
+        "reasons": [
+          "FILTER #2 (Blowout Corner Ban: Fav @ 1.14 with underdog < 4.8 corners/g)"
+        ]
+      }
+    ],
+    "post_filter_lock": {
+      "market": "Manchester City Over 4.5 Shots on Target",
+      "type": "TEAM_SOT",
+      "prob": 0.8679381437122794,
+      "raw_prob": 0.8679381437122794,
+      "odds": 1.33,
+      "proj": "7.5 Expected SOT"
+    },
+    "post_filter_alt": {
+      "market": "Total Cards Under 4.5",
+      "type": "UNDER_CARDS",
+      "prob": 0.8378141210876099,
+      "raw_prob": 0.8553785061754919,
+      "odds": 1.3,
+      "proj": "2.9 Cards"
+    }
+  },
+  {
+    "match_id": "2026-10-20_PSG_BAR",
+    "match": "Paris Saint-Germain vs FC Barcelona",
+    "kickoff": "21:00 CET",
+    "exp_fouls": 19,
+    "exp_corners": 13,
+    "exp_cards": 3,
+    "exp_tackles": 36,
+    "raw_unfiltered_top": {
+      "market": "Total Fouls Under 24.5",
+      "type": "UNDER_FOULS",
+      "prob": 0.8777334395477185,
+      "raw_prob": 0.9249492541977794,
+      "odds": 1.33,
+      "proj": "19.3 Fouls (9.2+9.7)"
+    },
+    "rejected_traps": [],
+    "post_filter_lock": {
+      "market": "Total Corners Over 8.5",
+      "type": "OVER_CORNERS",
+      "prob": 0.9002420855164823,
+      "raw_prob": 0.9002420855164823,
+      "odds": 1.38,
+      "proj": "13.0 Corners (6.2+6.8)"
+    },
+    "post_filter_alt": {
+      "market": "Total Fouls Under 24.5",
+      "type": "UNDER_FOULS",
+      "prob": 0.8777334395477185,
+      "raw_prob": 0.9249492541977794,
+      "odds": 1.33,
+      "proj": "19.3 Fouls (9.2+9.7)"
+    }
+  },
+  {
+    "match_id": "2026-10-20_NAP_BOD",
+    "match": "SSC Napoli vs FK Bod\u00f8/Glimt",
+    "kickoff": "21:00 CET",
+    "exp_fouls": 19,
+    "exp_corners": 10,
+    "exp_cards": 2,
+    "exp_tackles": 29,
+    "raw_unfiltered_top": {
+      "market": "Total Cards Under 4.5",
+      "type": "UNDER_CARDS",
+      "prob": 0.9168327112841239,
+      "raw_prob": 0.9417712174067229,
+      "odds": 1.3,
+      "proj": "2.3 Cards"
+    },
+    "rejected_traps": [
+      {
+        "market": "Total Fouls Under 24.5",
+        "type": "UNDER_FOULS",
+        "prob": 0.8907049239984751,
+        "raw_prob": 0.9143073018371032,
+        "odds": 1.33,
+        "proj": "19.1 Fouls (9.9+8.9)",
+        "reasons": [
+          "FILTER #4 (0-Pt UEFA Desperation Ban: Team on 0 pts [0 vs 3])"
+        ]
+      },
+      {
+        "market": "Total Corners Over 8.5",
+        "type": "OVER_CORNERS",
+        "prob": 0.7103768719314074,
+        "raw_prob": 0.7103768719314074,
+        "odds": 1.38,
+        "proj": "10.4 Corners (5.8+4.6)",
+        "reasons": [
+          "FILTER #2 (Blowout Corner Ban: Fav @ 1.42 with underdog < 4.8 corners/g)"
+        ]
+      },
+      {
+        "market": "Total Cards Under 4.5",
+        "type": "UNDER_CARDS",
+        "prob": 0.9168327112841239,
+        "raw_prob": 0.9417712174067229,
+        "odds": 1.3,
+        "proj": "2.3 Cards",
+        "reasons": [
+          "FILTER #4 (0-Pt UEFA Desperation Ban: Team on 0 pts [0 vs 3])"
+        ]
+      }
+    ],
+    "post_filter_lock": {
+      "market": "SSC Napoli Over 4.5 Shots on Target",
+      "type": "TEAM_SOT",
+      "prob": 0.764929966302384,
+      "raw_prob": 0.764929966302384,
+      "odds": 1.33,
+      "proj": "6.4 Expected SOT"
+    },
+    "post_filter_alt": {
+      "market": "Total Corners Under 10.5",
+      "type": "UNDER_CORNERS",
+      "prob": 0.5331262740017967,
+      "raw_prob": 0.5331262740017967,
+      "odds": 1.33,
+      "proj": "10.4 Corners (5.8+4.6)"
+    }
+  },
+  {
+    "match_id": "2026-10-20_STU_ATM",
+    "match": "VfB Stuttgart vs Atl\u00e9tico Madrid",
+    "kickoff": "21:00 CET",
+    "exp_fouls": 21,
+    "exp_corners": 12,
+    "exp_cards": 3,
+    "exp_tackles": 29,
+    "raw_unfiltered_top": {
+      "market": "Total Corners Over 8.5",
+      "type": "OVER_CORNERS",
+      "prob": 0.8683288842627876,
+      "raw_prob": 0.8683288842627876,
+      "odds": 1.38,
+      "proj": "12.4 Corners (6.56+5.82)"
+    },
+    "rejected_traps": [],
+    "post_filter_lock": {
+      "market": "Total Corners Over 8.5",
+      "type": "OVER_CORNERS",
+      "prob": 0.8683288842627876,
+      "raw_prob": 0.8683288842627876,
+      "odds": 1.38,
+      "proj": "12.4 Corners (6.56+5.82)"
+    },
+    "post_filter_alt": {
+      "market": "Total Cards Under 4.5",
+      "type": "UNDER_CARDS",
+      "prob": 0.779275567062033,
+      "raw_prob": 0.7964534619607447,
+      "odds": 1.3,
+      "proj": "3.2 Cards"
+    }
+  }
+]
