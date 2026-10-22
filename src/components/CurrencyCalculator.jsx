@@ -12,7 +12,7 @@ const AFRICAN_CURRENCIES = [
 export default function CurrencyCalculator() {
   const [selectedCurrency, setSelectedCurrency] = useState(AFRICAN_CURRENCIES[0]);
   const [stake, setStake] = useState(selectedCurrency.defaultStake);
-  const [odds, setOdds] = useState(1.50);
+  const [odds, setOdds] = useState(2.00);
 
   const potentialReturn = Math.round(stake * odds);
   const potentialProfit = Math.max(0, potentialReturn - stake);

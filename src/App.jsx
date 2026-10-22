@@ -6,16 +6,14 @@ import Footer from './components/Footer';
 import SearchModal from './components/SearchModal';
 import CopySuccessModal from './components/CopySuccessModal';
 import { usePredictions } from './context/PredictionsContext';
-import { Sparkles, Clock, Flame, ShieldCheck, X } from 'lucide-react';
+import { X } from 'lucide-react';
 
-// Pages
+// Pages (Punters Hub removed entirely)
 import HomePage from './pages/HomePage';
 import PredictionsPage from './pages/PredictionsPage';
 import MarketsDirectoryPage from './pages/MarketsDirectoryPage';
 import MarketDetailPage from './pages/MarketDetailPage';
 import LadderPage from './pages/LadderPage';
-import PuntersPage from './pages/PuntersPage';
-import PunterProfilePage from './pages/PunterProfilePage';
 import WeekendHubPage from './pages/WeekendHubPage';
 import EditorPicksPage from './pages/EditorPicksPage';
 import TicketDetailPage from './pages/TicketDetailPage';
@@ -63,23 +61,20 @@ export default function App() {
   // Dynamic SEO Page Title for Google indexing and search snippets
   useEffect(() => {
     const titles = {
-      home: 'BRYME Predictions | Daily SportyBet Booking Codes & 18-Step Rollover Ladder',
-      ladder: '18-Step Rollover Mountain & Safe Haven Milestones | BRYME Predictions',
+      home: 'BRYME Predictions | Daily 2.00x Odds Ladder Challenge & Two-Team Behaviour Machine',
+      ladder: '10-Step 2.00x Odds Rollover Challenge (₦1K → ₦1.024M) | BRYME Predictions',
       predictions: 'SportyBet & Bet9ja Booking Codes Hub | BRYME Predictions',
-      punters: 'Tracked African Punters Directory & Daily Slips | BRYME Predictions',
       convert: 'Convert Bet Codes (SportyBet, Bet9ja, 1xBet, BetKing) | BRYME',
       markets: '35+ Football Betting Markets Catalogue & Hit Rates | BRYME',
       results: 'Verified Results Ledger (76.9% Win Rate) | BRYME Predictions',
-      machine: 'Top-5 Leagues Walk-Forward Behaviour Machine (Fouls, Cards, Corners, Tackles) | BRYME',
+      machine: 'Top-5 Leagues Two-Team Walk-Forward Behaviour Machine (Fouls, Cards, Corners, Tackles) | BRYME',
       'editor-picks': 'Weekend 2.00x European Banker Double | BRYME Predictions',
-      'weekend-hub': 'African Punters Consensus Hub & Match Polls | BRYME',
+      'weekend-hub': 'Consensus Hub & Match Polls | BRYME',
       admin: 'Admin Management Deck | BRYME Predictions'
     };
 
     if (titles[mainRoute]) {
       document.title = titles[mainRoute];
-    } else if (mainRoute === 'punter' && param) {
-      document.title = `${param.replace('punter-', '').toUpperCase()} Daily Booking Codes | BRYME Predictions`;
     } else if (mainRoute === 'ticket' && param) {
       document.title = `Banker Slip Selections & Odds Breakdown | BRYME Predictions`;
     } else if (mainRoute === 'market' && param) {
@@ -87,11 +82,13 @@ export default function App() {
     }
   }, [mainRoute, param]);
 
-  // Render appropriate view based on route
+  // Render appropriate view based on route (Punters routes removed -> redirect to HomePage)
   const renderContent = () => {
     switch (mainRoute) {
       case 'home':
       case '':
+      case 'punters':
+      case 'punter':
         return <HomePage onNavigate={navigate} />;
       case 'machine':
       case 'behaviour':
@@ -117,10 +114,6 @@ export default function App() {
         return <MarketDetailPage marketId={param} onNavigate={navigate} />;
       case 'ladder':
         return <LadderPage onNavigate={navigate} />;
-      case 'punters':
-        return <PuntersPage onNavigate={navigate} />;
-      case 'punter':
-        return <PunterProfilePage punterId={param} onNavigate={navigate} />;
       case 'weekend-hub':
         return <WeekendHubPage onNavigate={navigate} />;
       case 'editor-picks':
@@ -163,15 +156,15 @@ export default function App() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
             </span>
-            <span className="font-bold text-white uppercase tracking-wider">{announcements?.tickerText || '★ TUESDAY UCL SPECIAL: Real Madrid vs Dortmund • 2.45x Banker Live'}</span>
+            <span className="font-bold text-white uppercase tracking-wider">{announcements?.tickerText || '★ 2.00x ODDS LADDER CHALLENGE RESET: Day 1 Live • Powered by 2-Team Behaviour Machine'}</span>
           </div>
 
           <div className="hidden sm:flex items-center gap-4 text-slate-400">
-            <span>Ladder: <strong className="text-white">Day {ladder.currentDay} (₦{ladder.currentBalance?.toLocaleString()})</strong></span>
+            <span>2x Ladder: <strong className="text-white">Day {ladder?.currentDay || 1} (₦{(ladder?.currentBalance || 1000).toLocaleString()})</strong></span>
             <span>&bull;</span>
-            <span>Sporty: <strong className="text-white">{ladder.sportyCode}</strong></span>
+            <span>Target: <strong className="text-emerald-400">2.00x Daily</strong></span>
             <span>&bull;</span>
-            <span>Bet9ja: <strong className="text-white">{ladder.todaysCode}</strong></span>
+            <span>Slip: <strong className="text-white">{ladder?.sportyCode || '2X-DAY1'}</strong></span>
           </div>
 
           <button 
@@ -205,13 +198,11 @@ export default function App() {
       {/* 4. Slide-in Mobile & Tablet Sidebar Drawer */}
       {sidebarOpen && (
         <div className="fixed inset-0 z-50 lg:hidden flex">
-          {/* Backdrop */}
           <div 
             onClick={() => setSidebarOpen(false)} 
             className="fixed inset-0 bg-black/70 backdrop-blur-sm transition-opacity"
           />
 
-          {/* Drawer Content */}
           <div className="relative w-full max-w-xs sm:max-w-sm bg-[#0E1626] text-white h-full overflow-y-auto p-4 shadow-2xl flex flex-col justify-between z-10 border-r border-slate-800">
             <div>
               <div className="flex items-center justify-between pb-3 border-b border-slate-800 mb-4">
@@ -221,7 +212,7 @@ export default function App() {
                   </div>
                   <div>
                     <h3 className="font-display font-black text-sm tracking-wide">BRYME PREDICTIONS</h3>
-                    <p className="text-[10px] text-slate-400 font-mono">18-Step Rollover Suite</p>
+                    <p className="text-[10px] text-slate-400 font-mono">2.00x Rollover Suite</p>
                   </div>
                 </div>
 
@@ -247,21 +238,17 @@ export default function App() {
       <Footer onNavigate={navigate} />
 
       {/* 6. Mobile Bottom Navigation Bar */}
-      <BottomNav 
-        currentRoute={mainRoute} 
-        onNavigate={navigate} 
-        onOpenSidebar={() => setSidebarOpen(true)}
-      />
+      <BottomNav currentRoute={mainRoute} onNavigate={navigate} />
 
-      {/* 7. Instant Search Modal */}
+      {/* 7. Global Search Modal */}
       <SearchModal 
         isOpen={searchOpen} 
         onClose={() => setSearchOpen(false)} 
         onNavigate={navigate} 
       />
 
-      {/* 8. Global High-Converting Copy & Viral Share Modal */}
-      <CopySuccessModal
+      {/* 8. Global 1-Tap Copy Success Modal */}
+      <CopySuccessModal 
         isOpen={copyModal?.isOpen}
         onClose={closeCopyModal}
         code={copyModal?.code}

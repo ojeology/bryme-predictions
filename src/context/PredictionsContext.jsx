@@ -9,11 +9,11 @@ import { SYNDICATE_ARCHIVE as DEFAULT_SYNDICATE_ARCHIVE } from '../data/syndicat
 
 const PredictionsContext = createContext(null);
 
-const STORAGE_KEY_LADDER = 'bryme_active_ladder_v3';
-const STORAGE_KEY_TICKETS = 'bryme_booking_tickets_v3';
+const STORAGE_KEY_LADDER = 'bryme_active_ladder_2odds_v5';
+const STORAGE_KEY_TICKETS = 'bryme_booking_tickets_v5';
 const STORAGE_KEY_CATALOGUE = 'bryme_code_catalogue_v3';
-const STORAGE_KEY_PUNTERS = 'bryme_punters_v4';
-const STORAGE_KEY_ANNOUNCEMENTS = 'bryme_announcements_v1';
+const STORAGE_KEY_PUNTERS = 'bryme_punters_removed_v5';
+const STORAGE_KEY_ANNOUNCEMENTS = 'bryme_announcements_2odds_v5';
 const STORAGE_KEY_MARKETS = 'bryme_markets_v2';
 const STORAGE_KEY_WHALE = 'bryme_whale_slip_v1';
 const STORAGE_KEY_ADS = 'bryme_ad_settings_v1';
@@ -119,21 +119,8 @@ export function PredictionsProvider({ children }) {
     }
   });
 
-  // 4. Punters & Daily Codes State
-  const [punters, setPuntersState] = useState(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY_PUNTERS);
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.some(p => p.id === 'punter-mrbanks')) {
-          return parsed;
-        }
-      }
-      return INITIAL_PUNTERS;
-    } catch (e) {
-      return INITIAL_PUNTERS;
-    }
-  });
+  // 4. Punters State (Removed — empty array)
+  const [punters, setPuntersState] = useState([]);
 
   // 5. Market Specific Booking Codes State (Slips attached to Over 1.5, Double Chance, etc.)
   const [marketCodes, setMarketCodesState] = useState(() => {
@@ -154,13 +141,13 @@ export function PredictionsProvider({ children }) {
     try {
       const saved = localStorage.getItem(STORAGE_KEY_ANNOUNCEMENTS);
       return saved ? JSON.parse(saved) : {
-        tickerText: '★ TUESDAY UCL SPECIAL: Real Madrid vs Dortmund • 2.45x Banker Live',
+        tickerText: '★ 2.00x ODDS LADDER CHALLENGE RESET: Day 1 Live • Powered by 2-Team Behaviour Machine',
         dropTimeWAT: '02:00 AM WAT',
         showUclBanner: true
       };
     } catch (e) {
       return {
-        tickerText: '★ TUESDAY UCL SPECIAL: Real Madrid vs Dortmund • 2.45x Banker Live',
+        tickerText: '★ 2.00x ODDS LADDER CHALLENGE RESET: Day 1 Live • Powered by 2-Team Behaviour Machine',
         dropTimeWAT: '02:00 AM WAT',
         showUclBanner: true
       };
@@ -249,14 +236,14 @@ export function PredictionsProvider({ children }) {
           const json = await res.json();
           if (json.success && json.data && isMounted) {
             const remote = json.data;
-            if (remote.ladder) setLadderState(remote.ladder);
+            if (remote.ladder && Number(remote.ladder.dailyOdds) >= 1.95) {
+              setLadderState(remote.ladder);
+            } else {
+              setLadderState(DEFAULT_LADDER);
+            }
             if (remote.tickets) setTicketsState(remote.tickets);
             if (remote.codeCatalogue) setCodeCatalogueState(remote.codeCatalogue);
-            if (remote.punters && Array.isArray(remote.punters) && remote.punters.some(p => p.id === 'punter-mrbanks')) {
-              setPuntersState(remote.punters);
-            } else {
-              setPuntersState(INITIAL_PUNTERS);
-            }
+            setPuntersState([]);
             if (remote.announcements) setAnnouncementsState(remote.announcements);
             if (remote.markets) setMarketsState(remote.markets);
             if (remote.marketCodes && Array.isArray(remote.marketCodes)) {

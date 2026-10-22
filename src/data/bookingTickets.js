@@ -63,29 +63,47 @@ export const DAILY_BOOKING_TICKETS = [
   },
   {
     id: 'ticket-ladder-challenge',
-    badge: 'BRYME ROLLOVER',
-    title: 'BRYME Rollover Step 1/18 (₦1,000 Starting Stake → ₦1,500 Target)',
+    badge: '2.00x ODDS CHALLENGE',
+    title: 'BRYME 2.00x Rollover Day 1/10 (₦1,000 Starting Stake → ₦2,000 Target)',
     category: 'ladder',
-    riskLevel: 'Ultra Conservative',
-    totalOdds: 1.50,
-    date: '2026-10-21',
+    riskLevel: '100% Two-Team Agreement',
+    totalOdds: 2.31,
+    date: '2026-10-22',
     status: 'pending',
-    dropTime: '11:00 AM WAT',
-    confidence: '98% Model Rating',
-    description: 'Fresh Challenge 52 Restart: ₦1,000 to ₦1,000,000 Journey. Target 1.50 daily odds. 50% capital banked at Day 6.',
+    dropTime: 'Live Today',
+    confidence: '100% 2-Team Agreement',
+    description: 'Fresh 2.00x Odds Challenge Reset (Day 1): ₦1,000 to ₦1,024,000 in 10 Steps at 2.00x daily odds. Powered by Two-Team Behaviour Machine.',
     codes: {
-      sportybet: 'DROPS 11:00 AM',
-      footballcom: 'DROPS 11:00 AM'
+      sportybet: '2X-DAY1',
+      footballcom: '2X-DAY1'
     },
     selections: [
       {
-        match: 'Day 1 Banker Double (Top European & Domestic Leagues)',
-        league: '⚽ European Top-Flight Competitions',
-        kickoff: 'Today 16:30 WAT',
-        pick: 'Double Chance & Total Goals Banker',
-        odds: 1.50,
+        match: 'Ajax vs Atalanta BC',
+        league: '🇪🇺 UEFA Conference League',
+        kickoff: '20:00 BST',
+        pick: 'Total Fouls Under 25.5 (or Cards Under 4.5)',
+        odds: 1.32,
         status: 'pending',
-        analysis: 'Model screening early kickoff fixtures for highest-frequency low-variance outcomes.'
+        analysis: 'Two-Team Model predicts 20 Fouls (9+11) and 2 Cards (94.2% model probability).'
+      },
+      {
+        match: 'FC Thun vs Hajduk Split',
+        league: '🇪🇺 UEFA Conference League',
+        kickoff: '20:00 BST',
+        pick: 'Total Fouls Over 21.5',
+        odds: 1.30,
+        status: 'pending',
+        analysis: 'Thun committed 16, 21, and 19 fouls in Europe + Hajduk high-foul press = 30 expected fouls (91.4% prob).'
+      },
+      {
+        match: 'AFC Bournemouth vs AC Milan',
+        league: '🇪🇺 UEFA Europa League',
+        kickoff: '20:00 BST',
+        pick: 'Total Fouls Over 20.5',
+        odds: 1.35,
+        status: 'pending',
+        analysis: 'Bournemouth 9/9 (100%) Over 20.5 fouls + Milan 12.2 fouls/g = 26 expected fouls (87.4% prob).'
       }
     ]
   },

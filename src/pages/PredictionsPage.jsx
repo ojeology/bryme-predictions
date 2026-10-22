@@ -109,10 +109,10 @@ export default function PredictionsPage({ onNavigate }) {
 
           <div className="flex items-center gap-2 self-start sm:self-auto">
             <button
-              onClick={() => onNavigate('punters')}
-              className="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-display font-black text-xs uppercase tracking-wider flex items-center gap-1.5 transition-all shadow-md"
+              onClick={() => onNavigate('machine')}
+              className="px-3.5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-display font-black text-xs uppercase tracking-wider flex items-center gap-1.5 transition-all shadow-md"
             >
-              <span>👑 Punters Hub &rarr;</span>
+              <span>🤖 2-Team Behaviour Machine &rarr;</span>
             </button>
           </div>
         </div>
@@ -128,7 +128,7 @@ export default function PredictionsPage({ onNavigate }) {
             }`}
           >
             <span>⚡</span>
-            <span>BRYME Code Hub ({codeCatalogue?.length || 0} Punters &amp; Daily Slips)</span>
+            <span>BRYME Code Hub ({codeCatalogue?.length || 0} Daily Slips)</span>
           </button>
 
           <button

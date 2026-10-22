@@ -1,16 +1,16 @@
 import React from 'react';
-import { Search, Flame, Clock, Sparkles, ShieldCheck, Menu, Trophy, Users, BarChart2 } from 'lucide-react';
+import { Search, ShieldCheck, Menu, BarChart2 } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 
 export default function Header({ currentRoute, onNavigate, onOpenSearch, onOpenSidebar }) {
   const topNav = [
-    { id: 'home', label: '🔥 ₦1K → ₦1M Ladder', action: () => onNavigate('home'), isHook: true },
-    { id: 'machine', label: '🤖 Behaviour Machine', action: () => onNavigate('machine'), badge: '90.1% Hit', isResults: true },
+    { id: 'home', label: '🔥 2.00x Ladder Challenge', action: () => onNavigate('home'), isHook: true },
+    { id: 'machine', label: '🤖 2-Team Behaviour Machine', action: () => onNavigate('machine'), badge: '100% 2-Team', isResults: true },
+    { id: 'ladder', label: '🪜 2.00x Rollover Board', action: () => onNavigate('ladder'), badge: 'Day 1' },
     { id: 'predictions', label: '📋 BRYME Code Hub', action: () => onNavigate('predictions'), badge: 'Daily' },
     { id: 'articles', label: '📚 Academy (Arbing)', action: () => onNavigate('articles'), badge: 'Guides' },
-    { id: 'punters', label: '👑 Punters Hub', action: () => onNavigate('punters'), badge: 'Codes' },
     { id: 'markets', label: '📂 35+ Markets DB', action: () => onNavigate('markets') },
-    { id: 'results', label: '📊 Results (77% Won)', action: () => onNavigate('results'), isResults: true },
+    { id: 'results', label: '📊 Results Ledger', action: () => onNavigate('results'), isResults: true },
   ];
 
   return (
@@ -45,11 +45,11 @@ export default function Header({ currentRoute, onNavigate, onOpenSearch, onOpenS
                   BRYME
                 </span>
                 <span className="text-[9px] uppercase font-display font-black tracking-wider px-1.5 py-0.5 bg-[#E41B13] text-white rounded shadow-sm">
-                  18-STEP ROLLOVER
+                  2-ODDS CHALLENGE
                 </span>
               </div>
               <p className="text-[10px] text-slate-300 font-medium tracking-tight mt-0.5 hidden xs:block">
-                Africa's #1 Daily ₦1K &rarr; ₦1M Rollover Ladder &bull; 02:00 AM WAT Drop
+                Daily 2.00x Rollover Challenge (₦1K &rarr; ₦1.024M) &bull; Powered by Two-Team Behaviour Machine
               </p>
             </div>
           </div>

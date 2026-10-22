@@ -34,11 +34,11 @@ export default function LadderPage({ onNavigate }) {
         <div className="flex items-center gap-2.5">
           <Trophy className="w-7 h-7 text-emerald-500" />
           <h1 className="text-2xl sm:text-3xl font-display font-black text-slate-900 dark:text-white">
-            The Public Rollover Ladder
+            The 2.00x Odds Rollover Ladder Challenge
           </h1>
         </div>
         <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1 max-w-2xl leading-relaxed">
-          A disciplined, public daily rollover starting with ₦1,000 aimed at the ₦1,000,000 target. Every step, loss, and 50% milestone banked in full public view.
+          Reset fresh to <strong>Day 1</strong>! A disciplined daily <strong>2.00x Odds Doubler Challenge</strong> starting with ₦1,000 aimed at ₦1,024,000 in 10 steps — powered strictly by 100% Two-Team Behaviour Agreement.
         </p>
       </div>
 
@@ -46,10 +46,10 @@ export default function LadderPage({ onNavigate }) {
       <div className="bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800/80 rounded-2xl p-4 sm:p-5 text-xs sm:text-sm space-y-1.5 shadow-sm">
         <div className="flex items-center gap-2 font-display font-black text-amber-800 dark:text-amber-300 uppercase tracking-wide">
           <AlertTriangle className="w-4 h-4 text-amber-500 flex-shrink-0" />
-          <span>Mandatory Mathematical Honesty &amp; Risk Disclosure</span>
+          <span>2.00x Doubler Mathematics &amp; Risk Disclosure</span>
         </div>
         <p className="text-amber-900 dark:text-slate-200 leading-relaxed text-xs">
-          <strong>"You can lose your whole stake. Most challenges end before reaching the goal."</strong> Reaching ₦1,000,000 from ₦1,000 at 1.50 odds with zero banking mathematically requires <strong>18 consecutive wins</strong> ((1.5)<sup>18</sup> &approx; 1,477x). Compound variance means most rollover challenges terminate within Days 1 to 4. We do not describe this challenge as low risk or as a source of income.
+          Reaching ₦1,024,000 from ₦1,000 at <strong>2.00x daily odds</strong> requires <strong>10 consecutive doubling steps</strong> (2<sup>10</sup> = 1,024x). Every daily 2.00x slip is built strictly from matches where both the Home Team and Away Team agree on Fouls, Corners, Cards, or Goals. Optional Safe Haven profit locks are available at Step 4 (₦16,000) and Step 7 (₦128,000).
         </p>
       </div>
 
@@ -58,10 +58,10 @@ export default function LadderPage({ onNavigate }) {
         <div className="flex items-center justify-between px-1">
           <h2 className="text-lg font-display font-black text-slate-900 dark:text-white flex items-center gap-2">
             <Zap className="w-5 h-5 text-emerald-500" />
-            The 18-Step Rollover Rung System
+            The 10-Step 2.00x Rollover Rung System
           </h2>
           <span className="text-xs font-mono text-slate-500 dark:text-slate-400">
-            Day 6 Safe Haven &bull; 50% Bank
+            Day 1 Fresh Reset &bull; 2.00x Daily Target
           </span>
         </div>
 
@@ -85,10 +85,10 @@ export default function LadderPage({ onNavigate }) {
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-lg font-display font-black text-slate-900 dark:text-white">
-                  Active Challenge #{ACTIVE_CHALLENGE.challengeNumber}
+                  2.00x Odds Challenge #{ACTIVE_CHALLENGE.challengeNumber}
                 </h2>
                 <span className="px-2 py-0.5 rounded-full text-[10px] font-display font-black bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30">
-                  STEP 3 LIVE
+                  DAY 1 LIVE (FRESH RESET)
                 </span>
               </div>
               <p className="text-xs text-slate-500 dark:text-slate-400">
@@ -98,7 +98,7 @@ export default function LadderPage({ onNavigate }) {
           </div>
 
           <div className="text-left sm:text-right bg-slate-50 dark:bg-[#050914] px-3.5 py-2 rounded-xl border border-slate-200 dark:border-white/[0.06]">
-            <span className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-mono block">Accumulated Purse</span>
+            <span className="text-[10px] text-slate-500 dark:text-slate-400 uppercase font-mono block">Day 1 Starting Purse</span>
             <span className="text-xl font-display font-black text-emerald-600 dark:text-emerald-400">
               ₦{ACTIVE_CHALLENGE.currentBalance.toLocaleString()}
             </span>
@@ -110,10 +110,10 @@ export default function LadderPage({ onNavigate }) {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 dark:border-white/[0.06] pb-2.5">
             <div>
               <span className="text-[10px] uppercase font-mono text-emerald-600 dark:text-emerald-400 font-bold tracking-wider">
-                Today's Daily 1.50 Slip (Step {ACTIVE_CHALLENGE.currentDay})
+                Today&apos;s Daily 2.00x Slip (Day {ACTIVE_CHALLENGE.currentDay})
               </span>
               <h3 className="text-sm font-display font-bold text-slate-900 dark:text-white">
-                Combined Target Odds: {ACTIVE_CHALLENGE.dailyOdds.toFixed(2)}x
+                Combined Target Odds: {ACTIVE_CHALLENGE.dailyOdds.toFixed(2)}x (2.31x Two-Team Builder)
               </h3>
             </div>
 

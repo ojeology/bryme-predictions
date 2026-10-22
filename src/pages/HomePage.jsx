@@ -117,17 +117,14 @@ export default function HomePage({ onNavigate }) {
     }
   };
 
-  const currentStep = ladder?.currentDay || 4;
-  const currentPot = ladder?.currentBalance || 3375;
-  const dailyOdds = ladder?.dailyOdds || 1.54;
+  const currentStep = ladder?.currentDay || 1;
+  const currentPot = ladder?.currentBalance || 1000;
+  const dailyOdds = ladder?.dailyOdds || 2.00;
   const targetPot = Math.round(currentPot * dailyOdds);
-  const sportyLadderCode = ladder?.sportyCode || 'Q7S287';
+  const sportyLadderCode = ladder?.sportyCode || '2X-DAY1';
   const footballLadderCode = ladder?.footballCode || sportyLadderCode;
-  const bet9jaLadderCode = ladder?.todaysCode || '5WGQKM6';
-  const oneXBetLadderCode = '23PUC';
-
-  // Ensure Mr banks is strictly pinned first
-  const sortedPunters = (punters || []).slice().sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
+  const bet9jaLadderCode = ladder?.todaysCode || '2X-DAY1';
+  const oneXBetLadderCode = '2X-DAY1';
 
   const handleCopy = (code, bookmaker = 'SportyBet', title = 'Banker Slip', odds = '') => {
     if (triggerCopyModal) {
@@ -282,7 +279,7 @@ export default function HomePage({ onNavigate }) {
       {/* ── 2. HERO SECTION: THE DUAL CONVICTION FISHHOOK ── */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         
-        {/* CARD A: 🪜 BRYME 18-STEP ROLLOVER CHALLENGE */}
+        {/* CARD A: 🪜 BRYME 2.00x ODDS ROLLOVER CHALLENGE */}
         <div className="rounded-3xl border-2 border-[#E41B13] bg-gradient-to-b from-[#141C30] via-[#0E1626] to-[#080C17] text-white p-5 sm:p-6 shadow-2xl relative overflow-hidden flex flex-col justify-between space-y-4">
           <div className="absolute top-0 right-0 -mr-16 -mt-16 w-52 h-52 rounded-full bg-[#E41B13]/25 blur-3xl pointer-events-none" />
           
@@ -291,31 +288,31 @@ export default function HomePage({ onNavigate }) {
             <div className="flex items-center justify-between gap-2">
               <span className="px-3 py-1 rounded-full bg-[#E41B13] text-white font-display font-black text-xs uppercase tracking-wider shadow-sm flex items-center gap-1.5">
                 <Flame className="w-3.5 h-3.5 fill-current" />
-                <span>BRYME 18-STEP ROLLOVER</span>
+                <span>BRYME 2.00x ODDS CHALLENGE</span>
               </span>
               <span className="px-2.5 py-0.5 rounded-lg bg-white/10 font-mono font-black text-xs text-amber-300 border border-white/15">
-                STEP {currentStep} OF 18
+                DAY {currentStep} OF 10 (FRESH RESET)
               </span>
             </div>
 
             {/* Title & Core Value Proposition */}
             <div>
               <h2 className="text-2xl sm:text-3xl font-display font-black tracking-tight text-white">
-                ₦1,000 &rarr; ₦1,000,000
+                ₦1,000 &rarr; ₦1,024,000
               </h2>
               <p className="text-xs text-slate-300 mt-1 leading-relaxed">
-                Compound daily 1.50x banker lines with 2 built-in <strong>Safe Haven Cashouts</strong> at Step 6 &amp; Step 12 to secure guaranteed profits in your bank account!
+                Reset fresh to <strong>Day 1</strong>! Double your pot in <strong>10 steps at 2.00x daily odds</strong> powered strictly by 100% Two-Team Behaviour Agreement (Fouls, Corners, Cards &amp; Goals).
               </p>
             </div>
 
             {/* Pot Stats Box */}
             <div className="grid grid-cols-2 gap-2 p-3 rounded-2xl bg-black/50 border border-white/10 font-mono">
               <div>
-                <span className="text-[10px] text-slate-400 uppercase block font-bold">Current Pot Stake</span>
+                <span className="text-[10px] text-slate-400 uppercase block font-bold">Day {currentStep} Starting Stake</span>
                 <span className="text-xl sm:text-2xl font-black text-white">₦{currentPot.toLocaleString()}</span>
               </div>
               <div className="text-right">
-                <span className="text-[10px] text-slate-400 uppercase block font-bold">Step {currentStep} Payout</span>
+                <span className="text-[10px] text-slate-400 uppercase block font-bold">Day {currentStep} Target (2.00x)</span>
                 <span className="text-xl sm:text-2xl font-black text-[#00FF66]">₦{targetPot.toLocaleString()}</span>
               </div>
             </div>
@@ -323,14 +320,14 @@ export default function HomePage({ onNavigate }) {
             {/* Today's Selections Box */}
             <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 space-y-1.5 text-xs">
               <div className="flex items-center justify-between text-[10px] font-mono font-bold text-amber-400 uppercase">
-                <span>Today's Step {currentStep} Banker Pick:</span>
-                <span>Odds: {dailyOdds}x</span>
+                <span>Today&apos;s Day {currentStep} Two-Team 2.00x Builder:</span>
+                <span>Target: 2.00x (2.31x Builder)</span>
               </div>
               <div className="font-display font-black text-sm text-white">
-                Ribecai Michele vs Vasami (Home Set @ 1.26) + Cecchinato vs Gaubas (Away Set @ 1.22)
+                Ajax vs Atalanta (Fouls U25.5 @ 1.32) + FC Thun vs Hajduk Split (Fouls O21.5 @ 1.30) + Bournemouth vs AC Milan (Fouls O20.5 @ 1.35)
               </div>
-              <div className="text-[11px] text-slate-400 font-mono">
-                Tennis Pro Circuit &bull; High-probability set-winning momentum
+              <div className="text-[11px] text-emerald-400 font-mono">
+                100% Two-Team Behaviour Agreement &bull; Zero Opponent Clash
               </div>
             </div>
 
@@ -359,7 +356,7 @@ export default function HomePage({ onNavigate }) {
                     selectedBookieTab === '1xbet' ? 'bg-blue-600 text-white shadow-sm' : 'bg-white/10 text-slate-400'
                   }`}
                 >
-                  1xBet (300% Bonus)
+                  1xBet / 22Bet
                 </button>
                 <button
                   onClick={() => setSelectedBookieTab('bet9ja')}
@@ -375,7 +372,7 @@ export default function HomePage({ onNavigate }) {
               <div className="p-3 rounded-xl bg-black border border-white/15 flex items-center justify-between gap-2">
                 <div>
                   <span className="text-[9px] uppercase font-mono font-bold text-slate-400 block">
-                    {selectedBookieTab === 'sporty' ? 'SportyBet' : selectedBookieTab === 'football' ? 'Football.com' : selectedBookieTab === '1xbet' ? '1xBet' : 'Bet9ja'} Code
+                    {selectedBookieTab === 'sporty' ? 'SportyBet' : selectedBookieTab === 'football' ? 'Football.com' : selectedBookieTab === '1xbet' ? '1xBet / 22Bet' : 'Bet9ja'} Day {currentStep} Slip
                   </span>
                   <span className="font-mono font-black text-lg text-amber-300 tracking-wider">
                     {selectedBookieTab === 'sporty' ? sportyLadderCode : selectedBookieTab === 'football' ? footballLadderCode : selectedBookieTab === '1xbet' ? oneXBetLadderCode : bet9jaLadderCode}
@@ -387,7 +384,7 @@ export default function HomePage({ onNavigate }) {
                     onClick={() => {
                       const activeCode = selectedBookieTab === 'sporty' ? sportyLadderCode : selectedBookieTab === 'football' ? footballLadderCode : selectedBookieTab === '1xbet' ? oneXBetLadderCode : bet9jaLadderCode;
                       const activeBookie = selectedBookieTab === 'sporty' ? 'SportyBet' : selectedBookieTab === 'football' ? 'Football.com' : selectedBookieTab === '1xbet' ? '1xBet' : 'Bet9ja';
-                      handleCopy(activeCode, activeBookie, `Rollover Step ${currentStep}`, `${dailyOdds}`);
+                      handleCopy(activeCode, activeBookie, `2.00x Challenge Day ${currentStep}`, `${dailyOdds}`);
                     }}
                     className={`px-3 py-2 rounded-xl text-white font-display font-black text-xs uppercase tracking-wider flex items-center gap-1 shadow-md transition-all ${
                       selectedBookieTab === 'football' ? 'bg-[#008751] hover:bg-[#007043]' : 'bg-[#E41B13] hover:bg-[#D01710]'
@@ -401,7 +398,7 @@ export default function HomePage({ onNavigate }) {
                     ) : (
                       <>
                         <Copy className="w-4 h-4" />
-                        <span>Copy Code</span>
+                        <span>Copy Slip</span>
                       </>
                     )}
                   </button>
@@ -414,14 +411,14 @@ export default function HomePage({ onNavigate }) {
           <div className="pt-2 border-t border-white/10 flex items-center justify-between text-xs">
             <span className="font-mono text-emerald-400 font-bold flex items-center gap-1">
               <ShieldCheck className="w-4 h-4" />
-              <span>Step 6 Safe Haven: ₦5,695 Banked</span>
+              <span>10 Steps @ 2.00x = ₦1,024,000</span>
             </span>
 
             <button
-              onClick={() => onNavigate('ticket/ticket-ladder-challenge')}
+              onClick={() => onNavigate('ladder')}
               className="text-[#E41B13] dark:text-rose-400 font-display font-black uppercase tracking-wider flex items-center gap-1 hover:underline"
             >
-              <span>Full 18-Step Board &rarr;</span>
+              <span>Full 10-Step 2.00x Board &rarr;</span>
             </button>
           </div>
         </div>
@@ -682,158 +679,6 @@ export default function HomePage({ onNavigate }) {
 
       {/* TOP HOME AD SLOT (MONETIZATION - MONETAG / ADSTERRA) */}
       <AdBanner slot="top-banner" label="Sponsored Betting Partner Banner" />
-
-      {/* ── 4. VIP PUNTERS ROSTER: FEATURING MR BANKS 📌 PINNED MASTER ── */}
-      <section className="space-y-3">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
-          <div className="flex items-center gap-2">
-            <span className="w-8 h-8 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center font-bold text-base shadow-md">
-              👑
-            </span>
-            <div>
-              <h2 className="text-lg sm:text-xl font-display font-black text-slate-900 dark:text-white flex items-center gap-2">
-                <span>Official Tracked African Punters</span>
-              </h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                Independent tracking of Nigeria's recognized betting analysts &bull; 1-tap copy active slips
-              </p>
-            </div>
-          </div>
-
-          <button
-            onClick={() => onNavigate('punters')}
-            className="px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-display font-black text-xs uppercase tracking-wider transition-all shadow-sm flex items-center gap-1.5 self-start sm:self-auto"
-          >
-            <span>View All 11 Punters &rarr;</span>
-          </button>
-        </div>
-
-        {/* Punters Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
-          {sortedPunters.slice(0, 6).map((punter) => {
-            const isPinned = punter.pinned;
-            const primaryCode = punter.dailyCodes && punter.dailyCodes[0];
-            const isCopied = primaryCode && copiedCode === primaryCode.code;
-
-            return (
-              <div
-                key={punter.id}
-                className={`rounded-2xl border ${
-                  isPinned 
-                    ? 'border-2 border-amber-500 bg-gradient-to-br from-amber-500/15 via-white dark:via-[#0E1626] to-transparent shadow-xl ring-2 ring-amber-500/20' 
-                    : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0E1626]'
-                } p-4 flex flex-col justify-between gap-3 shadow-sm transition-all hover:border-[#E41B13]/60`}
-              >
-                <div>
-                  {/* Header: Name, Handle, Pinned badge */}
-                  <div className="flex items-center justify-between gap-2 mb-2">
-                    <div className="flex items-center gap-2.5">
-                      <div className={`w-10 h-10 rounded-xl ${
-                        isPinned 
-                          ? 'bg-gradient-to-tr from-amber-600 to-yellow-400 text-slate-950 font-black shadow-md' 
-                          : 'bg-gradient-to-br from-slate-900 via-[#1a2336] to-[#0A0F1D] border border-slate-700 text-white'
-                      } flex items-center justify-center font-display font-black text-sm`}>
-                        {isPinned ? '📌' : (punter.avatar || punter.displayName.slice(0, 2).toUpperCase())}
-                      </div>
-
-                      <div>
-                        <div className="flex items-center gap-1.5">
-                          <h3 className="font-display font-black text-sm text-slate-900 dark:text-white">
-                            {punter.displayName}
-                          </h3>
-                          {isPinned && (
-                            <span className="px-1.5 py-0.2 rounded bg-amber-500 text-slate-950 font-mono font-black text-[9px] uppercase">
-                              VIP PINNED
-                            </span>
-                          )}
-                        </div>
-                        <span className="text-[11px] font-mono text-slate-400">
-                          {punter.handle} &bull; {punter.region}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="text-right font-mono">
-                      <span className="text-xs font-black text-emerald-600 dark:text-emerald-400 block">
-                        {punter.hitRate || '82%'}
-                      </span>
-                      <span className="text-[10px] text-slate-400 block">
-                        {punter.winStreak || 'Streak'}
-                      </span>
-                    </div>
-                  </div>
-
-                  <p className="text-xs text-slate-600 dark:text-slate-300 line-clamp-2 leading-relaxed mb-2">
-                    {punter.specialty || punter.bio}
-                  </p>
-                </div>
-
-                {/* Primary Daily Code Box */}
-                {primaryCode ? (
-                  <div className="p-3 rounded-xl bg-slate-50 dark:bg-[#121B2F] border border-slate-200/80 dark:border-slate-700/80 space-y-2">
-                    <div className="flex items-center justify-between text-[10px] font-mono">
-                      <span className="px-1.5 py-0.5 rounded bg-slate-200 dark:bg-[#162238] font-bold uppercase text-slate-800 dark:text-slate-200">
-                        {primaryCode.bookmaker}
-                      </span>
-                      <span className="font-bold text-amber-500">
-                        {primaryCode.totalOdds}x Odds{primaryCode.gamesCount ? ` • ${primaryCode.gamesCount} Legs` : ''}
-                      </span>
-                    </div>
-
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="font-mono font-black text-sm tracking-wider text-slate-900 dark:text-white select-all">
-                        {primaryCode.code}
-                      </span>
-
-                      <button
-                        onClick={() => handleCopy(primaryCode.code, primaryCode.bookmaker, `${punter.displayName}'s Slip`, primaryCode.totalOdds)}
-                        className={`px-3 py-1.5 rounded-lg text-xs font-display font-black uppercase tracking-wider flex items-center gap-1 transition-all ${
-                          isCopied 
-                            ? 'bg-[#00FF66] text-slate-950' 
-                            : 'bg-[#E41B13] hover:bg-[#D01710] text-white shadow-sm'
-                        }`}
-                      >
-                        {isCopied ? <Check className="w-3.5 h-3.5 stroke-[3]" /> : <Copy className="w-3.5 h-3.5" />}
-                        <span>{isCopied ? 'Copied' : 'Copy'}</span>
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-[#121B2F] text-center text-xs text-slate-400 font-mono">
-                    New slip dropping at 02:00 AM WAT
-                  </div>
-                )}
-
-                {/* Action button */}
-                <div className="flex items-center justify-between pt-1">
-                  <button
-                    onClick={() => onNavigate(`punter/${punter.id}`)}
-                    className="text-xs font-display font-bold text-[#E41B13] dark:text-rose-400 hover:underline flex items-center gap-1"
-                  >
-                    <span>Inspect Profile &amp; Slips</span>
-                    <ArrowRight className="w-3 h-3" />
-                  </button>
-
-                  {primaryCode && (
-                    <a
-                      href={getBookmakerUrl(primaryCode.bookmaker)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-[11px] font-mono text-slate-400 hover:text-white flex items-center gap-1"
-                    >
-                      <span>Load Slip</span>
-                      <ExternalLink className="w-3 h-3" />
-                    </a>
-                  )}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* MID-PAGE ADSTERRA 300x250 BANNER SLOT */}
-      <AdBanner slot="300x250" label="Sponsored 300x250 Banner" />
 
       {/* ── 5. LIVE BOOKING CODES VAULT (OVER 1.5, DOUBLE CHANCE, BTTS) ── */}
       <section className="space-y-3 bg-white dark:bg-[#0E1626] border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 shadow-sm">

@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { usePredictions } from '../context/PredictionsContext';
 import { WEEKEND_2_ODDS_STATS } from '../data/weekendArchive';
 import { 
-  Trophy, Flame, Sparkles, Clock, Copy, Check, ShieldCheck, 
-  Send, ExternalLink, ChevronRight, Layers, BarChart2, Users, HeartHandshake, Shield
+  Copy, Check, Send, ExternalLink, ChevronRight, HeartHandshake
 } from 'lucide-react';
 
 export default function Sidebar({ currentRoute, onNavigate }) {
@@ -11,10 +10,11 @@ export default function Sidebar({ currentRoute, onNavigate }) {
   const [copiedSporty, setCopiedSporty] = useState(false);
   const [copiedBet9ja, setCopiedBet9ja] = useState(false);
 
-  const sportyCode = ladder?.sportyCode || 'Q7S287';
-  const bet9jaCode = ladder?.todaysCode || 'Q7S287';
-  const currentDay = ladder?.currentDay || 4;
-  const currentBalance = ladder?.currentBalance || 3375;
+  const sportyCode = ladder?.sportyCode || '2X-DAY1';
+  const bet9jaCode = ladder?.todaysCode || '2X-DAY1';
+  const currentDay = ladder?.currentDay || 1;
+  const currentBalance = ladder?.currentBalance || 1000;
+  const dailyOdds = ladder?.dailyOdds || 2.00;
 
   const handleCopy = (code, type) => {
     navigator.clipboard.writeText(code);
@@ -28,15 +28,14 @@ export default function Sidebar({ currentRoute, onNavigate }) {
   };
 
   const navItems = [
-    { id: 'home', label: '🔥 The 18-Step Ladder', icon: '🪜', badge: `Day ${currentDay}`, isFeatured: true },
-    { id: 'machine', label: '🤖 Top-5 Behaviour Machine', icon: '🤖', badge: '90.1% Hit', isGreen: true },
+    { id: 'home', label: '🔥 2.00x Ladder Challenge', icon: '🪜', badge: `Day ${currentDay}`, isFeatured: true },
+    { id: 'machine', label: '🤖 2-Team Behaviour Machine', icon: '🤖', badge: '100% 2-Team', isGreen: true },
+    { id: 'ladder', label: '🪜 10-Step 2.00x Board', icon: '⛰️', badge: 'Fresh Reset' },
     { id: 'predictions', label: '📋 BRYME Code Hub', icon: '📋', badge: 'Daily Codes', isFeatured: true },
     { id: 'articles', label: '📚 Betting Academy (Arbing)', icon: '📚', badge: 'Guides', isSpecial: true },
-    { id: 'punters', label: '👑 Tracked African Punters', icon: '👑', badge: 'Hot', isSpecial: true },
     { id: 'results', label: '📊 Results & Hit Rate', icon: '📊', badge: '76.9% Won', isGreen: true },
     { id: 'markets', label: '📂 35+ Markets Database', icon: '🗂️' },
     { id: 'editor-picks', label: '🎯 Weekend 2.00x Banker', icon: '🎯' },
-    { id: 'ladder', label: '🪜 18-Step Safe Havens', icon: '⛰️' },
     { id: 'weekend-hub', label: '🤝 Consensus Community Hub', icon: '👥' },
     { id: 'bookmakers', label: '📱 Bookmakers & Codes', icon: '🎰' },
     { id: 'admin', label: '⚡ Admin Control Deck', icon: '🛠️', badge: 'PIN Locked' },
@@ -46,36 +45,35 @@ export default function Sidebar({ currentRoute, onNavigate }) {
   return (
     <aside className="space-y-4">
       
-      {/* ── 1. SIGNATURE SPORTYBET LADDER MINI-HERO WIDGET ── */}
+      {/* ── 1. SIGNATURE 2.00x LADDER MINI-HERO WIDGET ── */}
       <div className="rounded-2xl bg-gradient-to-br from-[#121927] via-[#1a2336] to-[#0A0F1D] border-2 border-[#E41B13]/40 p-4 text-white shadow-xl space-y-3 relative overflow-hidden">
-        {/* Glow */}
         <div className="absolute top-0 right-0 -mr-6 -mt-6 w-28 h-28 rounded-full bg-[#E41B13]/20 blur-xl pointer-events-none" />
 
         <div className="flex items-center justify-between">
           <span className="inline-flex items-center gap-1 text-[10px] font-display font-black uppercase tracking-wider bg-[#E41B13] text-white px-2 py-0.5 rounded-full shadow-sm">
             <span className="w-1.5 h-1.5 rounded-full bg-[#00FF66] animate-ping"></span>
-            BRYME Rollover
+            2.00x Challenge
           </span>
           <span className="text-[10px] font-mono text-amber-400 font-bold">
-            Day {currentDay}/18
+            Day {currentDay}/10
           </span>
         </div>
 
         <div>
-          <div className="text-xs text-slate-300 font-medium">Challenge #50 &bull; Active Pot</div>
+          <div className="text-xs text-slate-300 font-medium">Fresh Reset &bull; Active Stake</div>
           <div className="text-2xl font-mono font-black text-amber-300 mt-0.5">
             ₦{currentBalance.toLocaleString()}
           </div>
           <div className="text-[10px] text-slate-400 font-mono mt-0.5">
-            Target: ₦1,000,000 (Started ₦1,000)
+            Target: ₦1,024,000 (10 Steps @ 2.00x)
           </div>
         </div>
 
         {/* 1-Tap Booking Codes */}
         <div className="p-2.5 rounded-xl bg-black/60 border border-white/10 space-y-1.5">
           <div className="flex items-center justify-between text-[11px]">
-            <span className="text-slate-400 font-mono">Today's 1.50x Codes:</span>
-            <span className="text-[#00C250] font-bold font-mono">1.50 Odds</span>
+            <span className="text-slate-400 font-mono">Today&apos;s 2.00x Target:</span>
+            <span className="text-[#00C250] font-bold font-mono">{Number(dailyOdds).toFixed(2)} Odds</span>
           </div>
 
           {/* Sporty Code Pill */}
@@ -98,7 +96,7 @@ export default function Sidebar({ currentRoute, onNavigate }) {
           {/* Bet9ja Code Pill */}
           <div className="flex items-center justify-between gap-1 text-xs font-mono bg-[#00C250]/15 p-1.5 rounded-lg border border-[#00C250]/30">
             <div className="min-w-0">
-              <span className="text-[9px] text-emerald-400 font-bold block uppercase leading-tight">Bet9ja</span>
+              <span className="text-[9px] text-emerald-400 font-bold block uppercase leading-tight">Bet9ja / 22Bet</span>
               <span className="font-black text-white truncate block">{bet9jaCode}</span>
             </div>
             <button
@@ -114,10 +112,10 @@ export default function Sidebar({ currentRoute, onNavigate }) {
         </div>
 
         <button
-          onClick={() => onNavigate('ticket/ticket-ladder-challenge')}
+          onClick={() => onNavigate('ladder')}
           className="w-full py-2 bg-gradient-to-r from-[#E41B13] to-[#B01009] hover:from-[#D01710] hover:to-[#9A0D07] text-white font-display font-black text-xs uppercase tracking-wider rounded-xl transition-all shadow-md flex items-center justify-center gap-1.5"
         >
-          <span>Open Day {currentDay} Slip</span>
+          <span>Open Day {currentDay} (2.00x) Board</span>
           <ChevronRight className="w-3.5 h-3.5" />
         </button>
       </div>
@@ -166,7 +164,7 @@ export default function Sidebar({ currentRoute, onNavigate }) {
         })}
       </div>
 
-      {/* ── 3. 02:00 AM TELEGRAM ALERT ── */}
+      {/* ── 3. TELEGRAM ALERT ── */}
       <div className="rounded-2xl bg-gradient-to-br from-[#0B2545] to-[#134074] border border-blue-400/30 p-4 text-white space-y-2.5 shadow-md">
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 rounded-lg bg-blue-500/20 flex items-center justify-center">
@@ -174,16 +172,16 @@ export default function Sidebar({ currentRoute, onNavigate }) {
           </div>
           <div>
             <h4 className="font-display font-black text-xs uppercase tracking-wide">
-              Midnight 02:00 AM Alert
+              2.00x Challenge Alerts
             </h4>
             <p className="text-[10px] text-blue-200">
-              Never miss the 1.50 Ladder code
+              Never miss the daily 2.00x Behaviour Lock
             </p>
           </div>
         </div>
 
         <p className="text-xs text-slate-200 leading-relaxed">
-          Codes drop daily at <strong>02:00 AM WAT</strong>. Join 45,000+ African punters receiving codes directly on Telegram.
+          Two-Team Behaviour Machine picks drop daily. Receive the <strong>2.00x Ladder Challenge</strong> directly on Telegram.
         </p>
 
         <a

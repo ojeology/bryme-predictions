@@ -1,5 +1,4 @@
 import React from 'react';
-import { ShieldAlert, HeartHandshake, FileText, Phone, Mail, ArrowUpRight } from 'lucide-react';
 
 export default function Footer({ onNavigate }) {
   return (
@@ -45,13 +44,13 @@ export default function Footer({ onNavigate }) {
                 </button>
               </li>
               <li>
-                <button onClick={() => onNavigate('predictions')} className="hover:text-emerald-500 transition-colors">
-                  Predictions
+                <button onClick={() => onNavigate('machine')} className="hover:text-emerald-500 transition-colors font-bold text-emerald-500">
+                  🤖 2-Team Behaviour Machine
                 </button>
               </li>
               <li>
                 <button onClick={() => onNavigate('ladder')} className="hover:text-emerald-500 transition-colors">
-                  Ladder Ledger
+                  2.00x Ladder Challenge
                 </button>
               </li>
               <li>
@@ -69,27 +68,27 @@ export default function Footer({ onNavigate }) {
 
           <div>
             <h5 className="font-bold text-slate-900 dark:text-white uppercase tracking-wider text-[11px] mb-2">
-              African Hubs
+              Top-5 &amp; African Hubs
             </h5>
             <ul className="space-y-1.5">
               <li>
-                <button onClick={() => onNavigate('results')} className="hover:text-emerald-500 transition-colors">
-                  Nigeria NPFL
+                <button onClick={() => onNavigate('machine')} className="hover:text-emerald-500 transition-colors">
+                  Premier League &amp; La Liga
+                </button>
+              </li>
+              <li>
+                <button onClick={() => onNavigate('machine')} className="hover:text-emerald-500 transition-colors">
+                  Serie A, Bundesliga &amp; Ligue 1
                 </button>
               </li>
               <li>
                 <button onClick={() => onNavigate('results')} className="hover:text-emerald-500 transition-colors">
-                  Kenya FKF
+                  Verified Results Ledger
                 </button>
               </li>
               <li>
-                <button onClick={() => onNavigate('results')} className="hover:text-emerald-500 transition-colors">
-                  Ghana Premier League
-                </button>
-              </li>
-              <li>
-                <button onClick={() => onNavigate('results')} className="hover:text-emerald-500 transition-colors">
-                  South Africa PSL
+                <button onClick={() => onNavigate('predictions')} className="hover:text-emerald-500 transition-colors">
+                  Daily Booking Codes Hub
                 </button>
               </li>
             </ul>
@@ -97,12 +96,12 @@ export default function Footer({ onNavigate }) {
 
           <div>
             <h5 className="font-bold text-slate-900 dark:text-white uppercase tracking-wider text-[11px] mb-2">
-              Community
+              Strategy &amp; Tools
             </h5>
             <ul className="space-y-1.5">
               <li>
-                <button onClick={() => onNavigate('punters')} className="hover:text-emerald-500 transition-colors">
-                  Tracked Punters
+                <button onClick={() => onNavigate('machine')} className="hover:text-emerald-500 transition-colors">
+                  Two-Team Walk-Forward Lab
                 </button>
               </li>
               <li>
@@ -117,7 +116,7 @@ export default function Footer({ onNavigate }) {
               </li>
               <li>
                 <button onClick={() => onNavigate('editor-picks')} className="hover:text-emerald-500 transition-colors">
-                  Editor's Best Pick
+                  Editor&apos;s Best Pick
                 </button>
               </li>
             </ul>
