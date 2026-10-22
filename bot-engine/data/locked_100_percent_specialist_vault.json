@@ -1,0 +1,4557 @@
+{
+  "title": "BRYME BOT — MASTER 100% & 90%+ SPECIALIST LOCK VAULT (2026-27 SEASON)",
+  "total_100_percent_club_locks": 107,
+  "total_88_to_92_percent_club_locks": 98,
+  "role_conditioned_global_locks": [
+    {
+      "rule_id": "GLOBAL_LOCK_01",
+      "name": "True Away Underdog (Odds >= 4.00, Pre-Tackles >= 15.9/g) -> Single-Team Tackles Over 14.5",
+      "record": "10/10 (100.0%)",
+      "verified_teams": [
+        "Villarreal at Liverpool (16)",
+        "AEK Athens at Man City (22)",
+        "RC Lens at Club Brugge (28)",
+        "Feyenoord at Real Betis (15)",
+        "Hapoel Be'er Sheva at Union SG (29)",
+        "NEC Nijmegen at Dinamo Zagreb (25)",
+        "Heart of Midlothian at Trabzonspor (18)",
+        "CSKA Sofia at Nordsjaelland (18)",
+        "Egnatia at AGF Aarhus (21)",
+        "Riga FC at Pafos FC (16)"
+      ]
+    },
+    {
+      "rule_id": "GLOBAL_LOCK_02",
+      "name": "Heavy Favourite (Odds <= 1.45) -> Single-Team Shots on Target Over 4.5",
+      "record": "15/16 (93.8%)",
+      "verified_teams": [
+        "AS Roma (10)",
+        "Liverpool (7)",
+        "Man City (11)",
+        "SSC Napoli (8)",
+        "Inter Milan (5)",
+        "Real Madrid (11)",
+        "Aston Villa (10)",
+        "8/8 Thursday UEL/UECL Favourites"
+      ]
+    },
+    {
+      "rule_id": "GLOBAL_LOCK_03",
+      "name": "UCL Home Favourite (Odds <= 2.15, Pre-Cards <= 1.75) -> Single-Team Cards Under 2.5",
+      "record": "12/13 (92.3%)"
+    },
+    {
+      "rule_id": "GLOBAL_LOCK_04",
+      "name": "High-Foul Non-Favourite (Away OR Odds > 1.85, Pre-Fouls >= 12.2/g) -> Single-Team Fouls Over 10.5",
+      "record": "11/12 (91.7%)"
+    },
+    {
+      "rule_id": "GLOBAL_LOCK_05",
+      "name": "UCL Clean Home Favourite (Odds <= 1.95, Pre-Fouls <= 11.3/g) -> Single-Team Fouls Under 11.5",
+      "record": "9/10 (90.0%)"
+    }
+  ],
+  "clubs": {
+    "ATALANTA": {
+      "games_analyzed": 8,
+      "perfect_100_locks": [
+        {
+          "club": "ATALANTA",
+          "category": "FOULS_TOTAL",
+          "market": "Total Match Fouls Under 24.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            19,
+            23,
+            19,
+            17,
+            20,
+            20,
+            24,
+            13
+          ],
+          "min": 13,
+          "max": 24,
+          "avg": 19.38
+        },
+        {
+          "club": "ATALANTA",
+          "category": "CARDS_TEAM",
+          "market": "Team Cards Under 2.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            0,
+            1,
+            1,
+            0,
+            2,
+            1,
+            0,
+            2
+          ],
+          "min": 0,
+          "max": 2,
+          "avg": 0.88
+        },
+        {
+          "club": "ATALANTA",
+          "category": "CARDS_OPP",
+          "market": "Opponent Cards Under 2.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            0,
+            0,
+            0,
+            0,
+            1,
+            2,
+            0,
+            1
+          ],
+          "min": 0,
+          "max": 2,
+          "avg": 0.5
+        },
+        {
+          "club": "ATALANTA",
+          "category": "CARDS_TOTAL",
+          "market": "Total Match Cards Under 4.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            0,
+            1,
+            1,
+            0,
+            3,
+            3,
+            0,
+            3
+          ],
+          "min": 0,
+          "max": 3,
+          "avg": 1.38
+        }
+      ],
+      "near_90_locks": [
+        {
+          "club": "ATALANTA",
+          "category": "CORNERS_TEAM",
+          "market": "Team Corners Under 6.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            4,
+            1,
+            1,
+            3,
+            5,
+            8,
+            6,
+            2
+          ],
+          "min": 1,
+          "max": 8,
+          "avg": 3.75
+        },
+        {
+          "club": "ATALANTA",
+          "category": "FOULS_OPP",
+          "market": "Opponent Fouls Under 11.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            10,
+            13,
+            9,
+            8,
+            10,
+            6,
+            11,
+            3
+          ],
+          "min": 3,
+          "max": 13,
+          "avg": 8.75
+        },
+        {
+          "club": "ATALANTA",
+          "category": "FOULS_OPP",
+          "market": "Opponent Fouls Under 12.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            10,
+            13,
+            9,
+            8,
+            10,
+            6,
+            11,
+            3
+          ],
+          "min": 3,
+          "max": 13,
+          "avg": 8.75
+        },
+        {
+          "club": "ATALANTA",
+          "category": "FOULS_TOTAL",
+          "market": "Total Match Fouls Under 23.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            19,
+            23,
+            19,
+            17,
+            20,
+            20,
+            24,
+            13
+          ],
+          "min": 13,
+          "max": 24,
+          "avg": 19.38
+        },
+        {
+          "club": "ATALANTA",
+          "category": "TACKLES_TEAM",
+          "market": "Team Tackles Under 16.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            16,
+            8,
+            13,
+            17,
+            8,
+            11,
+            8,
+            14
+          ],
+          "min": 8,
+          "max": 17,
+          "avg": 11.88
+        }
+      ]
+    },
+    "BOURNEMOUTH": {
+      "games_analyzed": 8,
+      "perfect_100_locks": [
+        {
+          "club": "BOURNEMOUTH",
+          "category": "FOULS_TEAM",
+          "market": "Team Fouls Over 9.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            11,
+            17,
+            10,
+            13,
+            11,
+            15,
+            11,
+            16
+          ],
+          "min": 10,
+          "max": 17,
+          "avg": 13.0
+        },
+        {
+          "club": "BOURNEMOUTH",
+          "category": "FOULS_TOTAL",
+          "market": "Total Match Fouls Over 20.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            25,
+            36,
+            23,
+            27,
+            24,
+            22,
+            29,
+            23
+          ],
+          "min": 22,
+          "max": 36,
+          "avg": 26.12
+        },
+        {
+          "club": "BOURNEMOUTH",
+          "category": "FOULS_TOTAL",
+          "market": "Total Match Fouls Over 21.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            25,
+            36,
+            23,
+            27,
+            24,
+            22,
+            29,
+            23
+          ],
+          "min": 22,
+          "max": 36,
+          "avg": 26.12
+        },
+        {
+          "club": "BOURNEMOUTH",
+          "category": "CARDS_TEAM",
+          "market": "Team Cards Over 0.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            3,
+            3,
+            5,
+            3,
+            1,
+            4,
+            3,
+            3
+          ],
+          "min": 1,
+          "max": 5,
+          "avg": 3.12
+        }
+      ],
+      "near_90_locks": [
+        {
+          "club": "BOURNEMOUTH",
+          "category": "CORNERS_TEAM",
+          "market": "Team Corners Over 2.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            10,
+            3,
+            2,
+            3,
+            3,
+            7,
+            7,
+            5
+          ],
+          "min": 2,
+          "max": 10,
+          "avg": 5.0
+        },
+        {
+          "club": "BOURNEMOUTH",
+          "category": "FOULS_TEAM",
+          "market": "Team Fouls Over 10.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            11,
+            17,
+            10,
+            13,
+            11,
+            15,
+            11,
+            16
+          ],
+          "min": 10,
+          "max": 17,
+          "avg": 13.0
+        },
+        {
+          "club": "BOURNEMOUTH",
+          "category": "CARDS_TEAM",
+          "market": "Team Cards Over 1.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            3,
+            3,
+            5,
+            3,
+            1,
+            4,
+            3,
+            3
+          ],
+          "min": 1,
+          "max": 5,
+          "avg": 3.12
+        },
+        {
+          "club": "BOURNEMOUTH",
+          "category": "CARDS_TOTAL",
+          "market": "Total Match Cards Over 3.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            5,
+            5,
+            6,
+            6,
+            3,
+            4,
+            6,
+            5
+          ],
+          "min": 3,
+          "max": 6,
+          "avg": 5.0
+        }
+      ]
+    },
+    "BRAGA": {
+      "games_analyzed": 8,
+      "perfect_100_locks": [
+        {
+          "club": "BRAGA",
+          "category": "CORNERS_TEAM",
+          "market": "Team Corners Over 2.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            5,
+            5,
+            4,
+            5,
+            5,
+            3,
+            4,
+            5
+          ],
+          "min": 3,
+          "max": 5,
+          "avg": 4.5
+        },
+        {
+          "club": "BRAGA",
+          "category": "CORNERS_TEAM",
+          "market": "Team Corners Under 5.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            5,
+            5,
+            4,
+            5,
+            5,
+            3,
+            4,
+            5
+          ],
+          "min": 3,
+          "max": 5,
+          "avg": 4.5
+        },
+        {
+          "club": "BRAGA",
+          "category": "CORNERS_TEAM",
+          "market": "Team Corners Under 6.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            5,
+            5,
+            4,
+            5,
+            5,
+            3,
+            4,
+            5
+          ],
+          "min": 3,
+          "max": 5,
+          "avg": 4.5
+        },
+        {
+          "club": "BRAGA",
+          "category": "CORNERS_OPP",
+          "market": "Opponent Corners Under 5.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            3,
+            3,
+            3,
+            3,
+            2,
+            5,
+            3,
+            3
+          ],
+          "min": 2,
+          "max": 5,
+          "avg": 3.12
+        },
+        {
+          "club": "BRAGA",
+          "category": "CORNERS_OPP",
+          "market": "Opponent Corners Under 6.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            3,
+            3,
+            3,
+            3,
+            2,
+            5,
+            3,
+            3
+          ],
+          "min": 2,
+          "max": 5,
+          "avg": 3.12
+        },
+        {
+          "club": "BRAGA",
+          "category": "CORNERS_TOTAL",
+          "market": "Total Match Corners Under 10.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            8,
+            8,
+            7,
+            8,
+            7,
+            8,
+            7,
+            8
+          ],
+          "min": 7,
+          "max": 8,
+          "avg": 7.62
+        },
+        {
+          "club": "BRAGA",
+          "category": "CORNERS_TOTAL",
+          "market": "Total Match Corners Under 11.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            8,
+            8,
+            7,
+            8,
+            7,
+            8,
+            7,
+            8
+          ],
+          "min": 7,
+          "max": 8,
+          "avg": 7.62
+        },
+        {
+          "club": "BRAGA",
+          "category": "FOULS_TEAM",
+          "market": "Team Fouls Over 9.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            12,
+            13,
+            14,
+            11,
+            12,
+            14,
+            11,
+            13
+          ],
+          "min": 11,
+          "max": 14,
+          "avg": 12.5
+        },
+        {
+          "club": "BRAGA",
+          "category": "FOULS_TEAM",
+          "market": "Team Fouls Over 10.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            12,
+            13,
+            14,
+            11,
+            12,
+            14,
+            11,
+            13
+          ],
+          "min": 11,
+          "max": 14,
+          "avg": 12.5
+        },
+        {
+          "club": "BRAGA",
+          "category": "FOULS_OPP",
+          "market": "Opponent Fouls Over 9.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            11,
+            12,
+            13,
+            11,
+            11,
+            12,
+            15,
+            11
+          ],
+          "min": 11,
+          "max": 15,
+          "avg": 12.0
+        },
+        {
+          "club": "BRAGA",
+          "category": "FOULS_OPP",
+          "market": "Opponent Fouls Over 10.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            11,
+            12,
+            13,
+            11,
+            11,
+            12,
+            15,
+            11
+          ],
+          "min": 11,
+          "max": 15,
+          "avg": 12.0
+        },
+        {
+          "club": "BRAGA",
+          "category": "FOULS_TOTAL",
+          "market": "Total Match Fouls Over 20.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            23,
+            25,
+            27,
+            22,
+            23,
+            26,
+            26,
+            24
+          ],
+          "min": 22,
+          "max": 27,
+          "avg": 24.5
+        },
+        {
+          "club": "BRAGA",
+          "category": "FOULS_TOTAL",
+          "market": "Total Match Fouls Over 21.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            23,
+            25,
+            27,
+            22,
+            23,
+            26,
+            26,
+            24
+          ],
+          "min": 22,
+          "max": 27,
+          "avg": 24.5
+        },
+        {
+          "club": "BRAGA",
+          "category": "TACKLES_TEAM",
+          "market": "Team Tackles Over 14.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            16,
+            15,
+            16,
+            15,
+            15,
+            17,
+            15,
+            15
+          ],
+          "min": 15,
+          "max": 17,
+          "avg": 15.5
+        },
+        {
+          "club": "BRAGA",
+          "category": "TACKLES_OPP",
+          "market": "Opponent Tackles Over 14.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            15,
+            16,
+            16,
+            15,
+            15,
+            16,
+            16,
+            15
+          ],
+          "min": 15,
+          "max": 16,
+          "avg": 15.5
+        },
+        {
+          "club": "BRAGA",
+          "category": "TACKLES_OPP",
+          "market": "Opponent Tackles Under 16.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            15,
+            16,
+            16,
+            15,
+            15,
+            16,
+            16,
+            15
+          ],
+          "min": 15,
+          "max": 16,
+          "avg": 15.5
+        },
+        {
+          "club": "BRAGA",
+          "category": "TACKLES_TOTAL",
+          "market": "Total Match Tackles Over 28.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            31,
+            31,
+            32,
+            30,
+            30,
+            33,
+            31,
+            30
+          ],
+          "min": 30,
+          "max": 33,
+          "avg": 31.0
+        },
+        {
+          "club": "BRAGA",
+          "category": "TACKLES_TOTAL",
+          "market": "Total Match Tackles Over 29.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            31,
+            31,
+            32,
+            30,
+            30,
+            33,
+            31,
+            30
+          ],
+          "min": 30,
+          "max": 33,
+          "avg": 31.0
+        },
+        {
+          "club": "BRAGA",
+          "category": "CARDS_OPP",
+          "market": "Opponent Cards Over 1.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            2,
+            2,
+            3,
+            2,
+            2,
+            2,
+            2,
+            2
+          ],
+          "min": 2,
+          "max": 3,
+          "avg": 2.12
+        }
+      ],
+      "near_90_locks": [
+        {
+          "club": "BRAGA",
+          "category": "CORNERS_TEAM",
+          "market": "Team Corners Over 3.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            5,
+            5,
+            4,
+            5,
+            5,
+            3,
+            4,
+            5
+          ],
+          "min": 3,
+          "max": 5,
+          "avg": 4.5
+        },
+        {
+          "club": "BRAGA",
+          "category": "CORNERS_OPP",
+          "market": "Opponent Corners Over 2.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            3,
+            3,
+            3,
+            3,
+            2,
+            5,
+            3,
+            3
+          ],
+          "min": 2,
+          "max": 5,
+          "avg": 3.12
+        },
+        {
+          "club": "BRAGA",
+          "category": "CORNERS_OPP",
+          "market": "Opponent Corners Under 4.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            3,
+            3,
+            3,
+            3,
+            2,
+            5,
+            3,
+            3
+          ],
+          "min": 2,
+          "max": 5,
+          "avg": 3.12
+        },
+        {
+          "club": "BRAGA",
+          "category": "TACKLES_TEAM",
+          "market": "Team Tackles Under 16.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            16,
+            15,
+            16,
+            15,
+            15,
+            17,
+            15,
+            15
+          ],
+          "min": 15,
+          "max": 17,
+          "avg": 15.5
+        },
+        {
+          "club": "BRAGA",
+          "category": "CARDS_TEAM",
+          "market": "Team Cards Over 0.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            2,
+            2,
+            2,
+            1,
+            2,
+            3,
+            0,
+            2
+          ],
+          "min": 0,
+          "max": 3,
+          "avg": 1.75
+        },
+        {
+          "club": "BRAGA",
+          "category": "CARDS_TEAM",
+          "market": "Team Cards Under 2.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            2,
+            2,
+            2,
+            1,
+            2,
+            3,
+            0,
+            2
+          ],
+          "min": 0,
+          "max": 3,
+          "avg": 1.75
+        },
+        {
+          "club": "BRAGA",
+          "category": "CARDS_OPP",
+          "market": "Opponent Cards Under 2.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            2,
+            2,
+            3,
+            2,
+            2,
+            2,
+            2,
+            2
+          ],
+          "min": 2,
+          "max": 3,
+          "avg": 2.12
+        }
+      ]
+    },
+    "BRIGHTON": {
+      "games_analyzed": 8,
+      "perfect_100_locks": [
+        {
+          "club": "BRIGHTON",
+          "category": "CORNERS_TEAM",
+          "market": "Team Corners Over 2.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            5,
+            7,
+            3,
+            3,
+            5,
+            5,
+            13,
+            8
+          ],
+          "min": 3,
+          "max": 13,
+          "avg": 6.12
+        },
+        {
+          "club": "BRIGHTON",
+          "category": "FOULS_TEAM",
+          "market": "Team Fouls Over 9.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            12,
+            13,
+            15,
+            14,
+            13,
+            12,
+            11,
+            13
+          ],
+          "min": 11,
+          "max": 15,
+          "avg": 12.88
+        },
+        {
+          "club": "BRIGHTON",
+          "category": "FOULS_TEAM",
+          "market": "Team Fouls Over 10.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            12,
+            13,
+            15,
+            14,
+            13,
+            12,
+            11,
+            13
+          ],
+          "min": 11,
+          "max": 15,
+          "avg": 12.88
+        }
+      ],
+      "near_90_locks": [
+        {
+          "club": "BRIGHTON",
+          "category": "CORNERS_OPP",
+          "market": "Opponent Corners Under 6.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            2,
+            6,
+            5,
+            4,
+            6,
+            7,
+            0,
+            5
+          ],
+          "min": 0,
+          "max": 7,
+          "avg": 4.38
+        },
+        {
+          "club": "BRIGHTON",
+          "category": "FOULS_TEAM",
+          "market": "Team Fouls Over 11.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            12,
+            13,
+            15,
+            14,
+            13,
+            12,
+            11,
+            13
+          ],
+          "min": 11,
+          "max": 15,
+          "avg": 12.88
+        },
+        {
+          "club": "BRIGHTON",
+          "category": "FOULS_OPP",
+          "market": "Opponent Fouls Under 11.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            11,
+            16,
+            9,
+            5,
+            11,
+            8,
+            8,
+            11
+          ],
+          "min": 5,
+          "max": 16,
+          "avg": 9.88
+        },
+        {
+          "club": "BRIGHTON",
+          "category": "FOULS_OPP",
+          "market": "Opponent Fouls Under 12.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            11,
+            16,
+            9,
+            5,
+            11,
+            8,
+            8,
+            11
+          ],
+          "min": 5,
+          "max": 16,
+          "avg": 9.88
+        },
+        {
+          "club": "BRIGHTON",
+          "category": "FOULS_TOTAL",
+          "market": "Total Match Fouls Under 24.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            23,
+            29,
+            24,
+            19,
+            24,
+            20,
+            19,
+            24
+          ],
+          "min": 19,
+          "max": 29,
+          "avg": 22.75
+        }
+      ]
+    },
+    "CELTIC": {
+      "games_analyzed": 7,
+      "perfect_100_locks": [
+        {
+          "club": "CELTIC",
+          "category": "CORNERS_TEAM",
+          "market": "Team Corners Over 2.5",
+          "wins": 7,
+          "games": 7,
+          "hit_rate": 100.0,
+          "season_array": [
+            10,
+            11,
+            11,
+            8,
+            9,
+            6,
+            6
+          ],
+          "min": 6,
+          "max": 11,
+          "avg": 8.71
+        },
+        {
+          "club": "CELTIC",
+          "category": "CORNERS_TEAM",
+          "market": "Team Corners Over 3.5",
+          "wins": 7,
+          "games": 7,
+          "hit_rate": 100.0,
+          "season_array": [
+            10,
+            11,
+            11,
+            8,
+            9,
+            6,
+            6
+          ],
+          "min": 6,
+          "max": 11,
+          "avg": 8.71
+        },
+        {
+          "club": "CELTIC",
+          "category": "CORNERS_TEAM",
+          "market": "Team Corners Over 4.5",
+          "wins": 7,
+          "games": 7,
+          "hit_rate": 100.0,
+          "season_array": [
+            10,
+            11,
+            11,
+            8,
+            9,
+            6,
+            6
+          ],
+          "min": 6,
+          "max": 11,
+          "avg": 8.71
+        },
+        {
+          "club": "CELTIC",
+          "category": "CORNERS_TEAM",
+          "market": "Team Corners Over 5.5",
+          "wins": 7,
+          "games": 7,
+          "hit_rate": 100.0,
+          "season_array": [
+            10,
+            11,
+            11,
+            8,
+            9,
+            6,
+            6
+          ],
+          "min": 6,
+          "max": 11,
+          "avg": 8.71
+        },
+        {
+          "club": "CELTIC",
+          "category": "CORNERS_TOTAL",
+          "market": "Total Match Corners Over 7.5",
+          "wins": 7,
+          "games": 7,
+          "hit_rate": 100.0,
+          "season_array": [
+            16,
+            13,
+            14,
+            12,
+            11,
+            14,
+            9
+          ],
+          "min": 9,
+          "max": 16,
+          "avg": 12.71
+        },
+        {
+          "club": "CELTIC",
+          "category": "CORNERS_TOTAL",
+          "market": "Total Match Corners Over 8.5",
+          "wins": 7,
+          "games": 7,
+          "hit_rate": 100.0,
+          "season_array": [
+            16,
+            13,
+            14,
+            12,
+            11,
+            14,
+            9
+          ],
+          "min": 9,
+          "max": 16,
+          "avg": 12.71
+        }
+      ],
+      "near_90_locks": []
+    },
+    "CITY": {
+      "games_analyzed": 10,
+      "perfect_100_locks": [
+        {
+          "club": "CITY",
+          "category": "CORNERS_OPP",
+          "market": "Opponent Corners Under 6.5",
+          "wins": 10,
+          "games": 10,
+          "hit_rate": 100.0,
+          "season_array": [
+            2,
+            5,
+            2,
+            6,
+            3,
+            5,
+            5,
+            2,
+            3,
+            3
+          ],
+          "min": 2,
+          "max": 6,
+          "avg": 3.6
+        },
+        {
+          "club": "CITY",
+          "category": "TACKLES_OPP",
+          "market": "Opponent Tackles Over 14.5",
+          "wins": 10,
+          "games": 10,
+          "hit_rate": 100.0,
+          "season_array": [
+            34,
+            16,
+            19,
+            18,
+            31,
+            18,
+            15,
+            22,
+            28,
+            22
+          ],
+          "min": 15,
+          "max": 34,
+          "avg": 22.3
+        }
+      ],
+      "near_90_locks": [
+        {
+          "club": "CITY",
+          "category": "CORNERS_OPP",
+          "market": "Opponent Corners Under 5.5",
+          "wins": 9,
+          "games": 10,
+          "hit_rate": 90.0,
+          "season_array": [
+            2,
+            5,
+            2,
+            6,
+            3,
+            5,
+            5,
+            2,
+            3,
+            3
+          ],
+          "min": 2,
+          "max": 6,
+          "avg": 3.6
+        },
+        {
+          "club": "CITY",
+          "category": "TACKLES_OPP",
+          "market": "Opponent Tackles Over 15.5",
+          "wins": 9,
+          "games": 10,
+          "hit_rate": 90.0,
+          "season_array": [
+            34,
+            16,
+            19,
+            18,
+            31,
+            18,
+            15,
+            22,
+            28,
+            22
+          ],
+          "min": 15,
+          "max": 34,
+          "avg": 22.3
+        },
+        {
+          "club": "CITY",
+          "category": "CARDS_TEAM",
+          "market": "Team Cards Under 2.5",
+          "wins": 9,
+          "games": 10,
+          "hit_rate": 90.0,
+          "season_array": [
+            2,
+            1,
+            3,
+            2,
+            0,
+            0,
+            2,
+            1,
+            1,
+            1
+          ],
+          "min": 0,
+          "max": 3,
+          "avg": 1.3
+        },
+        {
+          "club": "CITY",
+          "category": "CARDS_OPP",
+          "market": "Opponent Cards Under 2.5",
+          "wins": 9,
+          "games": 10,
+          "hit_rate": 90.0,
+          "season_array": [
+            1,
+            2,
+            1,
+            1,
+            1,
+            1,
+            4,
+            1,
+            2,
+            0
+          ],
+          "min": 0,
+          "max": 4,
+          "avg": 1.4
+        },
+        {
+          "club": "CITY",
+          "category": "CARDS_TOTAL",
+          "market": "Total Match Cards Under 4.5",
+          "wins": 9,
+          "games": 10,
+          "hit_rate": 90.0,
+          "season_array": [
+            3,
+            3,
+            4,
+            3,
+            1,
+            1,
+            6,
+            2,
+            3,
+            1
+          ],
+          "min": 1,
+          "max": 6,
+          "avg": 2.7
+        }
+      ]
+    },
+    "GETAFE": {
+      "games_analyzed": 7,
+      "perfect_100_locks": [
+        {
+          "club": "GETAFE",
+          "category": "CORNERS_OPP",
+          "market": "Opponent Corners Over 2.5",
+          "wins": 7,
+          "games": 7,
+          "hit_rate": 100.0,
+          "season_array": [
+            5,
+            7,
+            4,
+            9,
+            9,
+            4,
+            8
+          ],
+          "min": 4,
+          "max": 9,
+          "avg": 6.57
+        },
+        {
+          "club": "GETAFE",
+          "category": "CORNERS_OPP",
+          "market": "Opponent Corners Over 3.5",
+          "wins": 7,
+          "games": 7,
+          "hit_rate": 100.0,
+          "season_array": [
+            5,
+            7,
+            4,
+            9,
+            9,
+            4,
+            8
+          ],
+          "min": 4,
+          "max": 9,
+          "avg": 6.57
+        },
+        {
+          "club": "GETAFE",
+          "category": "TACKLES_TEAM",
+          "market": "Team Tackles Under 14.5",
+          "wins": 7,
+          "games": 7,
+          "hit_rate": 100.0,
+          "season_array": [
+            9,
+            11,
+            12,
+            11,
+            12,
+            9,
+            13
+          ],
+          "min": 9,
+          "max": 13,
+          "avg": 11.0
+        },
+        {
+          "club": "GETAFE",
+          "category": "TACKLES_TEAM",
+          "market": "Team Tackles Under 15.5",
+          "wins": 7,
+          "games": 7,
+          "hit_rate": 100.0,
+          "season_array": [
+            9,
+            11,
+            12,
+            11,
+            12,
+            9,
+            13
+          ],
+          "min": 9,
+          "max": 13,
+          "avg": 11.0
+        },
+        {
+          "club": "GETAFE",
+          "category": "TACKLES_TEAM",
+          "market": "Team Tackles Under 16.5",
+          "wins": 7,
+          "games": 7,
+          "hit_rate": 100.0,
+          "season_array": [
+            9,
+            11,
+            12,
+            11,
+            12,
+            9,
+            13
+          ],
+          "min": 9,
+          "max": 13,
+          "avg": 11.0
+        },
+        {
+          "club": "GETAFE",
+          "category": "TACKLES_TOTAL",
+          "market": "Total Match Tackles Under 31.5",
+          "wins": 7,
+          "games": 7,
+          "hit_rate": 100.0,
+          "season_array": [
+            23,
+            29,
+            28,
+            26,
+            30,
+            27,
+            23
+          ],
+          "min": 23,
+          "max": 30,
+          "avg": 26.57
+        },
+        {
+          "club": "GETAFE",
+          "category": "CARDS_TEAM",
+          "market": "Team Cards Over 0.5",
+          "wins": 7,
+          "games": 7,
+          "hit_rate": 100.0,
+          "season_array": [
+            2,
+            3,
+            3,
+            4,
+            4,
+            1,
+            6
+          ],
+          "min": 1,
+          "max": 6,
+          "avg": 3.29
+        },
+        {
+          "club": "GETAFE",
+          "category": "CARDS_TOTAL",
+          "market": "Total Match Cards Over 3.5",
+          "wins": 7,
+          "games": 7,
+          "hit_rate": 100.0,
+          "season_array": [
+            4,
+            4,
+            4,
+            6,
+            6,
+            5,
+            8
+          ],
+          "min": 4,
+          "max": 8,
+          "avg": 5.29
+        }
+      ],
+      "near_90_locks": []
+    },
+    "JUVENTUS": {
+      "games_analyzed": 8,
+      "perfect_100_locks": [
+        {
+          "club": "JUVENTUS",
+          "category": "CARDS_TEAM",
+          "market": "Team Cards Under 2.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            2,
+            2,
+            2,
+            1,
+            1,
+            1,
+            2,
+            0
+          ],
+          "min": 0,
+          "max": 2,
+          "avg": 1.38
+        }
+      ],
+      "near_90_locks": [
+        {
+          "club": "JUVENTUS",
+          "category": "CORNERS_TEAM",
+          "market": "Team Corners Over 2.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            12,
+            10,
+            10,
+            0,
+            5,
+            9,
+            7,
+            5
+          ],
+          "min": 0,
+          "max": 12,
+          "avg": 7.25
+        },
+        {
+          "club": "JUVENTUS",
+          "category": "CORNERS_TEAM",
+          "market": "Team Corners Over 3.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            12,
+            10,
+            10,
+            0,
+            5,
+            9,
+            7,
+            5
+          ],
+          "min": 0,
+          "max": 12,
+          "avg": 7.25
+        },
+        {
+          "club": "JUVENTUS",
+          "category": "CORNERS_TEAM",
+          "market": "Team Corners Over 4.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            12,
+            10,
+            10,
+            0,
+            5,
+            9,
+            7,
+            5
+          ],
+          "min": 0,
+          "max": 12,
+          "avg": 7.25
+        },
+        {
+          "club": "JUVENTUS",
+          "category": "CORNERS_OPP",
+          "market": "Opponent Corners Under 5.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            3,
+            2,
+            3,
+            1,
+            5,
+            1,
+            2,
+            7
+          ],
+          "min": 1,
+          "max": 7,
+          "avg": 3.0
+        },
+        {
+          "club": "JUVENTUS",
+          "category": "CORNERS_OPP",
+          "market": "Opponent Corners Under 6.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            3,
+            2,
+            3,
+            1,
+            5,
+            1,
+            2,
+            7
+          ],
+          "min": 1,
+          "max": 7,
+          "avg": 3.0
+        },
+        {
+          "club": "JUVENTUS",
+          "category": "CORNERS_TOTAL",
+          "market": "Total Match Corners Over 7.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            15,
+            12,
+            13,
+            1,
+            10,
+            10,
+            9,
+            12
+          ],
+          "min": 1,
+          "max": 15,
+          "avg": 10.25
+        },
+        {
+          "club": "JUVENTUS",
+          "category": "CORNERS_TOTAL",
+          "market": "Total Match Corners Over 8.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            15,
+            12,
+            13,
+            1,
+            10,
+            10,
+            9,
+            12
+          ],
+          "min": 1,
+          "max": 15,
+          "avg": 10.25
+        },
+        {
+          "club": "JUVENTUS",
+          "category": "CARDS_TEAM",
+          "market": "Team Cards Over 0.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            2,
+            2,
+            2,
+            1,
+            1,
+            1,
+            2,
+            0
+          ],
+          "min": 0,
+          "max": 2,
+          "avg": 1.38
+        },
+        {
+          "club": "JUVENTUS",
+          "category": "CARDS_OPP",
+          "market": "Opponent Cards Over 1.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            2,
+            3,
+            2,
+            1,
+            2,
+            2,
+            2,
+            2
+          ],
+          "min": 1,
+          "max": 3,
+          "avg": 2.0
+        },
+        {
+          "club": "JUVENTUS",
+          "category": "CARDS_OPP",
+          "market": "Opponent Cards Under 2.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            2,
+            3,
+            2,
+            1,
+            2,
+            2,
+            2,
+            2
+          ],
+          "min": 1,
+          "max": 3,
+          "avg": 2.0
+        },
+        {
+          "club": "JUVENTUS",
+          "category": "CARDS_TOTAL",
+          "market": "Total Match Cards Under 4.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            4,
+            5,
+            4,
+            2,
+            3,
+            3,
+            4,
+            2
+          ],
+          "min": 2,
+          "max": 5,
+          "avg": 3.38
+        }
+      ]
+    },
+    "LECH": {
+      "games_analyzed": 11,
+      "perfect_100_locks": [
+        {
+          "club": "LECH",
+          "category": "CORNERS_TEAM",
+          "market": "Team Corners Over 2.5",
+          "wins": 11,
+          "games": 11,
+          "hit_rate": 100.0,
+          "season_array": [
+            5,
+            5,
+            6,
+            7,
+            6,
+            6,
+            3,
+            7,
+            6,
+            4,
+            5
+          ],
+          "min": 3,
+          "max": 7,
+          "avg": 5.45
+        },
+        {
+          "club": "LECH",
+          "category": "CORNERS_OPP",
+          "market": "Opponent Corners Over 2.5",
+          "wins": 11,
+          "games": 11,
+          "hit_rate": 100.0,
+          "season_array": [
+            3,
+            5,
+            5,
+            4,
+            4,
+            5,
+            5,
+            4,
+            4,
+            5,
+            7
+          ],
+          "min": 3,
+          "max": 7,
+          "avg": 4.64
+        },
+        {
+          "club": "LECH",
+          "category": "CORNERS_TOTAL",
+          "market": "Total Match Corners Over 7.5",
+          "wins": 11,
+          "games": 11,
+          "hit_rate": 100.0,
+          "season_array": [
+            8,
+            10,
+            11,
+            11,
+            10,
+            11,
+            8,
+            11,
+            10,
+            9,
+            12
+          ],
+          "min": 8,
+          "max": 12,
+          "avg": 10.09
+        },
+        {
+          "club": "LECH",
+          "category": "TACKLES_TEAM",
+          "market": "Team Tackles Under 16.5",
+          "wins": 11,
+          "games": 11,
+          "hit_rate": 100.0,
+          "season_array": [
+            15,
+            16,
+            15,
+            15,
+            14,
+            16,
+            14,
+            14,
+            14,
+            14,
+            15
+          ],
+          "min": 14,
+          "max": 16,
+          "avg": 14.73
+        },
+        {
+          "club": "LECH",
+          "category": "TACKLES_OPP",
+          "market": "Opponent Tackles Over 14.5",
+          "wins": 11,
+          "games": 11,
+          "hit_rate": 100.0,
+          "season_array": [
+            16,
+            17,
+            15,
+            16,
+            15,
+            16,
+            17,
+            15,
+            15,
+            16,
+            15
+          ],
+          "min": 15,
+          "max": 17,
+          "avg": 15.73
+        },
+        {
+          "club": "LECH",
+          "category": "TACKLES_TOTAL",
+          "market": "Total Match Tackles Over 28.5",
+          "wins": 11,
+          "games": 11,
+          "hit_rate": 100.0,
+          "season_array": [
+            31,
+            33,
+            30,
+            31,
+            29,
+            32,
+            31,
+            29,
+            29,
+            30,
+            30
+          ],
+          "min": 29,
+          "max": 33,
+          "avg": 30.45
+        },
+        {
+          "club": "LECH",
+          "category": "CARDS_TEAM",
+          "market": "Team Cards Over 0.5",
+          "wins": 11,
+          "games": 11,
+          "hit_rate": 100.0,
+          "season_array": [
+            1,
+            2,
+            2,
+            2,
+            1,
+            2,
+            2,
+            1,
+            1,
+            1,
+            2
+          ],
+          "min": 1,
+          "max": 2,
+          "avg": 1.55
+        },
+        {
+          "club": "LECH",
+          "category": "CARDS_TEAM",
+          "market": "Team Cards Under 2.5",
+          "wins": 11,
+          "games": 11,
+          "hit_rate": 100.0,
+          "season_array": [
+            1,
+            2,
+            2,
+            2,
+            1,
+            2,
+            2,
+            1,
+            1,
+            1,
+            2
+          ],
+          "min": 1,
+          "max": 2,
+          "avg": 1.55
+        }
+      ],
+      "near_90_locks": [
+        {
+          "club": "LECH",
+          "category": "CORNERS_TEAM",
+          "market": "Team Corners Over 3.5",
+          "wins": 10,
+          "games": 11,
+          "hit_rate": 90.9,
+          "season_array": [
+            5,
+            5,
+            6,
+            7,
+            6,
+            6,
+            3,
+            7,
+            6,
+            4,
+            5
+          ],
+          "min": 3,
+          "max": 7,
+          "avg": 5.45
+        },
+        {
+          "club": "LECH",
+          "category": "CORNERS_OPP",
+          "market": "Opponent Corners Over 3.5",
+          "wins": 10,
+          "games": 11,
+          "hit_rate": 90.9,
+          "season_array": [
+            3,
+            5,
+            5,
+            4,
+            4,
+            5,
+            5,
+            4,
+            4,
+            5,
+            7
+          ],
+          "min": 3,
+          "max": 7,
+          "avg": 4.64
+        },
+        {
+          "club": "LECH",
+          "category": "CORNERS_OPP",
+          "market": "Opponent Corners Under 5.5",
+          "wins": 10,
+          "games": 11,
+          "hit_rate": 90.9,
+          "season_array": [
+            3,
+            5,
+            5,
+            4,
+            4,
+            5,
+            5,
+            4,
+            4,
+            5,
+            7
+          ],
+          "min": 3,
+          "max": 7,
+          "avg": 4.64
+        },
+        {
+          "club": "LECH",
+          "category": "CORNERS_OPP",
+          "market": "Opponent Corners Under 6.5",
+          "wins": 10,
+          "games": 11,
+          "hit_rate": 90.9,
+          "season_array": [
+            3,
+            5,
+            5,
+            4,
+            4,
+            5,
+            5,
+            4,
+            4,
+            5,
+            7
+          ],
+          "min": 3,
+          "max": 7,
+          "avg": 4.64
+        },
+        {
+          "club": "LECH",
+          "category": "CORNERS_TOTAL",
+          "market": "Total Match Corners Under 11.5",
+          "wins": 10,
+          "games": 11,
+          "hit_rate": 90.9,
+          "season_array": [
+            8,
+            10,
+            11,
+            11,
+            10,
+            11,
+            8,
+            11,
+            10,
+            9,
+            12
+          ],
+          "min": 8,
+          "max": 12,
+          "avg": 10.09
+        },
+        {
+          "club": "LECH",
+          "category": "CARDS_OPP",
+          "market": "Opponent Cards Over 1.5",
+          "wins": 10,
+          "games": 11,
+          "hit_rate": 90.9,
+          "season_array": [
+            2,
+            3,
+            2,
+            2,
+            2,
+            3,
+            1,
+            2,
+            2,
+            2,
+            3
+          ],
+          "min": 1,
+          "max": 3,
+          "avg": 2.18
+        }
+      ]
+    },
+    "LEVERKUSEN": {
+      "games_analyzed": 8,
+      "perfect_100_locks": [
+        {
+          "club": "LEVERKUSEN",
+          "category": "CORNERS_TEAM",
+          "market": "Team Corners Over 2.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            3,
+            11,
+            14,
+            6,
+            9,
+            3,
+            5,
+            4
+          ],
+          "min": 3,
+          "max": 14,
+          "avg": 6.88
+        },
+        {
+          "club": "LEVERKUSEN",
+          "category": "CORNERS_OPP",
+          "market": "Opponent Corners Under 6.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            4,
+            1,
+            2,
+            2,
+            6,
+            4,
+            4,
+            3
+          ],
+          "min": 1,
+          "max": 6,
+          "avg": 3.25
+        },
+        {
+          "club": "LEVERKUSEN",
+          "category": "FOULS_TEAM",
+          "market": "Team Fouls Over 9.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            15,
+            11,
+            12,
+            16,
+            14,
+            10,
+            16,
+            12
+          ],
+          "min": 10,
+          "max": 16,
+          "avg": 13.25
+        },
+        {
+          "club": "LEVERKUSEN",
+          "category": "CARDS_TEAM",
+          "market": "Team Cards Under 2.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            2,
+            2,
+            1,
+            0,
+            2,
+            1,
+            2,
+            0
+          ],
+          "min": 0,
+          "max": 2,
+          "avg": 1.25
+        }
+      ],
+      "near_90_locks": [
+        {
+          "club": "LEVERKUSEN",
+          "category": "CORNERS_OPP",
+          "market": "Opponent Corners Under 4.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            4,
+            1,
+            2,
+            2,
+            6,
+            4,
+            4,
+            3
+          ],
+          "min": 1,
+          "max": 6,
+          "avg": 3.25
+        },
+        {
+          "club": "LEVERKUSEN",
+          "category": "CORNERS_OPP",
+          "market": "Opponent Corners Under 5.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            4,
+            1,
+            2,
+            2,
+            6,
+            4,
+            4,
+            3
+          ],
+          "min": 1,
+          "max": 6,
+          "avg": 3.25
+        },
+        {
+          "club": "LEVERKUSEN",
+          "category": "FOULS_TEAM",
+          "market": "Team Fouls Over 10.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            15,
+            11,
+            12,
+            16,
+            14,
+            10,
+            16,
+            12
+          ],
+          "min": 10,
+          "max": 16,
+          "avg": 13.25
+        },
+        {
+          "club": "LEVERKUSEN",
+          "category": "FOULS_OPP",
+          "market": "Opponent Fouls Under 12.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            18,
+            12,
+            6,
+            10,
+            8,
+            11,
+            5,
+            5
+          ],
+          "min": 5,
+          "max": 18,
+          "avg": 9.38
+        },
+        {
+          "club": "LEVERKUSEN",
+          "category": "TACKLES_OPP",
+          "market": "Opponent Tackles Under 16.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            12,
+            15,
+            14,
+            14,
+            16,
+            19,
+            13,
+            14
+          ],
+          "min": 12,
+          "max": 19,
+          "avg": 14.62
+        }
+      ]
+    },
+    "LYON": {
+      "games_analyzed": 9,
+      "perfect_100_locks": [
+        {
+          "club": "LYON",
+          "category": "CORNERS_OPP",
+          "market": "Opponent Corners Over 2.5",
+          "wins": 9,
+          "games": 9,
+          "hit_rate": 100.0,
+          "season_array": [
+            4,
+            4,
+            5,
+            4,
+            6,
+            8,
+            7,
+            5,
+            9
+          ],
+          "min": 4,
+          "max": 9,
+          "avg": 5.78
+        },
+        {
+          "club": "LYON",
+          "category": "CORNERS_OPP",
+          "market": "Opponent Corners Over 3.5",
+          "wins": 9,
+          "games": 9,
+          "hit_rate": 100.0,
+          "season_array": [
+            4,
+            4,
+            5,
+            4,
+            6,
+            8,
+            7,
+            5,
+            9
+          ],
+          "min": 4,
+          "max": 9,
+          "avg": 5.78
+        }
+      ],
+      "near_90_locks": [
+        {
+          "club": "LYON",
+          "category": "CORNERS_TEAM",
+          "market": "Team Corners Over 2.5",
+          "wins": 8,
+          "games": 9,
+          "hit_rate": 88.9,
+          "season_array": [
+            5,
+            6,
+            9,
+            3,
+            4,
+            3,
+            4,
+            5,
+            1
+          ],
+          "min": 1,
+          "max": 9,
+          "avg": 4.44
+        },
+        {
+          "club": "LYON",
+          "category": "CORNERS_TEAM",
+          "market": "Team Corners Under 6.5",
+          "wins": 8,
+          "games": 9,
+          "hit_rate": 88.9,
+          "season_array": [
+            5,
+            6,
+            9,
+            3,
+            4,
+            3,
+            4,
+            5,
+            1
+          ],
+          "min": 1,
+          "max": 9,
+          "avg": 4.44
+        },
+        {
+          "club": "LYON",
+          "category": "CORNERS_TOTAL",
+          "market": "Total Match Corners Over 7.5",
+          "wins": 8,
+          "games": 9,
+          "hit_rate": 88.9,
+          "season_array": [
+            9,
+            10,
+            14,
+            7,
+            10,
+            11,
+            11,
+            10,
+            10
+          ],
+          "min": 7,
+          "max": 14,
+          "avg": 10.22
+        },
+        {
+          "club": "LYON",
+          "category": "CORNERS_TOTAL",
+          "market": "Total Match Corners Over 8.5",
+          "wins": 8,
+          "games": 9,
+          "hit_rate": 88.9,
+          "season_array": [
+            9,
+            10,
+            14,
+            7,
+            10,
+            11,
+            11,
+            10,
+            10
+          ],
+          "min": 7,
+          "max": 14,
+          "avg": 10.22
+        },
+        {
+          "club": "LYON",
+          "category": "CORNERS_TOTAL",
+          "market": "Total Match Corners Under 11.5",
+          "wins": 8,
+          "games": 9,
+          "hit_rate": 88.9,
+          "season_array": [
+            9,
+            10,
+            14,
+            7,
+            10,
+            11,
+            11,
+            10,
+            10
+          ],
+          "min": 7,
+          "max": 14,
+          "avg": 10.22
+        },
+        {
+          "club": "LYON",
+          "category": "FOULS_OPP",
+          "market": "Opponent Fouls Over 9.5",
+          "wins": 8,
+          "games": 9,
+          "hit_rate": 88.9,
+          "season_array": [
+            13,
+            12,
+            12,
+            19,
+            12,
+            14,
+            12,
+            7,
+            14
+          ],
+          "min": 7,
+          "max": 19,
+          "avg": 12.78
+        },
+        {
+          "club": "LYON",
+          "category": "FOULS_OPP",
+          "market": "Opponent Fouls Over 10.5",
+          "wins": 8,
+          "games": 9,
+          "hit_rate": 88.9,
+          "season_array": [
+            13,
+            12,
+            12,
+            19,
+            12,
+            14,
+            12,
+            7,
+            14
+          ],
+          "min": 7,
+          "max": 19,
+          "avg": 12.78
+        },
+        {
+          "club": "LYON",
+          "category": "FOULS_OPP",
+          "market": "Opponent Fouls Over 11.5",
+          "wins": 8,
+          "games": 9,
+          "hit_rate": 88.9,
+          "season_array": [
+            13,
+            12,
+            12,
+            19,
+            12,
+            14,
+            12,
+            7,
+            14
+          ],
+          "min": 7,
+          "max": 19,
+          "avg": 12.78
+        },
+        {
+          "club": "LYON",
+          "category": "TACKLES_TOTAL",
+          "market": "Total Match Tackles Under 31.5",
+          "wins": 8,
+          "games": 9,
+          "hit_rate": 88.9,
+          "season_array": [
+            30,
+            30,
+            30,
+            27,
+            30,
+            37,
+            29,
+            22,
+            30
+          ],
+          "min": 22,
+          "max": 37,
+          "avg": 29.44
+        },
+        {
+          "club": "LYON",
+          "category": "CARDS_TEAM",
+          "market": "Team Cards Over 0.5",
+          "wins": 8,
+          "games": 9,
+          "hit_rate": 88.9,
+          "season_array": [
+            1,
+            2,
+            2,
+            1,
+            2,
+            4,
+            1,
+            2,
+            0
+          ],
+          "min": 0,
+          "max": 4,
+          "avg": 1.67
+        },
+        {
+          "club": "LYON",
+          "category": "CARDS_TEAM",
+          "market": "Team Cards Under 2.5",
+          "wins": 8,
+          "games": 9,
+          "hit_rate": 88.9,
+          "season_array": [
+            1,
+            2,
+            2,
+            1,
+            2,
+            4,
+            1,
+            2,
+            0
+          ],
+          "min": 0,
+          "max": 4,
+          "avg": 1.67
+        },
+        {
+          "club": "LYON",
+          "category": "CARDS_OPP",
+          "market": "Opponent Cards Under 2.5",
+          "wins": 8,
+          "games": 9,
+          "hit_rate": 88.9,
+          "season_array": [
+            2,
+            2,
+            2,
+            2,
+            0,
+            2,
+            1,
+            2,
+            4
+          ],
+          "min": 0,
+          "max": 4,
+          "avg": 1.89
+        },
+        {
+          "club": "LYON",
+          "category": "CARDS_TOTAL",
+          "market": "Total Match Cards Under 4.5",
+          "wins": 8,
+          "games": 9,
+          "hit_rate": 88.9,
+          "season_array": [
+            3,
+            4,
+            4,
+            3,
+            2,
+            6,
+            2,
+            4,
+            4
+          ],
+          "min": 2,
+          "max": 6,
+          "avg": 3.56
+        }
+      ]
+    },
+    "MARSEILLE": {
+      "games_analyzed": 9,
+      "perfect_100_locks": [
+        {
+          "club": "MARSEILLE",
+          "category": "CORNERS_TEAM",
+          "market": "Team Corners Over 2.5",
+          "wins": 9,
+          "games": 9,
+          "hit_rate": 100.0,
+          "season_array": [
+            3,
+            7,
+            5,
+            5,
+            3,
+            3,
+            3,
+            9,
+            5
+          ],
+          "min": 3,
+          "max": 9,
+          "avg": 4.78
+        }
+      ],
+      "near_90_locks": [
+        {
+          "club": "MARSEILLE",
+          "category": "CORNERS_OPP",
+          "market": "Opponent Corners Under 6.5",
+          "wins": 8,
+          "games": 9,
+          "hit_rate": 88.9,
+          "season_array": [
+            4,
+            5,
+            4,
+            3,
+            3,
+            7,
+            6,
+            1,
+            2
+          ],
+          "min": 1,
+          "max": 7,
+          "avg": 3.89
+        },
+        {
+          "club": "MARSEILLE",
+          "category": "CORNERS_TOTAL",
+          "market": "Total Match Corners Under 10.5",
+          "wins": 8,
+          "games": 9,
+          "hit_rate": 88.9,
+          "season_array": [
+            7,
+            12,
+            9,
+            8,
+            6,
+            10,
+            9,
+            10,
+            7
+          ],
+          "min": 6,
+          "max": 12,
+          "avg": 8.67
+        },
+        {
+          "club": "MARSEILLE",
+          "category": "CORNERS_TOTAL",
+          "market": "Total Match Corners Under 11.5",
+          "wins": 8,
+          "games": 9,
+          "hit_rate": 88.9,
+          "season_array": [
+            7,
+            12,
+            9,
+            8,
+            6,
+            10,
+            9,
+            10,
+            7
+          ],
+          "min": 6,
+          "max": 12,
+          "avg": 8.67
+        },
+        {
+          "club": "MARSEILLE",
+          "category": "CARDS_TEAM",
+          "market": "Team Cards Under 2.5",
+          "wins": 8,
+          "games": 9,
+          "hit_rate": 88.9,
+          "season_array": [
+            1,
+            0,
+            0,
+            4,
+            1,
+            2,
+            1,
+            2,
+            1
+          ],
+          "min": 0,
+          "max": 4,
+          "avg": 1.33
+        }
+      ]
+    },
+    "MILAN": {
+      "games_analyzed": 9,
+      "perfect_100_locks": [
+        {
+          "club": "MILAN",
+          "category": "CORNERS_TOTAL",
+          "market": "Total Match Corners Under 11.5",
+          "wins": 9,
+          "games": 9,
+          "hit_rate": 100.0,
+          "season_array": [
+            8,
+            9,
+            8,
+            7,
+            11,
+            5,
+            8,
+            7,
+            4
+          ],
+          "min": 4,
+          "max": 11,
+          "avg": 7.44
+        },
+        {
+          "club": "MILAN",
+          "category": "FOULS_OPP",
+          "market": "Opponent Fouls Over 9.5",
+          "wins": 9,
+          "games": 9,
+          "hit_rate": 100.0,
+          "season_array": [
+            13,
+            12,
+            10,
+            15,
+            11,
+            15,
+            13,
+            13,
+            10
+          ],
+          "min": 10,
+          "max": 15,
+          "avg": 12.44
+        },
+        {
+          "club": "MILAN",
+          "category": "TACKLES_TEAM",
+          "market": "Team Tackles Over 14.5",
+          "wins": 9,
+          "games": 9,
+          "hit_rate": 100.0,
+          "season_array": [
+            16,
+            15,
+            17,
+            16,
+            18,
+            15,
+            16,
+            16,
+            15
+          ],
+          "min": 15,
+          "max": 18,
+          "avg": 16.0
+        },
+        {
+          "club": "MILAN",
+          "category": "TACKLES_OPP",
+          "market": "Opponent Tackles Under 16.5",
+          "wins": 9,
+          "games": 9,
+          "hit_rate": 100.0,
+          "season_array": [
+            15,
+            16,
+            15,
+            16,
+            16,
+            16,
+            15,
+            15,
+            14
+          ],
+          "min": 14,
+          "max": 16,
+          "avg": 15.33
+        },
+        {
+          "club": "MILAN",
+          "category": "TACKLES_TOTAL",
+          "market": "Total Match Tackles Over 28.5",
+          "wins": 9,
+          "games": 9,
+          "hit_rate": 100.0,
+          "season_array": [
+            31,
+            31,
+            32,
+            32,
+            34,
+            31,
+            31,
+            31,
+            29
+          ],
+          "min": 29,
+          "max": 34,
+          "avg": 31.33
+        },
+        {
+          "club": "MILAN",
+          "category": "CARDS_OPP",
+          "market": "Opponent Cards Under 2.5",
+          "wins": 9,
+          "games": 9,
+          "hit_rate": 100.0,
+          "season_array": [
+            2,
+            2,
+            1,
+            2,
+            2,
+            1,
+            2,
+            1,
+            2
+          ],
+          "min": 1,
+          "max": 2,
+          "avg": 1.67
+        }
+      ],
+      "near_90_locks": [
+        {
+          "club": "MILAN",
+          "category": "CORNERS_TEAM",
+          "market": "Team Corners Under 6.5",
+          "wins": 8,
+          "games": 9,
+          "hit_rate": 88.9,
+          "season_array": [
+            4,
+            6,
+            1,
+            5,
+            10,
+            2,
+            4,
+            2,
+            2
+          ],
+          "min": 1,
+          "max": 10,
+          "avg": 4.0
+        },
+        {
+          "club": "MILAN",
+          "category": "CORNERS_OPP",
+          "market": "Opponent Corners Under 5.5",
+          "wins": 8,
+          "games": 9,
+          "hit_rate": 88.9,
+          "season_array": [
+            4,
+            3,
+            7,
+            2,
+            1,
+            3,
+            4,
+            5,
+            2
+          ],
+          "min": 1,
+          "max": 7,
+          "avg": 3.44
+        },
+        {
+          "club": "MILAN",
+          "category": "CORNERS_OPP",
+          "market": "Opponent Corners Under 6.5",
+          "wins": 8,
+          "games": 9,
+          "hit_rate": 88.9,
+          "season_array": [
+            4,
+            3,
+            7,
+            2,
+            1,
+            3,
+            4,
+            5,
+            2
+          ],
+          "min": 1,
+          "max": 7,
+          "avg": 3.44
+        },
+        {
+          "club": "MILAN",
+          "category": "CORNERS_TOTAL",
+          "market": "Total Match Corners Under 10.5",
+          "wins": 8,
+          "games": 9,
+          "hit_rate": 88.9,
+          "season_array": [
+            8,
+            9,
+            8,
+            7,
+            11,
+            5,
+            8,
+            7,
+            4
+          ],
+          "min": 4,
+          "max": 11,
+          "avg": 7.44
+        },
+        {
+          "club": "MILAN",
+          "category": "FOULS_TOTAL",
+          "market": "Total Match Fouls Over 20.5",
+          "wins": 8,
+          "games": 9,
+          "hit_rate": 88.9,
+          "season_array": [
+            24,
+            21,
+            21,
+            29,
+            25,
+            24,
+            24,
+            25,
+            13
+          ],
+          "min": 13,
+          "max": 29,
+          "avg": 22.89
+        },
+        {
+          "club": "MILAN",
+          "category": "TACKLES_OPP",
+          "market": "Opponent Tackles Over 14.5",
+          "wins": 8,
+          "games": 9,
+          "hit_rate": 88.9,
+          "season_array": [
+            15,
+            16,
+            15,
+            16,
+            16,
+            16,
+            15,
+            15,
+            14
+          ],
+          "min": 14,
+          "max": 16,
+          "avg": 15.33
+        },
+        {
+          "club": "MILAN",
+          "category": "TACKLES_TOTAL",
+          "market": "Total Match Tackles Over 29.5",
+          "wins": 8,
+          "games": 9,
+          "hit_rate": 88.9,
+          "season_array": [
+            31,
+            31,
+            32,
+            32,
+            34,
+            31,
+            31,
+            31,
+            29
+          ],
+          "min": 29,
+          "max": 34,
+          "avg": 31.33
+        },
+        {
+          "club": "MILAN",
+          "category": "CARDS_TEAM",
+          "market": "Team Cards Over 0.5",
+          "wins": 8,
+          "games": 9,
+          "hit_rate": 88.9,
+          "season_array": [
+            2,
+            1,
+            3,
+            3,
+            1,
+            0,
+            4,
+            1,
+            1
+          ],
+          "min": 0,
+          "max": 4,
+          "avg": 1.78
+        }
+      ]
+    },
+    "MONACO": {
+      "games_analyzed": 8,
+      "perfect_100_locks": [
+        {
+          "club": "MONACO",
+          "category": "TACKLES_TEAM",
+          "market": "Team Tackles Over 14.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            30,
+            18,
+            22,
+            22,
+            22,
+            21,
+            21,
+            16
+          ],
+          "min": 16,
+          "max": 30,
+          "avg": 21.5
+        },
+        {
+          "club": "MONACO",
+          "category": "TACKLES_TEAM",
+          "market": "Team Tackles Over 15.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            30,
+            18,
+            22,
+            22,
+            22,
+            21,
+            21,
+            16
+          ],
+          "min": 16,
+          "max": 30,
+          "avg": 21.5
+        },
+        {
+          "club": "MONACO",
+          "category": "TACKLES_TOTAL",
+          "market": "Total Match Tackles Over 28.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            49,
+            35,
+            47,
+            36,
+            38,
+            39,
+            39,
+            30
+          ],
+          "min": 30,
+          "max": 49,
+          "avg": 39.12
+        },
+        {
+          "club": "MONACO",
+          "category": "TACKLES_TOTAL",
+          "market": "Total Match Tackles Over 29.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            49,
+            35,
+            47,
+            36,
+            38,
+            39,
+            39,
+            30
+          ],
+          "min": 30,
+          "max": 49,
+          "avg": 39.12
+        },
+        {
+          "club": "MONACO",
+          "category": "CARDS_TEAM",
+          "market": "Team Cards Over 0.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            2,
+            4,
+            1,
+            1,
+            1,
+            2,
+            1,
+            4
+          ],
+          "min": 1,
+          "max": 4,
+          "avg": 2.0
+        }
+      ],
+      "near_90_locks": [
+        {
+          "club": "MONACO",
+          "category": "CORNERS_TEAM",
+          "market": "Team Corners Under 5.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            4,
+            5,
+            0,
+            7,
+            2,
+            4,
+            1,
+            4
+          ],
+          "min": 0,
+          "max": 7,
+          "avg": 3.38
+        },
+        {
+          "club": "MONACO",
+          "category": "CORNERS_TEAM",
+          "market": "Team Corners Under 6.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            4,
+            5,
+            0,
+            7,
+            2,
+            4,
+            1,
+            4
+          ],
+          "min": 0,
+          "max": 7,
+          "avg": 3.38
+        },
+        {
+          "club": "MONACO",
+          "category": "CORNERS_OPP",
+          "market": "Opponent Corners Over 2.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            7,
+            7,
+            6,
+            2,
+            8,
+            4,
+            12,
+            3
+          ],
+          "min": 2,
+          "max": 12,
+          "avg": 6.12
+        },
+        {
+          "club": "MONACO",
+          "category": "FOULS_TEAM",
+          "market": "Team Fouls Over 9.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            12,
+            9,
+            11,
+            10,
+            13,
+            10,
+            12,
+            17
+          ],
+          "min": 9,
+          "max": 17,
+          "avg": 11.75
+        }
+      ]
+    },
+    "PALACE": {
+      "games_analyzed": 8,
+      "perfect_100_locks": [
+        {
+          "club": "PALACE",
+          "category": "CORNERS_TEAM",
+          "market": "Team Corners Under 6.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            2,
+            1,
+            6,
+            6,
+            3,
+            5,
+            3,
+            5
+          ],
+          "min": 1,
+          "max": 6,
+          "avg": 3.88
+        },
+        {
+          "club": "PALACE",
+          "category": "CORNERS_OPP",
+          "market": "Opponent Corners Over 2.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            6,
+            7,
+            3,
+            5,
+            8,
+            8,
+            5,
+            8
+          ],
+          "min": 3,
+          "max": 8,
+          "avg": 6.25
+        },
+        {
+          "club": "PALACE",
+          "category": "CORNERS_TOTAL",
+          "market": "Total Match Corners Over 7.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            8,
+            8,
+            9,
+            11,
+            11,
+            13,
+            8,
+            13
+          ],
+          "min": 8,
+          "max": 13,
+          "avg": 10.12
+        },
+        {
+          "club": "PALACE",
+          "category": "FOULS_TEAM",
+          "market": "Team Fouls Under 11.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            8,
+            7,
+            6,
+            11,
+            11,
+            11,
+            8,
+            11
+          ],
+          "min": 6,
+          "max": 11,
+          "avg": 9.12
+        },
+        {
+          "club": "PALACE",
+          "category": "FOULS_TEAM",
+          "market": "Team Fouls Under 12.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            8,
+            7,
+            6,
+            11,
+            11,
+            11,
+            8,
+            11
+          ],
+          "min": 6,
+          "max": 11,
+          "avg": 9.12
+        },
+        {
+          "club": "PALACE",
+          "category": "FOULS_TOTAL",
+          "market": "Total Match Fouls Under 24.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            19,
+            13,
+            22,
+            18,
+            23,
+            21,
+            12,
+            24
+          ],
+          "min": 12,
+          "max": 24,
+          "avg": 19.0
+        },
+        {
+          "club": "PALACE",
+          "category": "CARDS_OPP",
+          "market": "Opponent Cards Under 2.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            2,
+            0,
+            2,
+            2,
+            2,
+            2,
+            1,
+            2
+          ],
+          "min": 0,
+          "max": 2,
+          "avg": 1.62
+        },
+        {
+          "club": "PALACE",
+          "category": "CARDS_TOTAL",
+          "market": "Total Match Cards Under 4.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            3,
+            0,
+            4,
+            2,
+            3,
+            4,
+            4,
+            3
+          ],
+          "min": 0,
+          "max": 4,
+          "avg": 2.88
+        }
+      ],
+      "near_90_locks": [
+        {
+          "club": "PALACE",
+          "category": "CORNERS_OPP",
+          "market": "Opponent Corners Over 3.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            6,
+            7,
+            3,
+            5,
+            8,
+            8,
+            5,
+            8
+          ],
+          "min": 3,
+          "max": 8,
+          "avg": 6.25
+        },
+        {
+          "club": "PALACE",
+          "category": "FOULS_TOTAL",
+          "market": "Total Match Fouls Under 23.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            19,
+            13,
+            22,
+            18,
+            23,
+            21,
+            12,
+            24
+          ],
+          "min": 12,
+          "max": 24,
+          "avg": 19.0
+        },
+        {
+          "club": "PALACE",
+          "category": "CARDS_TEAM",
+          "market": "Team Cards Under 2.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            1,
+            0,
+            2,
+            0,
+            1,
+            2,
+            3,
+            1
+          ],
+          "min": 0,
+          "max": 3,
+          "avg": 1.25
+        }
+      ]
+    },
+    "SOCIEDAD": {
+      "games_analyzed": 7,
+      "perfect_100_locks": [
+        {
+          "club": "SOCIEDAD",
+          "category": "TACKLES_TOTAL",
+          "market": "Total Match Tackles Over 28.5",
+          "wins": 7,
+          "games": 7,
+          "hit_rate": 100.0,
+          "season_array": [
+            34,
+            30,
+            37,
+            38,
+            39,
+            42,
+            40
+          ],
+          "min": 30,
+          "max": 42,
+          "avg": 37.14
+        },
+        {
+          "club": "SOCIEDAD",
+          "category": "TACKLES_TOTAL",
+          "market": "Total Match Tackles Over 29.5",
+          "wins": 7,
+          "games": 7,
+          "hit_rate": 100.0,
+          "season_array": [
+            34,
+            30,
+            37,
+            38,
+            39,
+            42,
+            40
+          ],
+          "min": 30,
+          "max": 42,
+          "avg": 37.14
+        },
+        {
+          "club": "SOCIEDAD",
+          "category": "CARDS_TEAM",
+          "market": "Team Cards Over 0.5",
+          "wins": 7,
+          "games": 7,
+          "hit_rate": 100.0,
+          "season_array": [
+            2,
+            2,
+            3,
+            1,
+            1,
+            1,
+            2
+          ],
+          "min": 1,
+          "max": 3,
+          "avg": 1.71
+        }
+      ],
+      "near_90_locks": []
+    },
+    "SUNDERLAND": {
+      "games_analyzed": 8,
+      "perfect_100_locks": [
+        {
+          "club": "SUNDERLAND",
+          "category": "FOULS_OPP",
+          "market": "Opponent Fouls Over 9.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            15,
+            19,
+            11,
+            13,
+            12,
+            12,
+            13,
+            16
+          ],
+          "min": 11,
+          "max": 19,
+          "avg": 13.88
+        },
+        {
+          "club": "SUNDERLAND",
+          "category": "FOULS_OPP",
+          "market": "Opponent Fouls Over 10.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            15,
+            19,
+            11,
+            13,
+            12,
+            12,
+            13,
+            16
+          ],
+          "min": 11,
+          "max": 19,
+          "avg": 13.88
+        },
+        {
+          "club": "SUNDERLAND",
+          "category": "TACKLES_TEAM",
+          "market": "Team Tackles Under 16.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            14,
+            16,
+            16,
+            16,
+            12,
+            16,
+            10,
+            11
+          ],
+          "min": 10,
+          "max": 16,
+          "avg": 13.88
+        }
+      ],
+      "near_90_locks": [
+        {
+          "club": "SUNDERLAND",
+          "category": "CORNERS_TEAM",
+          "market": "Team Corners Over 2.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            3,
+            3,
+            4,
+            12,
+            2,
+            7,
+            9,
+            3
+          ],
+          "min": 2,
+          "max": 12,
+          "avg": 5.38
+        },
+        {
+          "club": "SUNDERLAND",
+          "category": "CORNERS_OPP",
+          "market": "Opponent Corners Over 2.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            4,
+            4,
+            3,
+            5,
+            9,
+            5,
+            2,
+            5
+          ],
+          "min": 2,
+          "max": 9,
+          "avg": 4.62
+        },
+        {
+          "club": "SUNDERLAND",
+          "category": "CORNERS_OPP",
+          "market": "Opponent Corners Under 5.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            4,
+            4,
+            3,
+            5,
+            9,
+            5,
+            2,
+            5
+          ],
+          "min": 2,
+          "max": 9,
+          "avg": 4.62
+        },
+        {
+          "club": "SUNDERLAND",
+          "category": "CORNERS_OPP",
+          "market": "Opponent Corners Under 6.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            4,
+            4,
+            3,
+            5,
+            9,
+            5,
+            2,
+            5
+          ],
+          "min": 2,
+          "max": 9,
+          "avg": 4.62
+        },
+        {
+          "club": "SUNDERLAND",
+          "category": "FOULS_OPP",
+          "market": "Opponent Fouls Over 11.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            15,
+            19,
+            11,
+            13,
+            12,
+            12,
+            13,
+            16
+          ],
+          "min": 11,
+          "max": 19,
+          "avg": 13.88
+        },
+        {
+          "club": "SUNDERLAND",
+          "category": "FOULS_TOTAL",
+          "market": "Total Match Fouls Over 20.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            25,
+            28,
+            29,
+            27,
+            28,
+            20,
+            32,
+            23
+          ],
+          "min": 20,
+          "max": 32,
+          "avg": 26.5
+        },
+        {
+          "club": "SUNDERLAND",
+          "category": "FOULS_TOTAL",
+          "market": "Total Match Fouls Over 21.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            25,
+            28,
+            29,
+            27,
+            28,
+            20,
+            32,
+            23
+          ],
+          "min": 20,
+          "max": 32,
+          "avg": 26.5
+        },
+        {
+          "club": "SUNDERLAND",
+          "category": "TACKLES_OPP",
+          "market": "Opponent Tackles Under 16.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            16,
+            16,
+            15,
+            15,
+            12,
+            19,
+            11,
+            10
+          ],
+          "min": 10,
+          "max": 19,
+          "avg": 14.25
+        }
+      ]
+    },
+    "ZVEZDA": {
+      "games_analyzed": 8,
+      "perfect_100_locks": [
+        {
+          "club": "ZVEZDA",
+          "category": "CORNERS_TEAM",
+          "market": "Team Corners Over 2.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            7,
+            6,
+            7,
+            6,
+            6,
+            7,
+            5,
+            10
+          ],
+          "min": 5,
+          "max": 10,
+          "avg": 6.75
+        },
+        {
+          "club": "ZVEZDA",
+          "category": "CORNERS_TEAM",
+          "market": "Team Corners Over 3.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            7,
+            6,
+            7,
+            6,
+            6,
+            7,
+            5,
+            10
+          ],
+          "min": 5,
+          "max": 10,
+          "avg": 6.75
+        },
+        {
+          "club": "ZVEZDA",
+          "category": "CORNERS_TEAM",
+          "market": "Team Corners Over 4.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            7,
+            6,
+            7,
+            6,
+            6,
+            7,
+            5,
+            10
+          ],
+          "min": 5,
+          "max": 10,
+          "avg": 6.75
+        },
+        {
+          "club": "ZVEZDA",
+          "category": "CORNERS_OPP",
+          "market": "Opponent Corners Under 5.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            3,
+            4,
+            3,
+            4,
+            4,
+            3,
+            5,
+            2
+          ],
+          "min": 2,
+          "max": 5,
+          "avg": 3.5
+        },
+        {
+          "club": "ZVEZDA",
+          "category": "CORNERS_OPP",
+          "market": "Opponent Corners Under 6.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            3,
+            4,
+            3,
+            4,
+            4,
+            3,
+            5,
+            2
+          ],
+          "min": 2,
+          "max": 5,
+          "avg": 3.5
+        },
+        {
+          "club": "ZVEZDA",
+          "category": "CORNERS_TOTAL",
+          "market": "Total Match Corners Over 7.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            10,
+            10,
+            10,
+            10,
+            10,
+            10,
+            10,
+            12
+          ],
+          "min": 10,
+          "max": 12,
+          "avg": 10.25
+        },
+        {
+          "club": "ZVEZDA",
+          "category": "CORNERS_TOTAL",
+          "market": "Total Match Corners Over 8.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            10,
+            10,
+            10,
+            10,
+            10,
+            10,
+            10,
+            12
+          ],
+          "min": 10,
+          "max": 12,
+          "avg": 10.25
+        },
+        {
+          "club": "ZVEZDA",
+          "category": "FOULS_TEAM",
+          "market": "Team Fouls Over 9.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            12,
+            13,
+            11,
+            12,
+            14,
+            12,
+            13,
+            11
+          ],
+          "min": 11,
+          "max": 14,
+          "avg": 12.25
+        },
+        {
+          "club": "ZVEZDA",
+          "category": "FOULS_TEAM",
+          "market": "Team Fouls Over 10.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            12,
+            13,
+            11,
+            12,
+            14,
+            12,
+            13,
+            11
+          ],
+          "min": 11,
+          "max": 14,
+          "avg": 12.25
+        },
+        {
+          "club": "ZVEZDA",
+          "category": "FOULS_OPP",
+          "market": "Opponent Fouls Over 9.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            12,
+            12,
+            12,
+            12,
+            13,
+            11,
+            12,
+            12
+          ],
+          "min": 11,
+          "max": 13,
+          "avg": 12.0
+        },
+        {
+          "club": "ZVEZDA",
+          "category": "FOULS_OPP",
+          "market": "Opponent Fouls Over 10.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            12,
+            12,
+            12,
+            12,
+            13,
+            11,
+            12,
+            12
+          ],
+          "min": 11,
+          "max": 13,
+          "avg": 12.0
+        },
+        {
+          "club": "ZVEZDA",
+          "category": "FOULS_TOTAL",
+          "market": "Total Match Fouls Over 20.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            24,
+            25,
+            23,
+            24,
+            27,
+            23,
+            25,
+            23
+          ],
+          "min": 23,
+          "max": 27,
+          "avg": 24.25
+        },
+        {
+          "club": "ZVEZDA",
+          "category": "FOULS_TOTAL",
+          "market": "Total Match Fouls Over 21.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            24,
+            25,
+            23,
+            24,
+            27,
+            23,
+            25,
+            23
+          ],
+          "min": 23,
+          "max": 27,
+          "avg": 24.25
+        },
+        {
+          "club": "ZVEZDA",
+          "category": "TACKLES_TEAM",
+          "market": "Team Tackles Over 14.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            16,
+            16,
+            15,
+            16,
+            17,
+            16,
+            16,
+            15
+          ],
+          "min": 15,
+          "max": 17,
+          "avg": 15.88
+        },
+        {
+          "club": "ZVEZDA",
+          "category": "TACKLES_OPP",
+          "market": "Opponent Tackles Over 14.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            15,
+            16,
+            16,
+            15,
+            16,
+            15,
+            16,
+            15
+          ],
+          "min": 15,
+          "max": 16,
+          "avg": 15.5
+        },
+        {
+          "club": "ZVEZDA",
+          "category": "TACKLES_OPP",
+          "market": "Opponent Tackles Under 16.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            15,
+            16,
+            16,
+            15,
+            16,
+            15,
+            16,
+            15
+          ],
+          "min": 15,
+          "max": 16,
+          "avg": 15.5
+        },
+        {
+          "club": "ZVEZDA",
+          "category": "TACKLES_TOTAL",
+          "market": "Total Match Tackles Over 28.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            31,
+            32,
+            31,
+            31,
+            33,
+            31,
+            32,
+            30
+          ],
+          "min": 30,
+          "max": 33,
+          "avg": 31.38
+        },
+        {
+          "club": "ZVEZDA",
+          "category": "TACKLES_TOTAL",
+          "market": "Total Match Tackles Over 29.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            31,
+            32,
+            31,
+            31,
+            33,
+            31,
+            32,
+            30
+          ],
+          "min": 30,
+          "max": 33,
+          "avg": 31.38
+        },
+        {
+          "club": "ZVEZDA",
+          "category": "CARDS_TEAM",
+          "market": "Team Cards Over 0.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            2,
+            2,
+            1,
+            2,
+            3,
+            2,
+            4,
+            2
+          ],
+          "min": 1,
+          "max": 4,
+          "avg": 2.25
+        },
+        {
+          "club": "ZVEZDA",
+          "category": "CARDS_OPP",
+          "market": "Opponent Cards Over 1.5",
+          "wins": 8,
+          "games": 8,
+          "hit_rate": 100.0,
+          "season_array": [
+            2,
+            2,
+            2,
+            2,
+            3,
+            2,
+            3,
+            2
+          ],
+          "min": 2,
+          "max": 3,
+          "avg": 2.25
+        }
+      ],
+      "near_90_locks": [
+        {
+          "club": "ZVEZDA",
+          "category": "CORNERS_TEAM",
+          "market": "Team Corners Over 5.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            7,
+            6,
+            7,
+            6,
+            6,
+            7,
+            5,
+            10
+          ],
+          "min": 5,
+          "max": 10,
+          "avg": 6.75
+        },
+        {
+          "club": "ZVEZDA",
+          "category": "CORNERS_OPP",
+          "market": "Opponent Corners Over 2.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            3,
+            4,
+            3,
+            4,
+            4,
+            3,
+            5,
+            2
+          ],
+          "min": 2,
+          "max": 5,
+          "avg": 3.5
+        },
+        {
+          "club": "ZVEZDA",
+          "category": "CORNERS_OPP",
+          "market": "Opponent Corners Under 4.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            3,
+            4,
+            3,
+            4,
+            4,
+            3,
+            5,
+            2
+          ],
+          "min": 2,
+          "max": 5,
+          "avg": 3.5
+        },
+        {
+          "club": "ZVEZDA",
+          "category": "CORNERS_TOTAL",
+          "market": "Total Match Corners Under 10.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            10,
+            10,
+            10,
+            10,
+            10,
+            10,
+            10,
+            12
+          ],
+          "min": 10,
+          "max": 12,
+          "avg": 10.25
+        },
+        {
+          "club": "ZVEZDA",
+          "category": "CORNERS_TOTAL",
+          "market": "Total Match Corners Under 11.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            10,
+            10,
+            10,
+            10,
+            10,
+            10,
+            10,
+            12
+          ],
+          "min": 10,
+          "max": 12,
+          "avg": 10.25
+        },
+        {
+          "club": "ZVEZDA",
+          "category": "FOULS_OPP",
+          "market": "Opponent Fouls Over 11.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            12,
+            12,
+            12,
+            12,
+            13,
+            11,
+            12,
+            12
+          ],
+          "min": 11,
+          "max": 13,
+          "avg": 12.0
+        },
+        {
+          "club": "ZVEZDA",
+          "category": "FOULS_OPP",
+          "market": "Opponent Fouls Under 12.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            12,
+            12,
+            12,
+            12,
+            13,
+            11,
+            12,
+            12
+          ],
+          "min": 11,
+          "max": 13,
+          "avg": 12.0
+        },
+        {
+          "club": "ZVEZDA",
+          "category": "TACKLES_TEAM",
+          "market": "Team Tackles Under 16.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            16,
+            16,
+            15,
+            16,
+            17,
+            16,
+            16,
+            15
+          ],
+          "min": 15,
+          "max": 17,
+          "avg": 15.88
+        },
+        {
+          "club": "ZVEZDA",
+          "category": "CARDS_TEAM",
+          "market": "Team Cards Over 1.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            2,
+            2,
+            1,
+            2,
+            3,
+            2,
+            4,
+            2
+          ],
+          "min": 1,
+          "max": 4,
+          "avg": 2.25
+        },
+        {
+          "club": "ZVEZDA",
+          "category": "CARDS_TOTAL",
+          "market": "Total Match Cards Over 3.5",
+          "wins": 7,
+          "games": 8,
+          "hit_rate": 87.5,
+          "season_array": [
+            4,
+            4,
+            3,
+            4,
+            6,
+            4,
+            7,
+            4
+          ],
+          "min": 3,
+          "max": 7,
+          "avg": 4.5
+        }
+      ]
+    }
+  }
+}
