@@ -1,0 +1,27 @@
+date,match,market,selection,odds,source_note
+2026-10-11,Liverpool vs Man City,1X2,Liverpool,3.00,consensus closing (theScore +200 / DK +195 / bet365 ~2.88-3.20)
+2026-10-11,Liverpool vs Man City,1X2,Draw,3.70,consensus closing (+270/+275)
+2026-10-11,Liverpool vs Man City,1X2,Man City,2.25,consensus closing (+125 DK / +128 sportsgambler; best 2.28 1xbet)
+2026-10-11,Liverpool vs Man City,OU2.5,Over,1.61,closing after move from 1.53 (theScore -164)
+2026-10-11,Liverpool vs Man City,OU2.5,Under,2.35,closing (theScore +130)
+2026-10-11,Liverpool vs Man City,BTTS,Yes,1.45,ESPN bet feed (-220)
+2026-10-11,Liverpool vs Man City,BTTS,No,2.75,ESPN bet feed (+175)
+2026-10-11,Liverpool vs Man City,CORNERS,Under 11.5,1.85,Telegraph bet-builder quoted under 11.5 corners (price assumed 1.85)
+2026-10-17,Man City vs Ipswich,1X2,Man City,1.24,consensus closing (bet365 1.22 / Stake 1.24; best 1.27)
+2026-10-17,Man City vs Ipswich,1X2,Draw,7.00,consensus closing (bet365 7.0 / best 7.2)
+2026-10-17,Man City vs Ipswich,1X2,Ipswich,11.00,consensus closing (bet365 11.0 / Boyle 10.0 / best 11.8)
+2026-10-17,Man City vs Ipswich,OU2.5,Over,1.28,bet365 4/11
+2026-10-17,Man City vs Ipswich,OU2.5,Under,3.70,BetMGM +265 = 3.65-3.85
+2026-10-17,Man City vs Ipswich,OU3.5,Over,1.92,Fox Sports -109
+2026-10-17,Man City vs Ipswich,OU3.5,Under,1.87,Fox Sports -115
+2026-10-17,Man City vs Ipswich,BTTS,Yes,1.60,BetMGM -167
+2026-10-17,Man City vs Ipswich,BTTS,No,2.20,BetMGM +120
+2026-10-20,Man City vs AEK Athens,1X2,Man City,1.11,consensus (bet365 1.08 / Sofascore 1.13 / 22bet 1.17)
+2026-10-20,Man City vs AEK Athens,1X2,Draw,10.00,consensus (Sofascore 9.5 / 22bet 10.3)
+2026-10-20,Man City vs AEK Athens,1X2,AEK Athens,19.00,consensus (Sofascore 19 / bet365 22 / best 23)
+2026-10-20,Man City vs AEK Athens,OU2.5,Over,1.26,22bet 1.24-1.28
+2026-10-20,Man City vs AEK Athens,OU2.5,Under,3.73,22bet/Melbet 3.72-3.75
+2026-10-20,Man City vs AEK Athens,OU3.5,Over,1.72,1xBet 1.73 / FanDuel -134
+2026-10-20,Man City vs AEK Athens,OU3.5,Under,2.15,ESPN +115
+2026-10-20,Man City vs AEK Athens,BTTS,Yes,2.20,bet365 6/5
+2026-10-20,Man City vs AEK Athens,BTTS,No,1.66,bet365 implied from 6/5 two-way

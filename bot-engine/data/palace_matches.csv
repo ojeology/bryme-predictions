@@ -1,0 +1,9 @@
+date,comp,opponent,venue,bou_goals,opp_goals,bou_fouls,opp_fouls,bou_corners,opp_corners,bou_yellow,opp_yellow,bou_tackles,opp_tackles,referee,ref_fouls_avg,ref_yellow_avg,flag
+2026-08-28,Premier League,Man City,Home,1,4,8,11,2,6,1,2,34,14,Chris Kavanagh,26.6,4.8,opener
+2026-09-05,Premier League,Fulham,Away,3,2,7,6,1,7,0,0,17,12,Sam Barrott,20.0,2.8,
+2026-09-12,Premier League,Ipswich,Home,2,3,6,16,6,3,2,2,21,18,Chris Kavanagh,26.6,4.8,
+2026-09-17,Europa League,Lech Poznan,Home,4,0,11,7,6,5,0,2,20,11,Michal Ocenas,25.0,4.6,
+2026-09-20,Premier League,Leeds United,Away,0,0,11,12,3,8,1,2,20,18,Adam Herczeg,21.5,3.5,
+2026-10-11,Premier League,Nottingham Forest,Home,3,1,11,10,5,8,2,2,21,13,Peter Bankes,20.5,3.75,
+2026-10-15,Europa League,Lyon,Away,2,3,8,4,3,5,3,1,13,9,Joao Pinheiro,22.0,4.2,last2
+2026-10-18,Premier League,Brighton,Away,0,5,11,13,5,8,1,2,12,12,PL Referee,21.5,3.5,last2

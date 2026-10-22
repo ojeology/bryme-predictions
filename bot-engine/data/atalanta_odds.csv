@@ -1,0 +1,22 @@
+date,match,market,selection,odds,source_note
+2026-10-15,Atalanta vs Pafos,1X2,Atalanta,1.25,Bet365 pre-match
+2026-10-15,Atalanta vs Pafos,1X2,Draw,6.0,Bet365 pre-match
+2026-10-15,Atalanta vs Pafos,1X2,Pafos,11.0,Bet365 pre-match
+2026-10-15,Atalanta vs Pafos,OU2.5,Over,1.53,Bet365 pre-match
+2026-10-15,Atalanta vs Pafos,OU2.5,Under,2.4,Bet365 pre-match
+2026-10-18,AC Milan vs Atalanta,1X2,AC Milan,1.95,Bet365 pre-match
+2026-10-18,AC Milan vs Atalanta,1X2,Draw,3.6,Bet365 pre-match
+2026-10-18,AC Milan vs Atalanta,1X2,Atalanta,3.8,Bet365 pre-match
+2026-10-18,AC Milan vs Atalanta,OU2.5,Over,1.8,Bet365 pre-match
+2026-10-18,AC Milan vs Atalanta,OU2.5,Under,2.0,Bet365 pre-match
+2026-10-18,AC Milan vs Atalanta,BTTS,Yes,1.7,Bet365 pre-match
+2026-10-18,AC Milan vs Atalanta,BTTS,No,2.1,Bet365 pre-match
+2026-10-22,Ajax vs Atalanta,1X2,Ajax,2.13,22bet pre-match
+2026-10-22,Ajax vs Atalanta,1X2,Draw,3.78,22bet pre-match
+2026-10-22,Ajax vs Atalanta,1X2,Atalanta,3.14,22bet pre-match
+2026-10-22,Ajax vs Atalanta,OU2.5,Over,1.62,22bet pre-match
+2026-10-22,Ajax vs Atalanta,OU2.5,Under,2.2,22bet pre-match
+2026-10-22,Ajax vs Atalanta,BTTS,Yes,1.53,22bet pre-match
+2026-10-22,Ajax vs Atalanta,BTTS,No,2.45,22bet pre-match
+2026-10-22,Ajax vs Atalanta,FOULS_OU25.5,Under,1.32,22bet live user quote
+2026-10-22,Ajax vs Atalanta,FOULS_OU25.5,Over,3.10,22bet implied pair

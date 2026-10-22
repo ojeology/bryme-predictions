@@ -1,0 +1,23 @@
+date,match,market,selection,odds,source_note
+2026-10-15,Marseille vs Olympiakos,1X2,Marseille,1.75,Bet365 pre-match
+2026-10-15,Marseille vs Olympiakos,1X2,Draw,3.75,Bet365 pre-match
+2026-10-15,Marseille vs Olympiakos,1X2,Olympiakos,4.5,Bet365 pre-match
+2026-10-15,Marseille vs Olympiakos,OU2.5,Over,1.8,Bet365 pre-match
+2026-10-15,Marseille vs Olympiakos,OU2.5,Under,2.0,Bet365 pre-match
+2026-10-15,Marseille vs Olympiakos,BTTS,Yes,1.75,Bet365 pre-match
+2026-10-15,Marseille vs Olympiakos,BTTS,No,2.0,Bet365 pre-match
+2026-10-18,Angers vs Marseille,1X2,Angers,4.2,Bet365 pre-match
+2026-10-18,Angers vs Marseille,1X2,Draw,3.6,Bet365 pre-match
+2026-10-18,Angers vs Marseille,1X2,Marseille,1.85,Bet365 pre-match
+2026-10-18,Angers vs Marseille,OU2.5,Over,1.8,Bet365 pre-match
+2026-10-18,Angers vs Marseille,OU2.5,Under,2.0,Bet365 pre-match
+2026-10-18,Angers vs Marseille,BTTS,Yes,1.72,Bet365 pre-match
+2026-10-18,Angers vs Marseille,BTTS,No,2.05,Bet365 pre-match
+2026-10-22,Sturm Graz vs Marseille,1X2,Sturm Graz,3.6,22bet pre-match
+2026-10-22,Sturm Graz vs Marseille,1X2,Draw,3.73,22bet pre-match
+2026-10-22,Sturm Graz vs Marseille,1X2,Marseille,2.06,22bet pre-match
+2026-10-22,Sturm Graz vs Marseille,OU2.5,Over,1.76,22bet pre-match
+2026-10-22,Sturm Graz vs Marseille,OU2.5,Under,2.16,22bet pre-match
+2026-10-22,Sturm Graz vs Marseille,BTTS,Yes,1.62,22bet pre-match
+2026-10-22,Sturm Graz vs Marseille,BTTS,No,2.2,22bet pre-match
+2026-10-22,Sturm Graz vs Marseille,FOULS_OU20.5,Over,1.24,22bet live user quote

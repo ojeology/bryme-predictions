@@ -1,0 +1,39 @@
+name: Daily Top-5 Leagues Behaviour Bot
+
+on:
+  schedule:
+    # Runs automatically every day at 06:00 UTC
+    - cron: '0 6 * * *'
+  workflow_dispatch: # Allows manual 1-click trigger in GitHub Actions tab
+
+permissions:
+  contents: write
+
+jobs:
+  collect-and-predict:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Collect latest Top-5 League & UEFA match stats
+        run: python3 bot-engine/src/top5_collector.py
+
+      - name: Run Walk-Forward Behaviour Scanner
+        run: python3 bot-engine/src/scanner.py
+
+      - name: Sync Behaviour Machine to Cloudflare KV & Telegram Bot
+        run: python3 bot-engine/src/sync_machine_to_kv.py
+
+      - name: Commit & push updated CSVs and Daily Picks
+        run: |
+          git config user.name "Bryme-Behaviour-Bot"
+          git config user.email "bot@predictions.thebryme.com"
+          git add bot-engine/data/*.csv bot-engine/DAILY_PICKS.md
+          git diff --staged --quiet || git commit -m "chore(bot): auto-update Top-5 match stats & walk-forward picks [skip ci]"
+          git push

@@ -1,0 +1,9 @@
+date,comp,opponent,venue,bou_goals,opp_goals,bou_fouls,opp_fouls,bou_corners,opp_corners,bou_yellow,opp_yellow,bou_tackles,opp_tackles,referee,ref_fouls_avg,ref_yellow_avg,flag
+2026-09-05,Premier League,St Mirren,Away,2,1,15,6,10,6,1,4,19,29,Ryan Lee,22.0,3.8,opener
+2026-09-09,Premier League,St Johnstone,Away,1,0,9,13,11,2,2,2,8,12,Matthew MacDermid,22.0,3.8,
+2026-09-13,Carabao Cup,Rangers,Away,0,3,15,12,3,4,3,2,,,Nick Walsh,23.0,4.2,
+2026-09-17,Europa League,Ferencvaros,Home,1,3,18,14,11,3,0,2,18,9,Patrik Kolaric,23.0,4.8,
+2026-09-20,Premier League,Rangers,Home,0,1,16,19,8,4,2,3,27,19,John Beaton,23.5,4.2,
+2026-10-11,Premier League,Motherwell,Away,2,0,4,3,9,2,2,1,14,15,Steven McLean,21.0,3.5,
+2026-10-15,Europa League,Benfica,Away,1,4,7,9,6,8,0,3,14,15,Nikola Dabanovic,22.0,3.1,last2
+2026-10-18,Premier League,Hearts,Home,7,1,17,8,6,3,3,1,22,18,David Dickinson,22.2,4.2,last2

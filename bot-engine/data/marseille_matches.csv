@@ -1,0 +1,10 @@
+date,comp,opponent,venue,bou_goals,opp_goals,bou_fouls,opp_fouls,bou_corners,opp_corners,bou_yellow,opp_yellow,bou_tackles,opp_tackles,referee,ref_fouls_avg,ref_yellow_avg,flag
+2026-08-21,Ligue 1,Strasbourg,Home,4,0,6,12,3,4,1,3,17,19,Ligue 1 Referee,21.0,3.5,train
+2026-08-30,Ligue 1,Monaco,Away,0,2,10,9,7,5,0,4,17,18,Willy Delajod,21.5,3.5,train
+2026-09-06,Ligue 1,Paris FC,Home,2,3,10,12,5,4,0,2,10,24,Ligue 1 Referee,21.5,3.2,train
+2026-09-11,Ligue 1,Rennes,Away,0,1,13,15,5,3,4,1,14,14,Ligue 1 Referee,23.0,3.8,train
+2026-09-17,Europa League,Besiktas,Away,1,4,12,11,3,3,1,2,15,15,UEFA Referee,22.0,3.4,train
+2026-09-20,Ligue 1,PSG,Home,1,2,9,3,3,7,2,1,8,13,Ligue 1 Referee,20.5,3.4,train
+2026-10-11,Ligue 1,Troyes,Away,2,0,15,14,3,6,1,4,14,17,Ligue 1 Referee,23.5,3.8,train
+2026-10-15,Europa League,Olympiakos,Home,0,1,15,11,9,1,2,2,15,12,UEFA Referee,23.0,3.6,test_1
+2026-10-18,Ligue 1,Angers,Away,5,2,12,11,5,2,1,1,8,14,Ligue 1 Referee,22.0,3.2,test_2

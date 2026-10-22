@@ -212,6 +212,31 @@ async function handleApiRequest(request, env, url) {
     }
   }
 
+  // 6B. Behaviour Machine API (/api/machine)
+  if (path === '/api/machine') {
+    if (method === 'GET') {
+      if (kv) {
+        const bm = await kv.get('bryme_behaviour_machine', { type: 'json' });
+        if (bm) {
+          return jsonResponse({ success: true, source: 'cloudflare-kv', data: bm });
+        }
+      }
+      return jsonResponse({ success: true, source: 'edge-default', data: DEFAULT_BEHAVIOUR_MACHINE });
+    }
+
+    if (method === 'POST') {
+      const pin = request.headers.get('X-Admin-Pin');
+      if (pin !== 'bryme2026') {
+        return jsonResponse({ success: false, error: 'Unauthorized: Invalid Admin PIN' }, 401);
+      }
+      const bmData = await request.json();
+      if (kv) {
+        await kv.put('bryme_behaviour_machine', JSON.stringify(bmData));
+      }
+      return jsonResponse({ success: true, message: 'Behaviour Machine synced to Cloudflare KV', timestamp: new Date().toISOString() });
+    }
+  }
+
   // 7. Telegram Bot Auto-Ingestion & Live Admin Webhook (/api/telegram-webhook)
   if (path === '/api/telegram-webhook') {
     if (method === 'POST') {
@@ -228,6 +253,12 @@ async function handleApiRequest(request, env, url) {
           if (!s.punters) s.punters = [];
           if (!s.marketCodes) s.marketCodes = [];
           return s;
+        };
+
+        const getMachineState = async () => {
+          let bm = null;
+          if (kv) bm = await kv.get('bryme_behaviour_machine', { type: 'json' });
+          return bm || s_default_machine();
         };
 
         const saveState = async (s) => {
@@ -610,6 +641,30 @@ async function handleApiRequest(request, env, url) {
             return jsonResponse({ ok: true, action: 'help_bulk' });
           }
 
+          if (data === 'cmd_machine') {
+            const bm = await getMachineState();
+            await editTelegramMessage(botToken, chatId, messageId, formatMachineOverview(bm), getMachineMenuKeyboard());
+            return jsonResponse({ ok: true, action: 'cmd_machine' });
+          }
+
+          if (data === 'cmd_machine_small') {
+            const bm = await getMachineState();
+            await editTelegramMessage(botToken, chatId, messageId, formatMachineSmallSlip(bm), getMachineMenuKeyboard());
+            return jsonResponse({ ok: true, action: 'cmd_machine_small' });
+          }
+
+          if (data === 'cmd_machine_big') {
+            const bm = await getMachineState();
+            await editTelegramMessage(botToken, chatId, messageId, formatMachineBigSlip(bm), getMachineMenuKeyboard());
+            return jsonResponse({ ok: true, action: 'cmd_machine_big' });
+          }
+
+          if (data === 'cmd_machine_teams') {
+            const bm = await getMachineState();
+            await editTelegramMessage(botToken, chatId, messageId, formatMachineTeams(bm), getMachineMenuKeyboard());
+            return jsonResponse({ ok: true, action: 'cmd_machine_teams' });
+          }
+
           return jsonResponse({ ok: true, action: 'callback_processed', data });
         }
 
@@ -926,6 +981,38 @@ async function handleApiRequest(request, env, url) {
             `🌐 <b>predictions.thebryme.com</b>`;
           if (chatId) await sendTelegramReply(botToken, chatId, statusMsg, getMainMenuKeyboard());
           return jsonResponse({ ok: true, action: 'status' });
+        }
+
+        // 2.3.B Behaviour Machine (/machine, /locks, /bot, /team)
+        if (text.startsWith('/machine') || text.startsWith('/locks') || text.startsWith('/bot')) {
+          const bm = await getMachineState();
+          if (chatId) await sendTelegramReply(botToken, chatId, formatMachineOverview(bm), getMachineMenuKeyboard());
+          return jsonResponse({ ok: true, action: 'machine' });
+        }
+
+        if (text.startsWith('/team')) {
+          const query = text.replace('/team', '').trim().toLowerCase();
+          const bm = await getMachineState();
+          const teamsObj = bm?.teams || {};
+          const foundEntry = Object.entries(teamsObj).find(([slug, t]) =>
+            slug === query || t.name.toLowerCase().includes(query)
+          );
+          if (!query || !foundEntry) {
+            const avail = Object.keys(teamsObj).map(k => `<code>/team ${k}</code>`).join(', ');
+            const msgText = `🔍 <b>Team Behaviour Lookup</b>\n\nUsage: <code>/team getafe</code>\nAvailable teams: ${avail || 'None'}`;
+            if (chatId) await sendTelegramReply(botToken, chatId, msgText, getMachineMenuKeyboard());
+            return jsonResponse({ ok: true, action: 'team_help' });
+          }
+          const [slug, t] = foundEntry;
+          const teamMsg = `⚽ <b>${t.name} (${t.league}) — 2026–27 Walk-Forward Profile</b>\n\n` +
+            `• <b>Blind-Test Record:</b> <b>${t.record}</b> (ROI <b>${t.roi}</b>)\n` +
+            `• <b>Avg Total Fouls:</b> <b>${t.foulsAvg}</b> per match\n` +
+            `• <b>Avg Yellow Cards:</b> <b>${t.cardsAvg}</b> per match\n` +
+            `• <b>Avg Total Corners:</b> <b>${t.cornersAvg}</b> per match\n` +
+            `• <b>Avg Total Tackles:</b> <b>${t.tacklesAvg}</b> per match\n\n` +
+            `🔒 <b>Primary Behaviour Lock:</b>\n<b>${t.lock}</b>`;
+          if (chatId) await sendTelegramReply(botToken, chatId, teamMsg, getMachineMenuKeyboard());
+          return jsonResponse({ ok: true, action: 'team_lookup', team: slug });
         }
 
         // 2.4 List Codes
@@ -1836,10 +1923,117 @@ function getMainMenuKeyboard() {
         { text: '📊 Platform Status', callback_data: 'cmd_status' }
       ],
       [
-        { text: '📌 View Top Codes', callback_data: 'cmd_codes' }
+        { text: '📌 View Top Codes', callback_data: 'cmd_codes' },
+        { text: '🤖 Behaviour Machine', callback_data: 'cmd_machine' }
       ]
     ]
   };
+}
+
+function getMachineMenuKeyboard() {
+  return {
+    inline_keyboard: [
+      [
+        { text: '🔒 12-Leg Small-Odds Acca (22.14x)', callback_data: 'cmd_machine_small' }
+      ],
+      [
+        { text: '🚀 5-Leg Big-Odds Value Slip', callback_data: 'cmd_machine_big' },
+        { text: '📊 14-Team Leaderboard', callback_data: 'cmd_machine_teams' }
+      ],
+      [
+        { text: '🏠 Main Menu', callback_data: 'menu_main' }
+      ]
+    ]
+  };
+}
+
+const DEFAULT_BEHAVIOUR_MACHINE = {
+  updatedAt: '2026-10-22T17:15:00Z',
+  totalMatchesTracked: 118,
+  totalTeamsStudied: 14,
+  combinedSmallOdds: '22.14x – 24.39x',
+  combinedHitRate: '91/101 (90.1%)',
+  smallOddsSlip: [
+    { leg: 1, match: 'AFC Bournemouth vs AC Milan', pick: 'Fouls Over 20.5', odds: 1.35, modelProb: '83.8%', edge: '+13.6%', streak: '8/9 O21.5 (88.9%)' },
+    { leg: 2, match: 'Beşiktaş vs Crystal Palace', pick: 'Fouls Under 25.5', odds: 1.33, modelProb: '90.9%', edge: '+19.6%', streak: '8/8 <= 24 fouls (100%)' },
+    { leg: 3, match: 'Lech Poznań vs Sunderland', pick: 'Fouls Over 21.5', odds: 1.33, modelProb: '86.3%', edge: '+15.0%', streak: '7/8 O21.5 (87.5%)' },
+    { leg: 4, match: 'TSG Hoffenheim vs Lyon', pick: 'Corners Over 8.5', odds: 1.40, modelProb: '82.6%', edge: '+9.2%', streak: '8/9 >= 10 corners (88.9%)' },
+    { leg: 5, match: 'Celtic vs Celta Vigo', pick: 'Fouls Over 20.5', odds: 1.40, modelProb: '75.6%', edge: '+5.6%', streak: '5/6 O21.5 (83.3%)' },
+    { leg: 6, match: 'Lillestrøm vs Real Sociedad', pick: 'Fouls Over 20.5', odds: 1.26, modelProb: '82.0%', edge: '+7.0%', streak: '6/7 O20.5 (85.7%)' },
+    { leg: 7, match: 'Ajax vs Atalanta', pick: 'Fouls Under 25.5', odds: 1.32, modelProb: '92.4%', edge: '+20.6%', streak: '8/8 <= 24 fouls (100%)' },
+    { leg: 8, match: 'AS Monaco vs SC Freiburg', pick: 'Fouls Over 21.5', odds: 1.28, modelProb: '76.4%', edge: '+4.1%', streak: '4/4 last Monaco O21.5 (100%)' },
+    { leg: 9, match: 'Getafe vs FC Lugano', pick: 'Cards Over 3.5', odds: 1.27, modelProb: '90.6%', edge: '+16.0%', streak: '7/7 >= 4 cards (100%)' },
+    { leg: 10, match: 'Juventus vs Rennes', pick: 'Corners Over 7.5', odds: 1.26, modelProb: '78.0%', edge: '+3.5%', streak: '11/13 >= 8 corners (84.6%)' },
+    { leg: 11, match: 'OFI Crete vs Bayer Leverkusen', pick: 'Cards Under 5.5', odds: 1.12, modelProb: '93.2%', edge: '+8.4%', streak: '10/10 <= 5 cards (100%)' },
+    { leg: 12, match: 'SK Sturm Graz vs Marseille', pick: 'Fouls Over 20.5', odds: 1.24, modelProb: '82.5%', edge: '+6.1%', streak: '7/7 walk-forward streak (100%)' }
+  ],
+  bigOddsSlip: [
+    { leg: 1, match: 'AFC Bournemouth vs AC Milan', pick: 'Cards Over 4.0 (Asian)', odds: 2.25, modelProb: '63.8%', edge: '+22.6%', streak: '7/8 Bournemouth O3.5 cards' },
+    { leg: 2, match: 'Lech Poznań vs Sunderland', pick: 'Cards Over 3.5', odds: 1.77, modelProb: '65.1%', edge: '+12.5%', streak: 'Sunderland cards 4/4 blind test' },
+    { leg: 3, match: 'TSG Hoffenheim vs Lyon', pick: 'Cards Over 4.5', odds: 2.00, modelProb: '57.2%', edge: '+11.1%', streak: '4/4 Lyon Europa League >= 5 cards' },
+    { leg: 4, match: 'Celtic vs Celta Vigo', pick: 'Cards Over 3.5', odds: 1.67, modelProb: '67.0%', edge: '+10.6%', streak: '5/6 non-cup >= 4 cards' },
+    { leg: 5, match: 'Lillestrøm vs Real Sociedad', pick: 'BTTS — Yes (GG)', odds: 1.73, modelProb: '58.1%', edge: '+4.1%', streak: '5/5 last Sociedad BTTS Yes' }
+  ],
+  teams: {
+    getafe: { name: 'Getafe CF', league: 'La Liga', record: '18W - 2L (90.0%)', roi: '+66.2%', foulsAvg: 24.4, cardsAvg: 5.29, cornersAvg: 8.9, tacklesAvg: 27.6, lock: 'Cards Over 3.5 (7/7 = 100%) & Tackles Under 31.5 (7/7 = 100%)' },
+    monaco: { name: 'AS Monaco', league: 'Ligue 1', record: '8W - 1L last 4g (88.9%)', roi: '+58.9%', foulsAvg: 23.6, cardsAvg: 3.88, cornersAvg: 9.3, tacklesAvg: 34.0, lock: 'Fouls Over 21.5 (4/4 last 4g = 100%, 25.0 avg)' },
+    sunderland: { name: 'Sunderland', league: 'Premier League', record: '16W - 4L (80.0%)', roi: '+45.3%', foulsAvg: 22.8, cardsAvg: 4.25, cornersAvg: 9.8, tacklesAvg: 31.4, lock: 'Fouls Over 21.5 (7/8 = 87.5%) & Cards Over 3.5' },
+    atalanta: { name: 'Atalanta', league: 'Serie A', record: '21W - 6L (77.8%)', roi: '+43.9%', foulsAvg: 21.0, cardsAvg: 2.75, cornersAvg: 9.8, tacklesAvg: 30.8, lock: 'Fouls Under 24.5 (8/8 = 100%) & Cards Under 3.5 (7/7 = 100%)' },
+    bournemouth: { name: 'AFC Bournemouth', league: 'Premier League', record: '18W - 6L (75.0%)', roi: '+42.0%', foulsAvg: 24.2, cardsAvg: 4.80, cornersAvg: 10.6, tacklesAvg: 34.5, lock: 'Fouls Over 20.5/21.5 (8/9 = 88.9%) & Cards Over 3.5 (7/8 = 87.5%)' },
+    celtic: { name: 'Celtic FC', league: 'Scottish Premiership / UEL', record: '17W - 6L (73.9%)', roi: '+40.7%', foulsAvg: 22.1, cardsAvg: 3.88, cornersAvg: 10.6, tacklesAvg: 32.1, lock: 'Corners Over 8.5 (7/8 = 87.5%) & Fouls Over 20.5 (5/6 = 83.3%)' },
+    sociedad: { name: 'Real Sociedad', league: 'La Liga', record: '14W - 5L (73.7%)', roi: '+34.4%', foulsAvg: 22.7, cardsAvg: 4.43, cornersAvg: 10.0, tacklesAvg: 34.4, lock: 'Tackles Over 31.5 (5/5 = 100%) & Fouls Over 20.5 (6/7 = 85.7%)' },
+    marseille: { name: 'Olympique Marseille', league: 'Ligue 1', record: '15W - 6L (71.4%)', roi: '+29.0%', foulsAvg: 22.6, cardsAvg: 4.00, cornersAvg: 9.1, tacklesAvg: 31.3, lock: 'Fouls Over 20.5 (7/7 walk-forward streak) & Corners Under 10.5 (10/11 = 90.9%)' },
+    juventus: { name: 'Juventus', league: 'Serie A', record: '12W - 5L (70.6%)', roi: '+35.3%', foulsAvg: 23.0, cardsAvg: 3.63, cornersAvg: 9.1, tacklesAvg: 31.1, lock: 'Corners Over 7.5 (11/13 = 84.6%) & Tackles Under 31.5 (6/8 = 75%)' },
+    lyon: { name: 'Olympique Lyonnais', league: 'Ligue 1', record: '19W - 8L (70.4%)', roi: '+31.4%', foulsAvg: 22.9, cardsAvg: 4.33, cornersAvg: 10.6, tacklesAvg: 29.8, lock: 'Corners Over 8.5 (8/9 >= 10 corners = 88.9%) & Tackles Under 31.5 (7/8 = 87.5%)' },
+    leverkusen: { name: 'Bayer Leverkusen', league: 'Bundesliga', record: '11W - 5L (68.8%)', roi: '+28.6%', foulsAvg: 21.1, cardsAvg: 3.50, cornersAvg: 9.1, tacklesAvg: 29.9, lock: 'Cards Under 5.5 (10/10 = 100%) & Fouls MAE 1.75 (3W/0L)' },
+    palace: { name: 'Crystal Palace', league: 'Premier League', record: '15W - 7L (68.2%)', roi: '+51.1%', foulsAvg: 21.6, cardsAvg: 3.25, cornersAvg: 9.6, tacklesAvg: 35.1, lock: 'Fouls Under 25.5 (8/8 <= 24 = 100%) & Cards Under 4.5 (8/8 = 100%)' },
+    city: { name: 'Manchester City', league: 'Premier League', record: '20W - 10L (66.7%)', roi: '+25.6%', foulsAvg: 20.3, cardsAvg: 3.58, cornersAvg: 10.4, tacklesAvg: 29.2, lock: 'Fouls Under 22.5 & Team Corners Over 5.5' },
+    brighton: { name: 'Brighton & Hove Albion', league: 'Premier League', record: '12W - 8L (60.0%)', roi: '+14.0%', foulsAvg: 22.3, cardsAvg: 3.88, cornersAvg: 10.0, tacklesAvg: 32.6, lock: 'Fouls 5W-1L (83.3%) & Fouls Under 24.5 (7/8 = 87.5%)' }
+  }
+};
+
+function s_default_machine() {
+  return DEFAULT_BEHAVIOUR_MACHINE;
+}
+
+function formatMachineOverview(bm) {
+  const matches = bm?.totalMatchesTracked || 118;
+  const teams = bm?.totalTeamsStudied || 14;
+  return `🤖 <b>BRYME Walk-Forward Behaviour Machine (2026–27)</b>\n\n` +
+    `• <b>Database:</b> <b>${matches}</b> verified team-matches across <b>${teams}</b> Top-5 European & UEFA clubs (92 opponents)\n` +
+    `• <b>Markets Tracked:</b> Fouls, Yellow Cards, Corners, Tackles, BTTS & Pre-Match Devigged Odds\n` +
+    `• <b>Combined Tonight's 12-Leg Acca:</b> <b>${bm?.combinedSmallOdds || '22.14x – 24.39x'}</b>\n` +
+    `• <b>Combined Historical Hit Rate:</b> <b>${bm?.combinedHitRate || '91/101 (90.1%)'}</b>\n\n` +
+    `💡 <b>Commands:</b>\n` +
+    `• <code>/machine</code> — Open Behaviour Machine Hub\n` +
+    `• <code>/team getafe</code> (or <code>bournemouth</code>, <code>marseille</code>, <code>leverkusen</code>, <code>juventus</code>, <code>monaco</code>, <code>atalanta</code>, <code>sociedad</code>, <code>celtic</code>, <code>lyon</code>, <code>sunderland</code>, <code>palace</code>, <code>city</code>, <code>brighton</code>) — View team walk-forward stats & locks`;
+}
+
+function formatMachineSmallSlip(bm) {
+  const legs = bm?.smallOddsSlip || [];
+  const lines = legs.map(l =>
+    `<b>${l.leg}. ${l.match}</b>\n   🔒 <b>${l.pick} @ ${l.odds}</b> (Model ${l.modelProb} | Edge ${l.edge})\n   <i>Streak: ${l.streak}</i>`
+  ).join('\n\n');
+  return `🔒 <b>Tonight's 12-Leg Small-Odds Behaviour Acca (${bm?.combinedSmallOdds || '22.14x'})</b>\n` +
+    `<i>Combined Hit Rate: ${bm?.combinedHitRate || '91/101 (90.1%)'}</i>\n\n` +
+    `${lines || 'Run sync_machine_to_kv.py to load legs.'}`;
+}
+
+function formatMachineBigSlip(bm) {
+  const legs = bm?.bigOddsSlip || [];
+  const lines = legs.map(l =>
+    `<b>${l.leg}. ${l.match}</b>\n   🚀 <b>${l.pick} @ ${l.odds}</b> (Model ${l.modelProb} | Edge ${l.edge})\n   <i>${l.streak}</i>`
+  ).join('\n\n');
+  return `🚀 <b>Tonight's 5-Leg Big-Odds Value Slip (1.67x – 2.25x)</b>\n\n` +
+    `${lines || 'Run sync_machine_to_kv.py to load legs.'}`;
+}
+
+function formatMachineTeams(bm) {
+  const teamsObj = bm?.teams || {};
+  const lines = Object.entries(teamsObj).map(([slug, t], idx) =>
+    `<b>${idx + 1}. ${t.name}</b> (${t.league}) — <b>${t.record}</b> [ROI ${t.roi}]\n   • Avg: ${t.foulsAvg} Fouls | ${t.cardsAvg} Cards | ${t.cornersAvg} Corners | ${t.tacklesAvg} Tackles\n   • Lock: <i>${t.lock}</i>`
+  ).join('\n\n');
+  return `📊 <b>14-Team Walk-Forward Leaderboard (2026–27)</b>\n\n${lines || 'No teams synced yet.'}`;
 }
 
 function getPuntersMenuKeyboard() {

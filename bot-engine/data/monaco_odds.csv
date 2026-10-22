@@ -1,0 +1,19 @@
+date,match,market,selection,odds,source_note
+2026-10-15,CSKA Sofia vs Monaco,1X2,CSKA Sofia,5.25,Bet365 pre-match
+2026-10-15,CSKA Sofia vs Monaco,1X2,Draw,4.1,Bet365 pre-match
+2026-10-15,CSKA Sofia vs Monaco,1X2,Monaco,1.6,Bet365 pre-match
+2026-10-15,CSKA Sofia vs Monaco,OU2.5,Over,1.72,Bet365 pre-match
+2026-10-15,CSKA Sofia vs Monaco,OU2.5,Under,2.08,Bet365 pre-match
+2026-10-18,Lorient vs Monaco,1X2,Lorient,3.8,Bet365 pre-match
+2026-10-18,Lorient vs Monaco,1X2,Draw,3.7,Bet365 pre-match
+2026-10-18,Lorient vs Monaco,1X2,Monaco,1.9,Bet365 pre-match
+2026-10-18,Lorient vs Monaco,OU2.5,Over,1.7,Bet365 pre-match
+2026-10-18,Lorient vs Monaco,OU2.5,Under,2.1,Bet365 pre-match
+2026-10-22,Monaco vs Freiburg,1X2,Monaco,2.13,22bet pre-match
+2026-10-22,Monaco vs Freiburg,1X2,Draw,3.56,22bet pre-match
+2026-10-22,Monaco vs Freiburg,1X2,Freiburg,3.3,22bet pre-match
+2026-10-22,Monaco vs Freiburg,OU2.5,Over,1.73,22bet pre-match
+2026-10-22,Monaco vs Freiburg,OU2.5,Under,2.1,22bet pre-match
+2026-10-22,Monaco vs Freiburg,BTTS,Yes,1.62,22bet pre-match
+2026-10-22,Monaco vs Freiburg,BTTS,No,2.25,22bet pre-match
+2026-10-22,Monaco vs Freiburg,FOULS_OU21.5,Over,1.28,22bet live user quote
