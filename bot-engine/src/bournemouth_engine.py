@@ -42,6 +42,10 @@ BASELINES = {
                           "cards": 2.00, "tackles": 16.50},
     "Conference League": {"goals": 1.50, "fouls": 11.20, "corners": 4.90,
                           "cards": 1.75, "tackles": 15.50},
+    "Liga Portugal":     {"goals": 1.40, "fouls": 12.20, "corners": 4.60,
+                          "cards": 2.20, "tackles": 15.60},
+    "SuperLiga":         {"goals": 1.50, "fouls": 12.20, "corners": 4.80,
+                          "cards": 2.15, "tackles": 15.60},
     "Carabao Cup":       {"goals": 1.45, "fouls": 11.00, "corners": 5.00,
                           "cards": 1.60, "tackles": 16.50},
 }
@@ -218,7 +222,7 @@ def predict_match(matches_upto, opp_profile, comp, venue, team_name="Bournemouth
     venue: "Home" or "Away" from Bournemouth's perspective.
     No future data allowed.
     """
-    base = BASELINES[comp]
+    base = BASELINES.get(comp, BASELINES["Conference League"])
     tier_att, tier_con = TIER_GOALS_PRIOR[opp_profile["tier"]]
 
     def crate(field, prior, norm_field, mu, prior_n=PRIOR_N_EVENTS):

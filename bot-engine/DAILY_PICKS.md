@@ -1,7 +1,7 @@
 # Daily & Weekend Top-5 Leagues Walk-Forward Behaviour Report
 
-- **Total Verified 2026–27 Team-Matches:** `118`
-- **Total Top-5 & UEFA Opponent Profiles:** `92`
+- **Total Verified 2026–27 Team-Matches:** `134`
+- **Total Top-5 & UEFA Opponent Profiles:** `109`
 
 | Team | League | Matches | Walk-Forward Hit Rate | Real-Odds ROI |
 | :--- | :--- | :---: | :---: | :---: |
@@ -19,3 +19,5 @@
 | **Juventus** | Serie A | 8 | `12/17 (70.6%)` | `+35.3%` |
 | **Bayer Leverkusen** | Bundesliga | 8 | `11/16 (68.8%)` | `+28.6%` |
 | **Olympique Marseille** | Ligue 1 | 9 | `15/21 (71.4%)` | `+29.0%` |
+| **SC Braga** | Liga Portugal / UECL | 8 | `22/24 (91.7%)` | `+73.4%` |
+| **FK Crvena Zvezda** | SuperLiga / UECL | 8 | `13/15 (86.7%)` | `+63.3%` |

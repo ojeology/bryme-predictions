@@ -211,7 +211,7 @@ export default function BehaviourMachinePage() {
           <div className="p-3.5 rounded-2xl bg-black/40 border border-white/10">
             <div className="text-[11px] font-mono uppercase text-slate-400">Verified Matches</div>
             <div className="text-2xl font-mono font-black text-white mt-0.5">{MACHINE_META.totalMatchesStudied}</div>
-            <div className="text-[11px] text-cyan-400 font-mono">14 Deep Clubs &bull; 92 Profiles</div>
+            <div className="text-[11px] text-cyan-400 font-mono">16 Deep Clubs &bull; 109 Profiles</div>
           </div>
           <div className="p-3.5 rounded-2xl bg-black/40 border border-white/10">
             <div className="text-[11px] font-mono uppercase text-slate-400">Behaviour Hit Rate</div>
@@ -231,8 +231,8 @@ export default function BehaviourMachinePage() {
         {[
           { id: 'weekend', label: '🗓️ Friday Morning Top-5 Weekend Fixtures & H2H' },
           { id: 'overnight', label: '🌙 Overnight Results & Morning Breakdown' },
-          { id: 'slips', label: '🔒 Tonight’s 12-Leg Slip (22.14x)' },
-          { id: 'reports', label: '📊 14-Club Walk-Forward Reports' },
+          { id: 'slips', label: '🔒 Tonight’s 15-Leg Slip (44.63x)' },
+          { id: 'reports', label: '📊 16-Club Walk-Forward Reports' },
           { id: 'radar', label: `🌍 All ${MACHINE_META.totalTop5Profiles} Clubs Radar` },
           { id: 'calculator', label: '🧮 Live Odds Value Calculator' },
         ].map(tab => (
@@ -516,10 +516,10 @@ export default function BehaviourMachinePage() {
                 Strategy #1 — Small-Odds Constant Behaviour Accumulator (1.12x – 1.44x per leg)
               </div>
               <h2 className="text-lg sm:text-xl font-display font-black mt-0.5">
-                Interactive 12-Leg Behaviour Lock Slip ({customAccaStats.count} Legs Selected)
+                Interactive 15-Leg Behaviour Lock Slip ({customAccaStats.count} Legs Selected)
               </h2>
               <p className="text-xs text-slate-300 mt-1">
-                Tap any match row below to include or exclude it from your custom accumulator. Historical combined hit rate across these 12 constant trends is <strong>91/101 (90.1%)</strong>. Overnight FT stats will auto-grade here by 06:00 UTC morning.
+                Tap any match row below to include or exclude it from your custom accumulator. Historical combined hit rate across these 15 constant trends is <strong>113/125 (90.4%)</strong>. Overnight FT stats will auto-grade here by 06:00 UTC morning.
               </p>
             </div>
 
@@ -545,7 +545,7 @@ export default function BehaviourMachinePage() {
                 }
                 className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-xs font-mono font-bold text-white"
               >
-                {selectedLegs.length === SMALL_ODDS_SLIP.length ? 'Clear' : 'Select All 12'}
+                {selectedLegs.length === SMALL_ODDS_SLIP.length ? 'Clear' : 'Select All 15'}
               </button>
             </div>
           </div>
@@ -626,11 +626,11 @@ export default function BehaviourMachinePage() {
                   Strategy #2 — Big-Odds Value Plays (1.67x – 2.25x Singles / 2-3 Fold Combos)
                 </span>
                 <h3 className="text-lg font-display font-black text-slate-900 dark:text-white mt-0.5">
-                  5 High-Edge Behaviour Value Plays (Mispriced Bookmaker Lines)
+                  8 High-Edge Behaviour Value Plays (Mispriced Bookmaker Lines)
                 </h3>
               </div>
               <span className="text-xs font-mono px-3 py-1 rounded-lg bg-amber-500/15 text-amber-400 border border-amber-500/30">
-                5-Leg Combined: 22.95x
+                8-Leg Combined: 114.20x
               </span>
             </div>
 

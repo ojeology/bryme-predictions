@@ -1,0 +1,9 @@
+date,comp,opponent,venue,bou_goals,opp_goals,bou_fouls,opp_fouls,bou_corners,opp_corners,bou_yellow,opp_yellow,bou_tackles,opp_tackles,referee,ref_fouls_avg,ref_yellow_avg,flag
+2026-08-17,SuperLiga,Čukarički,Home,3,1,12,12,7,3,2,2,16,15,Srđan Jovanović,23.5,4.2,ok
+2026-08-24,SuperLiga,TSC Bačka Topola,Away,2,1,13,12,6,4,2,2,16,16,Novak Simović,24.0,4.5,ok
+2026-09-01,SuperLiga,Radnički Niš,Home,3,0,11,12,7,3,1,2,15,16,Milan Mitić,23.2,4.1,ok
+2026-09-14,SuperLiga,Vojvodina,Home,3,0,12,12,6,4,2,2,16,15,Srđan Jovanović,23.5,4.2,ok
+2026-09-23,SuperLiga,Partizan,Away,4,0,14,13,6,4,3,3,17,16,Novak Simović,24.0,4.5,ok
+2026-10-04,SuperLiga,TSC Bačka Topola,Home,3,1,12,11,7,3,2,2,16,15,Pavle Ilić,23.5,4.3,ok
+2026-10-15,Conference League,Lugano,Away,2,3,13,12,5,5,4,3,16,16,UEFA Referee,23.5,4.4,ok
+2026-10-18,SuperLiga,Mladost Lučani,Home,5,1,11,12,10,2,2,2,15,15,Milan Ilić,23.0,4.0,ok

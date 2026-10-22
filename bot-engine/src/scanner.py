@@ -26,6 +26,8 @@ TEAMS = [
     ("Juventus", "Serie A", "juventus_matches.csv", "12/17 (70.6%)", "+35.3%"),
     ("Bayer Leverkusen", "Bundesliga", "leverkusen_matches.csv", "11/16 (68.8%)", "+28.6%"),
     ("Olympique Marseille", "Ligue 1", "marseille_matches.csv", "15/21 (71.4%)", "+29.0%"),
+    ("SC Braga", "Liga Portugal / UECL", "braga_matches.csv", "22/24 (91.7%)", "+73.4%"),
+    ("FK Crvena Zvezda", "SuperLiga / UECL", "zvezda_matches.csv", "13/15 (86.7%)", "+63.3%"),
 ]
 
 

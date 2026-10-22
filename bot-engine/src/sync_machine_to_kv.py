@@ -29,6 +29,9 @@ TONIGHT_SMALL_ODDS_SLIP = [
     {"leg": 10, "match": "Juventus vs Rennes", "pick": "Corners Over 7.5", "odds": 1.26, "alt": "Corners O8.5 @ 1.50", "modelProb": "78.0%", "edge": "+3.5%", "streak": "11/13 >= 8 corners (84.6%)"},
     {"leg": 11, "match": "OFI Crete vs Bayer Leverkusen", "pick": "Cards Under 5.5", "odds": 1.12, "alt": "Fouls O20.5 (71.8%)", "modelProb": "93.2%", "edge": "+8.4%", "streak": "10/10 <= 5 cards (100%)"},
     {"leg": 12, "match": "SK Sturm Graz vs Marseille", "pick": "Fouls Over 20.5", "odds": 1.24, "alt": "Corners U10.5 (10/11)", "modelProb": "82.5%", "edge": "+6.1%", "streak": "7/7 walk-forward streak (100%)"},
+    {"leg": 13, "match": "FK Jablonec vs Brighton", "pick": "Cards Under 4.5", "odds": 1.25, "alt": "Fouls U24.5 @ 1.35 (7/8)", "modelProb": "86.8%", "edge": "+11.3%", "streak": "3/3 last Brighton <=3 cards & 7/8 U24.5 fouls"},
+    {"leg": 14, "match": "SC Braga vs KAA Gent", "pick": "Fouls Over 20.5", "odds": 1.28, "alt": "Corners U10.5 @ 1.33 (10/11)", "modelProb": "82.9%", "edge": "+8.9%", "streak": "8/8 Braga games >= 22 fouls (100%)"},
+    {"leg": 15, "match": "Crvena Zvezda vs FC Copenhagen", "pick": "Fouls Over 20.5", "odds": 1.26, "alt": "Corners O8.5 @ 1.35 (8/8)", "modelProb": "85.9%", "edge": "+10.9%", "streak": "8/8 Zvezda games >= 23 fouls (100%)"},
 ]
 
 TONIGHT_BIG_ODDS_SLIP = [
@@ -37,11 +40,16 @@ TONIGHT_BIG_ODDS_SLIP = [
     {"leg": 3, "match": "TSG Hoffenheim vs Lyon", "pick": "Cards Over 4.5", "odds": 2.00, "modelProb": "57.2%", "edge": "+11.1%", "streak": "4/4 Lyon Europa League >= 5 cards"},
     {"leg": 4, "match": "Celtic vs Celta Vigo", "pick": "Cards Over 3.5", "odds": 1.67, "modelProb": "67.0%", "edge": "+10.6%", "streak": "5/6 non-cup >= 4 cards"},
     {"leg": 5, "match": "Lillestrøm vs Real Sociedad", "pick": "BTTS — Yes (GG)", "odds": 1.73, "modelProb": "58.1%", "edge": "+4.1%", "streak": "5/5 last Sociedad BTTS Yes"},
+    {"leg": 6, "match": "FK Jablonec vs Brighton", "pick": "Cards Under 3.5", "odds": 1.72, "modelProb": "72.1%", "edge": "+17.3%", "streak": "3/3 last Brighton <= 3 cards (1, 1, 3)"},
+    {"leg": 7, "match": "SC Braga vs KAA Gent", "pick": "Corners Under 9.5", "odds": 1.72, "modelProb": "68.2%", "edge": "+13.4%", "streak": "8/8 Braga games finished with 7-8 corners (100%)"},
+    {"leg": 8, "match": "Crvena Zvezda vs FC Copenhagen", "pick": "Cards Over 3.5", "odds": 1.68, "modelProb": "70.8%", "edge": "+14.7%", "streak": "7/8 Zvezda games >= 4 cards (7 cards at Lugano)"},
 ]
 
 TEAM_PROFILES = {
+    "braga": {"name": "SC Braga", "league": "Liga Portugal / UECL", "record": "22W - 2L (91.7%)", "roi": "+73.4%", "foulsAvg": 24.5, "cardsAvg": 3.88, "cornersAvg": 7.6, "tacklesAvg": 31.0, "lock": "Fouls Over 20.5 (8/8 = 100%) & Corners Under 9.5 (8/8 = 100%)"},
     "getafe": {"name": "Getafe CF", "league": "La Liga", "record": "18W - 2L (90.0%)", "roi": "+66.2%", "foulsAvg": 24.4, "cardsAvg": 5.29, "cornersAvg": 8.9, "tacklesAvg": 27.6, "lock": "Cards Over 3.5 (7/7 = 100%) & Tackles Under 31.5 (7/7 = 100%)"},
     "monaco": {"name": "AS Monaco", "league": "Ligue 1", "record": "8W - 1L last 4g (88.9%)", "roi": "+58.9%", "foulsAvg": 23.6, "cardsAvg": 3.88, "cornersAvg": 9.3, "tacklesAvg": 34.0, "lock": "Fouls Over 21.5 (4/4 last 4g = 100%, 25.0 avg)"},
+    "zvezda": {"name": "FK Crvena Zvezda", "league": "SuperLiga / UECL", "record": "13W - 2L (86.7%)", "roi": "+63.3%", "foulsAvg": 24.3, "cardsAvg": 4.38, "cornersAvg": 10.3, "tacklesAvg": 31.4, "lock": "Fouls Over 20.5 (8/8 = 100%) & Corners Over 8.5 (8/8 >= 10 corners)"},
     "sunderland": {"name": "Sunderland", "league": "Premier League", "record": "16W - 4L (80.0%)", "roi": "+45.3%", "foulsAvg": 22.8, "cardsAvg": 4.25, "cornersAvg": 9.8, "tacklesAvg": 31.4, "lock": "Fouls Over 21.5 (7/8 = 87.5%) & Cards Over 3.5"},
     "atalanta": {"name": "Atalanta", "league": "Serie A", "record": "21W - 6L (77.8%)", "roi": "+43.9%", "foulsAvg": 21.0, "cardsAvg": 2.75, "cornersAvg": 9.8, "tacklesAvg": 30.8, "lock": "Fouls Under 24.5 (8/8 = 100%) & Cards Under 3.5 (7/7 = 100%)"},
     "bournemouth": {"name": "AFC Bournemouth", "league": "Premier League", "record": "18W - 6L (75.0%)", "roi": "+42.0%", "foulsAvg": 24.2, "cardsAvg": 4.80, "cornersAvg": 10.6, "tacklesAvg": 34.5, "lock": "Fouls Over 20.5/21.5 (8/9 = 88.9%) & Cards Over 3.5 (7/8 = 87.5%)"},
@@ -66,8 +74,8 @@ def build_machine_payload() -> dict:
         "updatedAt": datetime.now(timezone.utc).isoformat(),
         "totalMatchesTracked": total_rows,
         "totalTeamsStudied": len(TEAM_PROFILES),
-        "combinedSmallOdds": "22.14x - 24.39x",
-        "combinedHitRate": "91/101 (90.1%)",
+        "combinedSmallOdds": "44.63x - 49.17x (15 Legs)",
+        "combinedHitRate": "113/125 (90.4%)",
         "smallOddsSlip": TONIGHT_SMALL_ODDS_SLIP,
         "bigOddsSlip": TONIGHT_BIG_ODDS_SLIP,
         "weekendTop5Fixtures": WEEKEND_TOP5_FIXTURES,
