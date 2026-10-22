@@ -5,3 +5,7 @@ dist-ssr
 .env
 dist
 .vite
+
+# Python cache
+__pycache__/
+*.pyc
