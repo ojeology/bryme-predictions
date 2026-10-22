@@ -1,6 +1,6 @@
 {
-  "last_updated": "2026-10-22T23:55:00Z",
-  "matches_graded": 21,
+  "last_updated": "2026-10-22T23:58:00Z",
+  "matches_graded": 45,
   "early_7_two_team_accuracy": "7/7 (100.0%)",
   "late_14_matches_with_winning_lock": "11/14 (78.6%)",
   "mixed_slips_accuracy": "4/4 Slips WON (2.31x Fouls \u2705, 2.17x Corners \u2705, 4.28x 5-Leg Builder \u2705, 5.10x Value Builder \u2705)",
@@ -14,18 +14,8 @@
     "RULE 7 (Domestic vs UEFA Desperation Foul Regime Split): Teams sitting on 0 points in UEFA League Phase (Anderlecht 20 fouls at Jagiellonia) foul +45% more than in domestic league games. Weight UEFA match logs 65% vs 35% domestic!",
     "RULE 8 (Early 3-0 Blowout Corner & Card Suppression): When a heavy favourite goes 3-0 up in the first half against a lower-tier opponent (Real Sociedad 6-0 at Lillestr\u00f8m -> 6 corners, 14 fouls; Twente 4-1 at Lincoln -> 7 corners, 2 cards), 2nd-half corners and cards collapse. Prefer Fouls or 1st-Half lines over Full-Time Corners/Cards in heavy mismatches."
   ],
-  "total_matches_evaluated": 30,
-  "learned_adjustments": [
-    {
-      "rule_id": "RULE_09_UCL_CORNER_CROSS_FLOOR_AND_CLEAN_TEMPO",
-      "triggered_by": [
-        "FC Porto 0-1 PSV Eindhoven (5 corners [2-3], 16 fouls, 2 cards; Porto averaged 1.5 corners in UCL MD1-2 despite 5.0 domestically)",
-        "Paris Saint-Germain 4-2 FC Barcelona (5 corners [2-3] despite 40 shots & 19 SOT because total crosses were only 6+4=10; 21 fouls & 1 card)",
-        "Fenerbah\u00e7e 2-2 Slavia Praha (8 corners [3-5] vs 27 fouls & 40 tackles; Fenerbahce averaged 2.7 corners in UCL)",
-        "All 9 Tuesday UCL matches finished Under 4.5 Cards (9/9 = 100%) and 8/9 finished <= 22 Fouls (only Istanbul cauldron had 27 fouls)"
-      ],
-      "root_cause": "In the UEFA Champions League, technical possession sides (PSG, Barcelona, Porto, Napoli, Roma, Man City) play central through-balls with low cross volume (10 crosses in PSG-Barca) and commit far fewer fouls/cards (avg 18.6 fouls & 2.4 cards across 8 non-cauldron UCL games) than Europa/Conference League teams.",
-      "parameter_update": "Weight UEFA corner logs 65% vs 35% domestic, ban Over Corners when either team averages < 3.5 UEFA corners/g or < 14 crosses/g (pivot to Favourite Over 4.5 SOT [4/4 = 100% in UCL, 12/12 = 100% overall] or Fouls Under 24.5 / Cards Under 4.5 [8/8 non-cauldron UCL]), and restrict Filter #4 (0-pt Desperation Under Ban) strictly to UEL/UECL or Cauldrons where both teams average >= 11.5 fouls/g."
-    }
-  ]
+  "thursday_36_accuracy": "31/36 (86.1%)",
+  "tuesday_ucl_9_raw_accuracy": "8/9 (88.9%)",
+  "tuesday_ucl_9_filtered_primary_or_alt": "8/9 (88.9%)",
+  "favourite_sot_over_4_5_record": "12/12 (100.0% across Tuesday UCL + Thursday UEL/UECL)"
 }
