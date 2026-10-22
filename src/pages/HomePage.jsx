@@ -245,6 +245,40 @@ export default function HomePage({ onNavigate }) {
         </div>
       </div>
 
+      {/* ── 1B. TOP-5 LEAGUES WALK-FORWARD BEHAVIOUR MACHINE CALLOUT ── */}
+      <div
+        onClick={() => onNavigate('machine')}
+        className="cursor-pointer rounded-2xl bg-gradient-to-r from-emerald-950 via-[#0E1E32] to-[#0A1324] border-2 border-emerald-500/50 hover:border-emerald-400 p-4 sm:p-5 text-white shadow-xl transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4"
+      >
+        <div className="space-y-1">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="px-2.5 py-0.5 rounded-full bg-emerald-500 text-black font-display font-black text-[10px] uppercase tracking-wider">
+              NEW &bull; WALK-FORWARD AI LAB
+            </span>
+            <span className="text-xs font-mono text-emerald-300 font-bold">
+              91/101 (90.1%) Historical Behaviour Hit Rate &bull; 118 Matches &bull; 92 Top-5 Clubs
+            </span>
+          </div>
+          <h3 className="font-display font-black text-base sm:text-lg text-white">
+            🤖 Top-5 European Leagues Behaviour Machine (Fouls, Cards, Corners &amp; Tackles)
+          </h3>
+          <p className="text-xs text-slate-300">
+            View Tonight&apos;s 12-Leg <strong>22.14x–24.39x</strong> Constant Behaviour Accumulator, 5 Big-Odds Value Plays, all 14 Club Walk-Forward Reports, &amp; the Live Weekend Fixture Value Calculator.
+          </p>
+        </div>
+
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onNavigate('machine');
+          }}
+          className="px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-display font-black text-xs uppercase tracking-wider whitespace-nowrap flex items-center gap-1.5 shadow-md self-stretch sm:self-center justify-center"
+        >
+          <span>Open Behaviour Lab</span>
+          <ArrowRight className="w-4 h-4" />
+        </button>
+      </div>
+
       {/* ── 2. HERO SECTION: THE DUAL CONVICTION FISHHOOK ── */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         

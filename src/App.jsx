@@ -29,29 +29,13 @@ import AdminPage from './pages/AdminPage';
 import ConvertCodesPage from './pages/ConvertCodesPage';
 import ArticlesPage from './pages/ArticlesPage';
 import ArticleDetailPage from './pages/ArticleDetailPage';
+import BehaviourMachinePage from './pages/BehaviourMachinePage';
 
 export default function App() {
   const [currentHash, setCurrentHash] = useState(window.location.hash || '#/');
   const [searchOpen, setSearchOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { ladder, announcements, copyModal, closeCopyModal, adSettings } = usePredictions();
-
-  // Inject Monetag / Adsterra Global Header Scripts dynamically
-  useEffect(() => {
-    if (adSettings?.monetagScript) {
-      const srcMatch = adSettings.monetagScript.match(/src=["']([^"']+)["']/i);
-      if (srcMatch && srcMatch[1]) {
-        // Prevent duplicate injection
-        const existing = document.querySelector(`script[src="${srcMatch[1]}"]`);
-        if (!existing) {
-          const s = document.createElement('script');
-          s.src = srcMatch[1];
-          s.async = true;
-          document.head.appendChild(s);
-        }
-      }
-    }
-  }, [adSettings?.monetagScript]);
+  const { ladder, announcements, copyModal, closeCopyModal } = usePredictions();
 
   useEffect(() => {
     const handleHashChange = () => {
@@ -86,6 +70,7 @@ export default function App() {
       convert: 'Convert Bet Codes (SportyBet, Bet9ja, 1xBet, BetKing) | BRYME',
       markets: '35+ Football Betting Markets Catalogue & Hit Rates | BRYME',
       results: 'Verified Results Ledger (76.9% Win Rate) | BRYME Predictions',
+      machine: 'Top-5 Leagues Walk-Forward Behaviour Machine (Fouls, Cards, Corners, Tackles) | BRYME',
       'editor-picks': 'Weekend 2.00x European Banker Double | BRYME Predictions',
       'weekend-hub': 'African Punters Consensus Hub & Match Polls | BRYME',
       admin: 'Admin Management Deck | BRYME Predictions'
@@ -108,6 +93,10 @@ export default function App() {
       case 'home':
       case '':
         return <HomePage onNavigate={navigate} />;
+      case 'machine':
+      case 'behaviour':
+      case 'bot':
+        return <BehaviourMachinePage onNavigate={navigate} />;
       case 'articles':
       case 'academy':
       case 'guides':

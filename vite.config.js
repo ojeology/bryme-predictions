@@ -9,6 +9,13 @@ export default defineConfig({
     host: '0.0.0.0',
     port: 5173,
     allowedHosts: true,
+    proxy: {
+      '/api': {
+        target: 'https://predictions.thebryme.com',
+        changeOrigin: true,
+        secure: true,
+      },
+    },
   },
   preview: {
     host: '0.0.0.0',

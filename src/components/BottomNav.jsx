@@ -4,9 +4,9 @@ import { Trophy, Users, BarChart2, Layers, Flame } from 'lucide-react';
 export default function BottomNav({ currentRoute, onNavigate }) {
   const items = [
     { id: 'home', label: '18-Ladder', icon: Trophy, hasPulse: true },
-    { id: 'punters', label: 'Punters', icon: Users },
+    { id: 'machine', label: 'Machine', icon: Layers, hasPulse: true },
     { id: 'predictions', label: 'Code Hub', icon: Flame },
-    { id: 'markets', label: 'Markets', icon: Layers },
+    { id: 'punters', label: 'Punters', icon: Users },
     { id: 'results', label: 'Results', icon: BarChart2 },
   ];
 

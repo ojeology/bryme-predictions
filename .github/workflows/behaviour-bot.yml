@@ -1,10 +1,14 @@
-name: Daily Top-5 Leagues Behaviour Bot
+name: Top-5 Leagues Daily & Weekend Behaviour Bot
 
 on:
   schedule:
-    # Runs automatically every day at 06:00 UTC
+    # Daily morning sweep at 06:00 UTC
     - cron: '0 6 * * *'
-  workflow_dispatch: # Allows manual 1-click trigger in GitHub Actions tab
+    # Pre-Weekend Friday afternoon sweep (15:00 UTC) for Fri/Sat/Sun Top-5 League fixtures
+    - cron: '0 15 * * 5'
+    # Saturday & Sunday morning pre-kickoff sweeps (09:00 UTC)
+    - cron: '0 9 * * 6,0'
+  workflow_dispatch: # Manual 1-click run from GitHub Actions tab
 
 permissions:
   contents: write
@@ -24,16 +28,16 @@ jobs:
       - name: Collect latest Top-5 League & UEFA match stats
         run: python3 bot-engine/src/top5_collector.py
 
-      - name: Run Walk-Forward Behaviour Scanner
+      - name: Run Walk-Forward Behaviour Scanner & Update Website Data
         run: python3 bot-engine/src/scanner.py
 
       - name: Sync Behaviour Machine to Cloudflare KV & Telegram Bot
-        run: python3 bot-engine/src/sync_machine_to_kv.py
+        run: python3 bot-engine/src/sync_machine_to_kv.py || true
 
-      - name: Commit & push updated CSVs and Daily Picks
+      - name: Commit & push updated CSVs and Website Behaviour Data
         run: |
           git config user.name "Bryme-Behaviour-Bot"
           git config user.email "bot@predictions.thebryme.com"
-          git add bot-engine/data/*.csv bot-engine/DAILY_PICKS.md
-          git diff --staged --quiet || git commit -m "chore(bot): auto-update Top-5 match stats & walk-forward picks [skip ci]"
+          git add bot-engine/data/*.csv bot-engine/DAILY_PICKS.md src/data/behaviourMachineData.js
+          git diff --staged --quiet || git commit -m "chore(bot): auto-update Top-5 match stats & weekend value picks"
           git push
