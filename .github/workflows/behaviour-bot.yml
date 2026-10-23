@@ -8,7 +8,7 @@ on:
     - cron: '0 15 * * 5'
     # Saturday & Sunday morning pre-kickoff sweeps (09:00 UTC)
     - cron: '0 9 * * 6,0'
-  workflow_dispatch: # Manual 1-click run from GitHub Actions tab
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -19,6 +19,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python 3.11
         uses: actions/setup-python@v5
@@ -28,17 +30,19 @@ jobs:
       - name: Collect latest Top-5 League & UEFA match stats
         run: python3 bot-engine/src/top5_collector.py
 
-      - name: Run Walk-Forward Behaviour Scanner & Update Website Data
+      - name: Run Walk-Forward Behaviour Scanner & Enrich Website Bundles
         run: |
           python3 bot-engine/src/scanner.py
           python3 bot-engine/src/weekend_top5_engine.py
+          python3 bot-engine/src/enrich_machine_data.py
+          python3 bot-engine/src/build_website_live_bundle.py
 
-      - name: Sync Behaviour Machine to Cloudflare KV & Telegram Bot
+      - name: Sync Behaviour Machine & 3.00x Pure OVER Rollover to Cloudflare KV
         run: python3 bot-engine/src/sync_machine_to_kv.py || true
 
       - name: Commit & push updated CSVs and Website Behaviour Data
         run: |
           git config user.name "Bryme-Behaviour-Bot"
           git config user.email "bot@predictions.thebryme.com"
-          git add bot-engine/ src/data/behaviourMachineData.js
-          git diff --staged --quiet || (git pull --rebase origin main && git commit -m "chore(bot): auto-update Top-5 match stats & weekend value picks" && git push)
+          git add bot-engine/ src/data/behaviourMachineData.js src/data/fridayRolloverAndVaultData.js
+          git diff --staged --quiet || (git pull --rebase origin main && git commit -m "chore(bot): auto-update Top-5 match stats & Pure OVER rollover bundle" && git push)

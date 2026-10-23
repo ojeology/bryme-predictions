@@ -71,7 +71,7 @@ async function syncKV() {
       twentyTwoBetAffiliateUrl: 'https://che.fluxbrox.com/redirect.aspx?pid=199669&bid=1488&lpid=25'
     },
     announcements: {
-      tickerText: '★ TUESDAY UCL SPECIAL: Real Madrid vs Dortmund • 2.45x Banker Live',
+      tickerText: '★ DAY 1 LIVE TONIGHT (3.036x PURE OVER ON 22BET): ₦1,000 → ₦3,036 → ₦9,108 → ₦27,324 → ₦81,972 • Zero Unders • Zero Goal Bets',
       dropTimeWAT: '02:00 AM WAT',
       showUclBanner: true
     }

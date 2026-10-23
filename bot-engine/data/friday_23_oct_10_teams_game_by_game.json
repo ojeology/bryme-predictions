@@ -1,0 +1,730 @@
+{
+  "Match 1: VfB Stuttgart vs Borussia M\u00f6nchengladbach (19:30, Bundesliga, Ref: Matthias J\u00f6llenbeck)": {
+    "Stuttgart_2026_27": {
+      "corners_for": [
+        4,
+        10,
+        3,
+        6,
+        8,
+        9,
+        4,
+        8,
+        7
+      ],
+      "corners_ag": [
+        12,
+        5,
+        6,
+        12,
+        3,
+        6,
+        4,
+        3,
+        1
+      ],
+      "corners_tot": [
+        16,
+        15,
+        9,
+        18,
+        11,
+        15,
+        8,
+        11,
+        8
+      ],
+      "fouls_for": [
+        9,
+        6,
+        9,
+        12,
+        13,
+        13,
+        8,
+        12,
+        9
+      ],
+      "fouls_tot": [
+        21,
+        12,
+        23,
+        21,
+        21,
+        30,
+        14,
+        21,
+        24
+      ],
+      "tackles_home_for": [
+        12,
+        7,
+        10,
+        13
+      ],
+      "tackles_home_tot": [
+        20,
+        26,
+        26,
+        23
+      ],
+      "yc_for": [
+        3,
+        1,
+        0,
+        0,
+        2,
+        0,
+        3,
+        0,
+        1
+      ]
+    },
+    "Gladbach_2026_27_Bundesliga": {
+      "fouls_for": [
+        13,
+        14,
+        16,
+        12,
+        17,
+        13
+      ],
+      "fouls_1h": [
+        7,
+        6,
+        10,
+        6,
+        8,
+        8
+      ],
+      "fouls_tot": [
+        23,
+        22,
+        23,
+        26,
+        25,
+        26
+      ],
+      "corners_for": [
+        6,
+        13,
+        2,
+        6,
+        6,
+        3
+      ],
+      "corners_ag": [
+        7,
+        4,
+        6,
+        4,
+        6,
+        6
+      ],
+      "corners_tot": [
+        13,
+        17,
+        8,
+        10,
+        12,
+        9
+      ],
+      "yc_for": [
+        2,
+        3,
+        1,
+        5,
+        1,
+        3
+      ]
+    },
+    "Stuttgart_2026_27_verified_last10": {
+      "corners_for": [
+        6,
+        3,
+        10,
+        3,
+        7,
+        6,
+        5,
+        8,
+        9,
+        9
+      ],
+      "corners_ag": [
+        6,
+        9,
+        8,
+        5,
+        5,
+        2,
+        7,
+        1,
+        5,
+        4
+      ],
+      "corners_tot": [
+        12,
+        12,
+        18,
+        8,
+        12,
+        8,
+        12,
+        9,
+        14,
+        13
+      ]
+    }
+  },
+  "Match 2: Ipswich Town vs Nottingham Forest (20:00, Premier League, Ref: Thomas Bramall)": {
+    "Ipswich_2026_27": {
+      "corners_for_all": [
+        3,
+        5,
+        4,
+        4,
+        3,
+        3,
+        4,
+        2,
+        3
+      ],
+      "corners_for_epl": [
+        3,
+        4,
+        4,
+        3,
+        4,
+        2,
+        3
+      ],
+      "corners_tot_home": [
+        8,
+        8,
+        7,
+        5,
+        7
+      ],
+      "tackles_home_for": [
+        22,
+        15,
+        18,
+        26,
+        18
+      ],
+      "fouls_away_for": [
+        12,
+        16,
+        12,
+        16
+      ],
+      "fouls_home_for": [
+        12,
+        11,
+        6,
+        11,
+        8
+      ],
+      "yc_for": [
+        0,
+        3,
+        3,
+        1,
+        3,
+        2,
+        3,
+        2,
+        2
+      ]
+    },
+    "Forest_2026_27": {
+      "fouls_for": [
+        15,
+        15,
+        10,
+        20,
+        16,
+        12,
+        10,
+        14
+      ],
+      "fouls_tot": [
+        29,
+        27,
+        23,
+        33,
+        27,
+        22,
+        21,
+        22
+      ],
+      "fouls_opp_away": [
+        13,
+        11,
+        11
+      ],
+      "tackles_away_for": [
+        23,
+        23,
+        13
+      ],
+      "tackles_away_opp": [
+        21,
+        17,
+        21
+      ],
+      "tackles_away_tot": [
+        44,
+        40,
+        34
+      ],
+      "yc_for": [
+        2,
+        1,
+        2,
+        3,
+        5,
+        2,
+        2,
+        4
+      ]
+    },
+    "verified_cards_and_corners": {
+      "ipswich_epl_yc_opp_home": [
+        3,
+        3,
+        4
+      ],
+      "ipswich_epl_yc_tot": [
+        3,
+        4,
+        4,
+        4,
+        5,
+        6,
+        3
+      ],
+      "forest_away_epl_yc_for": [
+        2,
+        5,
+        2
+      ],
+      "forest_away_epl_yc_tot": [
+        6,
+        7,
+        4
+      ],
+      "forest_all10_yc_for": [
+        1,
+        1,
+        2,
+        4,
+        2,
+        2,
+        5,
+        2,
+        2,
+        1
+      ],
+      "forest_corners_for_26_27": [
+        3,
+        3,
+        5,
+        2,
+        1,
+        6,
+        8,
+        8
+      ],
+      "forest_corners_ag_26_27": [
+        2,
+        2,
+        3,
+        10,
+        6,
+        2,
+        5,
+        6
+      ]
+    }
+  },
+  "Match 3: Deportivo Alav\u00e9s vs M\u00e1laga CF (20:00, La Liga, Ref: Carlos Mu\u00f1iz Mu\u00f1oz)": {
+    "Alaves_2026_27": {
+      "fouls_for": [
+        16,
+        13,
+        15,
+        14,
+        17,
+        7,
+        13,
+        11,
+        17
+      ],
+      "fouls_opp": [
+        13,
+        14,
+        8,
+        13,
+        16,
+        14,
+        16,
+        14,
+        14
+      ],
+      "fouls_tot": [
+        29,
+        27,
+        23,
+        27,
+        33,
+        21,
+        29,
+        25,
+        31
+      ],
+      "tackles_home_for": [
+        18,
+        22,
+        16,
+        21,
+        21
+      ],
+      "tackles_tot": [
+        30,
+        34,
+        41,
+        33,
+        43,
+        38,
+        41,
+        40,
+        27
+      ],
+      "yc_opp": [
+        3,
+        1,
+        1,
+        2,
+        2,
+        4,
+        2,
+        3,
+        1
+      ]
+    },
+    "Malaga_2026_27": {
+      "corners_for": [
+        1,
+        7,
+        6,
+        6,
+        5,
+        4,
+        9,
+        8,
+        4
+      ],
+      "yc_for": [
+        3,
+        1,
+        2,
+        4,
+        1,
+        5,
+        2,
+        4,
+        1
+      ],
+      "fouls_for": [
+        11,
+        12,
+        9,
+        15,
+        10,
+        17,
+        16,
+        10,
+        4
+      ]
+    },
+    "verified_corners_two_sided": {
+      "alaves_home_corners_ag": [
+        5,
+        3,
+        9,
+        1,
+        5,
+        10
+      ],
+      "alaves_26_27_corners_ag": [
+        3,
+        9,
+        9,
+        1,
+        4,
+        5,
+        5,
+        10,
+        0
+      ],
+      "malaga_away_corners_for": [
+        7,
+        1,
+        6,
+        5,
+        9
+      ]
+    }
+  },
+  "Match 4: Torino vs Monza (19:45, Serie A)": {
+    "Torino_2026_27": {
+      "corners_tot_serie_a": [
+        6,
+        7,
+        8,
+        9,
+        7,
+        7,
+        8
+      ],
+      "yc_for_all": [
+        1,
+        2,
+        1,
+        2,
+        1,
+        3,
+        4,
+        0,
+        1
+      ],
+      "yc_opp_all": [
+        1,
+        0,
+        1,
+        1,
+        3,
+        1,
+        3,
+        3,
+        2
+      ],
+      "tackles_for": [
+        15,
+        12,
+        17,
+        19,
+        13,
+        14,
+        15,
+        17,
+        12
+      ],
+      "tackles_tot_home": [
+        35,
+        26,
+        40,
+        35,
+        31
+      ]
+    },
+    "Monza_2026_27": {
+      "fouls_away": [
+        14,
+        12,
+        16,
+        13,
+        9
+      ],
+      "yc_for_all": [
+        0,
+        2,
+        1,
+        1,
+        2,
+        0,
+        4,
+        1,
+        1
+      ],
+      "yc_opp_all": [
+        2,
+        2,
+        0,
+        1,
+        2,
+        2,
+        1,
+        3,
+        2
+      ]
+    },
+    "verified_corners_two_sided": {
+      "torino_serie_a_tot": [
+        6,
+        7,
+        8,
+        9,
+        7,
+        7,
+        8
+      ],
+      "monza_serie_a_tot": [
+        6,
+        6,
+        9,
+        10,
+        12,
+        13,
+        9
+      ],
+      "coppa_italia_h2h_1_sep_2026_at_torino": {
+        "torino": 8,
+        "monza": 8,
+        "total": 16
+      }
+    }
+  },
+  "Match 5: Stade Brestois vs OGC Nice (19:45, Ligue 1, Ref: Guillaume Paradis)": {
+    "Brest_2026_27": {
+      "yc_for_all10": [
+        0,
+        0,
+        1,
+        1,
+        2,
+        1,
+        1,
+        1,
+        1,
+        2
+      ],
+      "yc_opp_all10": [
+        0,
+        1,
+        1,
+        1,
+        3,
+        1,
+        2,
+        1,
+        1,
+        1
+      ],
+      "yc_tot_all10": [
+        0,
+        1,
+        2,
+        2,
+        5,
+        2,
+        3,
+        2,
+        2,
+        3
+      ],
+      "tackles_opp_home": [
+        18,
+        13,
+        19,
+        15,
+        18
+      ],
+      "fouls_for_26_27": [
+        12,
+        19,
+        16,
+        13,
+        13,
+        5,
+        20
+      ]
+    },
+    "Nice_2026_27": {
+      "tackles_away_for": [
+        13,
+        16,
+        13,
+        19
+      ],
+      "tackles_away_tot": [
+        32,
+        31,
+        35,
+        30
+      ],
+      "corners_away_for": [
+        4,
+        8,
+        9
+      ],
+      "yc_tot_all10": [
+        5,
+        1,
+        3,
+        1,
+        1,
+        4,
+        2,
+        4,
+        2,
+        4
+      ]
+    },
+    "verified_cards_and_corners": {
+      "brest_last10_yc_for": [
+        0,
+        0,
+        1,
+        1,
+        2,
+        1,
+        1,
+        1,
+        1,
+        2
+      ],
+      "nice_26_27_yc_opp": [
+        0,
+        0,
+        2,
+        1,
+        1,
+        1,
+        0
+      ],
+      "nice_away_yc_opp": [
+        1,
+        0,
+        1,
+        0
+      ],
+      "brest_last10_yc_tot": [
+        0,
+        1,
+        2,
+        2,
+        5,
+        2,
+        3,
+        2,
+        2,
+        3
+      ],
+      "nice_last10_yc_tot": [
+        5,
+        1,
+        3,
+        1,
+        1,
+        4,
+        2,
+        4,
+        2,
+        4
+      ]
+    }
+  }
+}

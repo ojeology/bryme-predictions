@@ -9,11 +9,11 @@ import { SYNDICATE_ARCHIVE as DEFAULT_SYNDICATE_ARCHIVE } from '../data/syndicat
 
 const PredictionsContext = createContext(null);
 
-const STORAGE_KEY_LADDER = 'bryme_active_ladder_2odds_v5';
-const STORAGE_KEY_TICKETS = 'bryme_booking_tickets_v5';
+const STORAGE_KEY_LADDER = 'bryme_active_ladder_3odds_v6';
+const STORAGE_KEY_TICKETS = 'bryme_booking_tickets_v6';
 const STORAGE_KEY_CATALOGUE = 'bryme_code_catalogue_v3';
 const STORAGE_KEY_PUNTERS = 'bryme_punters_removed_v5';
-const STORAGE_KEY_ANNOUNCEMENTS = 'bryme_announcements_2odds_v5';
+const STORAGE_KEY_ANNOUNCEMENTS = 'bryme_announcements_3odds_v6';
 const STORAGE_KEY_MARKETS = 'bryme_markets_v2';
 const STORAGE_KEY_WHALE = 'bryme_whale_slip_v1';
 const STORAGE_KEY_ADS = 'bryme_ad_settings_v1';
@@ -141,13 +141,13 @@ export function PredictionsProvider({ children }) {
     try {
       const saved = localStorage.getItem(STORAGE_KEY_ANNOUNCEMENTS);
       return saved ? JSON.parse(saved) : {
-        tickerText: '★ 2.00x ODDS LADDER CHALLENGE RESET: Day 1 Live • Powered by 2-Team Behaviour Machine',
+        tickerText: '★ DAY 1 LIVE TONIGHT (3.036x PURE OVER ON 22BET): ₦1,000 → ₦3,036 → ₦9,108 → ₦27,324 → ₦81,972 • Zero Unders • Zero Goal Bets',
         dropTimeWAT: '02:00 AM WAT',
         showUclBanner: true
       };
     } catch (e) {
       return {
-        tickerText: '★ 2.00x ODDS LADDER CHALLENGE RESET: Day 1 Live • Powered by 2-Team Behaviour Machine',
+        tickerText: '★ DAY 1 LIVE TONIGHT (3.036x PURE OVER ON 22BET): ₦1,000 → ₦3,036 → ₦9,108 → ₦27,324 → ₦81,972 • Zero Unders • Zero Goal Bets',
         dropTimeWAT: '02:00 AM WAT',
         showUclBanner: true
       };
@@ -236,7 +236,7 @@ export function PredictionsProvider({ children }) {
           const json = await res.json();
           if (json.success && json.data && isMounted) {
             const remote = json.data;
-            if (remote.ladder && Number(remote.ladder.dailyOdds) >= 1.95) {
+            if (remote.ladder && remote.ladder.version === '3odds-pure-over-v6') {
               setLadderState(remote.ladder);
             } else {
               setLadderState(DEFAULT_LADDER);

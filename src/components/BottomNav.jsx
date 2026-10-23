@@ -1,13 +1,13 @@
 import React from 'react';
-import { Calendar, ShieldAlert, Trophy, Layers, Calculator } from 'lucide-react';
+import { Flame, Trophy, Lock, ClipboardList, ShieldAlert } from 'lucide-react';
 
 export default function BottomNav({ currentRoute, onNavigate }) {
   const items = [
-    { id: 'friday', label: 'Fri Top-5', icon: Calendar, hasPulse: true },
-    { id: 'thursday', label: 'Thu UEFA', icon: Layers, hasPulse: true },
-    { id: 'tuesday', label: 'Tue UCL', icon: Calendar },
-    { id: 'whynot', label: 'Why Not', icon: ShieldAlert },
-    { id: 'ladder', label: '2x-Ladder', icon: Trophy },
+    { id: 'friday', label: 'Fri 3.04x', icon: Flame, hasPulse: true },
+    { id: 'ladder', label: '3x Rollover', icon: Trophy, hasPulse: true },
+    { id: 'vault', label: '100% Vault', icon: Lock },
+    { id: 'ledger', label: '54 Ledger', icon: ClipboardList },
+    { id: 'whynot', label: 'Line Rules', icon: ShieldAlert },
   ];
 
   return (
@@ -21,9 +21,7 @@ export default function BottomNav({ currentRoute, onNavigate }) {
               key={item.id}
               onClick={() => onNavigate(item.id)}
               className={`flex flex-col items-center justify-center flex-1 h-full py-1 transition-all relative ${
-                isActive 
-                  ? 'text-emerald-400 font-black' 
-                  : 'text-slate-400 hover:text-white'
+                isActive ? 'text-emerald-400 font-black' : 'text-slate-400 hover:text-white'
               }`}
             >
               <div className="relative">

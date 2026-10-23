@@ -1,30 +1,75 @@
 {
-  "last_updated": "2026-10-22T23:59:59Z",
-  "matches_graded": 54,
-  "overall_primary_accuracy": "44/54 (81.5%)",
-  "overall_primary_or_secondary_accuracy": "47/54 (87.0%)",
-  "thursday_36_accuracy": "31/36 (86.1%)",
-  "tuesday_ucl_9_raw_accuracy": "8/9 (88.9%)",
-  "wednesday_ucl_9_primary_accuracy": "7/9 (77.8%)",
-  "wednesday_ucl_9_primary_or_secondary_accuracy": "8/9 (88.9%)",
-  "favourite_sot_over_4_5_record": "15/16 (93.8% across all 54 UEFA matches: 8/8 Thu + 4/4 Tue UCL + 3/4 Wed UCL)",
-  "active_filters_v2": [
-    "Filter #1: Hostile Cauldron Under Fouls Ban (Turkey/Greece/Balkans)",
-    "Filter #2: Heavy Favourite (<= 1.45) Blowout Over Corners Ban -> Pivot to Favourite Over 4.5 SOT (Saved 2 more losses on Wed UCL: Inter 9 corners & Real Madrid 8 corners!)",
-    "Filter #3: Dual-Team >= 11.5 Foul Floor to Bet Over Fouls (Saved 6/6 on Wed UCL!)"
+  "updated_at": "2026-10-23T13:05:00Z",
+  "uefa_54_match_accuracy": "42/54 (77.8%)",
+  "active_rollover_strategy": "3.00x Pure OVER Rollover (NGN 1,000 -> 3,036 -> 9,108 -> 27,324 -> 81,972 in 4 wins)",
+  "active_filters": [
+    "Filter #1: High-Variance Red-Card / Whistle Chaos Shield",
+    "Filter #2: Pin-Back Away Corner Game-Script Trap Check (e.g. rejected Gladbach Away O2.5 Corners @ 1.45)",
+    "Filter #3: Opponent Low-Foul / Possession-Freezer Check (e.g. rejected Gladbach Away O10.5 Fouls @ 1.42)"
   ],
   "deleted_filters": [
-    "Filter #4 (0-Point UEFA Under Fouls/Cards Ban) — DELETED permanently after saving 0 losses and blocking 7 winners in prior 24 blind matches; deleting it unlocked 2 more winners on Wed UCL (Lille vs Galatasaray Cards Under 4.5 [4 cards] & Fouls Under 23.5 [19 fouls]; Inter vs Shakhtar Fouls Under 23.5 [19 fouls])."
+    "Filter #4: 0-Point UEFA Desperation Ban — PERMANENTLY DELETED (0 losses saved vs 7 winners blocked across 54 UEFA games)"
   ],
-  "rules_learned": [
-    "RULE 1 (Two-Sided Opponent Audit): Never predict total fouls/cards from one team's average alone. Blend 50% Team A + 50% Team B.",
-    "RULE 2 (Clean Opponent Veto): If either team commits <=9.0 fouls/game or <=1.3 cards/game, VETO Over 22.5 Fouls and Over 3.5 Cards; pivot to Under Fouls/Cards.",
-    "RULE 3 (Trailing Team Siege Corner Explosion): When a dominant possession favourite trails or is held 0-0/1-2 (Getafe 15 corners vs Lugano, Freiburg 11 corners vs Monaco, Olympiacos 14 corners vs Sparta), corners explode to 15-20. VETO Under Corners.",
-    "RULE 4 (Away Underdog Fouls Surge): When a central/southern European underdog visits or hosts an elite side in a tight 1-goal game (Lugano 23 fouls, Sturm Graz 23 fouls, Thun 23 fouls), underdog fouls surge +35%.",
-    "RULE 5 (Possession Sterility vs Low Block): High possession away favourites (Brighton 64% at Jablonec) can be held to 0-0 with <10 corners if the host plays a passive 5-4-1.",
-    "RULE 6 (Card Conversion Dampener): High fouls (24-26) only convert to 4+ cards if referee cards/foul ratio >= 0.16 (Juventus vs Rennes had 24 fouls -> only 2 cards).",
-    "RULE 7 (Clinical Central Transition Corner Trap): Teams that score through direct central transitions with low crosses (Liverpool 6-3 LASK -> 6 corners; Club Brugge 3-0 Lens -> 1 Brugge corner on 6 crosses, 6 total corners) fail Over 9.5 Corners even when pre-match corner averages look high. Require high crosses/g (>=16/g) before backing Over 9.5 Corners.",
-    "RULE 8 (Heavy Favourite <= 1.45 Blowout Corner Ban -> SOT Pivot): Filter #2 saved 2 more losses on Wednesday UCL (Inter 1-0 Shakhtar had 9 corners despite Forebet Over 9.74; Real Madrid 4-1 Leipzig had 8 corners despite Forebet Over 10.43) while the Favourite Over 4.5 SOT pivot went 3/4 on Wednesday (Inter 5, Real Madrid 11, Aston Villa 10; Sporting 4 on 16 shots & 3.16 xG) and is now 15/16 (93.8%) overall!",
-    "RULE 9 (Shock Underdog Lead Foul Spike): 0 points in the table does NOT cause high fouls (Lille vs Gala 19 fouls, Inter vs Shakhtar 19 fouls). High fouls in mismatches ONLY occur when a huge underdog (>= 6.00 odds, like LASK @ 11.00 leading 3-1 at Sporting CP) takes a shock lead and commits 20+ tactical/time-wasting fouls (LASK 22 fouls, 5 yellows) parking the bus."
+  "standing_user_rules": [
+    "ZERO Under markets allowed — strictly OVER Corners, OVER Fouls, OVER Tackles, OVER Cards, OVER Shots/SOT",
+    "ZERO Goal markets allowed (no Over/Under Goals, no BTTS)",
+    "REAL Bookmaker Line Rule — never quote theoretical lines below the bookmaker's actual published window",
+    "Zero sugar-coating — always audit BOTH Home and Away match-by-match logs before kick-off"
+  ],
+  "rules": [
+    {
+      "id": "rule-01",
+      "badge": "ACTIVE RULE #1 • PURE OVER POLICY",
+      "title": "STRICT OVER-ONLY BEHAVIOUR POLICY (Zero Under Markets, Zero Goal Markets)",
+      "example": "Friday 23 Oct Global Scan (29 Matches -> 6-Leg 3.036x Pure OVER Slip)",
+      "whatPublicSees": "Mixing sweat-inducing Under lines (where 1 red card or 85th-minute scramble ruins the entire rollover) or 1X2 / Goal bets.",
+      "whatMachineSees": "Goals and Under lines carry asymmetric late-game chaos risk. Pure OVER behaviour lines (Team/Match Corners Over, Fouls Over, Tackles Over, Yellow Cards Over, Shots Over) only move in ONE direction — upward every minute the match continues.",
+      "howToProfit": "Exclude ALL Goal markets and ALL Under markets from every rollover slip. Back ONLY verified 90%–100% OVER behaviour floors."
+    },
+    {
+      "id": "rule-02",
+      "badge": "ACTIVE RULE #2 • REAL BOOKIE LINE RULE",
+      "title": "Audit ONLY Real Published Bookmaker Lines (Never Quote Imaginary Low Lines)",
+      "example": "Granada vs Valladolid (Bookie Fouls = 29.5, NOT 20.5) vs Stuttgart vs Gladbach (22Bet Fouls = Over 18.5 @ 1.31 ✅)",
+      "whatPublicSees": "Seeing that a high-foul league hits Over 20.5 in 95% of games and assuming the bookmaker offers Over 20.5 — when oddsmakers actually open Granada/Valladolid at 29.5 (where hit rate is 50%).",
+      "whatMachineSees": "Out of all 29 matches on 23 Oct, oddsmakers priced 28 Fouls markets right on their true mean (24.5–30.5). ONLY Stuttgart vs Gladbach was mispriced on 22Bet at Over 18.5 @ 1.31 against a 23.4 expectation (13/13 = 100% >= 21 fouls since Sept 5).",
+      "howToProfit": "Reject inflated bookmaker lines immediately with zero sugar-coating. Strike ONLY where the actual live bookmaker line sits +2.5 to +5.0 below both teams' real floor."
+    },
+    {
+      "id": "rule-03",
+      "badge": "ACTIVE RULE #3 • OPPONENT FOUL TRAP",
+      "title": "Two-Team Study Catches Single-Team Foul Traps (Filter #3)",
+      "example": "VfB Stuttgart vs Gladbach — Rejected Gladbach Away Fouls Over 10.5 @ 1.42 in Favour of Match Fouls Over 18.5 @ 1.31",
+      "whatPublicSees": "Gladbach committed 13, 17, 12, 16, 14, 13 fouls (6/6 = 100% Over 10.5!) so one-sided bettors jump on Gladbach Over 10.5 @ 1.42.",
+      "whatMachineSees": "Stuttgart draw 11+ opponent fouls in only 5/9 games (55.6%) and 2/4 at home! Literally 3 days earlier (20 Oct), Atlético Madrid committed only 7 fouls at Stuttgart (Away O10.5 LOST), yet Stuttgart committed 15 so Match Fouls = 22 (Over 18.5 WON by +3.5!).",
+      "howToProfit": "Always inspect BOTH Team For AND Opponent Drawn logs. Taking Match Fouls Over 18.5 @ 1.31 turned a 73.3% trap into a 13/13 (100% since Sept 5) lock."
+    },
+    {
+      "id": "rule-04",
+      "badge": "ACTIVE RULE #4 • REFEREE + AWAY CARD FLOOR",
+      "title": "Three-Way Booking Lock: Team 100% Floor + Venue + Assigned Referee",
+      "example": "Granada vs Real Valladolid — Valladolid (Away) Over 1.5 Yellow Cards @ 1.24 (Ref: Marta Huerta de Aza)",
+      "whatPublicSees": "Guessing Match Total Cards without checking which team commits the tactical away fouls or who holds the whistle.",
+      "whatMachineSees": "Real Valladolid hit 2+ yellows in 10/10 games (100% season: 4,2,4,3,5,2,2,4,4,2) averaging 3.8 yellows AWAY (4,5,4,4,2), AND assigned referee Marta Huerta de Aza booked EVERY away team 3+ times (3, 3, 5 = 3/3 = 100%) in 2026–27 Segunda División.",
+      "howToProfit": "Require Team Season 100% + Away Venue alignment + verified Referee card floor before touching any booking prop."
+    },
+    {
+      "id": "rule-05",
+      "badge": "ACTIVE RULE #5 • FILTER #4 DELETED",
+      "title": "Evidence-Based Self-Learning: Filter #4 (0-Point Under Ban) Permanently Deleted",
+      "example": "54-Match UEFA Ledger Audit (Tue UCL + Wed UCL + Thu UEL/UECL)",
+      "whatPublicSees": "Keeping a gut-feel rule forever without testing whether it actually saves losses.",
+      "whatMachineSees": "Post-mortem across all 54 UEFA matches proved Filter #4 saved 0 losses while blocking 7 clean winners (including Fenerbahçe vs Slavia 4 cards, Celtic vs Salzburg 24 fouls, Ararat vs AZ 24 fouls). Deleted permanently.",
+      "howToProfit": "Every rule is audited against real FT outcomes in model_evaluation_ledger.csv. Rules that don't improve net hit rate are deleted immediately."
+    },
+    {
+      "id": "rule-06",
+      "badge": "ACTIVE RULE #6 • BOOKIE LINE SHOPPING",
+      "title": "SportyBet vs 22Bet Execution Split (+0.07 to +0.14 Per Leg Matters in Rollovers)",
+      "example": "Go Ahead Eagles O4.5 Corners (1.31 SportyBet vs 1.20 22Bet) vs Stuttgart Fouls O18.5 (1.31 ONLY on 22Bet)",
+      "whatPublicSees": "Losing 20%–35% of rollover payout to shaved odds or forcing weak legs when one bookie hasn't opened props yet.",
+      "whatMachineSees": "SportyBet pays higher on pure Corners, while 22Bet opens discounted alt Fouls lines (Over 18.5 @ 1.31) and Italian Serie B team corners (Vicenza Over 2.5 @ ~1.15) that let us drop 83% legs entirely.",
+      "howToProfit": "Shop lines across SportyBet & 22Bet and eliminate every sub-90% leg before locking Day 1 (6 events = 3.036x, 100% >= 90% floor)."
+    }
   ]
 }

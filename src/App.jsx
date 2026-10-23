@@ -68,6 +68,10 @@ export default function App() {
       case '':
       case 'friday':
         return <BehaviourMachinePage initialTab="friday" onNavigate={navigate} />;
+      case 'vault':
+        return <BehaviourMachinePage initialTab="vault" onNavigate={navigate} />;
+      case 'ledger':
+        return <BehaviourMachinePage initialTab="ledger" onNavigate={navigate} />;
       case 'thursday':
         return <BehaviourMachinePage initialTab="thursday" onNavigate={navigate} />;
       case 'tuesday':
@@ -75,7 +79,7 @@ export default function App() {
       case 'whynot':
         return <BehaviourMachinePage initialTab="whynot" onNavigate={navigate} />;
       case 'challenge':
-        return <BehaviourMachinePage initialTab="challenge" onNavigate={navigate} />;
+        return <LadderPage onNavigate={navigate} />;
       case 'clubs':
         return <BehaviourMachinePage initialTab="clubs" onNavigate={navigate} />;
       case 'calculator':
@@ -147,14 +151,14 @@ export default function App() {
               <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
             </span>
             <span className="font-bold text-white uppercase tracking-wider">
-              PERSONAL BOT STUDY LAB &bull; TWO-TEAM ACCURACY TODAY: 7/7 (100%) ON FINISHED MATCHES
+              DAY 1 PLACED ON 22BET: 6 PURE OVER LEGS @ 3.036x (₦1,000 &rarr; ₦3,036 TONIGHT!)
             </span>
           </div>
 
           <div className="hidden sm:flex items-center gap-4 text-slate-400">
-            <span>Schedule: <strong className="text-emerald-400">Fri (Weekend Top-5) &bull; Tue (UCL) &bull; Thu (UEL/UECL)</strong></span>
+            <span>UCL Strict: <strong className="text-emerald-400">16/18 (88.9%)</strong></span>
             <span>&bull;</span>
-            <span>2.00x Challenge: <strong className="text-amber-300">Day 1 Live</strong></span>
+            <span>4-Win Monthly Goal: <strong className="text-amber-300">₦81,972 (+₦51.9K Net Profit)</strong></span>
           </div>
         </div>
       </div>

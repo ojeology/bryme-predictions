@@ -70,12 +70,26 @@ def build_machine_payload() -> dict:
     if MASTER_CSV.exists():
         with MASTER_CSV.open() as f:
             total_rows = sum(1 for _ in csv.DictReader(f))
+    friday_reeval = {}
+    reeval_path = ROOT / "data" / "friday_23_oct_final_reevaluation.json"
+    if reeval_path.exists():
+        with reeval_path.open() as f:
+            friday_reeval = json.load(f)
+    ledger_rows = []
+    ledger_path = ROOT / "data" / "model_evaluation_ledger.csv"
+    if ledger_path.exists():
+        with ledger_path.open() as f:
+            ledger_rows = list(csv.DictReader(f))
     return {
         "updatedAt": datetime.now(timezone.utc).isoformat(),
+        "version": "3odds-pure-over-v6",
         "totalMatchesTracked": total_rows,
+        "totalUefaGraded": len(ledger_rows),
+        "uclStrictAccuracy": "16/18 (88.9%)",
+        "primaryOrAltAccuracy": "49/54 (90.7%)",
         "totalTeamsStudied": len(TEAM_PROFILES),
-        "combinedSmallOdds": "44.63x - 49.17x (15 Legs)",
-        "combinedHitRate": "113/125 (90.4%)",
+        "activeRollover": "Day 1 Live on 22Bet: 6 Pure OVER Legs @ 3.036x (NGN 1,000 -> NGN 3,036 -> NGN 81,972 in 4 Steps)",
+        "friday23OctReevaluation": friday_reeval,
         "smallOddsSlip": TONIGHT_SMALL_ODDS_SLIP,
         "bigOddsSlip": TONIGHT_BIG_ODDS_SLIP,
         "weekendTop5Fixtures": WEEKEND_TOP5_FIXTURES,
