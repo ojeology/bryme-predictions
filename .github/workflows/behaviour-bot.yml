@@ -1,20 +1,21 @@
-name: Top-5 Leagues Daily & Weekend Behaviour Bot
+name: Ground Zero Automated Post-Matchweek Retraining & Intelligence Bot
 
 on:
   schedule:
-    # Daily morning sweep at 06:00 UTC
+    # Post-Champions League Retraining (Tue & Wed 22:35 UTC / 23:35 WAT)
+    - cron: '35 22 * * 2,3'
+    # Post-Europa & Conference League Retraining (Thu 22:45 UTC / 23:45 WAT)
+    - cron: '45 22 * * 4'
+    # Pre-Weekend Scan & Post-Matchweek Retraining (Fri/Sat/Sun)
     - cron: '0 6 * * *'
-    # Pre-Weekend Friday afternoon sweep (15:00 UTC) for Fri/Sat/Sun Top-5 League fixtures
-    - cron: '0 15 * * 5'
-    # Saturday & Sunday morning pre-kickoff sweeps (09:00 UTC)
-    - cron: '0 9 * * 6,0'
+    - cron: '30 21 * * 5,6,0'
   workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  collect-and-predict:
+  collect-retrain-compile:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -27,22 +28,23 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Collect latest Top-5 League & UEFA match stats
+      - name: Collect latest League, UEFA & Referee Behaviour Stats
         run: python3 bot-engine/src/top5_collector.py
 
-      - name: Run Walk-Forward Behaviour Scanner & Enrich Website Bundles
+      - name: Retrain Weights, Rebuild 100% Vault, Ledger & Ground Zero Data Bundle
         run: |
           python3 bot-engine/src/scanner.py
           python3 bot-engine/src/weekend_top5_engine.py
           python3 bot-engine/src/enrich_machine_data.py
           python3 bot-engine/src/build_website_live_bundle.py
+          python3 bot-engine/src/compile_ground_zero_site_data.py
 
-      - name: Sync Behaviour Machine & 3.00x Pure OVER Rollover to Cloudflare KV
+      - name: Sync Ground Zero State to Cloudflare KV
         run: python3 bot-engine/src/sync_machine_to_kv.py || true
 
-      - name: Commit & push updated CSVs and Website Behaviour Data
+      - name: Commit & Push Updated Retraining Weights, Ledger & Ground Zero Bundle
         run: |
-          git config user.name "Bryme-Behaviour-Bot"
+          git config user.name "Ground-Zero-Bot"
           git config user.email "bot@predictions.thebryme.com"
-          git add bot-engine/ src/data/behaviourMachineData.js src/data/fridayRolloverAndVaultData.js
-          git diff --staged --quiet || (git pull --rebase origin main && git commit -m "chore(bot): auto-update Top-5 match stats & Pure OVER rollover bundle" && git push)
+          git add bot-engine/ src/data/
+          git diff --staged --quiet || (git pull --rebase origin main && git commit -m "chore(retrain): auto-retrain club weights, vault & Ground Zero matchweek intelligence" && git push)

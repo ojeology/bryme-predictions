@@ -1,32 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import Header from './components/Header';
-import Sidebar from './components/Sidebar';
-import BottomNav from './components/BottomNav';
-import Footer from './components/Footer';
-import SearchModal from './components/SearchModal';
-import CopySuccessModal from './components/CopySuccessModal';
-import { usePredictions } from './context/PredictionsContext';
-import { X } from 'lucide-react';
-
-// Pages
-import BehaviourMachinePage from './pages/BehaviourMachinePage';
-import LadderPage from './pages/LadderPage';
-import PredictionsPage from './pages/PredictionsPage';
-import MarketsDirectoryPage from './pages/MarketsDirectoryPage';
-import MarketDetailPage from './pages/MarketDetailPage';
-import WeekendHubPage from './pages/WeekendHubPage';
-import EditorPicksPage from './pages/EditorPicksPage';
-import TicketDetailPage from './pages/TicketDetailPage';
-import ResultsArchivePage from './pages/ResultsArchivePage';
-import BookmakersPage from './pages/BookmakersPage';
-import AboutPage from './pages/AboutPage';
-import EditorialPolicyPage from './pages/EditorialPolicyPage';
-import ResponsibleGamblingPage from './pages/ResponsibleGamblingPage';
-import ContactPage from './pages/ContactPage';
-import AdminPage from './pages/AdminPage';
-import ConvertCodesPage from './pages/ConvertCodesPage';
-import ArticlesPage from './pages/ArticlesPage';
-import ArticleDetailPage from './pages/ArticleDetailPage';
+import React, { useState, useEffect, useMemo } from 'react';
+import { GROUND_ZERO } from './data/groundZeroData';
+import CommandCenterView from './groundzero/CommandCenterView';
+import LeagueBatchesView from './groundzero/LeagueBatchesView';
+import VaultAndClubDirectoryView, { DedicatedTeamPage } from './groundzero/VaultAndClubPageView';
+import RefereesView from './groundzero/RefereesView';
+import RetrainingAndLedgerView from './groundzero/RetrainingAndLedgerView';
+import MidweekUefaView from './groundzero/MidweekUefaView';
+import { Search, Flame, Layers, Lock, Scale, RefreshCw, Trophy, X } from 'lucide-react';
 
 class AppErrorBoundary extends React.Component {
   constructor(props) {
@@ -39,14 +19,14 @@ class AppErrorBoundary extends React.Component {
   render() {
     if (this.state.error) {
       return (
-        <div className="p-6 rounded-2xl bg-[#0E1626] border border-rose-500/50 text-white space-y-3">
-          <h2 className="text-lg font-bold text-rose-400">Section Recovery Mode</h2>
+        <div className="p-6 rounded-2xl bg-[#0B1222] border border-rose-500/50 text-white space-y-3">
+          <h2 className="text-lg font-bold text-rose-400">Ground Zero View Recovery</h2>
           <p className="text-xs font-mono text-slate-300">{String(this.state.error?.message || this.state.error)}</p>
           <button
-            onClick={() => { this.setState({ error: null }); window.location.hash = '#/friday'; }}
+            onClick={() => { this.setState({ error: null }); window.location.hash = '#/'; }}
             className="px-4 py-2 rounded-xl bg-emerald-500 text-slate-950 font-bold text-xs"
           >
-            Reload View
+            Return to Command Center
           </button>
         </div>
       );
@@ -56,219 +36,212 @@ class AppErrorBoundary extends React.Component {
 }
 
 export default function App() {
-  const [currentHash, setCurrentHash] = useState(window.location.hash || '#/');
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { copyModal, closeCopyModal } = usePredictions();
+  const [hash, setHash] = useState(window.location.hash || '#/');
+  const [quickQuery, setQuickQuery] = useState('');
 
   useEffect(() => {
-    const handleHashChange = () => {
-      setCurrentHash(window.location.hash || '#/');
-      setSidebarOpen(false);
+    const onHash = () => {
+      setHash(window.location.hash || '#/');
       window.scrollTo(0, 0);
     };
-
-    window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
+    window.addEventListener('hashchange', onHash);
+    return () => window.removeEventListener('hashchange', onHash);
   }, []);
 
+  useEffect(() => {
+    document.title = 'GROUND ZERO | Football Match Behaviour & 3.00x Pure OVER Intelligence';
+  }, [hash]);
+
   const navigate = (path) => {
-    setSidebarOpen(false);
-    const cleanPath = path.startsWith('#') ? path : `#/${path.replace(/^\//, '')}`;
-    window.location.hash = cleanPath;
+    setQuickQuery('');
+    const clean = path.startsWith('#') ? path : `#/${path.replace(/^\//, '')}`;
+    window.location.hash = clean;
   };
 
-  // Parse route and parameter from hash
-  const rawRoute = currentHash.replace(/^#\/?/, '').trim();
-  const segments = rawRoute.split('/');
-  const mainRoute = segments[0] || 'friday';
-  const param = segments[1] || '';
+  const parts = hash.replace(/^#\/?/, '').trim().split('/');
+  const route = parts[0] || 'command';
+  const param = parts[1] || '';
 
-  useEffect(() => {
-    document.title = 'BRYME Bot Lab | Personal Two-Team Behaviour Machine & Pattern Discovery';
-  }, [mainRoute, param]);
+  // Instant Omnibox Results across all 307 Clubs + 22 Leagues + 197 Referees
+  const searchHits = useMemo(() => {
+    const q = quickQuery.trim().toLowerCase();
+    if (q.length < 2) return [];
+    const clubHits = (GROUND_ZERO.clubs || [])
+      .filter(c => c.name.toLowerCase().includes(q) || c.slug.includes(q))
+      .slice(0, 6)
+      .map(c => ({ type: 'CLUB PAGE', label: `${c.name} (${c.league})`, target: `team/${c.slug}` }));
+    const refHits = (GROUND_ZERO.referees || [])
+      .filter(r => r.name.toLowerCase().includes(q))
+      .slice(0, 3)
+      .map(r => ({ type: 'REFEREE', label: `${r.name} (${r.avgFouls}F / ${r.avgYellows}YC)`, target: `referees/${r.slug}` }));
+    const lgHits = (GROUND_ZERO.leagueBatches || [])
+      .filter(l => l.name.toLowerCase().includes(q))
+      .slice(0, 3)
+      .map(l => ({ type: 'LEAGUE BATCH', label: `${l.flag} ${l.name} (${l.totalMatches} Matches)`, target: `league/${l.slug}` }));
+    return [...clubHits, ...lgHits, ...refHits];
+  }, [quickQuery]);
 
-  // Render Personal Bot Study Lab by default on home & schedule routes
-  const renderContent = () => {
-    switch (mainRoute) {
-      case 'home':
-      case '':
-      case 'friday':
-        return <BehaviourMachinePage initialTab="friday" onNavigate={navigate} />;
-      case 'vault':
-        return <BehaviourMachinePage initialTab="vault" onNavigate={navigate} />;
-      case 'ledger':
-        return <BehaviourMachinePage initialTab="ledger" onNavigate={navigate} />;
-      case 'thursday':
-        return <BehaviourMachinePage initialTab="thursday" onNavigate={navigate} />;
-      case 'tuesday':
-        return <BehaviourMachinePage initialTab="tuesday" onNavigate={navigate} />;
-      case 'whynot':
-        return <BehaviourMachinePage initialTab="whynot" onNavigate={navigate} />;
-      case 'challenge':
-        return <LadderPage onNavigate={navigate} />;
-      case 'clubs':
-        return <BehaviourMachinePage initialTab="clubs" onNavigate={navigate} />;
-      case 'calculator':
-        return <BehaviourMachinePage initialTab="calculator" onNavigate={navigate} />;
-      case 'machine':
-      case 'behaviour':
-      case 'bot':
-        return <BehaviourMachinePage initialTab={param || 'friday'} onNavigate={navigate} />;
-      case 'ladder':
-        return <LadderPage onNavigate={navigate} />;
-      case 'admin':
-        return <AdminPage onNavigate={navigate} />;
-      case 'articles':
-      case 'academy':
-      case 'guides':
-        return <ArticlesPage onNavigate={navigate} />;
-      case 'article':
-        return <ArticleDetailPage slug={param} onNavigate={navigate} />;
-      case 'convert':
-      case 'converter':
-      case 'catalogue':
-        return <ConvertCodesPage onNavigate={navigate} />;
-      case 'predictions':
-        return <PredictionsPage onNavigate={navigate} />;
-      case 'markets':
-        return <MarketsDirectoryPage onNavigate={navigate} />;
-      case 'market':
-        return <MarketDetailPage marketId={param} onNavigate={navigate} />;
-      case 'weekend-hub':
-        return <WeekendHubPage onNavigate={navigate} />;
-      case 'editor-picks':
-        return <EditorPicksPage onNavigate={navigate} />;
-      case 'ticket':
-        return <TicketDetailPage ticketId={param} onNavigate={navigate} />;
-      case 'results':
-        return <ResultsArchivePage initialTab={param} onNavigate={navigate} />;
-      case 'bookmakers':
-        return <BookmakersPage onNavigate={navigate} />;
-      case 'about':
-        return <AboutPage onNavigate={navigate} />;
-      case 'editorial-policy':
-        return <EditorialPolicyPage onNavigate={navigate} />;
-      case 'responsible-gambling':
-        return <ResponsibleGamblingPage onNavigate={navigate} />;
-      case 'contact':
-        return <ContactPage onNavigate={navigate} />;
-      default:
-        return <BehaviourMachinePage initialTab="friday" onNavigate={navigate} />;
+  const navTabs = [
+    { id: 'command', label: '3.00x Command (Step 1–4)', short: '3x Ladder', icon: Flame },
+    { id: 'leagues', label: `Weekend Leagues (${GROUND_ZERO.meta.totalWeekendMatches})`, short: 'Leagues', icon: Layers },
+    { id: 'vault', label: `100% Vault & ${GROUND_ZERO.meta.totalClubs} Clubs`, short: '100% Vault', icon: Lock },
+    { id: 'referees', label: `Referees (${GROUND_ZERO.meta.totalReferees})`, short: 'Referees', icon: Scale },
+    { id: 'retrain', label: 'Retraining & 54 Ledger', short: 'Ledger', icon: RefreshCw },
+    { id: 'uefa', label: 'UCL & UEL Lab', short: 'UEFA', icon: Trophy },
+  ];
+
+  const renderMain = () => {
+    if (route === 'team' || route === 'clubs') {
+      return param
+        ? <DedicatedTeamPage data={GROUND_ZERO} teamSlug={param} onNavigate={navigate} />
+        : <VaultAndClubDirectoryView data={GROUND_ZERO} onNavigate={navigate} />;
     }
+    if (route === 'leagues' || route === 'weekend') {
+      return <LeagueBatchesView data={GROUND_ZERO} initialDay={param || 'ALL'} onNavigate={navigate} />;
+    }
+    if (route === 'league') {
+      return <LeagueBatchesView data={GROUND_ZERO} initialLeague={param || 'ALL'} onNavigate={navigate} />;
+    }
+    if (route === 'vault') {
+      return <VaultAndClubDirectoryView data={GROUND_ZERO} onNavigate={navigate} />;
+    }
+    if (route === 'referees' || route === 'referee') {
+      return <RefereesView data={GROUND_ZERO} highlightSlug={param} onNavigate={navigate} />;
+    }
+    if (route === 'retrain' || route === 'ledger' || route === 'whynot' || route === 'calculator') {
+      return <RetrainingAndLedgerView data={GROUND_ZERO} initialSection={route === 'whynot' ? 'rules' : route} onNavigate={navigate} />;
+    }
+    if (route === 'uefa' || route === 'tuesday' || route === 'thursday') {
+      return <MidweekUefaView data={GROUND_ZERO} onNavigate={navigate} />;
+    }
+    return <CommandCenterView data={GROUND_ZERO} onNavigate={navigate} />;
   };
 
   return (
-    <div className="min-h-screen bg-[#070B16] text-slate-100 flex flex-col font-sans transition-colors overflow-x-hidden w-full max-w-full">
-      
-      {/* 1. Personal Research Lab Header */}
-      <Header 
-        currentRoute={mainRoute} 
-        onNavigate={navigate} 
-        onOpenSearch={() => setSearchOpen(true)}
-        onOpenSidebar={() => setSidebarOpen(true)}
-      />
-
-      {/* 2. Personal Study Status Ticker */}
-      <div className="bg-[#050914] border-b border-blue-900/40 text-xs py-1.5 px-3 text-slate-300 overflow-x-auto scrollbar-none">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4 text-[11px] font-mono whitespace-nowrap">
-          <div className="flex items-center gap-2">
-            <span className="flex h-2 w-2 relative">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-            </span>
-            <span className="font-bold text-white uppercase tracking-wider">
-              DAY 1 PLACED ON 22BET: 6 PURE OVER LEGS @ 3.036x (₦1,000 &rarr; ₦3,036 TONIGHT!)
-            </span>
-          </div>
-
-          <div className="hidden sm:flex items-center gap-4 text-slate-400">
-            <span>UCL Strict: <strong className="text-emerald-400">16/18 (88.9%)</strong></span>
-            <span>&bull;</span>
-            <span>4-Win Monthly Goal: <strong className="text-amber-300">₦81,972 (+₦51.9K Net Profit)</strong></span>
-          </div>
-        </div>
-      </div>
-
-      {/* 3. Main Layout Container with Desktop Sidebar */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-6">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          
-          {/* Left Desktop Sticky Sidebar */}
-          <div className="hidden lg:block lg:col-span-4 xl:col-span-3 space-y-4">
-            <div className="sticky top-20">
-              <Sidebar currentRoute={mainRoute} onNavigate={navigate} />
+    <div className="min-h-screen bg-[#050912] text-slate-100 flex flex-col font-sans pb-20 lg:pb-8">
+      {/* ── CLEAN GROUND ZERO TOP TERMINAL BAR ── */}
+      <header className="sticky top-0 z-40 bg-[#070D1B]/95 backdrop-blur-xl border-b border-slate-800/90 shadow-xl">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 py-3 flex flex-col md:flex-row md:items-center justify-between gap-3">
+          {/* Brand */}
+          <div onClick={() => navigate('')} className="flex items-center gap-3 cursor-pointer select-none">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-400 via-teal-500 to-cyan-600 text-slate-950 font-black text-lg flex items-center justify-center shadow-lg">
+              GZ
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="font-black text-base sm:text-lg tracking-tight text-white">GROUND ZERO</span>
+                <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-mono text-[10px] font-bold">
+                  MATCH BEHAVIOUR LAB
+                </span>
+              </div>
+              <p className="text-[11px] font-mono text-slate-400">
+                4-Step 3.00x Rollover (₦1K &rarr; ₦81,972) &bull; {GROUND_ZERO.meta.totalClubs} Club Pages &bull; {GROUND_ZERO.meta.totalReferees} Referees
+              </p>
             </div>
           </div>
 
-          {/* Main Content Workspace */}
-          <div className="lg:col-span-8 xl:col-span-9 space-y-6">
-            <AppErrorBoundary key={mainRoute}>
-              {renderContent()}
-            </AppErrorBoundary>
+          {/* Instant Global Jump Search */}
+          <div className="relative w-full md:w-96">
+            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-2.5" />
+            <input
+              type="text"
+              value={quickQuery}
+              onChange={e => setQuickQuery(e.target.value)}
+              placeholder="Jump to any Club Page, League, or Referee..."
+              className="w-full pl-9 pr-8 py-2 rounded-xl bg-slate-950 border border-slate-800 focus:border-emerald-500 outline-none text-xs font-mono text-white"
+            />
+            {quickQuery && (
+              <button onClick={() => setQuickQuery('')} className="absolute right-2.5 top-2.5 text-slate-400 hover:text-white">
+                <X className="w-4 h-4" />
+              </button>
+            )}
+            {searchHits.length > 0 && (
+              <div className="absolute left-0 right-0 mt-1.5 rounded-2xl bg-[#0B1325] border border-emerald-500/40 shadow-2xl overflow-hidden z-50 divide-y divide-slate-800">
+                {searchHits.map((hit, i) => (
+                  <button
+                    key={i}
+                    onClick={() => navigate(hit.target)}
+                    className="w-full px-3.5 py-2.5 text-left hover:bg-emerald-500/15 flex items-center justify-between text-xs font-mono"
+                  >
+                    <span className="text-white font-bold truncate">{hit.label}</span>
+                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 ml-2 flex-shrink-0">
+                      {hit.type}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
-
         </div>
+
+        {/* Desktop & Tablet Primary Navigation Bar */}
+        <div className="border-t border-white/[0.06] bg-[#050914] px-3 sm:px-6 py-2 overflow-x-auto scrollbar-none">
+          <div className="max-w-7xl mx-auto flex items-center gap-2">
+            {navTabs.map(t => {
+              const Icon = t.icon;
+              const isSelected =
+                route === t.id ||
+                (t.id === 'command' && (route === '' || route === 'friday' || route === 'ladder')) ||
+                (t.id === 'vault' && route === 'team') ||
+                (t.id === 'leagues' && route === 'league') ||
+                (t.id === 'retrain' && (route === 'ledger' || route === 'whynot' || route === 'calculator'));
+              return (
+                <button
+                  key={t.id}
+                  onClick={() => navigate(t.id === 'command' ? '' : t.id)}
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-mono font-bold whitespace-nowrap flex items-center gap-1.5 transition-all ${
+                    isSelected
+                      ? 'bg-emerald-500 text-slate-950 font-black shadow-md'
+                      : 'bg-white/[0.04] hover:bg-white/[0.09] text-slate-300 hover:text-white'
+                  }`}
+                >
+                  <Icon className="w-3.5 h-3.5" />
+                  <span>{t.label}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </header>
+
+      {/* ── MAIN WORKSPACE ── */}
+      <main className="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 py-5 sm:py-7">
+        <AppErrorBoundary key={hash}>
+          {renderMain()}
+        </AppErrorBoundary>
       </main>
 
-      {/* 4. Slide-in Mobile & Tablet Sidebar Drawer */}
-      {sidebarOpen && (
-        <div className="fixed inset-0 z-50 lg:hidden flex">
-          <div 
-            onClick={() => setSidebarOpen(false)} 
-            className="fixed inset-0 bg-black/70 backdrop-blur-sm transition-opacity"
-          />
+      {/* ── CLEAN FOOTER ── */}
+      <footer className="max-w-7xl w-full mx-auto px-4 sm:px-6 pt-6 border-t border-slate-900 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] font-mono text-slate-500">
+        <span>GROUND ZERO &bull; Walk-Forward Match Behaviour Intelligence Lab</span>
+        <span>Auto-Retraining Schedule: Post-UCL (Tue/Wed) &bull; Post-UEL/UECL (Thu) &bull; Post-Matchweek (Fri/Sat/Sun)</span>
+      </footer>
 
-          <div className="relative w-full max-w-xs sm:max-w-sm bg-[#0E1626] text-white h-full overflow-y-auto p-4 shadow-2xl flex flex-col justify-between z-10 border-r border-slate-800">
-            <div>
-              <div className="flex items-center justify-between pb-3 border-b border-slate-800 mb-4">
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-emerald-500 text-slate-950 flex items-center justify-center font-black">
-                    B
-                  </div>
-                  <div>
-                    <h3 className="font-display font-black text-sm tracking-wide">BRYME BOT LAB</h3>
-                    <p className="text-[10px] text-slate-400 font-mono">Personal Study &amp; Pattern Lab</p>
-                  </div>
-                </div>
-
-                <button
-                  onClick={() => setSidebarOpen(false)}
-                  className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-slate-300"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-
-              <Sidebar currentRoute={mainRoute} onNavigate={(path) => { setSidebarOpen(false); navigate(path); }} />
-            </div>
-          </div>
+      {/* ── MOBILE BOTTOM NAVIGATION DOCK ── */}
+      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-[#070D1B]/95 backdrop-blur-xl border-t border-slate-800 lg:hidden">
+        <div className="grid grid-cols-5 h-16 max-w-lg mx-auto">
+          {navTabs.slice(0, 5).map(t => {
+            const Icon = t.icon;
+            const isSelected =
+              route === t.id ||
+              (t.id === 'command' && (route === '' || route === 'friday' || route === 'ladder')) ||
+              (t.id === 'vault' && route === 'team') ||
+              (t.id === 'leagues' && route === 'league');
+            return (
+              <button
+                key={t.id}
+                onClick={() => navigate(t.id === 'command' ? '' : t.id)}
+                className={`flex flex-col items-center justify-center gap-1 ${
+                  isSelected ? 'text-emerald-400 font-black' : 'text-slate-400'
+                }`}
+              >
+                <Icon className="w-4 h-4" />
+                <span className="text-[10px] font-mono">{t.short}</span>
+              </button>
+            );
+          })}
         </div>
-      )}
-
-      {/* 5. Footer */}
-      <Footer onNavigate={navigate} />
-
-      {/* 6. Mobile Bottom Navigation Bar */}
-      <BottomNav currentRoute={mainRoute} onNavigate={navigate} />
-
-      {/* 7. Global Search Modal */}
-      <SearchModal 
-        isOpen={searchOpen} 
-        onClose={() => setSearchOpen(false)} 
-        onNavigate={navigate} 
-      />
-
-      {/* 8. Global 1-Tap Copy Success Modal */}
-      <CopySuccessModal 
-        isOpen={copyModal?.isOpen}
-        onClose={closeCopyModal}
-        code={copyModal?.code}
-        bookmaker={copyModal?.bookmaker}
-        title={copyModal?.title}
-        odds={copyModal?.odds}
-      />
-
+      </nav>
     </div>
   );
 }
