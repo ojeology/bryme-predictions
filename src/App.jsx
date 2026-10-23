@@ -45,6 +45,10 @@ function parseRoute(hashStr) {
   }
   if (clean === '/leagues/sat') return { view: 'leagues', day: 'sat', league: 'all' };
   if (clean === '/leagues/sun') return { view: 'leagues', day: 'sun', league: 'all' };
+  if (clean === '/leagues/fri') return { view: 'leagues', day: 'fri', league: 'all' };
+  if (clean === '/leagues/midweek' || clean.startsWith('/uefa')) {
+    return { view: 'leagues', day: 'midweek', league: 'all' };
+  }
   if (clean.startsWith('/league/')) {
     return { view: 'leagues', day: 'all', league: decodeURIComponent(clean.replace('/league/', '')) };
   }
