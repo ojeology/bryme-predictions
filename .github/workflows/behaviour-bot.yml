@@ -40,5 +40,5 @@ jobs:
         run: |
           git config user.name "Ground-Zero-Bot"
           git config user.email "bot@predictions.thebryme.com"
-          git add bot-engine/ src/data/groundZeroData.js
+          git add bot-engine/ src/data/
           git diff --staged --quiet || (git pull --rebase origin main && git commit -m "chore(ground-zero): auto-grade FT box scores & refresh 360 club logs across 20 leagues" && git push)
