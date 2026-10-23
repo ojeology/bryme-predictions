@@ -2,8 +2,19 @@ import React, { useState, useMemo } from 'react';
 import { ArrowLeft, Search, CheckCircle2, ArrowRight } from 'lucide-react';
 import { safeText, resolveClub } from './utils';
 
+const TOP5_NAMES = new Set([
+  'Premier League',
+  'La Liga',
+  'Bundesliga',
+  'Serie A',
+  'Ligue 1',
+  'Champions League',
+  'Europa League',
+]);
+
 export function VaultView({ data, navigate }) {
   const [search, setSearch] = useState('');
+  const [top5Only, setTop5Only] = useState(true);
 
   const clubs = useMemo(() => {
     const raw = Array.isArray(data?.clubs) ? data.clubs : Object.values(data?.clubs || {});
@@ -27,17 +38,19 @@ export function VaultView({ data, navigate }) {
 
   const filteredVault = useMemo(() => {
     const q = search.trim().toLowerCase();
-    if (!q) return vaultLocks;
-    return vaultLocks.filter((v) =>
-      `${v.club} ${v.league || ''} ${v.market || ''}`.toLowerCase().includes(q)
-    );
-  }, [vaultLocks, search]);
+    return vaultLocks.filter((v) => {
+      if (!q && top5Only && !TOP5_NAMES.has(v.league)) return false;
+      if (q && !`${v.club} ${v.league || ''} ${v.market || ''}`.toLowerCase().includes(q)) return false;
+      return true;
+    });
+  }, [vaultLocks, search, top5Only]);
 
   const filteredClubs = useMemo(() => {
     const q = search.trim().toLowerCase();
-    if (!q) return clubs.slice(0, 64);
-    return clubs.filter((c) => `${c.name} ${c.league || ''}`.toLowerCase().includes(q));
-  }, [clubs, search]);
+    const base = !q && top5Only ? clubs.filter((c) => TOP5_NAMES.has(c.league)) : clubs;
+    if (!q) return base.slice(0, 96);
+    return base.filter((c) => `${c.name} ${c.league || ''}`.toLowerCase().includes(q));
+  }, [clubs, search, top5Only]);
 
   const openClub = (nameOrSlug) => {
     const found = resolveClub(clubs, nameOrSlug);
@@ -62,15 +75,37 @@ export function VaultView({ data, navigate }) {
           </span>
         </div>
 
-        <div className="relative">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search any club (e.g. Bournemouth, Stuttgart, Real Valladolid, Manchester City, Aston Villa)..."
-            className="w-full pl-10 pr-4 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:bg-white focus:border-slate-400"
-          />
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+          <div className="relative flex-1">
+            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search any club (e.g. Bournemouth, Stuttgart, Arsenal, Leverkusen, Espanyol, Chelsea)..."
+              className="w-full pl-10 pr-4 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:bg-white focus:border-slate-400"
+            />
+          </div>
+          <div className="inline-flex items-center gap-1 bg-slate-100 p-1 rounded-xl shrink-0 self-start sm:self-auto">
+            <button
+              type="button"
+              onClick={() => setTop5Only(true)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                top5Only ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              Top 5 Leagues Core
+            </button>
+            <button
+              type="button"
+              onClick={() => setTop5Only(false)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                !top5Only ? 'bg-slate-900 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              All 20 Leagues
+            </button>
+          </div>
         </div>
       </section>
 

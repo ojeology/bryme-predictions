@@ -63,7 +63,7 @@ LEAGUE_NOTES = {
     "2-bundesliga": "Elite high-tempo Corner league with clean 7.5–9.5 Match Corner & 2.5 Away Corner lines.",
     "russian-premier-league": "Heavy foul league (28–30 avg fouls) — bookmakers price main lines high (27.5–28.5), so ONLY bet Fouls when two-sided hit rate clears your line.",
     "ekstraklasa": "High-duel Polish top flight with large 11–12 game samples for cleanly tested Corner & Foul floors.",
-    "allsvenskan": "Deep 26+ game late-season samples make Swedish Corner streaks the highest-sample statistical locks in Europe.",
+    "allsvenskan": "WARNING: Synthetic artificial-turf stadiums (e.g. Elfsborg's Borås Arena) + late-October dead rubbers cause grass visitors to skid channel balls out for goal kicks — excluded from Top-5 Rollover Core.",
     "super-lig": "Passionate home crowds drive strong Home Shot/Corner pressure and elevated referee card counts.",
     "pro-league": "Fast transition football with consistent 8.5+ Match Corner & Home Favourite Corner floors.",
     "premiership": "Dominant Old Firm / top-six territory creates massive Match & Favourite Corner totals.",
@@ -141,6 +141,7 @@ def evaluate_match_candidates(hl, al, home_name, away_name, ref_obj):
     proj_fouls = proj_two([x["totalFouls"] for x in hl], [x["totalFouls"] for x in al], [x["totalFouls"] for x in hl_h], [x["totalFouls"] for x in al_a], foul_mult)
     proj_cards = proj_two([x["totalCards"] for x in hl], [x["totalCards"] for x in al], [x["totalCards"] for x in hl_h], [x["totalCards"] for x in al_a], card_mult)
     proj_tackles = proj_two([x["totalTackles"] for x in hl], [x["totalTackles"] for x in al], [x["totalTackles"] for x in hl_h], [x["totalTackles"] for x in al_a])
+    proj_shots = proj_two([x["totalShots"] for x in hl], [x["totalShots"] for x in al], [x["totalShots"] for x in hl_h], [x["totalShots"] for x in al_a])
 
     specs = [
         (f"{home_name} Over {{L}} Corners", [x["teamCorners"] for x in hl], [x["oppCorners"] for x in al], [x["teamCorners"] for x in hl_h], [x["oppCorners"] for x in al_a], [3.5, 4.5, 5.5], 1.0, "corners"),
@@ -149,9 +150,12 @@ def evaluate_match_candidates(hl, al, home_name, away_name, ref_obj):
         (f"{away_name} Over {{L}} Yellow Cards", [x["teamCards"] for x in al], [x["oppCards"] for x in hl], [x["teamCards"] for x in al_a], [x["oppCards"] for x in hl_h], [1.5, 2.5], card_mult, "cards"),
         (f"{home_name} Over {{L}} Yellow Cards", [x["teamCards"] for x in hl], [x["oppCards"] for x in al], [x["teamCards"] for x in hl_h], [x["oppCards"] for x in al_a], [1.5, 2.5], card_mult, "cards"),
         ("Match Over {L} Yellow Cards", [x["totalCards"] for x in hl], [x["totalCards"] for x in al], [x["totalCards"] for x in hl_h], [x["totalCards"] for x in al_a], [2.5, 3.5, 4.5], card_mult, "cards"),
-        ("Match Over {L} Fouls", [x["totalFouls"] for x in hl], [x["totalFouls"] for x in al], [x["totalFouls"] for x in hl_h], [x["totalFouls"] for x in al_a], [19.5, 20.5, 21.5, 22.5, 23.5, 24.5, 25.5], foul_mult, "fouls"),
-        (f"{away_name} Over {{L}} Fouls", [x["teamFouls"] for x in al], [x["oppFouls"] for x in hl], [x["teamFouls"] for x in al_a], [x["oppFouls"] for x in hl_h], [9.5, 10.5, 11.5, 12.5, 13.5, 14.5], foul_mult, "fouls"),
-        (f"{home_name} Over {{L}} Fouls", [x["teamFouls"] for x in hl], [x["oppFouls"] for x in al], [x["teamFouls"] for x in hl_h], [x["oppFouls"] for x in al_a], [9.5, 10.5, 11.5, 12.5, 13.5, 14.5], foul_mult, "fouls"),
+        ("Match Over {L} Fouls", [x["totalFouls"] for x in hl], [x["totalFouls"] for x in al], [x["totalFouls"] for x in hl_h], [x["totalFouls"] for x in al_a], [18.5, 19.5, 20.5, 21.5, 22.5, 23.5, 24.5, 25.5], foul_mult, "fouls"),
+        (f"{away_name} Over {{L}} Fouls", [x["teamFouls"] for x in al], [x["oppFouls"] for x in hl], [x["teamFouls"] for x in al_a], [x["oppFouls"] for x in hl_h], [8.5, 9.5, 10.5, 11.5, 12.5, 13.5, 14.5], foul_mult, "fouls"),
+        (f"{home_name} Over {{L}} Fouls", [x["teamFouls"] for x in hl], [x["oppFouls"] for x in al], [x["teamFouls"] for x in hl_h], [x["oppFouls"] for x in al_a], [8.5, 9.5, 10.5, 11.5, 12.5, 13.5, 14.5], foul_mult, "fouls"),
+        ("Match Over {L} Total Shots", [x["totalShots"] for x in hl], [x["totalShots"] for x in al], [x["totalShots"] for x in hl_h], [x["totalShots"] for x in al_a], [20.5, 21.5, 22.5, 23.5], 1.0, "shots"),
+        (f"{home_name} Over {{L}} Shots", [x["teamShots"] for x in hl], [x["oppShots"] for x in al], [x["teamShots"] for x in hl_h], [x["oppShots"] for x in al_a], [9.5, 10.5, 11.5], 1.0, "shots"),
+        (f"{away_name} Over {{L}} Shots", [x["teamShots"] for x in al], [x["oppShots"] for x in hl], [x["teamShots"] for x in al_a], [x["oppShots"] for x in hl_h], [8.5, 9.5, 10.5], 1.0, "shots"),
     ]
 
     scored = []
@@ -176,6 +180,8 @@ def evaluate_match_candidates(hl, al, home_name, away_name, ref_obj):
                 continue
             if cat == "corners" and (p_val - L) > 5.8:
                 continue
+            if cat == "shots" and (p_val - L) > 6.5:
+                continue
             sw = sum(x > L for x in s1) + sum(x > L for x in s2)
             st = len(s1) + len(s2)
             vw = sum(x > L for x in v1) + sum(x > L for x in v2)
@@ -185,7 +191,7 @@ def evaluate_match_candidates(hl, al, home_name, away_name, ref_obj):
             buf = round(p_val - L, 1)
             if buf < 0.8:
                 continue
-            score = spct * 1.15 + vpct * 0.45 + min(buf, 4.5) * 2.2 + (4.0 if cat == "corners" else 0.0)
+            score = spct * 1.15 + vpct * 0.45 + min(buf, 3.2) * 1.8 + (L - lines[0]) * 1.9 + (4.0 if cat == "corners" else 2.5 if cat == "shots" else 0.0)
             cand = {
                 "score": round(score, 2),
                 "cat": cat,
@@ -213,6 +219,7 @@ def evaluate_match_candidates(hl, al, home_name, away_name, ref_obj):
             "fouls": round(proj_fouls),
             "cards": round(proj_cards),
             "tackles": round(proj_tackles),
+            "shots": round(proj_shots),
         },
         "candidates": scored[:3],
     }
@@ -320,11 +327,23 @@ def main():
             cm["slug"] = f"{base}-{cid}"
         slug_owner[cm["slug"]] = cid
 
-    # 2. Build League Batches & Run Full Walk-Forward Audit on Fri + Sat + Sun + Midweek Europe (Oct 23 - Oct 29)
+    TOP5_CORE_SLUGS = {
+        "premier-league",
+        "la-liga",
+        "bundesliga",
+        "serie-a",
+        "ligue-1",
+        "champions-league",
+        "europa-league",
+    }
+
+    # 2. Build League Batches & Run Full Walk-Forward Audit on Fri + Sat + Sun + Midweek Europe
     batches_map = {}
     club_upcoming = defaultdict(list)
     sat_ranked = []
     sun_ranked = []
+    sat_top5_ranked = []
+    sun_top5_ranked = []
     oct23_lookup = {}
 
     for m in sorted(cache.values(), key=lambda x: (x.get("order", 50), x.get("utcTime") or "")):
@@ -444,11 +463,17 @@ def main():
             entry = (top1["score"], card, top1)
             if d_wat == "2026-10-24":
                 sat_ranked.append(entry)
+                if cslug in TOP5_CORE_SLUGS:
+                    sat_top5_ranked.append(entry)
             elif d_wat == "2026-10-25":
                 sun_ranked.append(entry)
+                if cslug in TOP5_CORE_SLUGS:
+                    sun_top5_ranked.append(entry)
 
     sat_ranked.sort(key=lambda x: x[0], reverse=True)
     sun_ranked.sort(key=lambda x: x[0], reverse=True)
+    sat_top5_ranked.sort(key=lambda x: x[0], reverse=True)
+    sun_top5_ranked.sort(key=lambda x: x[0], reverse=True)
 
     # 3. Build 100%-complete Club Objects + Europe-wide 100% Unbroken Vault
     clubs_out = []
@@ -464,6 +489,8 @@ def main():
         ("FOULS_MATCH", "Match Fouls Over 21.5", "totalFouls", 21.5),
         ("FOULS_TEAM", "Team Fouls Over 9.5", "teamFouls", 9.5),
         ("FOULS_TEAM", "Team Fouls Over 11.5", "teamFouls", 11.5),
+        ("SHOTS_MATCH", "Match Total Shots Over 20.5", "totalShots", 20.5),
+        ("SHOTS_TEAM", "Team Shots Over 9.5", "teamShots", 9.5),
         ("CARDS_TEAM", "Team Yellow Cards Over 1.5", "teamCards", 1.5),
         ("CARDS_MATCH", "Match Yellow Cards Over 2.5", "totalCards", 2.5),
     ]
@@ -784,8 +811,10 @@ def main():
                 "returnNGN": 3036,
                 "legs": compiled_fri_legs,
             },
-            "saturdayShortlist": [x[1] for x in sat_ranked[:8]],
-            "sundayShortlist": [x[1] for x in sun_ranked[:8]],
+            "saturdayShortlist": [x[1] for x in sat_top5_ranked[:8]],
+            "sundayShortlist": [x[1] for x in sun_top5_ranked[:8]],
+            "saturdayAllShortlist": [x[1] for x in sat_ranked[:10]],
+            "sundayAllShortlist": [x[1] for x in sun_ranked[:10]],
             "rejectedTodayTraps": [
                 {
                     "match": "Akhmat Grozny vs FC Orenburg (Russian Premier League — FT/Late 16–24 Fouls)",

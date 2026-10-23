@@ -2,9 +2,19 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { UserCheck, Search, ShieldCheck, AlertTriangle } from 'lucide-react';
 import { safeText } from './utils';
 
+const TOP5_UEFA_SLUGS = new Set([
+  'premier-league',
+  'la-liga',
+  'bundesliga',
+  'serie-a',
+  'ligue-1',
+  'champions-league',
+  'europa-league',
+]);
+
 export default function LeagueBatchesView({ data, initialDay = 'all', initialLeague = 'all', navigate }) {
   const [day, setDay] = useState(initialDay || 'all');
-  const [leagueFilter, setLeagueFilter] = useState(initialLeague || 'all');
+  const [leagueFilter, setLeagueFilter] = useState(initialLeague && initialLeague !== 'all' ? initialLeague : 'top5');
   const [search, setSearch] = useState('');
   const [only90Locks, setOnly90Locks] = useState(false);
 
@@ -13,7 +23,7 @@ export default function LeagueBatchesView({ data, initialDay = 'all', initialLea
   }, [initialDay]);
 
   useEffect(() => {
-    setLeagueFilter(initialLeague || 'all');
+    setLeagueFilter(initialLeague && initialLeague !== 'all' ? initialLeague : 'top5');
   }, [initialLeague]);
 
   const batches = data?.leagueBatches || [];
@@ -22,7 +32,11 @@ export default function LeagueBatchesView({ data, initialDay = 'all', initialLea
   const filteredBatches = useMemo(() => {
     const q = search.trim().toLowerCase();
     return batches
-      .filter((b) => leagueFilter === 'all' || b.slug === leagueFilter)
+      .filter((b) => {
+        if (leagueFilter === 'all') return true;
+        if (leagueFilter === 'top5') return TOP5_UEFA_SLUGS.has(b.slug);
+        return b.slug === leagueFilter;
+      })
       .map((b) => {
         const matches = (b.matches || []).filter((m) => {
           if (day !== 'all' && m.dayBucket !== day) return false;
@@ -107,6 +121,17 @@ export default function LeagueBatchesView({ data, initialDay = 'all', initialLea
 
         {/* SIMPLE HORIZONTAL LEAGUE SELECTOR */}
         <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pt-1">
+          <button
+            type="button"
+            onClick={() => setLeagueFilter('top5')}
+            className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap border ${
+              leagueFilter === 'top5'
+                ? 'bg-emerald-600 text-white border-emerald-600'
+                : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
+            }`}
+          >
+            Top 5 Leagues + UEFA
+          </button>
           <button
             type="button"
             onClick={() => setLeagueFilter('all')}

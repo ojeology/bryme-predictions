@@ -8,14 +8,15 @@ function formatMoney(n) {
 
 export default function CommandCenterView({ data, navigate }) {
   const [selectedDay, setSelectedDay] = useState('friday');
+  const [top5Only, setTop5Only] = useState(true);
   const [showSkipped, setShowSkipped] = useState(false);
 
   const rollover = data?.rollover || {};
   const meta = data?.meta || {};
   const steps = rollover.steps || [];
   const fridayTicket = rollover.fridayLiveTicket || { legs: [] };
-  const satShortlist = (rollover.saturdayShortlist || []).slice(0, 8);
-  const sunShortlist = (rollover.sundayShortlist || []).slice(0, 8);
+  const satShortlist = (top5Only ? rollover.saturdayShortlist : (rollover.saturdayAllShortlist || rollover.saturdayShortlist) || []).slice(0, 8);
+  const sunShortlist = (top5Only ? rollover.sundayShortlist : (rollover.sundayAllShortlist || rollover.sundayShortlist) || []).slice(0, 8);
   const skippedTraps = rollover.rejectedTodayTraps || [];
 
   const openClubByName = (rawName, explicitSlug) => {
@@ -115,8 +116,32 @@ export default function CommandCenterView({ data, navigate }) {
               <p className="text-sm text-slate-600 mt-0.5">
                 {selectedDay === 'friday'
                   ? 'All 6 legs verified on 22Bet with 90%–100% pre-match floors. Live match stats update below.'
-                  : 'Every pick below hit 90%–100% across BOTH full season AND home/away venue splits. Combine your top 4–5 legs once 22Bet lines match the Max Safe Line badge.'}
+                  : top5Only
+                  ? 'Strict Top 5 European Leagues (PL, La Liga, Bundesliga, Serie A, Ligue 1) — natural grass, deep 22Bet liquidity & elite officiating.'
+                  : 'All 20 tracked European leagues — every pick hit 90%–100% across both full season and home/away venue splits.'}
               </p>
+              {selectedDay !== 'friday' && (
+                <div className="mt-2.5 inline-flex items-center gap-1.5 bg-white border border-slate-200 rounded-lg p-1 text-xs font-semibold">
+                  <button
+                    type="button"
+                    onClick={() => setTop5Only(true)}
+                    className={`px-2.5 py-1 rounded-md transition-all ${
+                      top5Only ? 'bg-emerald-600 text-white' : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    Top 5 Leagues Core
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setTop5Only(false)}
+                    className={`px-2.5 py-1 rounded-md transition-all ${
+                      !top5Only ? 'bg-slate-900 text-white' : 'text-slate-600 hover:text-slate-900'
+                    }`}
+                  >
+                    All 20 Leagues
+                  </button>
+                </div>
+              )}
             </div>
 
             <div className="inline-flex rounded-xl bg-slate-200/80 p-1 self-start overflow-x-auto max-w-full">
@@ -170,6 +195,7 @@ export default function CommandCenterView({ data, navigate }) {
               const homeName = parts[0] || '';
               const awayName = parts[1] || '';
               const isWon = String(leg.liveStatus || '').includes('WON') || String(leg.liveStatus || '').includes('CASHED');
+              const isLost = String(leg.liveStatus || '').includes('LOST');
 
               return (
                 <div key={leg.num || idx} className="p-5 sm:p-6 hover:bg-slate-50/50 transition-colors">
@@ -219,6 +245,8 @@ export default function CommandCenterView({ data, navigate }) {
                             className={`inline-flex flex-wrap items-center gap-2 text-xs font-semibold px-3 py-1.5 rounded-lg border ${
                               isWon
                                 ? 'bg-emerald-50 text-emerald-900 border-emerald-300'
+                                : isLost
+                                ? 'bg-rose-50 text-rose-900 border-rose-300'
                                 : 'bg-sky-50 text-sky-900 border-sky-200'
                             }`}
                           >
