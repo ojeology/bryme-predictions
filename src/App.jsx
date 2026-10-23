@@ -28,6 +28,33 @@ import ConvertCodesPage from './pages/ConvertCodesPage';
 import ArticlesPage from './pages/ArticlesPage';
 import ArticleDetailPage from './pages/ArticleDetailPage';
 
+class AppErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { error: null };
+  }
+  static getDerivedStateFromError(error) {
+    return { error };
+  }
+  render() {
+    if (this.state.error) {
+      return (
+        <div className="p-6 rounded-2xl bg-[#0E1626] border border-rose-500/50 text-white space-y-3">
+          <h2 className="text-lg font-bold text-rose-400">Section Recovery Mode</h2>
+          <p className="text-xs font-mono text-slate-300">{String(this.state.error?.message || this.state.error)}</p>
+          <button
+            onClick={() => { this.setState({ error: null }); window.location.hash = '#/friday'; }}
+            className="px-4 py-2 rounded-xl bg-emerald-500 text-slate-950 font-bold text-xs"
+          >
+            Reload View
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 export default function App() {
   const [currentHash, setCurrentHash] = useState(window.location.hash || '#/');
   const [searchOpen, setSearchOpen] = useState(false);
@@ -176,7 +203,9 @@ export default function App() {
 
           {/* Main Content Workspace */}
           <div className="lg:col-span-8 xl:col-span-9 space-y-6">
-            {renderContent()}
+            <AppErrorBoundary key={mainRoute}>
+              {renderContent()}
+            </AppErrorBoundary>
           </div>
 
         </div>

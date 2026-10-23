@@ -19,6 +19,18 @@ import {
   ChevronDown, ChevronUp, ShieldAlert, ArrowRight
 } from 'lucide-react';
 
+function fmtVal(v) {
+  if (v === null || v === undefined) return '';
+  if (typeof v === 'string' || typeof v === 'number' || typeof v === 'boolean') return String(v);
+  if (Array.isArray(v)) return `[${v.map(fmtVal).join(', ')}]`;
+  if (typeof v === 'object') {
+    return Object.entries(v)
+      .map(([k, val]) => `${k}: ${fmtVal(val)}`)
+      .join(' | ');
+  }
+  return String(v);
+}
+
 function poissonPmf(k, lambda) {
   if (lambda <= 0) return k === 0 ? 1 : 0;
   let logP = k * Math.log(lambda) - lambda;
@@ -369,22 +381,22 @@ export default function BehaviourMachinePage({ onNavigate, initialTab = 'friday'
                               RANK #{leg.rank}
                             </span>
                             <span className="text-xs font-mono text-cyan-300 font-bold">
-                              {leg.competition} &bull; {leg.kickoff_wat}
+                              {fmtVal(leg.competition)} &bull; {fmtVal(leg.kickoff_wat)}
                             </span>
                             <span className="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono text-[10px] font-bold">
-                              Venue: {leg.venue_two_sided} | Season: {leg.season_two_sided}
+                              Venue: {fmtVal(leg.venue_two_sided)} | Season: {fmtVal(leg.season_two_sided)}
                             </span>
                           </div>
-                          <h3 className="text-lg sm:text-xl font-display font-black text-white">{leg.match}</h3>
+                          <h3 className="text-lg sm:text-xl font-display font-black text-white">{fmtVal(leg.match)}</h3>
                           <div className="text-xs font-mono text-emerald-400 font-bold">
-                            ✅ {leg.pick} ({leg.confirmed_odds})
+                            ✅ {fmtVal(leg.pick)} ({fmtVal(leg.confirmed_odds)})
                           </div>
                         </div>
 
                         <div className="flex items-center gap-3 self-end lg:self-center font-mono text-xs">
                           <div className="px-3 py-2 rounded-xl bg-black/50 border border-slate-800">
                             <span className="text-[10px] text-slate-400 block">2-Team Model</span>
-                            <strong className="text-white text-sm">{leg.walk_forward_model} ({leg.walk_forward_exact})</strong>
+                            <strong className="text-white text-sm">{fmtVal(leg.walk_forward_model)} ({fmtVal(leg.walk_forward_exact)})</strong>
                           </div>
                           <button type="button" className="px-3 py-2 rounded-xl bg-white/10 text-white font-bold flex items-center gap-1">
                             <span>{isOpen ? 'Hide Logs' : 'Season Logs'}</span>
@@ -400,22 +412,22 @@ export default function BehaviourMachinePage({ onNavigate, initialTab = 'friday'
                               <span className="text-[10px] uppercase text-cyan-400 font-bold block">
                                 Team 2026–27 Game-by-Game Sequence
                               </span>
-                              <div className="text-white font-bold break-words">{JSON.stringify(leg.team_seq_2627)}</div>
+                              <div className="text-white font-bold break-words">{fmtVal(leg.team_seq_2627)}</div>
                             </div>
                             <div className="p-3 rounded-xl bg-[#0E1626] border border-amber-500/30 space-y-1">
                               <span className="text-[10px] uppercase text-amber-300 font-bold block">
                                 Opponent 2026–27 Game-by-Game Sequence
                               </span>
-                              <div className="text-white font-bold break-words">{JSON.stringify(leg.opp_seq_2627)}</div>
+                              <div className="text-white font-bold break-words">{fmtVal(leg.opp_seq_2627)}</div>
                             </div>
                           </div>
                           {leg.same_season_h2h && (
                             <div className="p-3 rounded-xl bg-blue-950/30 border border-blue-500/30 text-cyan-200">
-                              📌 <strong>Same-Season H2H / Referee Check:</strong> {leg.same_season_h2h}
+                              📌 <strong>Same-Season H2H / Referee Check:</strong> {fmtVal(leg.same_season_h2h)}
                             </div>
                           )}
                           <div className="p-3 rounded-xl bg-emerald-950/30 border border-emerald-500/40 text-emerald-200 leading-relaxed font-sans">
-                            <strong>Verdict:</strong> {leg.verdict}
+                            <strong>Verdict:</strong> {fmtVal(leg.verdict)}
                           </div>
                         </div>
                       )}
