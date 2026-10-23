@@ -1,6 +1,6 @@
 /**
- * GROUND ZERO — Match Behaviour Intelligence Edge Worker
- * Serves SPA Static Assets & Cloudflare KV Edge Endpoints (/api/health, /api/machine, /api/state)
+ * GROUND ZERO — Match Behaviour Lab Edge Worker (Clean Editorial v8)
+ * Forces fresh no-store HTML delivery on / so mobile browsers never show stale layouts.
  */
 
 const corsHeaders = {
@@ -28,23 +28,6 @@ function getKvBinding(env) {
   return null;
 }
 
-const DEFAULT_GROUND_ZERO_SUMMARY = {
-  version: 'ground-zero-v7',
-  title: 'GROUND ZERO — Match Behaviour Intelligence Lab',
-  ladder: {
-    steps: 4,
-    progression: [1000, 3036, 9108, 27324, 81972],
-    targetOddsPerStep: '3.00x Pure OVER',
-  },
-  counts: {
-    clubs: 307,
-    leagues: 22,
-    weekendMatches: 120,
-    referees: 197,
-    gradedUefaLedger: 54,
-  },
-};
-
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -55,7 +38,20 @@ export default {
       return handleApiRequest(request, env, url);
     }
     if (env.ASSETS) {
-      return env.ASSETS.fetch(request);
+      const assetRes = await env.ASSETS.fetch(request);
+      const ct = assetRes.headers.get('content-type') || '';
+      if (ct.includes('text/html') || url.pathname === '/' || url.pathname === '/index.html') {
+        const headers = new Headers(assetRes.headers);
+        headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
+        headers.set('Pragma', 'no-cache');
+        headers.set('Expires', '0');
+        return new Response(assetRes.body, {
+          status: assetRes.status,
+          statusText: assetRes.statusText,
+          headers,
+        });
+      }
+      return assetRes;
     }
     return new Response('Not Found', { status: 404 });
   },
@@ -70,7 +66,7 @@ async function handleApiRequest(request, env, url) {
   if (path === '/api/health') {
     return jsonResponse({
       status: 'healthy',
-      version: 'ground-zero-v7',
+      version: 'ground-zero-v8-clean-light',
       platform: 'Ground Zero Edge Worker',
       timestamp: new Date().toISOString(),
       kvConnected: Boolean(kv),
@@ -87,26 +83,18 @@ async function handleApiRequest(request, env, url) {
           return jsonResponse({ success: true, source: 'cloudflare-kv', data: stored });
         }
       }
-      return jsonResponse({ success: true, source: 'edge-default', data: DEFAULT_GROUND_ZERO_SUMMARY });
+      return jsonResponse({ success: true, source: 'edge-default', version: 'ground-zero-v8-clean-light' });
     }
-
     if (method === 'POST') {
       const pin = request.headers.get('X-Admin-Pin');
       if (pin !== 'bryme2026') {
-        return jsonResponse({ success: false, error: 'Unauthorized: Invalid Admin PIN' }, 401);
+        return jsonResponse({ success: false, error: 'Unauthorized' }, 401);
       }
       const payload = await request.json();
-      if (kv) {
-        await kv.put(kvKey, JSON.stringify(payload));
-      }
-      return jsonResponse({
-        success: true,
-        key: kvKey,
-        version: 'ground-zero-v7',
-        timestamp: new Date().toISOString(),
-      });
+      if (kv) await kv.put(kvKey, JSON.stringify(payload));
+      return jsonResponse({ success: true, key: kvKey, version: 'ground-zero-v8-clean-light' });
     }
   }
 
-  return jsonResponse({ success: true, version: 'ground-zero-v7' });
+  return jsonResponse({ success: true, version: 'ground-zero-v8-clean-light' });
 }

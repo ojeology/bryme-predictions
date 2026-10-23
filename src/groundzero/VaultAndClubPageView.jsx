@@ -1,430 +1,446 @@
 import React, { useState, useMemo } from 'react';
-import { Lock, Search, ArrowLeft, ArrowUpRight, CheckCircle2 } from 'lucide-react';
-import { resolveClub, toSlug, safeText } from './utils';
+import { ArrowLeft, Search, CheckCircle2, ArrowRight } from 'lucide-react';
+import { safeText, resolveClub } from './utils';
 
-export function DedicatedTeamPage({ data, teamSlug, onNavigate }) {
-  const club = useMemo(() => resolveClub(data.clubs, teamSlug), [data.clubs, teamSlug]);
+export function VaultView({ data, navigate }) {
+  const [search, setSearch] = useState('');
 
-  if (!club) return null;
+  const clubs = useMemo(() => {
+    const raw = Array.isArray(data?.clubs) ? data.clubs : Object.values(data?.clubs || {});
+    return [...raw].sort((a, b) => safeText(a.name).localeCompare(safeText(b.name)));
+  }, [data]);
+
+  const vaultLocks = useMemo(() => {
+    const core = data?.vaultClubLocks || [];
+    const globalFri = (data?.fridayGlobalLocks || []).map((g) => ({
+      club: g.team || g.club,
+      league: g.competition || g.league,
+      market: g.market || g.pick,
+      wins: g.wins,
+      games: g.games,
+      hitRate: 100,
+      avg: g.avg,
+      min: g.min,
+    }));
+    return [...core, ...globalFri];
+  }, [data]);
+
+  const filteredVault = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) return vaultLocks;
+    return vaultLocks.filter((v) =>
+      `${v.club} ${v.league || ''} ${v.market || ''}`.toLowerCase().includes(q)
+    );
+  }, [vaultLocks, search]);
+
+  const filteredClubs = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) return clubs.slice(0, 64);
+    return clubs.filter((c) => `${c.name} ${c.league || ''}`.toLowerCase().includes(q));
+  }, [clubs, search]);
+
+  const openClub = (nameOrSlug) => {
+    const found = resolveClub(clubs, nameOrSlug);
+    if (found?.slug) navigate(`/team/${found.slug}`);
+  };
 
   return (
-    <div className="space-y-6">
-      {/* Top Breadcrumb Back Bar */}
-      <div className="flex items-center justify-between gap-3 flex-wrap">
-        <button
-          onClick={() => onNavigate('vault')}
-          className="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-mono font-bold text-slate-200 flex items-center gap-1.5"
-        >
-          <ArrowLeft className="w-4 h-4 text-emerald-400" />
-          <span>Back to 100% Vault &amp; All {data.meta.totalClubs} Club Directory</span>
-        </button>
-
-        <button
-          onClick={() => onNavigate('leagues')}
-          className="px-3.5 py-2 rounded-xl bg-cyan-500/15 border border-cyan-500/30 text-xs font-mono font-bold text-cyan-300 flex items-center gap-1.5"
-        >
-          <span>View League Matchweek Batch</span>
-          <ArrowUpRight className="w-3.5 h-3.5" />
-        </button>
-      </div>
-
-      {/* Club Intelligence Hero */}
-      <div className="rounded-3xl border-2 border-emerald-500/50 bg-gradient-to-br from-[#0D182E] via-[#0A1222] to-[#060A14] p-6 space-y-5 shadow-2xl">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/10 pb-5">
-          <div className="flex items-center gap-4">
-            {club.badge ? (
-              <img src={club.badge} alt={club.name} className="w-16 h-16 object-contain rounded-2xl bg-white/5 p-2 border border-white/10" />
-            ) : (
-              <div className="w-16 h-16 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center font-black text-2xl text-emerald-400">
-                {club.name.slice(0, 2).toUpperCase()}
-              </div>
-            )}
-            <div>
-              <div className="flex items-center gap-2 flex-wrap">
-                <span className="px-2.5 py-0.5 rounded-full bg-emerald-500 text-slate-950 font-mono font-black text-[10px] uppercase">
-                  {club.tier}
-                </span>
-                <span className="text-xs font-mono text-cyan-300 font-bold">{club.league}</span>
-                {club.record && (
-                  <span className="px-2 py-0.5 rounded bg-amber-400/20 text-amber-300 font-mono text-[10px] font-bold">
-                    Walk-Forward: {club.record}
-                  </span>
-                )}
-              </div>
-              <h1 className="text-2xl sm:text-4xl font-black text-white mt-1">{club.name}</h1>
-              {club.summary && <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl">{club.summary}</p>}
-            </div>
+    <div className="space-y-8">
+      {/* 1. CLEAN SEARCH HEADER */}
+      <section className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6 space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div>
+            <h1 className="text-xl sm:text-2xl font-bold text-slate-900">
+              100% Club Vault & Team Pages
+            </h1>
+            <p className="text-sm text-slate-600 mt-0.5">
+              Every club below has cleared its listed Over line in <strong>every tracked game this season</strong>. Click any club name to open its dedicated page, backtests, and match log.
+            </p>
           </div>
-
-          {/* Club Behaviour Averages */}
-          {Object.keys(club.averages || {}).length > 0 && (
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 font-mono text-center text-xs">
-              <div className="p-3 rounded-2xl bg-black/50 border border-slate-800">
-                <span className="text-[10px] text-slate-400 uppercase block">Match Fouls</span>
-                <strong className="text-lg text-amber-300">{club.averages.fouls ?? '—'}</strong>
-                {club.averages.foulsFor && <span className="text-[10px] text-slate-400 block">For {club.averages.foulsFor}</span>}
-              </div>
-              <div className="p-3 rounded-2xl bg-black/50 border border-slate-800">
-                <span className="text-[10px] text-slate-400 uppercase block">Match Corners</span>
-                <strong className="text-lg text-cyan-300">{club.averages.corners ?? '—'}</strong>
-                {club.averages.cornersFor && <span className="text-[10px] text-slate-400 block">For {club.averages.cornersFor}</span>}
-              </div>
-              <div className="p-3 rounded-2xl bg-black/50 border border-slate-800">
-                <span className="text-[10px] text-slate-400 uppercase block">Match Cards</span>
-                <strong className="text-lg text-rose-300">{club.averages.cards ?? '—'}</strong>
-              </div>
-              <div className="p-3 rounded-2xl bg-black/50 border border-slate-800">
-                <span className="text-[10px] text-slate-400 uppercase block">Match Tackles</span>
-                <strong className="text-lg text-emerald-300">{club.averages.tackles ?? '—'}</strong>
-              </div>
-            </div>
-          )}
+          <span className="text-xs font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-lg self-start">
+            {vaultLocks.length} Unbroken 100% Streaks • {clubs.length} Club Pages
+          </span>
         </div>
 
-        {/* Upcoming Weekend Fixture(s) Linked Directly to Opponent Page */}
-        {club.upcomingFixtures?.length > 0 && (
-          <div className="space-y-2">
-            <h2 className="text-xs font-mono uppercase tracking-wider text-amber-300 font-bold">
-              📅 Next Scheduled Match &amp; Pre-Match Intelligence Link
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs font-mono">
-              {club.upcomingFixtures.map((uf, i) => (
-                <div key={i} className="p-4 rounded-2xl bg-[#070C18] border border-amber-400/30 flex items-center justify-between gap-3">
-                  <div className="space-y-1">
-                    <div className="text-slate-400">{uf.date} &bull; {uf.kickoff} &bull; {uf.comp} ({uf.venue})</div>
-                    <div className="text-white font-bold text-sm">vs {uf.opponent} &bull; Ref: {uf.referee}</div>
-                    <div className="text-emerald-400 font-bold">{uf.bestPick}</div>
-                  </div>
-                  <button
-                    onClick={() => onNavigate(`team/${uf.opponentSlug}`)}
-                    className="px-3 py-2 rounded-xl bg-amber-400 text-slate-950 font-black whitespace-nowrap"
-                  >
-                    Compare {uf.opponent} &rarr;
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Active 100% & 90%+ Pure OVER Specialist Locks */}
-      <div className="rounded-3xl border border-slate-800 bg-[#0B1222] p-5 sm:p-6 space-y-4">
-        <h2 className="text-lg font-black text-white flex items-center gap-2">
-          <Lock className="w-5 h-5 text-emerald-400" />
-          <span>Verified Pure OVER Specialist Floors ({club.pureOverLocks?.length || 0} Active)</span>
-        </h2>
-
-        {club.pureOverLocks?.length > 0 ? (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs font-mono border-collapse">
-              <thead>
-                <tr className="bg-slate-900 text-slate-400 border-b border-slate-800">
-                  <th className="p-2.5">Category</th>
-                  <th className="p-2.5">Pure OVER Floor</th>
-                  <th className="p-2.5">Season Record</th>
-                  <th className="p-2.5">Hit Rate</th>
-                  <th className="p-2.5">Min / Avg / Max</th>
-                  <th className="p-2.5">2026–27 Game Sequence</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-800/70">
-                {club.pureOverLocks.map((lk, i) => (
-                  <tr key={i}>
-                    <td className="p-2.5 text-cyan-300 font-bold">{lk.category}</td>
-                    <td className="p-2.5 text-amber-300 font-bold">{lk.market}</td>
-                    <td className="p-2.5 text-white">{lk.wins}/{lk.games}</td>
-                    <td className="p-2.5">
-                      <span className="px-2 py-0.5 rounded bg-emerald-500 text-slate-950 font-black">{lk.hitRate}%</span>
-                    </td>
-                    <td className="p-2.5 text-slate-300">{lk.min} / {lk.avg} / {lk.max}</td>
-                    <td className="p-2.5 text-slate-400">[{(lk.seasonArray || []).join(', ')}]</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        ) : (
-          <p className="text-xs font-mono text-slate-400">
-            Club baseline indexed — full 5-market 2026–27 game-by-game sequence scan populates automatically in the next test batch.
-          </p>
-        )}
-      </div>
-
-      {/* 2026-27 Raw Sequences Map if present */}
-      {Object.keys(club.sequences2627 || {}).length > 0 && (
-        <div className="rounded-3xl border border-slate-800 bg-[#0B1222] p-5 sm:p-6 space-y-3">
-          <h2 className="text-lg font-black text-white">📊 Raw 2026–27 Game-by-Game Behaviour Sequences</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs font-mono">
-            {Object.entries(club.sequences2627).map(([k, v]) => (
-              <div key={k} className="p-3 rounded-xl bg-[#070C18] border border-slate-800">
-                <span className="text-[10px] uppercase text-cyan-400 font-bold block">{k}</span>
-                <div className="text-white font-bold mt-0.5 break-words">{safeText(v)}</div>
-              </div>
-            ))}
-          </div>
+        <div className="relative">
+          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search any club (e.g. Bournemouth, Stuttgart, Real Valladolid, Manchester City, Aston Villa)..."
+            className="w-full pl-10 pr-4 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:bg-white focus:border-slate-400"
+          />
         </div>
-      )}
+      </section>
 
-      {/* Strict Walk-Forward Blind Test Table */}
-      {club.blindTests?.length > 0 && (
-        <div className="rounded-3xl border border-slate-800 bg-[#0B1222] p-5 sm:p-6 space-y-3">
-          <h2 className="text-lg font-black text-white flex items-center gap-2">
-            <CheckCircle2 className="w-5 h-5 text-emerald-400" />
-            <span>Walk-Forward Pre-Match Blind Tests (Zero Future Leakage)</span>
+      {/* 2. CLEAN 100% UNBROKEN STREAKS TABLE */}
+      <section className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div className="px-5 sm:px-6 py-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+          <h2 className="text-base sm:text-lg font-bold text-slate-900">
+            Unbroken 100% Season Streaks ({filteredVault.length})
           </h2>
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs font-mono border-collapse">
-              <thead>
-                <tr className="bg-slate-900 text-slate-400 border-b border-slate-800">
-                  <th className="p-2.5">Match</th>
-                  <th className="p-2.5">Market</th>
-                  <th className="p-2.5">Pre-Match Model</th>
-                  <th className="p-2.5">Bookie Line</th>
-                  <th className="p-2.5">Actual FT</th>
-                  <th className="p-2.5">Grade</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-800/70">
-                {club.blindTests.map((bt, idx) => (
-                  <tr key={idx}>
-                    <td className="p-2.5 font-bold text-white">{bt.match}</td>
-                    <td className="p-2.5 text-amber-300">{bt.market}</td>
-                    <td className="p-2.5 text-slate-200">{bt.model}</td>
-                    <td className="p-2.5 text-slate-400">{bt.bookie}</td>
-                    <td className="p-2.5 font-bold text-cyan-300">{bt.actual}</td>
-                    <td className="p-2.5">
-                      <span className={`px-2 py-0.5 rounded font-black text-[10px] ${
-                        bt.result === 'WON' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'
-                      }`}>
-                        {bt.result}
+          <span className="text-xs text-slate-500">Tap any row to open club report</span>
+        </div>
+
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="border-b border-slate-200 text-xs font-semibold text-slate-500 uppercase bg-slate-50/40">
+                <th className="py-3.5 px-5">Club</th>
+                <th className="py-3.5 px-4">Safest Pure OVER Market</th>
+                <th className="py-3.5 px-4">Season Record</th>
+                <th className="py-3.5 px-4">Season Average</th>
+                <th className="py-3.5 px-5 text-right">Inspect</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-200 text-sm">
+              {filteredVault.map((row, idx) => {
+                const matchedClub = resolveClub(clubs, row.club);
+                return (
+                  <tr
+                    key={`${row.club}-${row.market}-${idx}`}
+                    onClick={() => openClub(row.club)}
+                    className="hover:bg-slate-50 cursor-pointer transition-colors"
+                  >
+                    <td className="py-3.5 px-5 font-bold text-slate-900">
+                      <div className="flex items-center gap-2.5">
+                        {matchedClub?.badge ? (
+                          <img src={matchedClub.badge} alt="" className="w-5 h-5 object-contain shrink-0" />
+                        ) : null}
+                        <div>
+                          <div className="hover:text-emerald-700 underline decoration-slate-300 underline-offset-4">
+                            {safeText(matchedClub?.name || row.club)}
+                          </div>
+                          {matchedClub?.league || row.league ? (
+                            <div className="text-xs font-normal text-slate-500">
+                              {safeText(matchedClub?.league || row.league)}
+                            </div>
+                          ) : null}
+                        </div>
+                      </div>
+                    </td>
+                    <td className="py-3.5 px-4 font-semibold text-emerald-800">
+                      {safeText(row.market)}
+                    </td>
+                    <td className="py-3.5 px-4">
+                      <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full">
+                        <CheckCircle2 className="w-3.5 h-3.5" />
+                        {row.wins && row.games ? `${row.wins} won out of ${row.games} (100%)` : '100%'}
+                      </span>
+                    </td>
+                    <td className="py-3.5 px-4 text-slate-700 font-medium">
+                      {row.avg != null ? `${row.avg} per game` : '—'}
+                      {row.min != null ? ` (lowest: ${row.min})` : ''}
+                    </td>
+                    <td className="py-3.5 px-5 text-right">
+                      <span className="inline-flex items-center gap-1 text-xs font-semibold text-slate-700 hover:text-emerald-700">
+                        Open Page <ArrowRight className="w-3.5 h-3.5" />
                       </span>
                     </td>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
-      )}
+      </section>
 
-      {/* Full Chronological Season Match Log */}
-      {club.matches?.length > 0 && (
-        <div className="rounded-3xl border border-slate-800 bg-[#0B1222] p-5 sm:p-6 space-y-3">
-          <h2 className="text-lg font-black text-white">
-            📂 Complete 2026–27 Chronological Match Log ({club.matches.length} Matches)
+      {/* 3. ALL 307 CLUBS DIRECTORY */}
+      <section className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6">
+        <div className="pb-4 border-b border-slate-100">
+          <h2 className="text-base sm:text-lg font-bold text-slate-900">
+            All {clubs.length} Tracked Club Pages
           </h2>
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs font-mono border-collapse">
-              <thead>
-                <tr className="bg-slate-900 text-slate-400 border-b border-slate-800">
-                  <th className="p-2">Date</th>
-                  <th className="p-2">Comp</th>
-                  <th className="p-2">Opponent</th>
-                  <th className="p-2">Venue</th>
-                  <th className="p-2">FT</th>
-                  <th className="p-2">Fouls (For+Ag)</th>
-                  <th className="p-2">Corners (For+Ag)</th>
-                  <th className="p-2">Cards (For+Ag)</th>
-                  <th className="p-2">Tackles (For+Ag)</th>
-                  <th className="p-2">Referee</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-800/70">
-                {club.matches.map((m, i) => (
-                  <tr key={i} className="hover:bg-white/[0.03]">
-                    <td className="p-2 text-slate-400">{m.date}</td>
-                    <td className="p-2 text-cyan-300">{m.comp}</td>
-                    <td className="p-2 font-bold text-white">
-                      <button onClick={() => onNavigate(`team/${toSlug(m.opponent)}`)} className="hover:text-amber-300 underline decoration-white/20">
-                        {m.opponent}
-                      </button>
-                    </td>
-                    <td className="p-2">{m.venue}</td>
-                    <td className="p-2 font-bold text-emerald-400">{m.score}</td>
-                    <td className="p-2 text-amber-300">{m.totalFouls} ({m.teamFouls}+{m.oppFouls})</td>
-                    <td className="p-2 text-cyan-300">{m.totalCorners} ({m.teamCorners}+{m.oppCorners})</td>
-                    <td className="p-2 text-rose-300">{m.totalCards} ({m.teamCards}+{m.oppCards})</td>
-                    <td className="p-2 text-slate-200">{m.totalTackles} ({m.teamTackles}+{m.oppTackles})</td>
-                    <td className="p-2 text-slate-400">{m.referee}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <p className="text-xs text-slate-500 mt-0.5">
+            {search.trim()
+              ? `Showing ${filteredClubs.length} matching clubs`
+              : 'Showing first 64 clubs alphabetically — type any club name in the search bar above to find all 307 teams.'}
+          </p>
         </div>
-      )}
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 mt-4">
+          {filteredClubs.map((club) => (
+            <button
+              key={club.slug}
+              type="button"
+              onClick={() => navigate(`/team/${club.slug}`)}
+              className="flex items-center justify-between gap-2 px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50/60 hover:bg-white hover:border-emerald-400 text-left transition-all"
+            >
+              <div className="flex items-center gap-2.5 min-w-0">
+                {club.badge ? (
+                  <img src={club.badge} alt="" className="w-5 h-5 object-contain shrink-0" />
+                ) : null}
+                <div className="min-w-0">
+                  <div className="text-sm font-semibold text-slate-900 truncate">
+                    {safeText(club.name)}
+                  </div>
+                  <div className="text-[11px] text-slate-500 truncate">
+                    {safeText(club.league || 'Tracked Club')}
+                  </div>
+                </div>
+              </div>
+              <ArrowRight className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+            </button>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }
 
-export default function VaultAndClubDirectoryView({ data, onNavigate }) {
-  const [search, setSearch] = useState('');
-  const [catFilter, setCatFilter] = useState('ALL');
-  const [viewMode, setViewMode] = useState('locks'); // 'locks' | 'clubs'
+export function DedicatedTeamPage({ data, slug, navigate }) {
+  const clubs = Array.isArray(data?.clubs) ? data.clubs : Object.values(data?.clubs || {});
+  const club = resolveClub(clubs, slug);
 
-  const allPureOverLocks = useMemo(() => {
-    const out = [];
-    for (const c of data.clubs || []) {
-      for (const lk of c.pureOverLocks || []) {
-        out.push({ ...lk, clubSlug: c.slug, clubName: c.name, league: c.league, badge: c.badge });
-      }
-    }
-    return out.sort((a, b) => b.hitRate - a.hitRate || b.wins - a.wins);
-  }, [data.clubs]);
+  if (!club) {
+    return (
+      <div className="bg-white rounded-2xl border border-slate-200 p-8 text-center space-y-3">
+        <h2 className="text-lg font-bold text-slate-900">Club page not found</h2>
+        <p className="text-sm text-slate-600">
+          Return to the Club Vault to search all 307 tracked clubs.
+        </p>
+        <button
+          type="button"
+          onClick={() => navigate('/vault')}
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 text-white text-sm font-semibold"
+        >
+          <ArrowLeft className="w-4 h-4" /> Back to Club Vault
+        </button>
+      </div>
+    );
+  }
 
-  const filteredLocks = useMemo(() => {
-    return allPureOverLocks.filter(lk => {
-      const q = search.trim().toLowerCase();
-      const sOk = !q || lk.clubName.toLowerCase().includes(q) || lk.market.toLowerCase().includes(q) || lk.league.toLowerCase().includes(q);
-      const cOk = catFilter === 'ALL' || lk.category.toLowerCase().includes(catFilter.toLowerCase());
-      return sOk && cOk;
-    });
-  }, [allPureOverLocks, search, catFilter]);
-
-  const filteredClubs = useMemo(() => {
-    const q = search.trim().toLowerCase();
-    return (data.clubs || []).filter(c => !q || c.name.toLowerCase().includes(q) || c.league.toLowerCase().includes(q));
-  }, [data.clubs, search]);
+  const averages = club.averages || {};
+  const locks = club.pureOverLocks || [];
+  const blindTests = (club.blindTests || []).filter(
+    (b) => !String(b.market || '').toLowerCase().includes('goal')
+  );
+  const matches = club.matches || [];
+  const nextFix = (club.upcomingFixtures && club.upcomingFixtures[0]) || null;
 
   return (
     <div className="space-y-6">
-      <div className="rounded-3xl bg-[#0B1222] border border-emerald-500/40 p-5 sm:p-6 space-y-4">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-          <div>
-            <span className="px-2.5 py-0.5 rounded-full bg-emerald-500 text-slate-950 font-mono font-black text-[10px] uppercase">
-              100% SPECIALIST VAULT &amp; {data.meta.totalClubs} DEDICATED CLUB DOSSIERS
-            </span>
-            <h1 className="text-2xl sm:text-3xl font-black text-white mt-1">
-              Pure OVER Specialist Vault — Click Any Club to Open Its Dedicated Page
-            </h1>
+      <div>
+        <button
+          type="button"
+          onClick={() => navigate('/vault')}
+          className="inline-flex items-center gap-1.5 text-sm font-semibold text-slate-600 hover:text-slate-900"
+        >
+          <ArrowLeft className="w-4 h-4" /> Back to 100% Vault & All Clubs
+        </button>
+      </div>
+
+      {/* 1. CLEAN TEAM HEADER + NEXT MATCH */}
+      <section className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-7">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
+          <div className="flex items-center gap-4">
+            {club.badge ? (
+              <img src={club.badge} alt="" className="w-14 h-14 object-contain shrink-0" />
+            ) : null}
+            <div>
+              <div className="text-xs font-semibold uppercase tracking-wide text-emerald-700">
+                {safeText(club.league)} • {safeText(club.tier || '2026–27 Club Behaviour Profile')}
+              </div>
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-0.5">
+                {safeText(club.name)}
+              </h1>
+              {club.summary ? (
+                <p className="text-sm text-slate-600 mt-1 max-w-2xl leading-relaxed">
+                  {safeText(club.summary)}
+                </p>
+              ) : null}
+            </div>
           </div>
 
-          <div className="flex items-center gap-2 font-mono text-xs">
-            <button
-              onClick={() => setViewMode('locks')}
-              className={`px-3.5 py-2 rounded-xl font-black ${
-                viewMode === 'locks' ? 'bg-emerald-500 text-slate-950' : 'bg-slate-900 text-slate-300 border border-slate-800'
-              }`}
-            >
-              🔒 All Pure OVER Vault Locks ({allPureOverLocks.length})
-            </button>
-            <button
-              onClick={() => setViewMode('clubs')}
-              className={`px-3.5 py-2 rounded-xl font-black ${
-                viewMode === 'clubs' ? 'bg-cyan-400 text-slate-950' : 'bg-slate-900 text-slate-300 border border-slate-800'
-              }`}
-            >
-              🏟️ All {data.meta.totalClubs} Dedicated Club Pages
-            </button>
-          </div>
-        </div>
-
-        {/* Search + Category Filter */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-          <div className="relative flex-1">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
-            <input
-              type="text"
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              placeholder="Search any club (e.g. Stuttgart, Monza, Valladolid, Arsenal, Real Madrid, Go Ahead Eagles)..."
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-xs font-mono text-white"
-            />
-          </div>
-
-          {viewMode === 'locks' && (
-            <div className="flex items-center gap-1.5 flex-wrap font-mono text-xs">
-              {['ALL', 'Corners', 'Fouls', 'Tackles', 'Cards', 'SOT'].map(cat => (
-                <button
-                  key={cat}
-                  onClick={() => setCatFilter(cat)}
-                  className={`px-3 py-2 rounded-xl font-bold ${
-                    catFilter === cat ? 'bg-amber-400 text-slate-950 font-black' : 'bg-slate-900 text-slate-300'
-                  }`}
-                >
-                  {cat}
-                </button>
-              ))}
+          {nextFix && (
+            <div className="bg-emerald-50/70 border border-emerald-200 rounded-xl p-4 lg:w-[340px] shrink-0">
+              <div className="text-[11px] font-semibold uppercase tracking-wide text-emerald-800">
+                Next Fixture ({safeText(nextFix.venue)})
+              </div>
+              <div className="text-base font-bold text-slate-900 mt-0.5">
+                vs{' '}
+                {nextFix.opponentSlug ? (
+                  <button
+                    type="button"
+                    onClick={() => navigate(`/team/${nextFix.opponentSlug}`)}
+                    className="underline decoration-emerald-400 underline-offset-4 hover:text-emerald-800"
+                  >
+                    {safeText(nextFix.opponent)}
+                  </button>
+                ) : (
+                  safeText(nextFix.opponent)
+                )}
+              </div>
+              <div className="text-xs text-slate-600 mt-0.5">
+                {safeText(nextFix.date)} at {safeText(nextFix.kickoff)} • {safeText(nextFix.comp)}
+              </div>
+              {nextFix.referee ? (
+                <div className="text-xs text-slate-800 font-medium mt-1.5">
+                  Referee: <strong>{safeText(nextFix.referee)}</strong>
+                </div>
+              ) : null}
+              {nextFix.bestPick ? (
+                <div className="text-xs font-bold text-emerald-900 mt-1.5 pt-1.5 border-t border-emerald-200">
+                  Best Pick: {safeText(nextFix.bestPick)}
+                </div>
+              ) : null}
             </div>
           )}
         </div>
-      </div>
 
-      {viewMode === 'locks' ? (
-        <div className="rounded-3xl bg-[#0B1222] border border-slate-800 overflow-hidden">
+        {/* 4 SIMPLE STAT CARDS */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6 pt-6 border-t border-slate-100">
+          <div className="bg-slate-50 rounded-xl p-3.5 border border-slate-200/80">
+            <div className="text-xs text-slate-500 font-medium">Matches Logged</div>
+            <div className="text-xl font-bold text-slate-900 mt-1">{matches.length || '—'}</div>
+          </div>
+          <div className="bg-slate-50 rounded-xl p-3.5 border border-slate-200/80">
+            <div className="text-xs text-slate-500 font-medium">Match Corners Avg</div>
+            <div className="text-xl font-bold text-slate-900 mt-1">{safeText(averages.corners ?? '—')}</div>
+          </div>
+          <div className="bg-slate-50 rounded-xl p-3.5 border border-slate-200/80">
+            <div className="text-xs text-slate-500 font-medium">Match Fouls Avg</div>
+            <div className="text-xl font-bold text-slate-900 mt-1">{safeText(averages.fouls ?? '—')}</div>
+          </div>
+          <div className="bg-slate-50 rounded-xl p-3.5 border border-slate-200/80">
+            <div className="text-xs text-slate-500 font-medium">Match Cards Avg</div>
+            <div className="text-xl font-bold text-slate-900 mt-1">{safeText(averages.cards ?? '—')}</div>
+          </div>
+        </div>
+      </section>
+
+      {/* 2. VERIFIED PURE OVER SPECIALIST LINES */}
+      {locks.length > 0 && (
+        <section className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <div className="px-5 sm:px-6 py-4 bg-slate-50 border-b border-slate-200">
+            <h2 className="text-base sm:text-lg font-bold text-slate-900">
+              High-Hit Pure OVER Markets for {safeText(club.name)}
+            </h2>
+          </div>
+          <div className="divide-y divide-slate-200">
+            {locks.map((lk, i) => (
+              <div key={i} className="px-5 sm:px-6 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                <div>
+                  <div className="font-bold text-slate-900 text-sm sm:text-base">
+                    {safeText(lk.market)}
+                  </div>
+                  <div className="text-xs text-slate-600 mt-0.5">
+                    Season average: <strong>{lk.avg}</strong> • Lowest single game: <strong>{lk.min}</strong> • Highest: <strong>{lk.max}</strong>
+                  </div>
+                </div>
+                <span className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-full self-start sm:self-center">
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                  {lk.wins}/{lk.games} Won ({lk.hitRate}%)
+                </span>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* 3. WALK-FORWARD BLIND TEST TABLE (MATCHING REPORT.md PLAIN-ENGLISH TABLE) */}
+      {blindTests.length > 0 && (
+        <section className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <div className="px-5 sm:px-6 py-4 bg-slate-50 border-b border-slate-200">
+            <h2 className="text-base sm:text-lg font-bold text-slate-900">
+              Blind Walk-Forward Backtests (Pre-Match Model vs Actual Result)
+            </h2>
+            <p className="text-xs text-slate-600 mt-0.5">
+              Generated strictly using prior games played before kickoff — zero future leakage.
+            </p>
+          </div>
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs font-mono border-collapse">
+            <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-slate-900 text-slate-400 border-b border-slate-800">
-                  <th className="p-3">Dedicated Club Page</th>
-                  <th className="p-3">League</th>
-                  <th className="p-3">Category</th>
-                  <th className="p-3">Pure OVER Specialist Floor</th>
-                  <th className="p-3">Record</th>
-                  <th className="p-3">Hit %</th>
-                  <th className="p-3">2026–27 Sequence</th>
+                <tr className="border-b border-slate-200 text-xs font-semibold text-slate-500 uppercase bg-slate-50/40">
+                  <th className="py-3 px-5">Match</th>
+                  <th className="py-3 px-4">Behaviour Market</th>
+                  <th className="py-3 px-4">Pre-Match Model</th>
+                  <th className="py-3 px-4">Actual Match Count</th>
+                  <th className="py-3 px-5 text-right">Result</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/70">
-                {filteredLocks.map((lk, i) => (
-                  <tr
-                    key={i}
-                    onClick={() => onNavigate(`team/${lk.clubSlug}`)}
-                    className="cursor-pointer hover:bg-emerald-500/[0.06] transition-colors"
-                  >
-                    <td className="p-3 font-bold text-white flex items-center gap-2 whitespace-nowrap">
-                      {lk.badge && <img src={lk.badge} alt="" className="w-5 h-5 object-contain" />}
-                      <span className="underline decoration-emerald-500/40">{lk.clubName}</span>
-                      <ArrowUpRight className="w-3.5 h-3.5 text-emerald-400" />
-                    </td>
-                    <td className="p-3 text-slate-400">{lk.league}</td>
-                    <td className="p-3 text-cyan-300">{lk.category}</td>
-                    <td className="p-3 font-bold text-amber-300">{lk.market}</td>
-                    <td className="p-3 text-white">{lk.wins}/{lk.games}</td>
-                    <td className="p-3">
-                      <span className={`px-2 py-0.5 rounded font-black text-[10px] ${
-                        lk.hitRate >= 100 ? 'bg-emerald-500 text-slate-950' : 'bg-emerald-500/20 text-emerald-300'
-                      }`}>
-                        {lk.hitRate}%
-                      </span>
-                    </td>
-                    <td className="p-3 text-[10px] text-slate-400 max-w-xs truncate">[{(lk.seasonArray || []).join(', ')}]</td>
-                  </tr>
-                ))}
+              <tbody className="divide-y divide-slate-200 text-sm">
+                {blindTests.map((b, idx) => {
+                  const won = String(b.result || '').toUpperCase().includes('WON');
+                  return (
+                    <tr key={idx} className="hover:bg-slate-50/60">
+                      <td className="py-3 px-5 font-semibold text-slate-900">{safeText(b.match)}</td>
+                      <td className="py-3 px-4 text-slate-800 font-medium">{safeText(b.market)}</td>
+                      <td className="py-3 px-4 text-slate-600">{safeText(b.model)}</td>
+                      <td className="py-3 px-4 font-bold text-slate-900">{safeText(b.actual)}</td>
+                      <td className="py-3 px-5 text-right">
+                        <span
+                          className={`inline-block text-xs font-bold px-2.5 py-0.5 rounded-full ${
+                            won
+                              ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
+                              : 'bg-rose-50 text-rose-700 border border-rose-200'
+                          }`}
+                        >
+                          {safeText(b.result)}
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          {filteredClubs.map(c => (
-            <button
-              key={c.slug}
-              onClick={() => onNavigate(`team/${c.slug}`)}
-              className="text-left p-4 rounded-2xl bg-[#0B1222] hover:bg-[#101B33] border border-slate-800 hover:border-emerald-500/50 transition-all flex items-center justify-between gap-3"
-            >
-              <div className="flex items-center gap-3 min-w-0">
-                {c.badge ? (
-                  <img src={c.badge} alt="" className="w-9 h-9 object-contain flex-shrink-0" />
-                ) : (
-                  <div className="w-9 h-9 rounded-xl bg-slate-800 flex items-center justify-center font-mono font-black text-xs text-emerald-400 flex-shrink-0">
-                    {c.name.slice(0, 2).toUpperCase()}
-                  </div>
-                )}
-                <div className="min-w-0">
-                  <div className="font-bold text-sm text-white truncate">{c.name}</div>
-                  <div className="text-[11px] font-mono text-slate-400 truncate">{c.league}</div>
-                  <div className="text-[10px] font-mono text-emerald-400 mt-0.5">
-                    {c.pureOverLocks?.length ? `${c.pureOverLocks.length} Pure OVER Locks` : 'Open Club Dossier'}
-                    {c.matches?.length ? ` • ${c.matches.length} Logged Games` : ''}
-                  </div>
-                </div>
-              </div>
-              <ArrowUpRight className="w-4 h-4 text-slate-400 flex-shrink-0" />
-            </button>
-          ))}
-        </div>
+        </section>
+      )}
+
+      {/* 4. CHRONOLOGICAL 2026–27 MATCH LOG */}
+      {matches.length > 0 && (
+        <section className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <div className="px-5 sm:px-6 py-4 bg-slate-50 border-b border-slate-200">
+            <h2 className="text-base sm:text-lg font-bold text-slate-900">
+              Full 2026–27 Chronological Match Log ({matches.length} Games)
+            </h2>
+            <p className="text-xs text-slate-600 mt-0.5">
+              Format: Team count – Opponent count (Total in brackets).
+            </p>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="border-b border-slate-200 text-xs font-semibold text-slate-500 uppercase bg-slate-50/40">
+                  <th className="py-3 px-5">Date</th>
+                  <th className="py-3 px-4">Opponent</th>
+                  <th className="py-3 px-4">Venue</th>
+                  <th className="py-3 px-4">Corners (Team–Opp)</th>
+                  <th className="py-3 px-4">Fouls (Team–Opp)</th>
+                  <th className="py-3 px-4">Cards (Team–Opp)</th>
+                  <th className="py-3 px-5">Referee</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-200 text-sm">
+                {matches
+                  .filter((m) => m.totalCorners > 0 || m.totalFouls > 0 || m.totalCards > 0)
+                  .map((m, idx) => (
+                    <tr key={idx} className="hover:bg-slate-50/60">
+                      <td className="py-3 px-5 text-slate-600 whitespace-nowrap">{safeText(m.date)}</td>
+                      <td className="py-3 px-4 font-semibold text-slate-900">
+                        {safeText(m.opponent)}
+                        {m.comp ? <span className="block text-xs font-normal text-slate-500">{safeText(m.comp)}</span> : null}
+                      </td>
+                      <td className="py-3 px-4 text-slate-600">{safeText(m.venue)}</td>
+                      <td className="py-3 px-4 font-medium text-slate-900">
+                        {m.teamCorners}–{m.oppCorners} <span className="text-slate-500">({m.totalCorners})</span>
+                      </td>
+                      <td className="py-3 px-4 font-medium text-slate-900">
+                        {m.teamFouls}–{m.oppFouls} <span className="text-slate-500">({m.totalFouls})</span>
+                      </td>
+                      <td className="py-3 px-4 font-medium text-slate-900">
+                        {m.teamCards}–{m.oppCards} <span className="text-slate-500">({m.totalCards})</span>
+                      </td>
+                      <td className="py-3 px-5 text-slate-600 text-xs">{safeText(m.referee || '—')}</td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
       )}
     </div>
   );

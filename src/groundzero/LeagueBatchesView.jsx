@@ -1,286 +1,266 @@
 import React, { useState, useMemo } from 'react';
-import { Scale, ChevronDown, ChevronUp, ArrowUpRight, AlertTriangle } from 'lucide-react';
+import { UserCheck, Search } from 'lucide-react';
+import { safeText } from './utils';
 
-export default function LeagueBatchesView({ data, initialDay = 'ALL', initialLeague = 'ALL', onNavigate }) {
-  const [dayFilter, setDayFilter] = useState(initialDay || 'ALL'); // 'ALL' | '2026-10-23' | '2026-10-24' | '2026-10-25'
-  const [leagueFilter, setLeagueFilter] = useState(initialLeague || 'ALL');
-  const [onlyWithRef, setOnlyWithRef] = useState(false);
-  const [expandedMatchId, setExpandedMatchId] = useState(null);
+export default function LeagueBatchesView({ data, initialDay = 'all', initialLeague = 'all', navigate }) {
+  const [day, setDay] = useState(initialDay || 'all');
+  const [leagueFilter, setLeagueFilter] = useState(initialLeague || 'all');
+  const [search, setSearch] = useState('');
+  const [onlyWithReferee, setOnlyWithReferee] = useState(false);
 
-  React.useEffect(() => {
-    if (initialDay === 'sat') setDayFilter('2026-10-24');
-    else if (initialDay === 'sun') setDayFilter('2026-10-25');
-    else if (initialDay === 'fri') setDayFilter('2026-10-23');
-    else setDayFilter('ALL');
-  }, [initialDay]);
+  const batches = data?.leagueBatches || [];
 
-  const batches = useMemo(() => {
-    return (data.leagueBatches || [])
-      .filter(b => leagueFilter === 'ALL' || b.slug === leagueFilter)
-      .map(b => {
-        const matches = b.matches.filter(m => {
-          const dayOk = dayFilter === 'ALL' || m.date === dayFilter;
-          const refOk = !onlyWithRef || Boolean(m.referee);
-          return dayOk && refOk;
+  const filteredBatches = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return batches
+      .filter((b) => leagueFilter === 'all' || b.slug === leagueFilter)
+      .map((b) => {
+        const matches = (b.matches || []).filter((m) => {
+          if (day === 'fri' && m.date !== '2026-10-23') return false;
+          if (day === 'sat' && m.date !== '2026-10-24') return false;
+          if (day === 'sun' && m.date !== '2026-10-25') return false;
+          if (onlyWithReferee && !m.referee?.name) return false;
+          if (q) {
+            const hay = `${m.homeName} ${m.awayName} ${b.name} ${m.referee?.name || ''} ${m.bestPick1 || ''}`.toLowerCase();
+            if (!hay.includes(q)) return false;
+          }
+          return true;
         });
         return { ...b, matches };
       })
-      .filter(b => b.matches.length > 0);
-  }, [data.leagueBatches, dayFilter, leagueFilter, onlyWithRef]);
+      .filter((b) => b.matches.length > 0);
+  }, [batches, day, leagueFilter, search, onlyWithReferee]);
+
+  const totalShown = filteredBatches.reduce((acc, b) => acc + b.matches.length, 0);
 
   return (
     <div className="space-y-6">
-      {/* Header & Filter Bar */}
-      <div className="rounded-3xl bg-[#0B1222] border border-slate-800 p-5 sm:p-6 space-y-4">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+      {/* HEADER & SIMPLE FILTERS */}
+      <section className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6 space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
-            <span className="px-2.5 py-0.5 rounded-full bg-cyan-400 text-slate-950 font-mono font-black text-[10px] uppercase">
-              LEAGUE-BY-LEAGUE BEHAVIOUR INTELLIGENCE &bull; 120 WEEKEND FIXTURES
-            </span>
-            <h1 className="text-2xl sm:text-3xl font-black text-white mt-1">
-              Weekend Matches Batched by League DNA, Referee &amp; Best Picks
+            <h1 className="text-xl sm:text-2xl font-bold text-slate-900">
+              Weekend Matches — Grouped by League
             </h1>
-            <p className="text-xs sm:text-sm text-slate-300 mt-1">
-              Every league header shows its structural foul/corner/card DNA &amp; bookmaker trap warning. Click <strong>any club name/badge</strong> to open its dedicated Walk-Forward Team Page.
+            <p className="text-sm text-slate-600 mt-0.5">
+              Read how each league behaves first, then inspect every match, its confirmed referee stats, and the #1 safest Over pick.
             </p>
           </div>
+          <div className="text-xs font-semibold text-slate-700 bg-slate-100 px-3 py-1.5 rounded-lg self-start">
+            Showing {totalShown} matches across {filteredBatches.length} leagues
+          </div>
+        </div>
 
-          {/* Day Filter Buttons */}
-          <div className="flex items-center gap-1.5 flex-wrap font-mono text-xs">
+        {/* DAY TABS + SEARCH + REFEREE FILTER */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 pt-1">
+          <div className="inline-flex rounded-xl bg-slate-100 p-1 self-start overflow-x-auto max-w-full">
             {[
-              { id: 'ALL', label: `All (${data.meta.totalWeekendMatches})` },
-              { id: '2026-10-23', label: `Fri 23 (${data.meta.fridayMatches})` },
-              { id: '2026-10-24', label: `Sat 24 (${data.meta.saturdayMatches})` },
-              { id: '2026-10-25', label: `Sun 25 (${data.meta.sundayMatches})` },
-            ].map(d => (
+              { id: 'all', label: 'All Days (120)' },
+              { id: 'fri', label: 'Friday (29)' },
+              { id: 'sat', label: 'Saturday (51)' },
+              { id: 'sun', label: 'Sunday (40)' },
+            ].map((d) => (
               <button
                 key={d.id}
-                onClick={() => setDayFilter(d.id)}
-                className={`px-3 py-2 rounded-xl font-black transition-all ${
-                  dayFilter === d.id
-                    ? 'bg-emerald-500 text-slate-950 shadow-md'
-                    : 'bg-slate-900 text-slate-300 border border-slate-800 hover:text-white'
+                type="button"
+                onClick={() => setDay(d.id)}
+                className={`px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold whitespace-nowrap transition-all ${
+                  day === d.id ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'
                 }`}
               >
                 {d.label}
               </button>
             ))}
+          </div>
 
-            <button
-              onClick={() => setOnlyWithRef(v => !v)}
-              className={`px-3 py-2 rounded-xl font-bold flex items-center gap-1.5 border ${
-                onlyWithRef
-                  ? 'bg-amber-400 text-slate-950 border-amber-300 font-black'
-                  : 'bg-slate-900 text-amber-300 border-amber-500/30'
-              }`}
-            >
-              <Scale className="w-3.5 h-3.5" />
-              <span>Refs Assigned ({data.meta.assignedWeekendRefs})</span>
-            </button>
+          <div className="flex flex-wrap items-center gap-2.5">
+            <div className="relative flex-1 sm:w-64">
+              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search team, league or referee..."
+                className="w-full pl-9 pr-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:bg-white focus:border-slate-400"
+              />
+            </div>
+
+            <label className="inline-flex items-center gap-2 text-xs sm:text-sm font-medium text-slate-700 bg-slate-50 border border-slate-200 px-3 py-2 rounded-xl cursor-pointer select-none">
+              <input
+                type="checkbox"
+                checked={onlyWithReferee}
+                onChange={(e) => setOnlyWithReferee(e.target.checked)}
+                className="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+              />
+              <span>With referee assigned</span>
+            </label>
           </div>
         </div>
 
-        {/* Quick League Selector Pills */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none font-mono text-xs">
+        {/* SIMPLE HORIZONTAL LEAGUE SELECTOR */}
+        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pt-1">
           <button
-            onClick={() => setLeagueFilter('ALL')}
-            className={`px-3 py-1.5 rounded-xl whitespace-nowrap font-bold ${
-              leagueFilter === 'ALL' ? 'bg-cyan-400 text-slate-950 font-black' : 'bg-slate-900 text-slate-300'
+            type="button"
+            onClick={() => setLeagueFilter('all')}
+            className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap border ${
+              leagueFilter === 'all'
+                ? 'bg-slate-900 text-white border-slate-900'
+                : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
             }`}
           >
-            All {data.leagueBatches.length} Leagues
+            All Leagues
           </button>
-          {data.leagueBatches.map(b => (
+          {batches.map((b) => (
             <button
               key={b.slug}
-              onClick={() => setLeagueFilter(b.slug)}
-              className={`px-3 py-1.5 rounded-xl whitespace-nowrap font-bold ${
-                leagueFilter === b.slug ? 'bg-cyan-400 text-slate-950 font-black' : 'bg-slate-900 text-slate-300 hover:text-white'
+              type="button"
+              onClick={() => setLeagueFilter(b.slug === leagueFilter ? 'all' : b.slug)}
+              className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap border ${
+                leagueFilter === b.slug
+                  ? 'bg-slate-900 text-white border-slate-900'
+                  : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'
               }`}
             >
-              {b.flag} {b.name} ({b.totalMatches})
+              {safeText(b.flag)} {safeText(b.name)} ({(b.matches || []).length})
             </button>
           ))}
         </div>
-      </div>
+      </section>
 
-      {/* Render Each League Batch */}
-      <div className="space-y-7">
-        {batches.map(batch => (
-          <section key={batch.slug} className="rounded-3xl border border-slate-800 bg-[#0A1120] overflow-hidden shadow-xl">
-            {/* League Behaviour DNA Banner */}
-            <div className="p-5 sm:p-6 bg-gradient-to-r from-[#0F1B33] via-[#0C1527] to-[#09101E] border-b border-slate-800 space-y-3">
-              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
-                <div>
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-xl">{batch.flag}</span>
-                    <h2 className="text-xl sm:text-2xl font-black text-white">{batch.name}</h2>
-                    <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-mono text-[11px] font-bold">
-                      {batch.matches.length} Matches Shown &bull; {batch.refsAssigned} Official Refs Linked
+      {/* CLEAN LEAGUE-BY-LEAGUE SECTIONS */}
+      <div className="space-y-6">
+        {filteredBatches.map((batch) => (
+          <section
+            key={batch.slug}
+            className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden"
+          >
+            {/* LEAGUE BEHAVIOUR HEADER */}
+            <div className="bg-slate-50 border-b border-slate-200 px-5 sm:px-6 py-4 space-y-2">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+                <h2 className="text-lg sm:text-xl font-bold text-slate-900">
+                  {safeText(batch.flag)} {safeText(batch.name)}
+                  <span className="ml-2 text-xs font-medium text-slate-500">
+                    ({batch.matches.length} {batch.matches.length === 1 ? 'match' : 'matches'})
+                  </span>
+                </h2>
+
+                <div className="flex flex-wrap items-center gap-2 text-xs">
+                  {batch.avgCorners ? (
+                    <span className="bg-white border border-slate-200 text-slate-700 font-medium px-2.5 py-1 rounded-lg">
+                      Avg Corners: <strong>{batch.avgCorners}</strong>
                     </span>
-                  </div>
-                  <p className="text-xs text-slate-300 mt-1 max-w-3xl leading-relaxed">{batch.patternSummary}</p>
-                </div>
-
-                <div className="grid grid-cols-3 gap-2 font-mono text-center text-xs flex-shrink-0">
-                  <div className="px-3 py-2 rounded-xl bg-black/50 border border-slate-800">
-                    <span className="text-[10px] text-slate-400 block">League Fouls</span>
-                    <strong className="text-amber-300">{batch.avgFouls}/g</strong>
-                  </div>
-                  <div className="px-3 py-2 rounded-xl bg-black/50 border border-slate-800">
-                    <span className="text-[10px] text-slate-400 block">League Corners</span>
-                    <strong className="text-cyan-300">{batch.avgCorners}/g</strong>
-                  </div>
-                  <div className="px-3 py-2 rounded-xl bg-black/50 border border-slate-800">
-                    <span className="text-[10px] text-slate-400 block">League Cards</span>
-                    <strong className="text-rose-300">{batch.avgCards}/g</strong>
-                  </div>
+                  ) : null}
+                  {batch.avgFouls ? (
+                    <span className="bg-white border border-slate-200 text-slate-700 font-medium px-2.5 py-1 rounded-lg">
+                      Avg Fouls: <strong>{batch.avgFouls}</strong>
+                    </span>
+                  ) : null}
+                  {batch.avgCards ? (
+                    <span className="bg-white border border-slate-200 text-slate-700 font-medium px-2.5 py-1 rounded-lg">
+                      Avg Cards: <strong>{batch.avgCards}</strong>
+                    </span>
+                  ) : null}
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5 text-xs">
-                <div className="p-2.5 rounded-xl bg-emerald-950/30 border border-emerald-500/30 text-emerald-200 font-mono">
-                  <strong>🎯 Best Market Target:</strong> {batch.softestMarket}
+              <p className="text-sm text-slate-700 leading-relaxed">
+                {safeText(batch.patternSummary)}
+              </p>
+
+              {batch.softestMarket ? (
+                <div className="text-xs text-emerald-800 font-semibold">
+                  Best market focus in {safeText(batch.name)}: {safeText(batch.softestMarket)}
                 </div>
-                <div className="p-2.5 rounded-xl bg-rose-950/30 border border-rose-500/30 text-rose-200 font-mono flex items-start gap-1.5">
-                  <AlertTriangle className="w-3.5 h-3.5 text-rose-400 flex-shrink-0 mt-0.5" />
-                  <span><strong>Trap Alert:</strong> {batch.trapWarning}</span>
-                </div>
-              </div>
+              ) : null}
             </div>
 
-            {/* League Match Cards */}
-            <div className="divide-y divide-slate-800/80">
-              {batch.matches.map(m => {
-                const isOpen = expandedMatchId === m.id;
+            {/* CLEAN MATCH CARDS INSIDE THIS LEAGUE */}
+            <div className="divide-y divide-slate-200">
+              {batch.matches.map((m) => {
+                const ref = m.referee;
                 return (
-                  <div key={m.id} className="p-4 sm:p-5 hover:bg-white/[0.015] transition-colors">
-                    <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-                      {/* Left: Club Badges + Clickable Team Links + Referee */}
-                      <div className="space-y-2 flex-1">
-                        <div className="flex items-center gap-2 flex-wrap text-[11px] font-mono">
-                          <span className="px-2 py-0.5 rounded bg-slate-800 text-cyan-300 font-bold">
-                            {m.dayLabel} &bull; {m.kickoff}
-                          </span>
-                          {m.venue && <span className="text-slate-400">{m.venue}</span>}
-                          {m.referee ? (
-                            <button
-                              onClick={() => onNavigate(`referees/${m.referee.slug}`)}
-                              className={`px-2 py-0.5 rounded font-bold flex items-center gap-1 border ${
-                                m.referee.strictness === 'strict'
-                                  ? 'bg-rose-500/20 text-rose-300 border-rose-500/40'
-                                  : 'bg-amber-500/15 text-amber-300 border-amber-500/30'
-                              }`}
-                            >
-                              <Scale className="w-3 h-3" />
-                              <span>Ref: {m.referee.name} ({m.referee.avg_fouls}F / {m.referee.avg_yellows}YC)</span>
-                            </button>
-                          ) : (
-                            <span className="text-slate-500">Referee TBC</span>
-                          )}
+                  <div key={m.id} className="p-5 sm:p-6 hover:bg-slate-50/40 transition-colors">
+                    <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                      {/* LEFT: KICKOFF + CLICKABLE TEAMS + REFEREE */}
+                      <div className="space-y-2 max-w-xl">
+                        <div className="text-xs font-medium text-slate-500 flex flex-wrap items-center gap-2">
+                          <span>{safeText(m.dayLabel || m.date)}</span>
+                          <span>•</span>
+                          <span>{safeText(m.kickoff)}</span>
+                          {m.venue ? (
+                            <>
+                              <span>•</span>
+                              <span>{safeText(m.venue)}</span>
+                            </>
+                          ) : null}
                         </div>
 
-                        {/* Clickable Home vs Away Team Names & Crests */}
-                        <div className="flex items-center gap-2.5 flex-wrap">
+                        <div className="flex flex-wrap items-center gap-2.5 text-base sm:text-lg font-bold text-slate-900">
                           <button
-                            onClick={() => onNavigate(`team/${m.homeSlug}`)}
-                            className="group flex items-center gap-2 text-left hover:text-cyan-300 transition-colors"
+                            type="button"
+                            onClick={() => navigate(`/team/${m.homeSlug}`)}
+                            className="inline-flex items-center gap-2 hover:text-emerald-700 underline decoration-slate-300 underline-offset-4"
                           >
-                            {m.homeBadge && <img src={m.homeBadge} alt="" className="w-6 h-6 object-contain" />}
-                            <span className="text-base sm:text-lg font-black text-white group-hover:text-cyan-300 underline decoration-white/20">
-                              {m.homeName}
-                            </span>
+                            {m.homeBadge ? (
+                              <img src={m.homeBadge} alt="" className="w-5 h-5 object-contain" />
+                            ) : null}
+                            <span>{safeText(m.homeName)}</span>
                           </button>
 
-                          <span className="font-mono text-xs text-slate-500">vs</span>
+                          <span className="text-sm font-normal text-slate-400">vs</span>
 
                           <button
-                            onClick={() => onNavigate(`team/${m.awaySlug}`)}
-                            className="group flex items-center gap-2 text-left hover:text-amber-300 transition-colors"
+                            type="button"
+                            onClick={() => navigate(`/team/${m.awaySlug}`)}
+                            className="inline-flex items-center gap-2 hover:text-emerald-700 underline decoration-slate-300 underline-offset-4"
                           >
-                            {m.awayBadge && <img src={m.awayBadge} alt="" className="w-6 h-6 object-contain" />}
-                            <span className="text-base sm:text-lg font-black text-white group-hover:text-amber-300 underline decoration-white/20">
-                              {m.awayName}
-                            </span>
+                            {m.awayBadge ? (
+                              <img src={m.awayBadge} alt="" className="w-5 h-5 object-contain" />
+                            ) : null}
+                            <span>{safeText(m.awayName)}</span>
                           </button>
                         </div>
 
-                        {/* Best Match Picks */}
-                        <div className="space-y-1 text-xs font-mono pt-0.5">
-                          <div className="text-emerald-400 font-bold">✅ Best Pick #1: {m.bestPick1}</div>
-                          <div className="text-amber-300">⚡ Best Pick #2: {m.bestPick2}</div>
-                        </div>
+                        {ref && ref.name ? (
+                          <div className="inline-flex flex-wrap items-center gap-1.5 text-xs bg-amber-50/90 text-slate-800 border border-amber-200 px-3 py-1.5 rounded-lg">
+                            <UserCheck className="w-3.5 h-3.5 text-amber-700 shrink-0" />
+                            <span>
+                              Referee: <strong>{safeText(ref.name)}</strong>
+                              {ref.avg_yellows != null ? ` • ${ref.avg_yellows} yellows/g` : ''}
+                              {ref.avg_fouls != null ? ` • ${ref.avg_fouls} fouls/g` : ''}
+                              {ref.strictness ? ` (${safeText(ref.strictness)})` : ''}
+                            </span>
+                          </div>
+                        ) : (
+                          <div className="text-xs text-slate-400">Referee: Not yet announced</div>
+                        )}
                       </div>
 
-                      {/* Right: Whole-Number Projections + Expand */}
-                      <div className="flex items-center gap-3 self-end lg:self-center">
-                        {m.projection && (
-                          <div className="grid grid-cols-4 gap-2 p-2.5 rounded-xl bg-black/50 border border-slate-800 font-mono text-center text-xs">
-                            <div>
-                              <span className="text-[9px] text-slate-400 uppercase block">Fouls</span>
-                              <strong className="text-amber-300">{m.projection.fouls}</strong>
-                            </div>
-                            <div>
-                              <span className="text-[9px] text-slate-400 uppercase block">Corners</span>
-                              <strong className="text-cyan-300">{m.projection.corners}</strong>
-                            </div>
-                            <div>
-                              <span className="text-[9px] text-slate-400 uppercase block">Cards</span>
-                              <strong className="text-rose-300">{m.projection.cardsExact || m.projection.cards}</strong>
-                            </div>
-                            <div>
-                              <span className="text-[9px] text-slate-400 uppercase block">Tackles</span>
-                              <strong className="text-emerald-300">{m.projection.tackles}</strong>
-                            </div>
-                          </div>
-                        )}
+                      {/* RIGHT: #1 SAFEST PURE OVER PICK */}
+                      <div className="lg:w-[390px] bg-emerald-50/70 border border-emerald-200 rounded-xl p-3.5 shrink-0">
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="text-[11px] font-semibold uppercase tracking-wide text-emerald-800">
+                            Best Over Pick for This Match
+                          </span>
+                          {m.projection ? (
+                            <span className="text-[11px] text-slate-600 font-medium">
+                              Proj: {m.projection.corners}C • {m.projection.fouls}F • {m.projection.cards}Y
+                            </span>
+                          ) : null}
+                        </div>
 
-                        <button
-                          onClick={() => setExpandedMatchId(isOpen ? null : m.id)}
-                          className="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/15 text-xs font-mono font-bold text-white flex items-center gap-1"
-                        >
-                          <span>{isOpen ? 'Close' : 'Match Intel'}</span>
-                          {isOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                        </button>
+                        <div className="text-sm sm:text-base font-bold text-slate-900 mt-1">
+                          {safeText(m.bestPick1 || 'Await live bookmaker line audit')}
+                        </div>
+
+                        {m.bestPick2 ? (
+                          <div className="mt-2 pt-2 border-t border-emerald-200/70 text-xs text-slate-700">
+                            <span className="font-semibold text-slate-500">Option 2: </span>
+                            <span className="font-medium">{safeText(m.bestPick2)}</span>
+                          </div>
+                        ) : null}
                       </div>
                     </div>
-
-                    {isOpen && (
-                      <div className="mt-4 pt-3 border-t border-slate-800 grid grid-cols-1 md:grid-cols-3 gap-3 text-xs font-mono">
-                        <div className="p-3 rounded-xl bg-[#070C18] border border-cyan-500/30 flex items-center justify-between">
-                          <div>
-                            <span className="text-[10px] text-cyan-400 uppercase block">Dedicated Home Dossier</span>
-                            <strong className="text-white text-sm">{m.homeName}</strong>
-                          </div>
-                          <button
-                            onClick={() => onNavigate(`team/${m.homeSlug}`)}
-                            className="px-3 py-1.5 rounded-lg bg-cyan-500 text-slate-950 font-black flex items-center gap-1"
-                          >
-                            <span>Open Club Page</span>
-                            <ArrowUpRight className="w-3.5 h-3.5" />
-                          </button>
-                        </div>
-
-                        <div className="p-3 rounded-xl bg-[#070C18] border border-amber-500/30 flex items-center justify-between">
-                          <div>
-                            <span className="text-[10px] text-amber-400 uppercase block">Dedicated Away Dossier</span>
-                            <strong className="text-white text-sm">{m.awayName}</strong>
-                          </div>
-                          <button
-                            onClick={() => onNavigate(`team/${m.awaySlug}`)}
-                            className="px-3 py-1.5 rounded-lg bg-amber-400 text-slate-950 font-black flex items-center gap-1"
-                          >
-                            <span>Open Club Page</span>
-                            <ArrowUpRight className="w-3.5 h-3.5" />
-                          </button>
-                        </div>
-
-                        <div className="p-3 rounded-xl bg-[#070C18] border border-rose-500/30 text-slate-300 font-sans">
-                          <strong className="text-rose-300 font-mono block text-[10px] uppercase">Bookmaker Line Rule:</strong>
-                          {m.bookieLineNote}
-                        </div>
-                      </div>
-                    )}
                   </div>
                 );
               })}
