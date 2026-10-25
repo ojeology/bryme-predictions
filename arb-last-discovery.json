@@ -1,6 +1,6 @@
 {
- "at": "2026-10-25T18:45:51.790Z",
- "edge": "LHR",
+ "at": "2026-10-25T18:51:08.782Z",
+ "edge": "SEA",
  "results": [
   {
    "id": "22bet",
@@ -446,24 +446,11 @@
   },
   {
    "id": "sportybet",
-   "status": "none",
-   "url": "",
-   "quoteCount": 0,
-   "note": "page loaded, 7 scripts and 0 chunks read",
-   "evidence": {
-    "page": "https://www.sportybet.com/ng/",
-    "scripts": [
-     "https://s.sporty.net/global/main/third-lib/classlist.2ac35fe294",
-     "https://s.sporty.net/global/main/modules/main/desktop/common/lib/base-lib.041385da55.js",
-     "https://s.sporty.net/global/main/modules/main/desktop/common/lib/index.9a78ce9ae8.js",
-     "https://s.sporty.net/global/main/modules/main/desktop/common/base/base.c61b819a2d.js",
-     "https://s.sporty.net/global/main/modules/main/desktop/common/core/core.0d106173d2.js",
-     "https://s.sporty.net/global/main/main-desktop/8692.009b9440ac.js",
-     "https://s.sporty.net/global/main/modules/main/desktop/home/index.e25a8b4b15.js"
-    ],
-    "chunks": [],
-    "candidatesTried": 18
-   },
+   "status": "found",
+   "url": "https://www.sportybet.com/api/ng/factsCenter/importantEvents?sportId=sr:sport:1",
+   "quoteCount": 389,
+   "note": "",
+   "evidence": {},
    "attempts": [
     {
      "url": "https://sports.sportybet.com/api/v1/sports?mode=4&count=200&lng=en&country=566&getEmpty=true",
@@ -640,6 +627,94 @@
      "keys": [],
      "reason": "HTTP 404",
      "sample": "{\"timestamp\":\"2026-10-25T18:45:27.137+00:00\",\"status\":404,\"error\":\"Not Found\",\"path\":\"/ng/v1/sports\"}"
+    },
+    {
+     "url": "https://www.sportybet.com/api/ng/factsCenter/commonThumbnailEvents?sportId=sr:sport:1",
+     "ok": false,
+     "status": 200,
+     "keys": [
+      "bizCode",
+      "message",
+      "data"
+     ],
+     "reason": "JSON, but no prices in it",
+     "sample": "{\"bizCode\":10000,\"message\":\"0#0\",\"data\":[{\"id\":\"sr:tournament:8\",\"name\":\"LaLiga\",\"events\":[{\"eventId\":\"sr:match:72478660\",\"gameId\":\"42077\",\"productStatus\":\"0#0\",\"estimateStartTime\":1792949400000,\"status\":1,\"setScore\":\"2:1\",\"gameScore\":[\"2:1\",\"0:0\"],\"period\":\"2\",\"matchStatus\":\"H2\",\"playedSeconds\":\"61"
+    },
+    {
+     "url": "https://www.sportybet.com/api/ng/factsCenter/pcUpcomingEvents?sportId=sr:sport:1",
+     "ok": false,
+     "status": 422,
+     "keys": [],
+     "reason": "HTTP 422",
+     "sample": "{\"bizCode\":19000,\"innerMsg\":\"Invalid\",\"message\":\"Invalid\",\"data\":{}}"
+    },
+    {
+     "url": "https://www.sportybet.com/api/ng/factsCenter/liveOrPrematchEvents?sportId=sr:sport:1",
+     "ok": false,
+     "status": 200,
+     "keys": [],
+     "reason": "HTTP 200",
+     "sample": ""
+    },
+    {
+     "url": "https://www.sportybet.com/api/ng/factsCenter/importantEvents?sportId=sr:sport:1",
+     "ok": true,
+     "status": 200,
+     "keys": [
+      "bizCode",
+      "message",
+      "data"
+     ],
+     "reason": "389 quotes",
+     "sample": ""
+    },
+    {
+     "url": "https://www.sportybet.com/api/ng/factsCenter/orderedSportList",
+     "ok": false,
+     "status": 200,
+     "keys": [
+      "bizCode",
+      "message",
+      "data"
+     ],
+     "reason": "JSON, but no prices in it",
+     "sample": "{\"bizCode\":10000,\"message\":\"0#0\",\"data\":[{\"id\":\"sr:sport:1\",\"name\":\"Football\",\"eventSize\":56},{\"id\":\"sr:sport:202120001\",\"name\":\"vFootball\",\"eventSize\":48},{\"id\":\"sr:sport:2\",\"name\":\"Basketball\",\"eventSize\":28},{\"id\":\"sr:sport:5\",\"name\":\"Tennis\",\"eventSize\":13},{\"id\":\"sr:sport:137\",\"name\":\"eFootball"
+    },
+    {
+     "url": "https://www.sportybet.com/api/ng/factsCenter/popularAndSportList",
+     "ok": false,
+     "status": 200,
+     "keys": [
+      "bizCode",
+      "message",
+      "data"
+     ],
+     "reason": "JSON, but no prices in it",
+     "sample": "{\"bizCode\":10000,\"message\":\"0#0\",\"data\":{\"sportList\":[{\"id\":\"sr:sport:1\",\"name\":\"Football\",\"eventSize\":1127,\"categories\":[{\"id\":\"sr:category:376\",\"name\":\"Andorra\",\"eventSize\":1,\"tournaments\":[{\"id\":\"sr:tournament:742\",\"name\":\"Primera Divisio\",\"eventSize\":1}]},{\"id\":\"sr:category:48\",\"name\":\"Argentina"
+    },
+    {
+     "url": "https://www.sportybet.com/api/ng/factsCenter/marketGroups?sportId=sr:sport:1",
+     "ok": false,
+     "status": 200,
+     "keys": [
+      "bizCode",
+      "message",
+      "data"
+     ],
+     "reason": "JSON, but no prices in it",
+     "sample": "{\"bizCode\":10000,\"message\":\"0#0\",\"data\":[{\"id\":\"171121135724MGI11262166\",\"name\":\"Main\"},{\"id\":\"171121144758MGI11271357\",\"name\":\"Goals\"},{\"id\":\"171121154448MGI11275318\",\"name\":\"Half\"},{\"id\":\"171121175348MGI11283628\",\"name\":\"Bookings\"},{\"id\":\"171121181907MGI11283762\",\"name\":\"Corners\"},{\"id\":\"171124164"
+    },
+    {
+     "url": "https://www.sportybet.com/api/ng/factsCenter/sportList",
+     "ok": false,
+     "status": 200,
+     "keys": [
+      "bizCode",
+      "message",
+      "data"
+     ],
+     "reason": "JSON, but no prices in it",
+     "sample": "{\"bizCode\":10000,\"message\":\"0#0\",\"data\":[{\"id\":\"sr:sport:1\",\"name\":\"Football\",\"eventSize\":1140,\"categories\":[{\"id\":\"sr:category:257\",\"name\":\"Albania\",\"eventSize\":1,\"tournaments\":[{\"id\":\"sr:tournament:720\",\"name\":\"Kategoria Superiore\",\"eventSize\":1}]},{\"id\":\"sr:category:376\",\"name\":\"Andorra\",\"eventSi"
     }
    ]
   },
