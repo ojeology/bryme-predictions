@@ -236,6 +236,7 @@ export default function ArbScannerView() {
   const [opportunities, setOpportunities] = useState([]);
   const [scanning, setScanning] = useState(false);
   const [scannedAt, setScannedAt] = useState(null);
+  const [runSummary, setRunSummary] = useState(null);
   const [scanError, setScanError] = useState('');
   const [autoRefresh, setAutoRefresh] = useState(false);
   const [notice, setNotice] = useState('');
@@ -295,14 +296,27 @@ export default function ArbScannerView() {
   const scanLive = useCallback(async () => {
     setScanning(true);
     setScanError('');
+    const startedAt = Date.now();
     try {
       const params = new URLSearchParams({ totalStake: String(totalStake), rounding: String(rounding) });
       const response = await fetch(`/api/arbs?${params}`, { headers: { Accept: 'application/json' } });
       if (!response.ok || !response.headers.get('content-type')?.includes('application/json')) throw new Error('The scanner API is not available on this deployment.');
       const data = await response.json();
-      setOpportunities(Array.isArray(data.opportunities) ? data.opportunities : []);
+      const found = Array.isArray(data.opportunities) ? data.opportunities : [];
+      setOpportunities(found);
       if (Array.isArray(data.connectors)) setConnection((current) => ({ ...current, state: 'ready', mode: data.mode || current.mode, connectors: data.connectors }));
       setScannedAt(new Date().toISOString());
+      setRunSummary({
+        at: new Date().toISOString(),
+        ms: Date.now() - startedAt,
+        quoteCount: Number(data.quoteCount || 0),
+        freshQuoteCount: Number(data.freshQuoteCount || 0),
+        rejectedQuoteCount: Number(data.rejectedQuoteCount || 0),
+        opportunities: found.length,
+        mode: data.mode || 'manual',
+        connectors: Array.isArray(data.connectors) ? data.connectors : [],
+        errors: Array.isArray(data.errors) ? data.errors : [],
+      });
       if (data.mode !== 'feed') setScanError('No automatic feed is configured. Use the manual calculator with prices you have verified.');
       if (Array.isArray(data.errors) && data.errors.length) setScanError(data.errors.join(' '));
     } catch (error) {
@@ -497,18 +511,60 @@ export default function ArbScannerView() {
             </StatusPill>
             <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400">Pre-match · No auto-betting</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight">Arbitrage, with the maths shown.</h1>
+          <h1 className="text-2xl sm:text-3xl font-black tracking-tight">Run the scanner.</h1>
           <p className="text-sm sm:text-base text-slate-300 leading-6 max-w-2xl mt-3">
-            Compare exact markets, split your NGN bankroll, verify every price yourself, then record manual placements. Unverified or old prices are never presented as live opportunities.
+            Press RUN and the server downloads the live pre-match prices from every book you have
+            connected, lines them up against each other and shows only the markets that really
+            match. You place every bet yourself.
           </p>
-          <div className="flex flex-wrap gap-3 mt-5">
-            <button type="button" onClick={() => setTab('calculator')} className="px-4 py-2.5 rounded-xl bg-emerald-500 text-slate-950 text-sm font-extrabold inline-flex items-center gap-2 hover:bg-emerald-400">
+          <div className="flex flex-wrap gap-3 mt-6">
+            <button
+              type="button"
+              onClick={() => { setTab('scanner'); scanLive(); }}
+              disabled={scanning}
+              className="px-7 py-4 rounded-2xl bg-emerald-500 hover:bg-emerald-400 disabled:bg-slate-600 disabled:text-slate-300 text-slate-950 text-base font-black uppercase tracking-[0.12em] inline-flex items-center gap-3 shadow-lg shadow-emerald-500/20"
+            >
+              {scanning ? <Loader2 className="w-5 h-5 animate-spin" /> : <RefreshCw className="w-5 h-5" />}
+              {scanning ? 'Downloading prices…' : 'Run — download the books’ prices'}
+            </button>
+            <button type="button" onClick={() => setTab('calculator')} className="px-4 py-2.5 rounded-xl bg-white/10 border border-white/15 text-white text-sm font-bold inline-flex items-center gap-2 hover:bg-white/15">
               <Calculator className="w-4 h-4" /> Calculate stakes
             </button>
             <button type="button" onClick={loadTrainingExample} className="px-4 py-2.5 rounded-xl bg-white/10 border border-white/15 text-white text-sm font-bold inline-flex items-center gap-2 hover:bg-white/15">
               <BookOpen className="w-4 h-4" /> Load labelled training example
             </button>
           </div>
+
+          {runSummary && (
+            <div className="mt-6 rounded-2xl bg-white/[0.06] border border-white/10 p-4 sm:p-5">
+              <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
+                <span className="text-slate-400 font-semibold">Last run</span>
+                <span className="text-white font-bold">{runSummary.opportunities} opportunity{runSummary.opportunities === 1 ? '' : 'ies'}</span>
+                <span className="text-slate-300">{runSummary.quoteCount.toLocaleString()} prices downloaded</span>
+                {runSummary.freshQuoteCount > 0 && <span className="text-slate-300">{runSummary.freshQuoteCount.toLocaleString()} still fresh</span>}
+                {runSummary.rejectedQuoteCount > 0 && <span className="text-amber-300">{runSummary.rejectedQuoteCount.toLocaleString()} rejected (stale or started)</span>}
+                <span className="text-slate-400">in {(runSummary.ms / 1000).toFixed(1)}s</span>
+              </div>
+              {runSummary.connectors.length > 0 && (
+                <div className="flex flex-wrap gap-2 mt-3">
+                  {runSummary.connectors.map((connector) => (
+                    <span
+                      key={connector.id}
+                      className={`px-2.5 py-1.5 rounded-lg text-[11px] font-bold ${
+                        connector.status === 'connected'
+                          ? 'bg-emerald-500/15 text-emerald-300'
+                          : connector.status === 'error'
+                            ? 'bg-rose-500/15 text-rose-300'
+                            : 'bg-white/10 text-slate-400'
+                      }`}
+                    >
+                      {connector.label} · {connector.status === 'connected' ? `${connector.quoteCount || 0} prices` : connector.status === 'error' ? 'blocked' : 'not connected'}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </section>
 
@@ -544,9 +600,9 @@ export default function ArbScannerView() {
                   60s refresh
                 </label>
               )}
-              <button type="button" onClick={scanLive} disabled={scanning || connection.state === 'loading'} className="px-4 py-2.5 rounded-xl bg-emerald-600 disabled:bg-slate-300 text-white text-sm font-bold inline-flex items-center justify-center gap-2">
+              <button type="button" onClick={scanLive} disabled={scanning || connection.state === 'loading'} className="px-5 py-3 rounded-xl bg-emerald-600 disabled:bg-slate-300 text-white text-sm font-black uppercase tracking-[0.1em] inline-flex items-center justify-center gap-2">
                 {scanning ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
-                {scanning ? 'Scanning…' : 'Scan connected feeds'}
+                {scanning ? 'Downloading…' : 'Run'}
               </button>
             </div>
           </div>

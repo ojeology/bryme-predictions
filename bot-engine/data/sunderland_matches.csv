@@ -1,9 +1,0 @@
-date,comp,opponent,venue,bou_goals,opp_goals,bou_fouls,opp_fouls,bou_corners,opp_corners,bou_yellow,opp_yellow,bou_tackles,opp_tackles,referee,ref_fouls_avg,ref_yellow_avg,flag
-2026-08-30,Premier League,Fulham,Home,1,0,10,15,3,4,0,2,14,16,Michael Salisbury,21.5,3.4,opener
-2026-09-05,Premier League,Brentford,Away,1,1,9,19,3,4,2,3,16,16,Thomas Bramall,23.3,2.7,
-2026-09-12,Premier League,Arsenal,Home,0,2,18,11,4,3,4,2,16,15,John Brooks,22.0,3.8,
-2026-09-16,Europa League,AZ Alkmaar,Home,1,0,14,13,12,5,3,2,16,15,Jeremie Pignard,22.5,4.3,
-2026-09-20,Premier League,Man City,Away,3,5,16,12,2,9,0,1,12,12,Robert Jones,22.0,3.5,
-2026-10-10,Premier League,Brighton,Home,0,2,8,12,7,5,0,1,16,19,Thomas Bramall,23.3,2.7,
-2026-10-15,Europa League,Torreense,Away,2,1,19,13,9,2,3,1,10,11,Enea Jorgji,23.5,4.1,last2
-2026-10-18,Premier League,Bournemouth,Away,0,2,7,16,3,5,2,3,11,10,Craig Pawson,21.5,3.9,last2

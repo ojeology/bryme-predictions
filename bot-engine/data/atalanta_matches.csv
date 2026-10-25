@@ -1,9 +1,0 @@
-date,comp,opponent,venue,bou_goals,opp_goals,bou_fouls,opp_fouls,bou_corners,opp_corners,bou_yellow,opp_yellow,bou_tackles,opp_tackles,referee,ref_fouls_avg,ref_yellow_avg,flag
-2026-08-23,Serie A,Sassuolo,Home,2,1,9,10,4,4,0,0,16,14,Valerio Crezzini,21.5,3.4,train
-2026-08-31,Serie A,Bologna,Home,1,0,10,13,1,2,1,0,8,18,Daniele Doveri,21.5,3.4,train
-2026-09-05,Serie A,Roma,Away,1,2,10,9,1,14,1,0,13,15,Marco Guida,21.5,3.4,train
-2026-09-12,Serie A,Cagliari,Home,1,2,9,8,3,2,0,0,17,24,Davide Massa,21.5,3.4,train
-2026-09-20,Serie A,Juventus,Away,0,2,10,10,5,4,2,1,8,11,Luca Zufferli,21.5,3.4,train
-2026-10-12,Serie A,Venezia,Home,3,1,14,6,8,7,1,2,11,13,Andrea Colombo,21.5,3.4,train
-2026-10-15,Conference League,Pafos,Home,3,1,13,11,6,2,0,0,8,10,UEFA Referee,21.0,3.3,test_1
-2026-10-18,Serie A,AC Milan,Away,2,3,10,3,2,2,2,1,14,19,Maurizio Mariani,21.5,3.4,test_2

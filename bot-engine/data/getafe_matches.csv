@@ -1,8 +1,0 @@
-date,comp,opponent,venue,bou_goals,opp_goals,bou_fouls,opp_fouls,bou_corners,opp_corners,bou_yellow,opp_yellow,bou_tackles,opp_tackles,referee,ref_fouls_avg,ref_yellow_avg,flag
-2026-09-07,La Liga,Celta Vigo,Home,1,1,8,9,3,5,2,2,9,14,Juan Martinez Munuera,23.0,4.2,train
-2026-09-13,La Liga,Deportivo,Home,1,1,14,9,3,7,3,1,11,18,Alejandro Hernandez,23.5,4.5,train
-2026-09-17,La Liga,Real Betis,Away,0,1,24,13,3,4,3,1,12,16,Jesus Gil Manzano,23.5,4.5,train
-2026-09-20,La Liga,Malaga,Home,1,0,16,16,5,9,4,2,11,15,Cesar Soto Grado,23.5,4.5,train
-2026-10-10,La Liga,Barcelona,Away,0,3,11,9,2,9,4,2,12,18,Mateo Busquets,23.0,4.3,train
-2026-10-15,Conference League,U Craiova,Away,1,1,13,14,4,4,1,4,9,18,UEFA Referee,23.5,4.3,test_1
-2026-10-19,La Liga,Rayo Vallecano,Home,1,1,12,9,8,8,6,2,13,10,Ricardo de Burgos,23.5,4.5,test_2

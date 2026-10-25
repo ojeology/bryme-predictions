@@ -1,71 +1,127 @@
-# BRYME Predictions ⚽
+# BRYME — Pre-match Arbitrage Scanner
 
-> **Mobile-first sports intelligence, transparent record-keeping, and public rollover ladder prototype.**
+A pre-match arbitrage scanner for Nigerian bookmakers. Press **RUN** and the
+server downloads the live prices from every book you have connected, matches
+them market by market, and shows only the opportunities that are real.
 
-Live Prototype hosted on GitHub Pages: **[https://ojeology.github.io/bryme-predictions/](https://ojeology.github.io/bryme-predictions/)**
-
----
-
-## 🌟 Overview & Product Philosophy
-
-Most social-media betting tipsters post booking codes and silently delete losses, presenting an artificial illusion of consistent profit. **BRYME Predictions** is built on transparent accounting:
-- **Zero deleted records**: All tickets (Won, Lost, Void, Pending) are permanently logged in the public archive.
-- **Zero guarantees**: Strictly no claims of "sure odds", "fixed matches", or percentage win certainty.
-- **The Ladder Challenge**: A public, numbered rollover starting at ₦1,000 targeting ₦1,000,000 with daily 1.50 codes, an honest Day-6 banking milestone (50%), and a permanent loss ledger.
-- **Favorite Punters Catalog**: Independent tracking of popular African sports analysts with source attribution and non-endorsement disclaimers.
-- **Weekend Consensus Hub**: Fixtures grouped across punters to surface high-conviction games.
-- **Pre-match Arbitrage Scanner**: `#/arbs` provides exact-market matching, NGN stake splitting, manual verification and a device-local placement ledger. No automatic betting or invented live odds.
-- **Strict 18+ Compliance**: Embedded responsible-gambling resources for Nigeria (GambleAlert) and Kenya (BCLB).
+**It never places a bet, never logs in, never moves money, never invents a
+price and never solves a challenge.** It reads prices you are allowed to see,
+does the arithmetic, and shows you the stake split. You place every bet
+yourself, after you verify it.
 
 ---
 
-## 📱 Tech Architecture & Portability
+## What it does
 
-- **Frontend**: React 18, Tailwind CSS, Lucide Icons, Vite 6.
-- **Data Layer**: Cleanly isolated JavaScript data modules in `src/data/` (`markets.js`, `tickets.js`, `ladder.js`, `punters.js`, `editorPicks.js`, `bookmakers.js`, `compliance.js`). Easily swappable for a Cloudflare Workers + D1/PostgreSQL backend in Phase 2.
-- **Static Hosting**: Configured with relative base asset paths (`base: './'`) and hash-based SPA routing to run smoothly on any GitHub Pages subpath (e.g. `https://<user>.github.io/<repo>/`) or custom domain without server-side rewrite rules.
+- **RUN** — one button downloads every connected book's pre-match prices and
+  returns the live opportunities, with a summary of what was downloaded and
+  from where.
+- **Exact matching** — two books are only compared when the fixture, the
+  market, the line and the settlement rule are the same. "Over 2.5" with
+  overtime is never paired with "Over 2.5" in 90 minutes.
+- **Canonical markets** — `Over 2.5` (book key `total_goals`) and
+  `Total 2.5 goals` are the same market; `Man Utd vs Bournemouth` and
+  `Manchester United v AFC Bournemouth` are the same fixture.
+- **Honest stakes** — the stake split is shown with the **lowest** rounded
+  return, and an opportunity is only marked executable when that return
+  still covers the bankroll and every stake clears the bookmaker's minimum.
+- **NGN calculator** — work out a split from prices you have verified
+  yourself.
+- **Placement ledger** — a device-local record of what you placed and what it
+  returned. Records are appended, never overwritten, and can be exported.
 
 ---
 
-## 🚀 Local Development
+## Running it
 
-### 1. Installation
 ```bash
-git clone https://github.com/ojeology/bryme-predictions.git
-cd bryme-predictions
 npm install
-```
-
-### 2. Run Local Development Server
-```bash
-npm run dev
-```
-Preview opens at `http://localhost:5173`. The arbitrage scanner is at `http://localhost:5173/#/arbs`; its local API uses the same service as the Cloudflare Worker.
-
-### 3. Test and Build for Production
-```bash
-npm test
+npm run dev          # http://localhost:5173/#/arbs
+npm test             # 38 tests
 npm run build
 ```
-Generates production-optimized static assets in `dist/` and creates `404.html` for routing fallback. See **[ARB_SCANNER.md](./ARB_SCANNER.md)** for the normalized quote schema, Cloudflare feed configuration, API routes and connector limitations.
+
+The site works without any feed configured: the calculator and the ledger are
+always available, and the Opportunities tab stays empty rather than filling
+with invented odds.
 
 ---
 
-## 🌐 GitHub Pages Deployment Guide
+## Connecting the books
 
-### Automatic via `gh-pages` branch
-1. Build the static bundle:
-   ```bash
-   npm run build
-   ```
-2. Commit and push the contents of `dist/` to the `gh-pages` branch.
-3. In GitHub Repository Settings -> **Pages**, set **Source** to `Deploy from a branch` and select `gh-pages` branch, `/ (root)`.
+See **[ARB_ODDS_SOURCING.md](./ARB_ODDS_SOURCING.md)** for the full picture.
+In short:
+
+```bash
+npm install -D playwright && npx playwright install --with-deps chromium
+node arb/discover.mjs          # opens each book, finds the prices it loads
+```
+
+Put the addresses it finds in `.env`:
+
+```bash
+SPORTYBET_FEED_URL=https://...
+NAIRABET_FEED_URL=https://...
+BET22_FEED_URL=https://...
+```
+
+Then press **RUN** in the app, or check it from the terminal:
+
+```bash
+node arb/probe.mjs          # what can we read right now?
+node arb/probe.mjs --scan   # and what arbitrage is live across the books?
+```
+
+Run these from your own connection. The books geo-target and rate-limit by
+IP, so a server outside Nigeria will be served a challenge instead of prices.
 
 ---
 
-## 🛡️ Responsible Gambling & Editorial Notice
-Sports betting involves financial risk. You can lose your stake. Never wager money needed for living expenses. Prototype figures are realistic demonstration data.
+## Layout
 
-## Live Deployment Status
-- **GitHub Pages**: [https://ojeology.github.io/bryme-predictions/](https://ojeology.github.io/bryme-predictions/)
-- **Workflow**: Automated GitHub Actions deployment enabled
+```
+arb/
+  service.js              the API (shared by the Cloudflare Worker and Vite)
+  vitePlugin.js           the same API during npm run dev
+  probe.mjs               "what can we actually read right now?"
+  discover.mjs            finds each book's price feed in a real browser
+  connectors/
+    httpBook.js           reads a book's own JSON endpoint
+    browserBook.js        reads the page in a headless browser (fallback)
+    normalize.js          any book payload -> the scanner's quote shape
+src/
+  arbs/ArbScannerView.jsx the scanner UI (RUN, calculator, ledger)
+  lib/arbitrage.js        the maths and the matching
+  App.jsx                 the shell
+tests/                    38 tests
+worker.js                 Cloudflare Worker (API + site)
+```
+
+## Deploying
+
+```bash
+npm run build
+npx wrangler deploy
+```
+
+The feed URLs live in the Worker environment (or as Worker secrets) — never in
+the browser and never in the repository.
+
+---
+
+## The rules
+
+1. No automatic betting, no account access, no challenge solving, no
+   geo-blocking or rate-limit evasion.
+2. No invented odds. Every price carries the time it was fetched; stale
+   prices and matches that have already kicked off are refused.
+3. Verify before you place. A calculated edge is not a filled bet.
+4. Respect each book's terms. If a book blocks us, stop.
+5. Keep the feed server-side. We do not republish a book's prices.
+6. 18+ only.
+
+## Responsible gambling
+
+Betting involves risk and you can lose money. Only bet what you can afford to
+lose. Support in Nigeria: GambleAlert (+234 915 767 7777) and the National
+Lottery Regulatory Commission (nlrc.gov.ng).

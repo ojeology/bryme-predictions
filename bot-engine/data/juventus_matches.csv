@@ -1,9 +1,0 @@
-date,comp,opponent,venue,bou_goals,opp_goals,bou_fouls,opp_fouls,bou_corners,opp_corners,bou_yellow,opp_yellow,bou_tackles,opp_tackles,referee,ref_fouls_avg,ref_yellow_avg,flag
-2026-08-23,Serie A,Frosinone,Away,1,0,18,15,12,3,2,2,8,20,Serie A Referee,23.5,3.5,train
-2026-08-29,Serie A,Parma,Home,2,0,23,12,10,2,2,3,16,10,Serie A Referee,23.5,3.5,train
-2026-09-13,Serie A,Sassuolo,Away,2,3,13,8,10,3,2,2,14,16,Serie A Referee,22.0,3.4,train
-2026-09-17,Europa League,NEC Nijmegen,Home,5,0,9,19,0,1,1,1,21,15,UEFA Referee,23.0,3.2,train
-2026-09-20,Serie A,Atalanta,Home,2,0,10,9,5,5,1,2,15,15,Daniele Doveri,21.5,3.2,train
-2026-10-11,Serie A,Cagliari,Away,1,1,8,8,9,1,1,2,22,24,Serie A Referee,21.0,3.2,train
-2026-10-15,Europa League,Celta Vigo,Away,2,1,19,12,7,2,2,2,19,19,UEFA Referee,24.0,3.8,test_1
-2026-10-18,Serie A,Lazio,Home,0,3,7,7,5,7,0,2,25,13,Serie A Referee,20.5,3.0,test_2
