@@ -1,5 +1,5 @@
 {
- "at": "2026-10-25T18:45:27.439Z",
+ "at": "2026-10-25T18:45:29.324Z",
  "edge": "LHR",
  "results": [
   {
@@ -534,6 +534,104 @@
      "keys": [],
      "reason": "HTTP 404",
      "sample": "{\"timestamp\":\"2026-10-25T18:45:27.137+00:00\",\"status\":404,\"error\":\"Not Found\",\"path\":\"/ng/v1/sports\"}"
+    }
+   ]
+  },
+  {
+   "id": "nairabet",
+   "status": "none",
+   "url": "",
+   "quoteCount": 0,
+   "note": "page loaded, 10 scripts and 0 chunks read",
+   "evidence": {
+    "page": "https://nairabet.com/sports",
+    "scripts": [
+     "https://nairabet.com/_next/static/chunks/polyfills-c67a75d1b6f99dc8.js",
+     "https://nairabet.com/_next/static/chunks/webpack-0b5e17d73b75ca1c.js",
+     "https://nairabet.com/_next/static/chunks/framework-f29e48ae95cae5a3.js",
+     "https://nairabet.com/_next/static/chunks/main-aa47ce9c3237352a.js",
+     "https://nairabet.com/_next/static/chunks/pages/_app-8bcdc29f3b3ee53c.js",
+     "https://nairabet.com/_next/static/chunks/269-8020d45427cae607.js",
+     "https://nairabet.com/_next/static/chunks/5607-f007ea4964cdc779.js",
+     "https://nairabet.com/_next/static/chunks/7506-42e320d647ebb10f.js",
+     "https://nairabet.com/_next/static/chunks/1021-c0efa6230ea549d6.js",
+     "https://nairabet.com/_next/static/chunks/2465-7cd71fa6cec0c89a.js"
+    ],
+    "chunks": [],
+    "candidatesTried": 5
+   },
+   "attempts": [
+    {
+     "url": "https://nairabet.com/service-api/linefeed/getLineFeed?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "<!DOCTYPE html><html lang=\"en\" data-critters-container><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0\"><link rel=\"apple-touch-icon\" sizes=\"76x76\" href=\"/nairabet/apple-touch-icon.png\"><link rel=\"icon\" type=\"image/png\" "
+    },
+    {
+     "url": "https://nairabet.com/service-api/linefeed/getPreMatchLineFeed?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "<!DOCTYPE html><html lang=\"en\" data-critters-container><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0\"><link rel=\"apple-touch-icon\" sizes=\"76x76\" href=\"/nairabet/apple-touch-icon.png\"><link rel=\"icon\" type=\"image/png\" "
+    },
+    {
+     "url": "https://nairabet.com/linefeed/getLineFeed?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "<!DOCTYPE html><html lang=\"en\" data-critters-container><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0\"><link rel=\"apple-touch-icon\" sizes=\"76x76\" href=\"/nairabet/apple-touch-icon.png\"><link rel=\"icon\" type=\"image/png\" "
+    },
+    {
+     "url": "https://nairabet.com/linefeed/getPreMatchLineFeed?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "<!DOCTYPE html><html lang=\"en\" data-critters-container><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0\"><link rel=\"apple-touch-icon\" sizes=\"76x76\" href=\"/nairabet/apple-touch-icon.png\"><link rel=\"icon\" type=\"image/png\" "
+    },
+    {
+     "url": "https://update-me-domain.com/api/Integration/playfastcasino",
+     "ok": false,
+     "status": 530,
+     "keys": [],
+     "reason": "HTTP 530",
+     "sample": "error code: 1016\n"
+    },
+    {
+     "url": "https://fonts.googleapis.com/",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "<html lang=\"en\" dir=ltr><meta charset=utf-8><meta name=viewport content=\"initial-scale=1, minimum-scale=1, width=device-width\"><title>Error 404 (Not Found)!!1</title><style>*{margin:0;padding:0}html,code{font:15px/22px arial,sans-serif}html{background:#fff;color:#222;padding:15px}body{color:#222;tex"
+    },
+    {
+     "url": "https://nairabet.nairabet.twoup.io/beapi/",
+     "ok": false,
+     "status": 530,
+     "keys": [],
+     "reason": "HTTP 530",
+     "sample": "error code: 1016\n"
+    },
+    {
+     "url": "https://storage.googleapis.com/",
+     "ok": false,
+     "status": 400,
+     "keys": [],
+     "reason": "HTTP 400",
+     "sample": "<?xml version='1.0' encoding='UTF-8'?><Error><Code>MissingSecurityHeader</Code><Message>Your request was missing a required header.</Message><Details>Authorization</Details></Error>"
+    },
+    {
+     "url": "https://nairabet.com/sports",
+     "ok": false,
+     "status": 200,
+     "keys": [],
+     "reason": "not JSON",
+     "sample": "<!DOCTYPE html><html lang=\"en\" data-critters-container><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0\"><link rel=\"apple-touch-icon\" sizes=\"76x76\" href=\"/nairabet/apple-touch-icon.png\"><link rel=\"icon\" type=\"image/png\" "
     }
    ]
   }
