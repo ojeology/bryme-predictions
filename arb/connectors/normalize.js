@@ -16,6 +16,7 @@
  */
 
 import { flattenLineFeed, isLineFeed } from './linefeed.js';
+import { flattenSportyBet, isSportyBet } from './sportybet.js';
 
 const STOP = new Set(['total', 'goals', 'goal', 'over', 'under', 'more', 'less', 'the', 'a', 'an', 'of', 'and']);
 
@@ -125,6 +126,8 @@ export function flattenBookPayload(payload, options = {}) {
   // The 1xBet/22Bet family speaks its own dialect (capitalised fields, string
   // odds, unix start times); it gets its own adapter.
   if (isLineFeed(payload)) return flattenLineFeed(payload, options);
+  // SportyBet publishes its own price tree
+  if (isSportyBet(payload)) return flattenSportyBet(payload, options);
   const bookmaker = options.bookmaker;
   const defaultRules = options.defaultRules || 'unspecified';
   const defaultFamily = options.defaultFamily || '';

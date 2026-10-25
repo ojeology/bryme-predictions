@@ -91,8 +91,24 @@ export const KNOWN_FEEDS = {
     ...GENERIC_PATHS.map((path) => `https://api.livescorebet.net${path}?${LINEFEED_QUERY}`),
   ],
   sportybet: [
-    ...GENERIC_PATHS.map((path) => `https://sports.sportybet.com${path}?${LINEFEED_QUERY}`),
-    ...GENERIC_PATHS.map((path) => `https://sports.sportybet.com/ng${path}?${LINEFEED_QUERY}`),
+    // PROVEN: the book publishes its own price tree under /api/ng/factsCenter
+    'https://www.sportybet.com/api/ng/factsCenter/importantEvents?sportId=sr:sport:1',
+    'https://www.sportybet.com/api/ng/factsCenter/liveOrPrematchEvents?sportId=sr:sport:1',
+    'https://www.sportybet.com/api/ng/factsCenter/pcUpcomingEvents?sportId=sr:sport:1',
+    'https://www.sportybet.com/api/ng/factsCenter/commonThumbnailEvents?sportId=sr:sport:1',
+    'https://www.sportybet.com/api/ng/factsCenter/sportList',
+    'https://www.sportybet.com/api/ng/factsCenter/marketGroups?sportId=sr:sport:1',
+    'https://www.sportybet.com/api/ng/factsCenter/popularAndSportList',
+    'https://www.sportybet.com/api/ng/factsCenter/orderedSportList',
+    // the same service behind the other name
+    'https://sports.sportybet.com/api/ng/factsCenter/importantEvents?sportId=sr:sport:1',
+    'https://sports.sportybet.com/api/ng/factsCenter/liveOrPrematchEvents?sportId=sr:sport:1',
+    'https://sports.sportybet.com/api/ng/factsCenter/pcUpcomingEvents?sportId=sr:sport:1',
+    'https://sports.sportybet.com/api/ng/factsCenter/commonThumbnailEvents?sportId=sr:sport:1',
+    'https://sports.sportybet.com/api/ng/factsCenter/sportList',
+    'https://sports.sportybet.com/api/ng/factsCenter/marketGroups?sportId=sr:sport:1',
+    'https://sports.sportybet.com/api/ng/factsCenter/popularAndSportList',
+    'https://sports.sportybet.com/api/ng/factsCenter/orderedSportList',
   ],
 };
 
