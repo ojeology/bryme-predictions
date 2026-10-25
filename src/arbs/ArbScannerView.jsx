@@ -25,6 +25,7 @@ import {
   Plus,
   RefreshCw,
   Save,
+  Search,
   ShieldCheck,
   Terminal,
   WifiOff,
@@ -322,6 +323,9 @@ export default function ArbScannerView() {
   const [scannedAt, setScannedAt] = useState(null);
   const [runSummary, setRunSummary] = useState(null);
   const [runHistory, setRunHistory] = useState(readRunHistory);
+  const [discovering, setDiscovering] = useState(false);
+  const [discovery, setDiscovery] = useState(null);
+  const [edge, setEdge] = useState(null);
   const [scanError, setScanError] = useState('');
   const [autoRefresh, setAutoRefresh] = useState(false);
   const [notice, setNotice] = useState('');
@@ -420,6 +424,7 @@ export default function ArbScannerView() {
         ok: true,
       };
       setRunSummary(record);
+      if (data.edge) setEdge(data.edge);
       if (data.mode !== 'feed') setScanError('No automatic feed is configured. Use the calculator with prices you have verified.');
       if (Array.isArray(data.errors) && data.errors.length) setScanError(data.errors.join(' '));
     } catch (error) {
@@ -468,6 +473,25 @@ export default function ArbScannerView() {
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, [scanLive]);
+
+  const findFeeds = useCallback(async () => {
+    if (discovering) return;
+    setDiscovering(true);
+    setDiscovery({ state: 'running' });
+    try {
+      const response = await fetch('/api/arbs/discover', { headers: { Accept: 'application/json' } });
+      if (!response.ok || !response.headers.get('content-type')?.includes('application/json')) {
+        throw new Error('The discovery endpoint is not available on this deployment.');
+      }
+      const data = await response.json();
+      if (data.edge) setEdge(data.edge);
+      setDiscovery({ state: 'done', results: Array.isArray(data.results) ? data.results : [] });
+    } catch (error) {
+      setDiscovery({ state: 'error', error: error.message || 'Discovery failed.' });
+    } finally {
+      setDiscovering(false);
+    }
+  }, [discovering]);
 
   const updateLeg = (index, patch) => {
     setLegs((current) => current.map((leg, legIndex) => legIndex === index ? { ...leg, ...patch } : leg));
@@ -688,6 +712,16 @@ export default function ArbScannerView() {
             {scanning ? <Loader2 className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
             {scanning ? 'downloading' : 'run'}
           </button>
+          <button
+            type="button"
+            onClick={findFeeds}
+            disabled={discovering}
+            className="px-4 py-3 rounded-xl border border-white/15 text-white/80 hover:bg-white/5 disabled:opacity-40 text-xs font-black uppercase tracking-[0.14em] inline-flex items-center gap-2"
+            title="Let the server hunt for each book's price feed"
+          >
+            {discovering ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
+            {discovering ? 'looking' : 'find feeds'}
+          </button>
         </div>
 
         <div className="mt-3 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-x-4 gap-y-2">
@@ -696,9 +730,51 @@ export default function ArbScannerView() {
           <Stat label="rejected" value={runSummary ? runSummary.rejectedQuoteCount.toLocaleString() : '—'} tone="amber" />
           <Stat label="opportunities" value={runSummary ? runSummary.opportunities : '—'} tone={runSummary && runSummary.opportunities ? 'emerald' : 'slate'} />
           <Stat label="last run" value={runSummary ? `${(runSummary.ms / 1000).toFixed(1)}s` : '—'} />
-          <Stat label="runs logged" value={runHistory.length} hint={runSummary ? timeLabel(runSummary.at) : 'press run'} />
+          <Stat label="edge" value={edge || '—'} hint={runSummary ? timeLabel(runSummary.at) : 'press run'} />
         </div>
       </div>
+
+      {discovery && (
+        <Panel
+          title={discovery.state === 'running' ? 'Looking for the books’ feeds' : 'Feeds found'}
+          subtitle={discovery.state === 'running'
+            ? 'the server is opening each book and watching what it loads'
+            : discovery.state === 'error' ? discovery.error : 'every address below was proven to carry prices'}
+          icon={Search}
+        >
+          {discovery.state === 'running' ? (
+            <div className="p-5 flex items-center gap-3 text-xs text-slate-400">
+              <Loader2 className="w-4 h-4 animate-spin text-emerald-400" />
+              Give it a minute — each book is opened and checked in turn.
+            </div>
+          ) : (
+            <div className="p-4 grid gap-2">
+              {(discovery.results || []).map((entry) => (
+                <div key={entry.id} className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-xl border border-white/10 bg-slate-950/40 px-3 py-2.5">
+                  <span className="text-xs font-bold text-slate-100 uppercase tracking-wider w-32 shrink-0">{entry.id}</span>
+                  <StatusPill tone={entry.status === 'found' ? 'green' : entry.status === 'blocked' ? 'red' : 'amber'}>
+                    {entry.status === 'found' ? `found · ${entry.quoteCount} prices` : entry.status === 'blocked' ? 'blocked' : 'nothing found'}
+                  </StatusPill>
+                  {entry.url && (
+                    <button
+                      type="button"
+                      onClick={() => copyText(entry.url)}
+                      className="font-mono text-[11px] text-sky-400 truncate max-w-full hover:text-sky-300"
+                      title="Copy this address"
+                    >
+                      {entry.url}
+                    </button>
+                  )}
+                  {!entry.url && entry.note && <span className="text-[11px] text-slate-500">{entry.note}</span>}
+                </div>
+              ))}
+              {(discovery.results || []).length === 0 && (
+                <p className="text-xs text-slate-500 p-3">Nothing was found. Press RUN again — the hunt runs from wherever you are.</p>
+              )}
+            </div>
+          )}
+        </Panel>
+      )}
 
       {/* ───────── feeds ───────── */}
       <Panel

@@ -72,6 +72,47 @@ with invented odds.
 
 ---
 
+## Connecting the books (without a terminal)
+
+The Worker can find the books' feeds itself:
+
+- **FIND FEEDS** in the console makes the server open each book, read the
+  JavaScript it loads and work out which address carries the prices. Every
+  candidate is *proven* before it is accepted — it is fetched and run through
+  the same normaliser the scanner uses, and it only counts if it produces real
+  quotes. The request leaves from the Cloudflare point of presence nearest
+  you, which is what the books require.
+- **RUN** does the same hunt automatically when no address has been pinned.
+
+So on a phone there is nothing to install: open the site, press **FIND FEEDS**,
+then **RUN**.
+
+To pin the addresses instead (server-side, survives restarts), run the local
+discovery and put the results in the Worker environment:
+
+```bash
+npm install -D playwright && npx playwright install --with-deps chromium
+node arb/discover.mjs          # opens each book, finds the prices it loads
+```
+
+Put the addresses it finds in `.env`:
+
+```bash
+SPORTYBET_FEED_URL=https://...
+NAIRABET_FEED_URL=https://...
+BET22_FEED_URL=https://...
+```
+
+Then press **RUN** in the app, or check it from the terminal:
+
+```bash
+node arb/probe.mjs          # what can we read right now?
+node arb/probe.mjs --scan   # and what arbitrage is live across the books?
+```
+
+Run these from your own connection. The books geo-target and rate-limit by
+IP, so a server outside Nigeria will be served a challenge instead of prices.
+
 ## Connecting the books
 
 See **[ARB_ODDS_SOURCING.md](./ARB_ODDS_SOURCING.md)** for the full picture.

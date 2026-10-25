@@ -15,6 +15,8 @@
  * not say, the operator's declared default for that book is used.
  */
 
+import { flattenLineFeed, isLineFeed } from './linefeed.js';
+
 const STOP = new Set(['total', 'goals', 'goal', 'over', 'under', 'more', 'less', 'the', 'a', 'an', 'of', 'and']);
 
 export function slug(value) {
@@ -120,6 +122,9 @@ function splitTeams(event, home, away) {
  * {events:[...]}, {matches:[...]} - and per event, markets with selections.
  */
 export function flattenBookPayload(payload, options = {}) {
+  // The 1xBet/22Bet family speaks its own dialect (capitalised fields, string
+  // odds, unix start times); it gets its own adapter.
+  if (isLineFeed(payload)) return flattenLineFeed(payload, options);
   const bookmaker = options.bookmaker;
   const defaultRules = options.defaultRules || 'unspecified';
   const defaultFamily = options.defaultFamily || '';

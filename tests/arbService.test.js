@@ -30,11 +30,25 @@ test('status route is honest when no automatic feed is configured', async () => 
 });
 
 test('GET scanner returns no invented opportunities in manual mode', async () => {
-  const response = await handleArbRequest(new Request('http://local/api/arbs?totalStake=100000'), {});
+  const response = await handleArbRequest(new Request('http://local/api/arbs?totalStake=100000'), { ARB_AUTO_DISCOVER: '0' });
   const data = await response.json();
   assert.equal(data.mode, 'manual');
   assert.deepEqual(data.opportunities, []);
   assert.equal(data.quoteCount, 0);
+});
+
+test('the discovery endpoint reports per-book findings and never invents a feed', async () => {
+  const response = await handleArbRequest(new Request('http://local/api/arbs/discover?book=1xbet'), {});
+  const data = await response.json();
+  assert.equal(response.status, 200);
+  assert.equal(data.ok, true);
+  assert.equal(data.results.length, 1);
+  const entry = data.results[0];
+  assert.equal(entry.id, '1xbet');
+  // whatever the network answered, a feed is only ever reported when it
+  // produced real quotes
+  if (entry.status === 'found') assert.ok(entry.quoteCount > 0 && entry.url);
+  else assert.equal(entry.quoteCount, 0);
 });
 
 test('POST scans only the normalized quotes supplied by the caller', async () => {
