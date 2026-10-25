@@ -1,5 +1,5 @@
 {
- "at": "2026-10-25T18:45:25.445Z",
+ "at": "2026-10-25T18:45:27.439Z",
  "edge": "LHR",
  "results": [
   {
@@ -470,6 +470,70 @@
      "keys": [],
      "reason": "not JSON",
      "sample": "<!-- ! new-countries -->\n<!-- ! new-countries [media] -->\n<!-- ! new-countries --><!-- ! new-countries [media] -->\n<!-- ! new-countries --><!-- ! new-countries [media] -->\n<!-- ! new-countries --><!-- ! new-countries [media] -->\n<!-- ! new-countries --><!-- ! new-countries [media] -->\n<!-- ! new-cou"
+    },
+    {
+     "url": "https://sports.sportybet.com/ng/api/v1/odds?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "{\"timestamp\":\"2026-10-25T18:45:26.920+00:00\",\"status\":404,\"error\":\"Not Found\",\"path\":\"/ng/api/v1/odds\"}"
+    },
+    {
+     "url": "https://sports.sportybet.com/ng/api/v1/sports?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "{\"timestamp\":\"2026-10-25T18:45:26.924+00:00\",\"status\":404,\"error\":\"Not Found\",\"path\":\"/ng/api/v1/sports\"}"
+    },
+    {
+     "url": "https://sports.sportybet.com/ng/api/v1/events?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "{\"timestamp\":\"2026-10-25T18:45:26.952+00:00\",\"status\":404,\"error\":\"Not Found\",\"path\":\"/ng/api/v1/events\"}"
+    },
+    {
+     "url": "https://sports.sportybet.com/ng/api/v1/markets?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "{\"timestamp\":\"2026-10-25T18:45:27.027+00:00\",\"status\":404,\"error\":\"Not Found\",\"path\":\"/ng/api/v1/markets\"}"
+    },
+    {
+     "url": "https://sports.sportybet.com/ng/v1/events?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "{\"timestamp\":\"2026-10-25T18:45:27.061+00:00\",\"status\":404,\"error\":\"Not Found\",\"path\":\"/ng/v1/events\"}"
+    },
+    {
+     "url": "https://sports.sportybet.com/ng/v1/odds?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "{\"timestamp\":\"2026-10-25T18:45:27.064+00:00\",\"status\":404,\"error\":\"Not Found\",\"path\":\"/ng/v1/odds\"}"
+    },
+    {
+     "url": "https://sports.sportybet.com/ng/v1/markets?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "{\"timestamp\":\"2026-10-25T18:45:27.090+00:00\",\"status\":404,\"error\":\"Not Found\",\"path\":\"/ng/v1/markets\"}"
+    },
+    {
+     "url": "https://sports.sportybet.com/ng/v1/sports?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "{\"timestamp\":\"2026-10-25T18:45:27.137+00:00\",\"status\":404,\"error\":\"Not Found\",\"path\":\"/ng/v1/sports\"}"
     }
    ]
   }
