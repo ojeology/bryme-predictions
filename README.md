@@ -1,8 +1,8 @@
-# BRYME — Pre-match Arbitrage Scanner
+# BRYME LAB — Pre-match Arbitrage Scanner
 
-A pre-match arbitrage scanner for Nigerian bookmakers. Press **RUN** and the
-server downloads the live prices from every book you have connected, matches
-them market by market, and shows only the opportunities that are real.
+Your private arbitrage lab for the Nigerian books. Press **RUN** and the server
+downloads the live prices from every book you have connected, matches them
+market by market, and shows only the opportunities that are real.
 
 **It never places a bet, never logs in, never moves money, never invents a
 price and never solves a challenge.** It reads prices you are allowed to see,
@@ -34,9 +34,34 @@ yourself, after you verify it.
 
 ## Running it
 
+Three ways, in the order you probably want them:
+
+**1. On your own machine (best for scanning).** The books geo-target by IP, so
+the scanner has to run from your own Nigerian connection. This also means the
+prices really come down.
+
 ```bash
 npm install
-npm run dev          # http://localhost:5173/#/arbs
+npm run lab          # binds 0.0.0.0 → http://localhost:5173
+```
+
+Open it on your phone on the same Wi-Fi at `http://<your-computer-ip>:5173`.
+
+**2. On the domain** (needs your Cloudflare login, once):
+
+```bash
+npx wrangler@4 login
+npm run deploy       # publishes the new build and the worker
+```
+
+**3. On GitHub Pages** (static only — no scanner API, calculator and ledger
+still work):
+
+```bash
+git push origin main
+```
+
+```bash
 npm test             # 38 tests
 npm run build
 ```
