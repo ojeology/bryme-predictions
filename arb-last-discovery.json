@@ -1,5 +1,5 @@
 {
- "at": "2026-10-25T22:53:13.756Z",
+ "at": "2026-10-25T22:53:16.958Z",
  "edge": "AMS",
  "phoneCountry": "NG",
  "workerCountry": "NG",
@@ -995,7 +995,7 @@
    "id": "livescorebet",
    "status": "found",
    "url": "https://gateway-ng.livescorebet.com/sportsbook/gateway/v3/view/events/matches?sportcategoryid=SBTC1_1&categoryid=SBTC1_1",
-   "quoteCount": 12608,
+   "quoteCount": 12645,
    "note": "",
    "evidence": {},
    "attempts": [
