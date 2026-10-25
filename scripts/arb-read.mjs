@@ -23,6 +23,7 @@ import { existsSync } from 'node:fs';
 import { flattenMsport } from '../arb/connectors/msport.js';
 import { flattenBetking } from '../arb/connectors/betking.js';
 import { flattenSportyBet } from '../arb/connectors/sportybet.js';
+import { fetchLiveScoreBetQuotes } from '../arb/connectors/livescorebetFeed.js';
 
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36';
 
@@ -32,6 +33,9 @@ const MSPORT_URL = (process.env.MSPORT_FEED_URL
 const BETKING_URLS = (process.env.BETKING_FEED_URL
   || 'https://sportsapicdn-desktop.betking.com/api/feeds/prematch/mostpopularsports/en/1/7/3/,https://sportsapicdn-desktop.betking.com/api/feeds/prematch/lastminute/en/1/15/')
   .split(',').map((entry) => entry.trim()).filter(Boolean);
+
+const LSB_URL = (process.env.LSCB_FEED_URL
+  || 'https://gateway-ng.livescorebet.com/sportsbook/gateway/v3/view/events/matches?sportcategoryid=SBTC1_1&categoryid=SBTC1_1').trim();
 
 const SPORTYBET_ORIGIN = 'https://www.sportybet.com';
 const SPORTYBET_PAGE = `${SPORTYBET_ORIGIN}/ng/`;
@@ -103,6 +107,30 @@ async function readMsport() {
     return quotes;
   } catch (error) {
     note('msport', `failed: ${error?.message || error}`);
+    return [];
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * LiveScore Bet - a plain gateway.  It is read here rather than in the
+ * Worker, because the Worker's memory is small and this book's whole
+ * football slate is a big answer.
+ * ------------------------------------------------------------------ */
+async function readLiveScoreBet() {
+  try {
+    const result = await fetchLiveScoreBetQuotes(LSB_URL, {
+      maxCompetitions: Number(process.env.LSB_MAX_COMPETITIONS || 48),
+      timeoutMs: 20000,
+    });
+    if (result.error) {
+      note('livescorebet', `failed: ${result.error.message}`);
+      return [];
+    }
+    const quotes = result.quotes.map((quote) => ({ ...quote, bookmaker: 'livescorebet' }));
+    note('livescorebet', `${result.competitions} competitions -> ${quotes.length} prices`);
+    return quotes;
+  } catch (error) {
+    note('livescorebet', `failed: ${error?.message || error}`);
     return [];
   }
 }
@@ -435,6 +463,9 @@ async function main() {
 
   const mspportQuotes = await readMsport();
   if (mspportQuotes.length) books.msport = mspportQuotes;
+
+  const lsbQuotes = await readLiveScoreBet();
+  if (lsbQuotes.length) books.livescorebet = lsbQuotes;
 
   let browser = null;
   try {

@@ -77,11 +77,12 @@ export async function readSnapshotBook(env = {}, book = '') {
   const now = Date.now();
   const hit = cache.get(`${base}|${book}`);
   if (hit && now - hit.at <= CACHE_MS) return hit.value;
+  void now;
 
   const sha = await headCommit(env);
   const addresses = sha ? [`${RAW}/${sha}/${book}.json`, `${base}/${book}.json`] : [`${base}/${book}.json`];
 
-  let value = { capturedAt: null, entry: null, error: null };
+  let value = { capturedAt: null, entry: null, quotes: [], error: null };
   try {
     let response = null;
     let lastError = null;
@@ -99,16 +100,63 @@ export async function readSnapshotBook(env = {}, book = '') {
     }
     if (!response) throw lastError || new Error('the prices could not be read');
     if (!response.ok) {
-      value = { capturedAt: null, entry: null, error: new Error(`the free reader has no prices for ${book} yet (HTTP ${response.status})`) };
+      value = { capturedAt: null, entry: null, quotes: [], error: new Error(`the free reader has no prices for ${book} yet (HTTP ${response.status})`) };
     } else {
       const payload = await response.json();
       value = { capturedAt: payload?.capturedAt || null, entry: payload || null, error: null };
+      // the tree is read, put through the adapter, and let go of
+      flattenInto(value, book, env);
     }
   } catch (error) {
-    value = { capturedAt: null, entry: null, error };
+    value = { capturedAt: null, entry: null, quotes: [], error };
   }
 
   cache.set(`${base}|${book}`, { at: now, value });
+  return value;
+}
+
+/**
+ * Put one published file through the book's own adapter, and keep only the
+ * prices: a raw price tree is several megabytes, and the Worker holds one
+ * book at a time.
+ */
+function flattenInto(value, book, env) {
+  const entry = value.entry;
+  const capturedAt = value.capturedAt;
+  if (!entry || !capturedAt) return value;
+
+  const captured = new Date(capturedAt);
+  const ageSeconds = (Date.now() - captured.getTime()) / 1000;
+  if (!Number.isFinite(ageSeconds) || ageSeconds > snapshotMaxAgeSeconds(env)) {
+    value.quotes = [];
+    value.error = new Error(`the prices read ${Math.round(ageSeconds / 60)} minutes ago are too old to compare`);
+    value.entry = null;
+    return value;
+  }
+
+  const stamp = (quotes) => quotes.map((quote) => ({ ...quote, fetchedAt: capturedAt }));
+  try {
+    let quotes = [];
+    if (Array.isArray(entry.quotes)) {
+      quotes = entry.quotes;
+    } else if (book === 'msport' && entry.payload) {
+      quotes = flattenMsport(entry.payload, { bookmaker: 'msport', url: entry.url, now: capturedAt });
+    } else if (book === 'betking' && Array.isArray(entry.payloads)) {
+      for (const item of entry.payloads) {
+        quotes.push(...flattenBetking(item.payload, { bookmaker: 'betking', url: item.url }));
+      }
+    } else if (book === 'sportybet' && Array.isArray(entry.payloads)) {
+      for (const item of entry.payloads) {
+        quotes.push(...flattenSportyBet(item.payload, { bookmaker: 'sportybet', now: capturedAt }));
+      }
+    }
+    value.quotes = stamp(quotes);
+    value.error = null;
+  } catch (readError) {
+    value.quotes = [];
+    value.error = readError;
+  }
+  value.entry = null;
   return value;
 }
 
@@ -120,46 +168,6 @@ export async function readSnapshotBook(env = {}, book = '') {
  * @returns {Promise<{quotes: Array, error: Error|null, capturedAt: string|null}>}
  */
 export async function snapshotQuotes(env = {}, book = '') {
-  const { capturedAt, entry, error } = await readSnapshotBook(env, book);
-  if (!entry || !capturedAt) return { quotes: [], error, capturedAt: null };
-
-  const captured = new Date(capturedAt);
-  const ageSeconds = (Date.now() - captured.getTime()) / 1000;
-  if (!Number.isFinite(ageSeconds) || ageSeconds > snapshotMaxAgeSeconds(env)) {
-    return {
-      quotes: [],
-      error: new Error(`the prices read ${Math.round(ageSeconds / 60)} minutes ago are too old to compare`),
-      capturedAt,
-    };
-  }
-
-  const stamp = (quotes) => quotes.map((quote) => ({ ...quote, fetchedAt: capturedAt }));
-
-  try {
-    // the reader publishes the prices already in comparable form
-    if (Array.isArray(entry.quotes)) {
-      return { quotes: stamp(entry.quotes), error: null, capturedAt };
-    }
-    if (book === 'msport' && entry.payload) {
-      return { quotes: stamp(flattenMsport(entry.payload, { bookmaker: 'msport', url: entry.url, now: capturedAt })), error: null, capturedAt };
-    }
-    if (book === 'betking' && Array.isArray(entry.payloads)) {
-      const quotes = [];
-      for (const item of entry.payloads) {
-        quotes.push(...flattenBetking(item.payload, { bookmaker: 'betking', url: item.url }));
-      }
-      return { quotes: stamp(quotes), error: null, capturedAt };
-    }
-    if (book === 'sportybet' && Array.isArray(entry.payloads)) {
-      const quotes = [];
-      for (const item of entry.payloads) {
-        quotes.push(...flattenSportyBet(item.payload, { bookmaker: 'sportybet', now: capturedAt }));
-      }
-      return { quotes: stamp(quotes), error: null, capturedAt };
-    }
-  } catch (readError) {
-    // a payload the adapter cannot read is left out rather than guessed at
-    return { quotes: [], error: readError, capturedAt };
-  }
-  return { quotes: [], error: null, capturedAt };
+  const value = await readSnapshotBook(env, book);
+  return { quotes: value.quotes || [], error: value.error || null, capturedAt: value.capturedAt || null };
 }

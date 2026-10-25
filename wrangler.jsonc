@@ -18,6 +18,11 @@
   "browser": {
     "binding": "browser"
   },
+  "vars": {
+    "ARB_MAX_QUOTE_AGE_SECONDS": "1800",
+    "ARB_SNAPSHOT_MAX_AGE_SECONDS": "1800",
+    "LSB_MAX_COMPETITIONS": "12"
+  },
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",

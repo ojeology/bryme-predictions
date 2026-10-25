@@ -1,5 +1,6 @@
 import { scanOpportunities, clusterFixtures, normalizeQuote } from '../src/lib/arbitrage.js';
 import { getConnectorStatus, loadConnectorQuotes } from './connectors/index.js';
+import { snapshotQuotes } from './connectors/snapshot.js';
 import { discoverBook, proveFeed, BOOK_PAGES, KNOWN_FEEDS } from './discovery.js';
 import { flattenBookPayload } from './connectors/normalize.js';
 import { captureBookViaBrowser } from './browserFeed.js';
@@ -78,6 +79,8 @@ function scanOptions(source = {}) {
     totalStake: numberOption(source.totalStake, 100000, { min: 1, max: 1_000_000_000, name: 'totalStake' }),
     rounding: numberOption(source.rounding, 100, { min: 0, max: 1_000_000, name: 'rounding' }),
     debug: source.debug === '2' ? 2 : (source.debug === '1' || source.debug === 'true' ? 1 : 0),
+    // which books to read: /api/arbs?books=betking,msport
+    only: String(source.books || '').split(',').map((id) => id.trim()).filter(Boolean),
   };
 }
 
@@ -253,7 +256,7 @@ export async function scanConfiguredFeeds(env = {}, options = {}) {
     }
     return scanWithDiscovered(env, options, usable, found);
   }
-  const { quotes, connectors, errors } = await loadConnectorQuotes(env);
+  const { quotes, connectors, errors } = await loadConnectorQuotes(env, options);
   const maxQuoteAgeSeconds = maxFeedAge(env);
   const now = Date.now();
   const freshQuotes = quotes.filter((quote) => isFreshPreMatch(quote, now, maxQuoteAgeSeconds));
@@ -457,7 +460,7 @@ async function egressTrace() {
 export async function handleArbRequest(request, env = {}) {
   const url = new URL(request.url);
   const path = url.pathname.replace(/\/$/, '');
-  if (!['/api/arbs', '/api/arbs/status', '/api/arbs/scan', '/api/arbs/discover', '/api/arbs/whereami', '/api/arbs/candidates', '/api/arbs/ingest', '/api/arbs/browser', '/api/arbs/probe'].includes(path)) return null;
+  if (!['/api/arbs', '/api/arbs/status', '/api/arbs/scan', '/api/arbs/discover', '/api/arbs/whereami', '/api/arbs/candidates', '/api/arbs/ingest', '/api/arbs/browser', '/api/arbs/probe', '/api/arbs/snapshot'].includes(path)) return null;
   if (request.method === 'OPTIONS') {
     return new Response(null, { status: 204, headers: { Allow: 'GET, POST, OPTIONS', 'Cache-Control': 'no-store' } });
   }
@@ -536,6 +539,20 @@ export async function handleArbRequest(request, env = {}) {
       for (const [book, urls] of Object.entries(KNOWN_FEEDS)) feeds[book] = urls.slice(0, 8);
       return json({ ok: true, feeds });
     }
+    if (path === '/api/arbs/snapshot') {
+      // what the free reader published, book by book
+      const books = {};
+      for (const book of ['sportybet', 'msport', 'betking']) {
+        const result = await snapshotQuotes(env, book);
+        books[book] = {
+          quotes: result.quotes.length,
+          capturedAt: result.capturedAt,
+          error: result.error?.message || null,
+        };
+      }
+      return json({ ok: true, books, checkedAt: new Date().toISOString() });
+    }
+
     if (path === '/api/arbs/ingest') {
       if (request.method !== 'POST') return json({ ok: false, error: 'Method not allowed.' }, 405);
       // The phone collected the books' own answers on the phone's own

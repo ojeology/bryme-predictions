@@ -17,7 +17,7 @@ export const CONNECTORS = [
   { id: 'nairabet', label: 'NairaBet', envKey: 'NAIRABET_FEED_URL' },
   { id: '22bet', label: '22Bet NG', envKey: 'BET22_FEED_URL' },
   { id: '1xbet', label: '1xBet', envKey: 'BET1X_FEED_URL' },
-  { id: 'livescorebet', label: 'LiveScore Bet NG', envKey: 'LSCB_FEED_URL' },
+  { id: 'livescorebet', label: 'LiveScore Bet NG', envKey: 'LSCB_FEED_URL', snapshot: true },
   // MSport is read over plain HTTP (with the browser as a fallback)
   { id: 'msport', label: 'MSport', envKey: 'MSPORT_FEED_URL', reader: fetchMsportQuotes, snapshot: true },
   // BetKing's edge only answers a real browser, so it gets one
@@ -77,7 +77,12 @@ function usableQuote(quote) {
  * Modular book adapters. Each currently accepts a permitted, operator-supplied
  * JSON feed; no access-control bypass or browser challenge solving is included.
  */
-export async function loadConnectorQuotes(env = {}) {
+export async function loadConnectorQuotes(env = {}, options = {}) {
+  // a scan can be limited to some of the books, which is how a single book
+  // is checked on its own
+  const only = Array.isArray(options.only) && options.only.length
+    ? new Set(options.only.map((id) => String(id)))
+    : null;
   // One book at a time, on purpose: a book's own price tree can be several
   // megabytes of JSON, and holding two of them at once is enough to run the
   // Worker out of memory. Each payload is released before the next one is
@@ -88,10 +93,25 @@ export async function loadConnectorQuotes(env = {}) {
       .catch((error) => ({ quotes: [], error }))
     : { quotes: [], error: null };
 
+  // The prices the free reader published come first: they carry the whole
+  // slate, and they cost no browser time at all.
+  const published = new Map();
+  const snapshotErrors = [];
+  for (const definition of CONNECTORS) {
+    if (!definition.snapshot) continue;
+    const result = await snapshotQuotes(env, definition.id);
+    if (result.quotes.length) {
+      published.set(definition.id, result.quotes);
+    } else if (result.error) {
+      snapshotErrors.push(`${definition.label}: ${result.error.message}`);
+    }
+  }
+
   // The books whose edge only serves a real browser share ONE browser
   // session, with a tab each: the free plan allows ten minutes of browser
-  // time a day and one new browser every twenty seconds.
-  const browserBooks = CONNECTORS.filter((d) => d.viaBrowser && env[d.envKey]);
+  // time a day and one new browser every twenty seconds.  A book whose
+  // prices the free reader already published does not need one.
+  const browserBooks = CONNECTORS.filter((d) => d.viaBrowser && env[d.envKey] && !published.has(d.id));
   const cached = browserCachePick(browserBooks, env);
   const needsBrowser = browserBooks.filter((d) => !cached.has(d.id));
   let sharedBrowser = null;
@@ -103,10 +123,9 @@ export async function loadConnectorQuotes(env = {}) {
   }
 
   const specific = [];
-  const snapshotErrors = [];
   try {
   for (const definition of CONNECTORS) {
-    if (!env[definition.envKey]) {
+    if (!env[definition.envKey] || (only && !only.has(definition.id))) {
       specific.push({ quotes: [], error: null, attempted: false });
       continue;
     }
@@ -114,13 +133,9 @@ export async function loadConnectorQuotes(env = {}) {
       const feedUrl = env[definition.envKey];
 
       // the free reader's published prices come first
-      if (definition.snapshot) {
-        const published = await snapshotQuotes(env, definition.id);
-        if (published.quotes.length) {
-          specific.push({ quotes: published.quotes, error: null, attempted: true, source: 'reader' });
-          continue;
-        }
-        if (published.error) snapshotErrors.push(`${definition.label}: ${published.error.message}`);
+      if (published.has(definition.id)) {
+        specific.push({ quotes: published.get(definition.id), error: null, attempted: true, source: 'reader' });
+        continue;
       }
 
       if (definition.reader) {
@@ -162,7 +177,11 @@ export async function loadConnectorQuotes(env = {}) {
     const ownQuotes = [];
     const sources = [];
     if (own.attempted && !own.error) {
-      sources.push(...own.quotes.map((quote) => ({ ...quote, bookmaker: definition.id })));
+      // a quote that already carries this book's name is used as it is:
+      // copying thousands of prices again is what runs a Worker out of memory
+      for (const quote of own.quotes) {
+        sources.push(quote.bookmaker === definition.id ? quote : { ...quote, bookmaker: definition.id });
+      }
     }
     if (env.ARB_FEED_URL && !combined.error) {
       sources.push(...combined.quotes.filter((quote) => normalizeBookmaker(quote.bookmaker || quote.book) === definition.id));
