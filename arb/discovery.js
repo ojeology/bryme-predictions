@@ -84,6 +84,14 @@ export const KNOWN_FEEDS = {
     ...GROUP_PATHS.map((path) => `https://api.22bet.ng${path}?${LINEFEED_QUERY}`),
   ],
   nairabet: [
+    // NairaBet runs on the Alteran platform; its addresses only resolve
+    // inside Nigeria, so these are tried from the phone's own network
+    'https://sb2frontend-alternar2.biahosted.com/api/sports',
+    'https://sb2frontend-alternar2.biahosted.com/api/events',
+    'https://sb2commongateway-alternar2.biahosted.com/api/sports',
+    'https://sb2commongateway-alternar2.biahosted.com/api/events',
+    'https://ps.tabet-live.io/sports',
+    'https://nairabet.nairabet.twoup.io/beapi/sports',
     ...GROUP_PATHS.slice(0, 4).map((path) => `https://nairabet.com${path}?${LINEFEED_QUERY}`),
     ...GROUP_PATHS.slice(0, 4).map((path) => `https://api.nairabet.com${path}?${LINEFEED_QUERY}`),
   ],
