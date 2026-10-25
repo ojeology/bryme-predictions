@@ -1,5 +1,5 @@
 {
- "at": "2026-10-25T18:45:39.329Z",
+ "at": "2026-10-25T18:45:48.163Z",
  "edge": "LHR",
  "results": [
   {
@@ -770,6 +770,123 @@
      "keys": [],
      "reason": "HTTP 525",
      "sample": "error code: 525\n"
+    }
+   ]
+  },
+  {
+   "id": "livescorebet",
+   "status": "none",
+   "url": "",
+   "quoteCount": 0,
+   "note": "page loaded, 5 scripts and 0 chunks read",
+   "evidence": {
+    "page": "https://livescorebet.com/ng/",
+    "scripts": [
+     "https://cdn-ukwest.onetrust.com/scripttemplates/otSDKStub.js",
+     "https://livescorebet.com/ng/vendors.3735969d.js",
+     "https://livescorebet.com/ng/firebase.4c03da06.js",
+     "https://livescorebet.com/ng/index.de45d74b.js",
+     "https://livescorebet.com/ng/modules.a23cbfb8.js"
+    ],
+    "chunks": [],
+    "candidatesTried": 7
+   },
+   "attempts": [
+    {
+     "url": "https://sports.livescorebet.net/linefeed/getLineFeed?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 525,
+     "keys": [],
+     "reason": "HTTP 525",
+     "sample": "error code: 525\n"
+    },
+    {
+     "url": "https://sports.livescorebet.net/service-api/linefeed/getPreMatchLineFeed?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 525,
+     "keys": [],
+     "reason": "HTTP 525",
+     "sample": "error code: 525\n"
+    },
+    {
+     "url": "https://sports.livescorebet.net/service-api/linefeed/getLineFeed?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 525,
+     "keys": [],
+     "reason": "HTTP 525",
+     "sample": "error code: 525\n"
+    },
+    {
+     "url": "https://sports.livescorebet.net/linefeed/getPreMatchLineFeed?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 525,
+     "keys": [],
+     "reason": "HTTP 525",
+     "sample": "error code: 525\n"
+    },
+    {
+     "url": "https://api.livescorebet.net/api/v1/markets?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 525,
+     "keys": [],
+     "reason": "HTTP 525",
+     "sample": "error code: 525\n"
+    },
+    {
+     "url": "https://api.livescorebet.net/api/v1/odds?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 525,
+     "keys": [],
+     "reason": "HTTP 525",
+     "sample": "error code: 525\n"
+    },
+    {
+     "url": "https://firebaseremoteconfig.googleapis.com/v1/projects/",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "<!DOCTYPE html>\n<html lang=en>\n  <meta charset=utf-8>\n  <meta name=viewport content=\"initial-scale=1, minimum-scale=1, width=device-width\">\n  <title>Error 404 (Not Found)!!1</title>\n  <style>\n    *{margin:0;padding:0}html,code{font:15px/22px arial,sans-serif}html{background:#fff;color:#222;padding:1"
+    },
+    {
+     "url": "https://firebase.googleapis.com/v1alpha/projects/-/apps/",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "<!DOCTYPE html>\n<html lang=en>\n  <meta charset=utf-8>\n  <meta name=viewport content=\"initial-scale=1, minimum-scale=1, width=device-width\">\n  <title>Error 404 (Not Found)!!1</title>\n  <style>\n    *{margin:0;padding:0}html,code{font:15px/22px arial,sans-serif}html{background:#fff;color:#222;padding:1"
+    },
+    {
+     "url": "https://firebaselogging.googleapis.com/v0cc/log?format=json_proto",
+     "ok": false,
+     "status": 400,
+     "keys": [],
+     "reason": "HTTP 400",
+     "sample": "<!DOCTYPE html>\n<html lang=en>\n  <meta charset=utf-8>\n  <meta name=viewport content=\"initial-scale=1, minimum-scale=1, width=device-width\">\n  <title>Error 400 (Bad Request)!!1</title>\n  <style>\n    *{margin:0;padding:0}html,code{font:15px/22px arial,sans-serif}html{background:#fff;color:#222;padding"
+    },
+    {
+     "url": "https://gateway-ng.livescorebet.com/sportsbook/gateway/v1",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "{\"timestamp\":1792953947919,\"status\":404,\"error\":\"Not Found\",\"path\":\"/sportsbook/gateway/v1\"}"
+    },
+    {
+     "url": "https://firebaseinstallations.googleapis.com/v1/projects/",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "<!DOCTYPE html>\n<html lang=en>\n  <meta charset=utf-8>\n  <meta name=viewport content=\"initial-scale=1, minimum-scale=1, width=device-width\">\n  <title>Error 404 (Not Found)!!1</title>\n  <style>\n    *{margin:0;padding:0}html,code{font:15px/22px arial,sans-serif}html{background:#fff;color:#222;padding:1"
+    },
+    {
+     "url": "https://formatjs.github.io/docs/react-intl/api",
+     "ok": false,
+     "status": 200,
+     "keys": [],
+     "reason": "not JSON",
+     "sample": "<!doctype html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"UTF-8\" />\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\n    <script async=\"\" src=\"https://www.googletagmanager.com/gtag/js?id=G-4H6ZM973P2\"></script><link rel=\"icon\" href=\"/img/logo-icon.svg\" type=\"image/svg+"
     }
    ]
   }
