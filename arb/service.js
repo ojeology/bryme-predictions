@@ -59,7 +59,7 @@ export async function scanConfiguredFeeds(env = {}, options = {}) {
       return scanWithDiscovered(env, options, knownList, knownList);
     }
     const found = await discoverAll(env, [], { crawl: false });
-    await reportDiscovery(env, found, { edge, trigger: 'scan' });
+    await reportDiscovery(env, found, { trigger: 'scan' });
     const usable = found.filter((entry) => entry.status === 'found' && entry.url);
     if (!usable.length) {
       return {
@@ -151,16 +151,17 @@ export async function runDiscovery(bookId, env = {}, options = {}) {
  * Quotes from a feed the Worker found by itself. Used when the operator has
  * not pinned an address, so RUN still works with nothing to configure.
  */
-async function quotesFromDiscovered(bookmaker, env = {}) {
+async function quotesFromDiscovered(bookmaker, env = {}, knownUrl = '') {
   const cached = cacheGet(bookmaker);
-  if (!cached) return { quotes: [], error: null, url: '' };
-  const result = await proveFeed(cached.url, bookmaker, { timeoutMs: Number(env.BOOK_TIMEOUT_MS || 8000) });
-  if (!result.ok) return { quotes: [], error: new Error(result.reason), url: cached.url };
+  const url = cached?.url || knownUrl || '';
+  if (!url) return { quotes: [], error: null, url: '' };
+  const result = await proveFeed(url, bookmaker, { timeoutMs: Number(env.BOOK_TIMEOUT_MS || 8000) });
+  if (!result.ok) return { quotes: [], error: new Error(result.reason), url };
   const fetchedAt = new Date().toISOString();
   return {
     quotes: result.quotes.map((quote) => ({ ...quote, fetchedAt })),
     error: null,
-    url: cached.url,
+    url,
   };
 }
 
@@ -178,8 +179,8 @@ export async function discoverAll(env = {}, bookIds = [], options = {}) {
 
 async function scanWithDiscovered(env, options, usable, found) {
   const perBook = await Promise.all(usable.map(async (entry) => {
-    const result = await quotesFromDiscovered(entry.id, env);
-    return { id: entry.id, label: entry.id, quotes: result.quotes, error: result.error };
+    const result = await quotesFromDiscovered(entry.id, env, entry.url);
+    return { id: entry.id, label: entry.id, quotes: result.quotes, error: result.error, url: result.url };
   }));
 
   const quotes = perBook.flatMap((entry) => entry.quotes);
