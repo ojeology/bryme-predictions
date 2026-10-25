@@ -18,14 +18,43 @@ import { flattenMsport } from './msport.js';
 import { flattenBetking } from './betking.js';
 import { flattenSportyBet } from './sportybet.js';
 
-const DEFAULT_BASE = 'https://raw.githubusercontent.com/ojeology/bryme-predictions/prices';
+const REPO = 'ojeology/bryme-predictions';
+const BRANCH = 'prices';
+const RAW = `https://raw.githubusercontent.com/${REPO}`;
 const CACHE_MS = 60_000;
+const HEAD_CACHE_MS = 300_000;
 const DEFAULT_MAX_AGE_SECONDS = 1800;
 
 const cache = new Map();
+let head = { sha: null, at: 0 };
 
 function snapshotBase(env = {}) {
-  return String(env.ARB_SNAPSHOT_URL || DEFAULT_BASE).trim().replace(/\/+$/, '');
+  return String(env.ARB_SNAPSHOT_URL || `${RAW}/${BRANCH}`).trim().replace(/\/+$/, '');
+}
+
+/**
+ * The commit the reader published last.
+ *
+ * The branch address can be served from a cache for a few minutes after a
+ * new push, so the commit itself is looked up and its address used: that
+ * address can never change under us.
+ */
+async function headCommit(env = {}) {
+  if (env.ARB_SNAPSHOT_URL) return null;
+  const now = Date.now();
+  if (head.sha && now - head.at <= HEAD_CACHE_MS) return head.sha;
+  try {
+    const response = await fetch(`https://api.github.com/repos/${REPO}/commits?sha=${BRANCH}&per_page=1`, {
+      headers: { 'User-Agent': 'BrymeArbScanner/1.0', Accept: 'application/vnd.github+json' },
+    });
+    if (!response.ok) return head.sha || null;
+    const list = await response.json();
+    const sha = Array.isArray(list) ? list[0]?.sha : null;
+    if (sha) head = { sha, at: now };
+    return sha || head.sha || null;
+  } catch {
+    return head.sha || null;
+  }
 }
 
 /** How old a snapshot may be before the prices are treated as gone cold. */
@@ -49,12 +78,26 @@ export async function readSnapshotBook(env = {}, book = '') {
   const hit = cache.get(`${base}|${book}`);
   if (hit && now - hit.at <= CACHE_MS) return hit.value;
 
+  const sha = await headCommit(env);
+  const addresses = sha ? [`${RAW}/${sha}/${book}.json`, `${base}/${book}.json`] : [`${base}/${book}.json`];
+
   let value = { capturedAt: null, entry: null, error: null };
   try {
-    const response = await fetch(`${base}/${book}.json?t=${now}`, {
-      headers: { 'User-Agent': 'BrymeArbScanner/1.0', Accept: 'application/json' },
-      redirect: 'follow',
-    });
+    let response = null;
+    let lastError = null;
+    for (const address of addresses) {
+      try {
+        const answer = await fetch(address, {
+          headers: { 'User-Agent': 'BrymeArbScanner/1.0', Accept: 'application/json' },
+          redirect: 'follow',
+        });
+        if (answer.ok) { response = answer; break; }
+        lastError = new Error(`HTTP ${answer.status}`);
+      } catch (error) {
+        lastError = error;
+      }
+    }
+    if (!response) throw lastError || new Error('the prices could not be read');
     if (!response.ok) {
       value = { capturedAt: null, entry: null, error: new Error(`the free reader has no prices for ${book} yet (HTTP ${response.status})`) };
     } else {

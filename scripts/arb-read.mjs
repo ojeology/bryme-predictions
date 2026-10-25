@@ -33,13 +33,16 @@ const BETKING_URLS = (process.env.BETKING_FEED_URL
   || 'https://sportsapicdn-desktop.betking.com/api/feeds/prematch/mostpopularsports/en/1/7/3/,https://sportsapicdn-desktop.betking.com/api/feeds/prematch/lastminute/en/1/15/')
   .split(',').map((entry) => entry.trim()).filter(Boolean);
 
-const SPORTYBET_PAGE = 'https://www.sportybet.com/ng/';
+const SPORTYBET_ORIGIN = 'https://www.sportybet.com';
+const SPORTYBET_PAGE = `${SPORTYBET_ORIGIN}/ng/`;
 
 /** How many SportyBet tournaments to read (the busiest ones first). */
 const SPORTYBET_TOURNAMENT_LIMIT = Number(process.env.SPORTYBET_TOURNAMENTS || 140);
 
 /** The price calls the book's own page makes, one per tournament. */
 const SPORTYBET_TEMPLATES = [
+  '/api/ng/factsCenter/sportList?timeline=24&productId=1&option=1',
+  '/api/ng/factsCenter/liveOrPrematchEvents?sportId=sr:sport:1',
   '/api/ng/factsCenter/wapEvents?sportId=sr:sport:1&tournamentId={id}',
   '/api/ng/factsCenter/wapConfigurableEventsByOrder?sportId=sr:sport:1&tournamentId={id}',
   '/api/ng/factsCenter/wapConfigurableUpcomingEvents?sportId=sr:sport:1&tournamentId={id}',
@@ -290,10 +293,16 @@ async function readSportyBet(browser) {
     page = await browser.newPage();
     await page.setViewport({ width: 412, height: 900 });
     await dressAsVisitor(page);
-    page.on('response', (response) => {
+    const captured = [];
+    page.on('response', async (response) => {
       const url = response.url();
       if (!/sportybet\.com\/api\//i.test(url)) return;
       seen.push({ url, method: response.request()?.method() || 'GET', status: response.status() });
+      if (!/factsCenter/i.test(url)) return;
+      try {
+        const text = await response.text();
+        if (text && text.length > 500) captured.push({ url, body: text });
+      } catch { /* the body may already be gone */ }
     });
 
     await page.goto(SPORTYBET_PAGE, { waitUntil: 'domcontentloaded', timeout: 45000 }).catch(() => {});
@@ -302,12 +311,12 @@ async function readSportyBet(browser) {
     await sleep(6000);
 
     // the device id the site's own app asks for
-    const device = await askInPage(page, { url: '/api/ng/patron/deviceId', method: 'POST' });
+    const device = await askInPage(page, { url: `${SPORTYBET_ORIGIN}/api/ng/patron/deviceId`, method: 'POST' });
     note('sportybet', `device id -> HTTP ${device?.status ?? 'nothing'}${device?.length ? `, ${device.length} bytes` : ''}`);
 
     // the menu: which tournaments are on today
     const menu = await askInPage(page, {
-      url: '/api/ng/factsCenter/wapPopularAndSportOption',
+      url: `${SPORTYBET_ORIGIN}/api/ng/factsCenter/wapPopularAndSportOption`,
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ sportId: 'sr:sport:1' }),
@@ -322,6 +331,21 @@ async function readSportyBet(browser) {
       for (const tournament of category?.tournaments || []) {
         tournaments.push({ id: tournament.id, name: tournament.name, events: tournament.eventSize || 0, category: category.name });
       }
+    }
+    // whatever the page fetched for itself is the book's own answer
+    for (const item of captured) {
+      try {
+        const payload = JSON.parse(item.body);
+        const found = flattenSportyBet(payload, { bookmaker: 'sportybet' });
+        if (found.length) {
+          quotes.push(...found);
+          note('sportybet', `the page's own call ${item.url.slice(0, 90)} -> ${found.length} prices`);
+        }
+      } catch { /* not a price tree */ }
+    }
+    if (quotes.length) {
+      note('sportybet', `the slate: ${quotes.length} prices`);
+      return quotes;
     }
     if (!tournaments.length) {
       note('sportybet', `menu -> ${menu?.error ? menu.error : `HTTP ${menu?.status ?? 'nothing'}: ${String(menu?.body || '').slice(0, 90)}`}`);
