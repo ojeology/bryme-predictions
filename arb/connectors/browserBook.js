@@ -24,15 +24,20 @@
 import { flattenBookPayload } from './normalize.js';
 
 async function loadPlaywright() {
-  try {
-    return await import('playwright');
-  } catch {
+  // The specifier is held in a variable on purpose: a static import would be
+  // resolved by the Cloudflare Worker bundler, which has no browser and no
+  // node_modules, and the deploy would break over a connector that only
+  // matters on a machine.  At runtime this throws inside the try and is
+  // reported as "Playwright is not installed".
+  const names = ['playwright', 'playwright-core'];
+  for (const name of names) {
     try {
-      return await import('playwright-core');
+      return await import(/* @vite-ignore */ name);
     } catch {
-      throw new Error('Playwright is not installed (npm i -D playwright && npx playwright install chromium).');
+      /* try the next one */
     }
   }
+  throw new Error('Playwright is not installed (npm i -D playwright && npx playwright install chromium).');
 }
 
 export async function fetchBookWithBrowser(env = {}, definition = {}) {
