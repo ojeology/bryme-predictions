@@ -545,6 +545,14 @@ export default function ArbScannerView() {
                 {runSummary.rejectedQuoteCount > 0 && <span className="text-amber-300">{runSummary.rejectedQuoteCount.toLocaleString()} rejected (stale or started)</span>}
                 <span className="text-slate-400">in {(runSummary.ms / 1000).toFixed(1)}s</span>
               </div>
+              {runSummary.quoteCount === 0 && (
+                <p className="mt-3 text-sm text-amber-200 leading-6">
+                  No prices came down, because no book is connected yet. On the machine that
+                  uses your own Nigerian connection: run <span className="font-bold text-white">node arb/discover.mjs</span>,
+                  then put the address it finds in <span className="font-bold text-white">.env</span> as
+                  SPORTYBET_FEED_URL (and the same for the other books) and press RUN again.
+                </p>
+              )}
               {runSummary.connectors.length > 0 && (
                 <div className="flex flex-wrap gap-2 mt-3">
                   {runSummary.connectors.map((connector) => (

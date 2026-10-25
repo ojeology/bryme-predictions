@@ -104,8 +104,18 @@ npm run build
 npx wrangler deploy
 ```
 
-The feed URLs live in the Worker environment (or as Worker secrets) — never in
-the browser and never in the repository.
+The feed URLs live in the Worker environment — never in the browser and never
+in the repository:
+
+```bash
+npx wrangler secret put SPORTYBET_FEED_URL
+npx wrangler secret put NAIRABET_FEED_URL
+npx wrangler secret put BET22_FEED_URL
+```
+
+(`ARB_FEED_URL` is also accepted, as one address that returns every book's
+quotes.) After the secrets are in place, press RUN in the app and the Worker
+downloads the prices on demand.
 
 ---
 

@@ -10,9 +10,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id) {
-          if (id.includes('src/data/gzCore')) return 'gz-core';
-          if (id.includes('src/data/gzClubsA')) return 'gz-clubs-a';
-          if (id.includes('src/data/gzClubsB')) return 'gz-clubs-b';
+          if (id.includes('src/lib/arbitrage')) return 'arb-core';
         },
       },
     },

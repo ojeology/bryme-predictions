@@ -21,10 +21,5 @@
       "/index.html",
       "/api/*"
     ]
-  },
-  "kv_namespaces": [
-    {
-      "binding": "BRYME_KV"
-    }
-  ]
+  }
 }
