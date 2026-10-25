@@ -77,7 +77,11 @@ export async function reportDiscovery(env = {}, results = [], extra = {}) {
     const path = `https://api.github.com/repos/${repo}/contents/${REPORT_PATH}`;
     // Updating a file needs its current sha, so read it first.
     let sha = '';
-    const merged = { at: report.at, edge: report.edge, results: [...results] };
+    // the extra facts (which country the worker reached the books from) are
+    // kept too - they explain a refusal better than any error message
+    const extras = { ...extra };
+    delete extras.trigger;
+    const merged = { at: report.at, edge: report.edge, ...extras, results: [...results] };
     try {
       const existing = await fetch(`${path}?ref=${encodeURIComponent(branch)}`, { headers });
       if (existing.ok) {
