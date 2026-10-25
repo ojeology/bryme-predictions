@@ -719,13 +719,33 @@ export default function ArbScannerView() {
       )}
 
       {runSummary && runSummary.quoteCount === 0 && (
-        <div className="bg-slate-900/60 border border-white/10 rounded-xl px-4 py-3 text-xs text-slate-400 leading-6">
-          <span className="font-bold text-slate-200">Nothing downloaded yet — no book is connected.</span>{' '}
-          On the machine that uses your own Nigerian connection run{' '}
-          <code className="font-mono text-emerald-400">node arb/discover.mjs</code>, then put the address
-          it finds in <code className="font-mono text-emerald-400">.env</code> as{' '}
-          <code className="font-mono text-emerald-400">SPORTYBET_FEED_URL</code> (and the same for the
-          other books) and press RUN again.
+        <div className="bg-slate-900/60 border border-white/10 rounded-xl px-4 py-4 text-xs text-slate-400 leading-6">
+          {runSummary.mode === 'feed' ? (
+            <>
+              <span className="font-bold text-slate-200">The books are connected but returned nothing.</span>{' '}
+              The addresses answered without prices — usually a block or the wrong address. On the
+              machine with your own connection run <code className="font-mono text-emerald-400">npm run doctor</code>
+              {' '}to see which book is failing, then <code className="font-mono text-emerald-400">npm run setup</code>
+              {' '}to look again.
+            </>
+          ) : (
+            <>
+              <span className="font-bold text-slate-200">This deployment has no book addresses yet.</span>{' '}
+              The scanner only reads what the server has been given, and it has been given nothing —
+              so RUN correctly returns 0 prices rather than inventing them.
+              <span className="block mt-2">
+                <strong className="text-slate-300">To fix it:</strong> on your own computer run{' '}
+                <code className="font-mono text-emerald-400">npm run setup</code> (it opens each book and
+                writes what it finds to <code className="font-mono text-emerald-400">.env</code>), then add
+                those values as Worker secrets in Cloudflare —{' '}
+                <code className="font-mono text-emerald-400">SPORTYBET_FEED_URL</code>,{' '}
+                <code className="font-mono text-emerald-400">NAIRABET_FEED_URL</code>,{' '}
+                <code className="font-mono text-emerald-400">BET22_FEED_URL</code> — and push once so the
+                Worker picks them up. <code className="font-mono text-emerald-400">npm run doctor</code> checks
+                both ends and prints the exact values.
+              </span>
+            </>
+          )}
         </div>
       )}
 
