@@ -16,6 +16,7 @@ import {
   ExternalLink,
   FilePlus2,
   Gauge,
+  Globe,
   History,
   Info,
   Keyboard,
@@ -326,6 +327,8 @@ export default function ArbScannerView() {
   const [discovering, setDiscovering] = useState(false);
   const [discovery, setDiscovery] = useState(null);
   const [edge, setEdge] = useState(null);
+  const [whereami, setWhereami] = useState(null);
+  const [whereamiBusy, setWhereamiBusy] = useState(false);
   const [scanError, setScanError] = useState('');
   const [autoRefresh, setAutoRefresh] = useState(false);
   const [notice, setNotice] = useState('');
@@ -586,6 +589,19 @@ export default function ArbScannerView() {
     setTab('calculator');
   };
 
+  const checkWhere = async () => {
+    setWhereamiBusy(true);
+    try {
+      const response = await fetch('/api/arbs/whereami', { headers: { Accept: 'application/json' } });
+      const data = await response.json();
+      setWhereami(data);
+    } catch {
+      setWhereami({ error: 'The check could not reach the server.' });
+    } finally {
+      setWhereamiBusy(false);
+    }
+  };
+
   const saveToLedger = () => {
     if (!result.valid || !result.executableInTheory || training || !checks.every(Boolean)) return;
     if (!meta.event.trim() || !meta.market.trim() || legs.some((leg) => !leg.label.trim())) {
@@ -731,6 +747,36 @@ export default function ArbScannerView() {
           <div className="font-mono text-xs tabular-nums text-slate-500 ml-auto hidden sm:block" title="Lagos time">
             {clockLabel(now)} WAT
           </div>
+
+          <button
+            type="button"
+            onClick={checkWhere}
+            disabled={whereamiBusy}
+            className="hidden md:inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-white/10 bg-white/5 text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400 hover:text-slate-200 disabled:opacity-40"
+            title="Show which country the books will see"
+          >
+            {whereamiBusy ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Globe className="w-3.5 h-3.5" />}
+            where from
+          </button>
+
+          {whereami && !whereami.error && (
+            <div className="w-full md:w-auto md:col-span-6 font-mono text-[11px] text-slate-400 bg-white/5 border border-white/10 rounded-lg px-3 py-2 leading-relaxed">
+              your phone reaches the books through{' '}
+              <span className={whereami.phone?.country === 'NG' ? 'text-emerald-400' : 'text-amber-400'}>
+                {whereami.phone?.country || 'an unknown country'} ({whereami.phone?.colo || '??'})
+              </span>
+              {' · the server reaches them through '}
+              <span className={whereami.worker?.country === 'NG' ? 'text-emerald-400' : 'text-amber-400'}>
+                {whereami.worker?.country || 'an unknown country'} ({whereami.worker?.colo || '??'})
+              </span>
+              {whereami.worker?.country && whereami.worker.country !== 'NG' && (
+                <span className="block text-slate-500">
+                  A book that only answers Nigerian traffic will refuse the server. Turn off any VPN on this
+                  phone, then run &ldquo;find feeds&rdquo; again.
+                </span>
+              )}
+            </div>
+          )}
 
           <button
             type="button"

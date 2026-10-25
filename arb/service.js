@@ -248,11 +248,33 @@ async function readJsonBody(request) {
   try { return JSON.parse(text || '{}'); } catch { throw new Error('Request body must be valid JSON.'); }
 }
 
+/**
+ * Where does the Worker reach the world from? The books decide whether to
+ * answer based on the country the request appears to come from, so this is
+ * the one number that explains why a feed is refused.
+ */
+async function egressTrace() {
+  try {
+    const response = await fetch('https://www.cloudflare.com/cdn-cgi/trace', {
+      headers: { Accept: 'text/plain' },
+    });
+    const text = await response.text();
+    const out = {};
+    for (const line of text.split('\n')) {
+      const [key, ...rest] = line.trim().split('=');
+      if (key && rest.length) out[key] = rest.join('=');
+    }
+    return { country: out.loc || null, colo: out.colo || null, ip: out.ip || null, warp: out.warp || null };
+  } catch {
+    return { country: null, colo: null, ip: null, warp: null };
+  }
+}
+
 /** Web Request handler shared by Cloudflare Workers and the local Vite adapter. */
 export async function handleArbRequest(request, env = {}) {
   const url = new URL(request.url);
   const path = url.pathname.replace(/\/$/, '');
-  if (!['/api/arbs', '/api/arbs/status', '/api/arbs/scan', '/api/arbs/discover'].includes(path)) return null;
+  if (!['/api/arbs', '/api/arbs/status', '/api/arbs/scan', '/api/arbs/discover', '/api/arbs/whereami'].includes(path)) return null;
   if (request.method === 'OPTIONS') {
     return new Response(null, { status: 204, headers: { Allow: 'GET, POST, OPTIONS', 'Cache-Control': 'no-store' } });
   }
@@ -262,6 +284,19 @@ export async function handleArbRequest(request, env = {}) {
   // pressed the button - which is what decides whether the books answer.
   const edge = request.cf?.colo || null;
   try {
+    if (path === '/api/arbs/whereami') {
+      if (request.method !== 'GET') return json({ ok: false, error: 'Method not allowed.' }, 405);
+      const cf = request.cf || {};
+      return json({
+        ok: true,
+        // where the request came from
+        phone: { country: cf.country || null, colo: cf.colo || null, ip: cf.clientIp || null },
+        // where the Worker itself reaches the world from
+        worker: await egressTrace(),
+        edge,
+        checkedAt: new Date().toISOString(),
+      });
+    }
     if (path === '/api/arbs/status') {
       if (request.method !== 'GET') return json({ ok: false, error: 'Method not allowed.' }, 405);
       return json({ ok: true, ...getConnectorStatus(env), edge, checkedAt: new Date().toISOString() });
