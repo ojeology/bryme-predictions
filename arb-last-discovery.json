@@ -1,5 +1,5 @@
 {
- "at": "2026-10-25T18:40:44.001Z",
+ "at": "2026-10-25T18:40:49.949Z",
  "edge": "SEA",
  "results": [
   {
@@ -176,6 +176,75 @@
      "keys": [],
      "reason": "HTTP 404",
      "sample": ""
+    },
+    {
+     "url": "https://api.22bet.ng/linefeed/getPreMatchLineFeed?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "<html>\r\n<title>404 Not Found</title>\r\n<style>html{color-scheme:light dark;}</style>\r\n</head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>Angie</center>\r\n</body>\r\n</html>\r\n<!-- a padd"
+    },
+    {
+     "url": "https://api.22bet.ng/service-api/linefeed/getPreMatchLineFeed?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "<html>\r\n<title>404 Not Found</title>\r\n<style>html{color-scheme:light dark;}</style>\r\n</head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>Angie</center>\r\n</body>\r\n</html>\r\n<!-- a padd"
+    },
+    {
+     "url": "https://api.22bet.ng/linefeed/getLineFeed?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "<html>\r\n<title>404 Not Found</title>\r\n<style>html{color-scheme:light dark;}</style>\r\n</head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>Angie</center>\r\n</body>\r\n</html>\r\n<!-- a padd"
+    },
+    {
+     "url": "https://api.22bet.ng/service-api/linefeed/getLineFeed?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "<html>\r\n<title>404 Not Found</title>\r\n<style>html{color-scheme:light dark;}</style>\r\n</head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>Angie</center>\r\n</body>\r\n</html>\r\n<!-- a padd"
+    },
+    {
+     "url": "https://api.22bet.ng/api/v1/linefeed/getPreMatchLineFeed?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "<html>\r\n<title>404 Not Found</title>\r\n<style>html{color-scheme:light dark;}</style>\r\n</head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>Angie</center>\r\n</body>\r\n</html>\r\n<!-- a padd"
+    },
+    {
+     "url": "https://api.22bet.ng/service-api/linefeed/getLiveLineFeed?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "<html>\r\n<title>404 Not Found</title>\r\n<style>html{color-scheme:light dark;}</style>\r\n</head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>Angie</center>\r\n</body>\r\n</html>\r\n<!-- a padd"
+    },
+    {
+     "url": "https://api.22bet.ng/service-api/sports/getSports?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "<html>\r\n<title>404 Not Found</title>\r\n<style>html{color-scheme:light dark;}</style>\r\n</head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>Angie</center>\r\n</body>\r\n</html>\r\n<!-- a padd"
+    },
+    {
+     "url": "https://api.22bet.ng/service-api/gamespreview/GetGamesPreviewLight?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 200,
+     "keys": [
+      "Value",
+      "Success",
+      "Error",
+      "ErrorCode"
+     ],
+     "reason": "JSON, but no prices in it",
+     "sample": "{\"Value\":null,\"Success\":false,\"Error\":\"Invalid parameters\",\"ErrorCode\":157176}"
     }
    ]
   },
