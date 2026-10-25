@@ -1,5 +1,5 @@
 {
- "at": "2026-10-25T22:53:12.042Z",
+ "at": "2026-10-25T22:53:13.756Z",
  "edge": "AMS",
  "phoneCountry": "NG",
  "workerCountry": "NG",
@@ -1257,6 +1257,27 @@
      "keys": [],
      "reason": "blocked (HTTP 403)",
      "sample": "<!DOCTYPE html><html lang=\"en-US\"><head><title>Just a moment...</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\"><meta name=\"robots\" content=\"noindex,nofollow\"><meta name=\"viewport\" content=\"width=device-width,initial-scal"
+    },
+    {
+     "url": "https://sportsapicdn-desktop.betking.com/api/feeds/live",
+     "ok": false,
+     "status": 200,
+     "keys": [],
+     "reason": "JSON, but no prices in it",
+     "sample": "[{\"Id\":1,\"Name\":\"Football\",\"EventCount\":15,\"Tournaments\":[{\"Id\":21522843,\"Name\":\"Paraguay Primera Division\",\"Events\":[{\"Id\":35593190,\"ProviderId\":\"73038614\",\"Name\":\"Sportivo San Lorenzo - Cerro Porteno\",\"Status\":1,\"Score\":\"0:1\",\"HomeGameScore\":\"0\",\"AwayGameScore\":\"1\",\"Markets\":[{\"Id\":794924305,\"Name"
+    },
+    {
+     "url": "https://sportsapicdn-desktop.betking.com/api/feeds/prematch/lastminute/en/1/15/",
+     "ok": true,
+     "status": 200,
+     "keys": [
+      "AreaMatches",
+      "Areas",
+      "Regions",
+      "TotalNoOfItems"
+     ],
+     "reason": "598 quotes",
+     "sample": ""
     }
    ]
   },
