@@ -1,5 +1,5 @@
 {
- "at": "2026-10-25T18:45:48.163Z",
+ "at": "2026-10-25T18:45:51.790Z",
  "edge": "LHR",
  "results": [
   {
@@ -887,6 +887,54 @@
      "keys": [],
      "reason": "not JSON",
      "sample": "<!doctype html>\n<html lang=\"en\">\n  <head>\n    <meta charset=\"UTF-8\" />\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\n    <script async=\"\" src=\"https://www.googletagmanager.com/gtag/js?id=G-4H6ZM973P2\"></script><link rel=\"icon\" href=\"/img/logo-icon.svg\" type=\"image/svg+"
+    },
+    {
+     "url": "https://api.livescorebet.net/api/v1/events?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 525,
+     "keys": [],
+     "reason": "HTTP 525",
+     "sample": "error code: 525\n"
+    },
+    {
+     "url": "https://api.livescorebet.net/api/v1/sports?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 525,
+     "keys": [],
+     "reason": "HTTP 525",
+     "sample": "error code: 525\n"
+    },
+    {
+     "url": "https://api.livescorebet.net/v1/markets?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 525,
+     "keys": [],
+     "reason": "HTTP 525",
+     "sample": "error code: 525\n"
+    },
+    {
+     "url": "https://api.livescorebet.net/v1/odds?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 525,
+     "keys": [],
+     "reason": "HTTP 525",
+     "sample": "error code: 525\n"
+    },
+    {
+     "url": "https://api.livescorebet.net/v1/sports?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 525,
+     "keys": [],
+     "reason": "HTTP 525",
+     "sample": "error code: 525\n"
+    },
+    {
+     "url": "https://api.livescorebet.net/v1/events?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 525,
+     "keys": [],
+     "reason": "HTTP 525",
+     "sample": "error code: 525\n"
     }
    ]
   }
