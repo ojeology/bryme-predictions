@@ -1,5 +1,5 @@
 {
- "at": "2026-10-25T18:51:08.782Z",
+ "at": "2026-10-25T18:54:50.666Z",
  "edge": "SEA",
  "results": [
   {
@@ -850,22 +850,11 @@
   },
   {
    "id": "livescorebet",
-   "status": "none",
-   "url": "",
-   "quoteCount": 0,
-   "note": "page loaded, 5 scripts and 0 chunks read",
-   "evidence": {
-    "page": "https://livescorebet.com/ng/",
-    "scripts": [
-     "https://cdn-ukwest.onetrust.com/scripttemplates/otSDKStub.js",
-     "https://livescorebet.com/ng/vendors.3735969d.js",
-     "https://livescorebet.com/ng/firebase.4c03da06.js",
-     "https://livescorebet.com/ng/index.de45d74b.js",
-     "https://livescorebet.com/ng/modules.a23cbfb8.js"
-    ],
-    "chunks": [],
-    "candidatesTried": 7
-   },
+   "status": "found",
+   "url": "https://gateway-ng.livescorebet.com/sportsbook/gateway/v3/view/events/matches?sportcategoryid=SBTC1_1&categoryid=SBTC1_1",
+   "quoteCount": 12584,
+   "note": "",
+   "evidence": {},
    "attempts": [
     {
      "url": "https://sports.livescorebet.net/linefeed/getLineFeed?mode=4&count=200&lng=en&country=566&getEmpty=true",
@@ -1010,6 +999,87 @@
      "keys": [],
      "reason": "HTTP 525",
      "sample": "error code: 525\n"
+    },
+    {
+     "url": "https://gateway-ng.livescorebet.com/sportsbook/gateway/v3/view/events/matches?sportcategoryid=SBTC1_1&categoryid=SBTC1_1",
+     "ok": true,
+     "status": 200,
+     "keys": [
+      "header",
+      "events",
+      "specials",
+      "popularSelections"
+     ],
+     "reason": "12584 quotes",
+     "sample": ""
+    },
+    {
+     "url": "https://gateway-ng.livescorebet.com/sportsbook/gateway/v3/view/sport/groupedleagues?sportcategoryid=SBTC1_1",
+     "ok": false,
+     "status": 200,
+     "keys": [
+      "header",
+      "competitions"
+     ],
+     "reason": "JSON, but no prices in it",
+     "sample": "{\"header\":{\"requestId\":\"37fbd2b4-d1a3-4dcd-91b1-3f24a6d0afa3\",\"versionApi\":\"2.35.0-415\",\"serverTime\":\"2026-10-25 18:54:50\",\"version\":\"20261025185450319\",\"viewType\":\"SportEventGroupsViewV3\",\"sourceUid\":\"50d81bc9-06da-4235-8e1c-f4c21f949295\"},\"competitions\":[{\"id\":\"SBTC1_1\",\"originalId\":\"1000093190\",\""
+    },
+    {
+     "url": "https://gateway-ng.livescorebet.com/sportsbook/gateway/v1/view/sport/leagues?sportcategoryid=SBTC1_1",
+     "ok": false,
+     "status": 200,
+     "keys": [
+      "header",
+      "competitions"
+     ],
+     "reason": "JSON, but no prices in it",
+     "sample": "{\"header\":{\"requestId\":\"b0becfdb-b838-4d4b-91a9-79f3a3932ab6\",\"versionApi\":\"2.35.0-415\",\"serverTime\":\"2026-10-25 18:54:50\",\"version\":\"20261025185450351\",\"viewType\":\"SportLeaguesView\",\"sourceUid\":\"50d81bc9-06da-4235-8e1c-f4c21f949295\"},\"competitions\":[{\"id\":\"SBTC1_1\",\"originalId\":\"1000093190\",\"name\":"
+    },
+    {
+     "url": "https://gateway-ng.livescorebet.com/sportsbook/gateway/v2/view/coupon?id=3103&sportcategoryid=SBTC1_1",
+     "ok": false,
+     "status": 200,
+     "keys": [
+      "header",
+      "coupons"
+     ],
+     "reason": "JSON, but no prices in it",
+     "sample": "{\"header\":{\"requestId\":\"b3121b9d-b73d-48f8-b8b6-1cac8b5ef9f8\",\"versionApi\":\"2.35.0-415\",\"serverTime\":\"2026-10-25 18:54:50\",\"version\":\"20261025185450327\",\"viewType\":\"couponView\",\"sourceUid\":\"50d81bc9-06da-4235-8e1c-f4c21f949295\"},\"coupons\":[{\"id\":\"3103\",\"name\":\"Premier League\",\"imageUrl\":\"https://cdn"
+    },
+    {
+     "url": "https://gateway-ng.livescorebet.com/sportsbook/gateway/v3/view/configs",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "{\"timestamp\":1792954490616,\"status\":404,\"error\":\"Not Found\",\"path\":\"/sportsbook/gateway/v3/view/configs\"}"
+    },
+    {
+     "url": "https://gateway-ng.livescorebet.com/sportsbook/gateway/v3/view/events/matches?sportcategoryid=SBTC1_1&categoryid=SBTC3_9916",
+     "ok": false,
+     "status": 200,
+     "keys": [
+      "header",
+      "events",
+      "specials",
+      "popularSelections"
+     ],
+     "reason": "JSON, but no prices in it",
+     "sample": "{\"header\":{\"requestId\":\"533109c6-1b05-484f-b58a-fd5fe5ed0b71\",\"versionApi\":\"2.35.0-415\",\"serverTime\":\"2026-10-25 18:54:50\",\"version\":\"20261025185450627\",\"viewType\":\"MatchesViewV3\",\"sourceUid\":\"50d81bc9-06da-4235-8e1c-f4c21f949295\"},\"events\":{\"categories\":[{\"id\":\"SBTC3_9916\",\"originalId\":\"2000052933\""
+    },
+    {
+     "url": "https://gateway-ng.livescorebet.com/sportsbook/gateway/v3/view/az/sports?sportcategoryid=SBTC1_1",
+     "ok": false,
+     "status": 200,
+     "keys": [
+      "header",
+      "sports",
+      "quickLinks",
+      "inPlayCounts",
+      "coupons"
+     ],
+     "reason": "JSON, but no prices in it",
+     "sample": "{\"header\":{\"requestId\":\"1b656773-291b-4823-b7cb-519f068251dc\",\"versionApi\":\"2.35.0-415\",\"serverTime\":\"2026-10-25 18:54:50\",\"version\":\"20261025185450667\",\"viewType\":\"SportsViewV3\",\"sourceUid\":\"39ebf621-d5e9-4540-8209-5b612b99b7f5\"},\"sports\":[{\"id\":\"SBTC1_3\",\"originalId\":\"SBTC1_3\",\"name\":\"American Foo"
     }
    ]
   }
