@@ -18,6 +18,7 @@
 import { flattenLineFeed, isLineFeed } from './linefeed.js';
 import { flattenSportyBet, isSportyBet } from './sportybet.js';
 import { flattenLiveScoreBet, isLiveScoreBet } from './livescorebet.js';
+import { flattenMsport, isMsport } from './msport.js';
 
 const STOP = new Set(['total', 'goals', 'goal', 'over', 'under', 'more', 'less', 'the', 'a', 'an', 'of', 'and']);
 
@@ -131,6 +132,8 @@ export function flattenBookPayload(payload, options = {}) {
   if (isSportyBet(payload)) return flattenSportyBet(payload, options);
   // LiveScore Bet publishes its own tree through its gateway
   if (isLiveScoreBet(payload)) return flattenLiveScoreBet(payload, options);
+  // MSport publishes its own tree, shaped like SportyBet's
+  if (isMsport(payload)) return flattenMsport(payload, options);
   const bookmaker = options.bookmaker;
   const defaultRules = options.defaultRules || 'unspecified';
   const defaultFamily = options.defaultFamily || '';

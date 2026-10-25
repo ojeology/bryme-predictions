@@ -1,7 +1,52 @@
-import { scanOpportunities } from '../src/lib/arbitrage.js';
+import { scanOpportunities, clusterFixtures, normalizeQuote } from '../src/lib/arbitrage.js';
 import { getConnectorStatus, loadConnectorQuotes } from './connectors/index.js';
 import { discoverBook, proveFeed, BOOK_PAGES, KNOWN_FEEDS } from './discovery.js';
 import { flattenBookPayload } from './connectors/normalize.js';
+import { captureBookViaBrowser } from './browserFeed.js';
+
+/** Hosts the probe is allowed to talk to. */
+const PROBE_HOSTS = [
+  '1xbet.ng', '22bet.ng', 'nairabet.com', '1xbet.com', '22bet.com',
+  'api.1xbet.ng', 'api.22bet.ng', 'api.nairabet.com',
+  'msport.com', 'www.msport.com', 'bet9ja.com', 'www.bet9ja.com',
+  'gateway-ng.livescorebet.com', 'www.sportybet.com', 'sports.sportybet.com',
+];
+
+async function probeBook(address, method, body, headers, seconds = 8) {
+  let target;
+  try { target = new URL(address); } catch { return { ok: false, error: 'That is not a web address.' }; }
+  const allowed = PROBE_HOSTS.some((host) => target.hostname === host || target.hostname.endsWith('.' + host));
+  if (!allowed) return { ok: false, error: 'That host is not on the book list.' };
+
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), seconds * 1000);
+  try {
+    const response = await fetch(target.toString(), {
+      method: method || 'GET',
+      body: body || undefined,
+      headers: { Accept: '*/*', 'User-Agent': 'Mozilla/5.0 (Linux; Android 13) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36', ...(headers || {}) },
+      signal: controller.signal,
+    });
+    const text = await response.text().catch((error) => `<<body unreadable: ${error?.message}>>`);
+    return {
+      ok: true,
+      status: response.status,
+      type: response.headers.get('content-type') || '',
+      length: text.length,
+      head: text.slice(0, 3000),
+      tail: text.slice(-1200),
+    };
+  } catch (error) {
+    return {
+      ok: false,
+      error: `The request did not finish: ${error?.message || error}`,
+      errorName: error?.name || '',
+      errorStack: String(error?.stack || '').slice(0, 500),
+    };
+  } finally {
+    clearTimeout(timer);
+  }
+}
 import { reportDiscovery, readKnownFeeds } from './report.js';
 
 function json(data, status = 200) {
@@ -28,6 +73,7 @@ function scanOptions(source = {}) {
   return {
     totalStake: numberOption(source.totalStake, 100000, { min: 1, max: 1_000_000_000, name: 'totalStake' }),
     rounding: numberOption(source.rounding, 100, { min: 0, max: 1_000_000, name: 'rounding' }),
+    debug: source.debug === '2' ? 2 : (source.debug === '1' || source.debug === 'true' ? 1 : 0),
   };
 }
 
@@ -41,6 +87,75 @@ function isFreshPreMatch(quote, now, maxAgeSeconds) {
   if (!Number.isFinite(fetchedAt) || !Number.isFinite(startsAt)) return false;
   const age = (now - fetchedAt) / 1000;
   return age >= -30 && age <= maxAgeSeconds && startsAt > now;
+}
+
+/**
+ * A small look at what each book is offering, so a quiet scan can be
+ * understood rather than guessed at.
+ */
+function sampleQuotes(quotes, perBook = 40) {
+  const byBook = {};
+  for (const quote of quotes) {
+    const book = byBook[quote.bookmaker] = byBook[quote.bookmaker] || [];
+    if (book.length >= perBook) continue;
+    book.push({
+      event: quote.event,
+      eventId: quote.eventId,
+      startsAt: quote.startsAt,
+      competition: quote.competition,
+      marketKey: quote.marketKey,
+      outcome: quote.outcome,
+      odds: quote.odds,
+      rulesKey: quote.rulesKey,
+    });
+  }
+  return byBook;
+}
+
+/**
+ * How much the books actually have in common.
+ *
+ * A scanner that finds nothing should be able to say why: because the
+ * books are not offering the same fixtures, because they are not offering
+ * the same markets, or because the prices simply do not add up.
+ */
+function overlapReport(quotes) {
+  const byBook = {};
+  const groups = new Map();
+  for (const quote of quotes) {
+    byBook[quote.bookmaker] = (byBook[quote.bookmaker] || 0) + 1;
+    const key = `${quote.sport}|${quote.marketKey}|${quote.rulesKey}|${quote.way}`;
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(quote);
+  }
+
+  // The same fixture is recognised the way the scanner recognises it: by the
+  // two team names and the kick-off time, not by the book's own event id.
+  const fixtureCounts = {};
+  const sharedFixtures = new Map();
+  let twoBooks = 0;
+  let threeBooks = 0;
+  for (const groupQuotes of groups.values()) {
+    for (const cluster of clusterFixtures(groupQuotes)) {
+      const books = new Set(cluster.map((quote) => quote.bookmaker));
+      const label = [...books].sort().join(' + ');
+      fixtureCounts[label] = (fixtureCounts[label] || 0) + 1;
+      if (books.size >= 2) {
+        twoBooks += 1;
+        const key = `${cluster[0].event}|${cluster[0].startsAt || 'unknown'}`;
+        if (!sharedFixtures.has(key)) sharedFixtures.set(key, books);
+        if (books.size >= 3) threeBooks += 1;
+      }
+    }
+  }
+  return {
+    quotesPerBook: byBook,
+    sharedFixtures: sharedFixtures.size,
+    fixtureCounts,
+    marketGroups: groups.size,
+    groupsWithTwoBooks: twoBooks,
+    groupsWithThreeBooks: threeBooks,
+  };
 }
 
 export async function scanConfiguredFeeds(env = {}, options = {}) {
@@ -98,6 +213,12 @@ export async function scanConfiguredFeeds(env = {}, options = {}) {
     freshQuoteCount: freshQuotes.length,
     rejectedQuoteCount: quotes.length - freshQuotes.length,
     maxQuoteAgeSeconds,
+    overlap: overlapReport(freshQuotes),
+    ...(options.debug === 2 ? { allQuotes: quotes.map((quote) => ({
+      bookmaker: quote.bookmaker, event: quote.event, eventId: quote.eventId, startsAt: quote.startsAt,
+      competition: quote.competition, marketKey: quote.marketKey, outcome: quote.outcome,
+      odds: quote.odds, rulesKey: quote.rulesKey, way: quote.way,
+    })) } : options.debug ? { sample: sampleQuotes(quotes) } : {}),
     errors: [...new Set(errors)],
     scannedAt: new Date().toISOString(),
   };
@@ -275,7 +396,7 @@ async function egressTrace() {
 export async function handleArbRequest(request, env = {}) {
   const url = new URL(request.url);
   const path = url.pathname.replace(/\/$/, '');
-  if (!['/api/arbs', '/api/arbs/status', '/api/arbs/scan', '/api/arbs/discover', '/api/arbs/whereami', '/api/arbs/candidates', '/api/arbs/ingest'].includes(path)) return null;
+  if (!['/api/arbs', '/api/arbs/status', '/api/arbs/scan', '/api/arbs/discover', '/api/arbs/whereami', '/api/arbs/candidates', '/api/arbs/ingest', '/api/arbs/browser', '/api/arbs/probe'].includes(path)) return null;
   if (request.method === 'OPTIONS') {
     return new Response(null, { status: 204, headers: { Allow: 'GET, POST, OPTIONS', 'Cache-Control': 'no-store' } });
   }
@@ -285,6 +406,69 @@ export async function handleArbRequest(request, env = {}) {
   // pressed the button - which is what decides whether the books answer.
   const edge = request.cf?.colo || null;
   try {
+    if (path === '/api/arbs/probe') {
+      let spec = {};
+      if (request.method === 'GET') {
+        spec = { url: url.searchParams.get('url'), method: 'GET', seconds: Number(url.searchParams.get('seconds')) || 8 };
+      } else {
+        try { spec = await request.json(); } catch (error) {
+          return json({ ok: false, error: `The body must be JSON: ${error?.message || error}` }, 400);
+        }
+      }
+      const result = await probeBook(spec.url, spec.method, spec.body, spec.headers, Number(spec.seconds) || 8);
+      return json({ ...result, edge, checkedAt: new Date().toISOString() });
+    }
+    if (path === '/api/arbs/browser') {
+      if (request.method !== 'GET' && request.method !== 'POST') return json({ ok: false, error: 'Method not allowed.' }, 405);
+      let book = url.searchParams.get('book');
+      if (request.method === 'POST') {
+        try {
+          const peek = await request.clone().json();
+          if (peek.book) book = peek.book;
+        } catch { /* the body may arrive later */ }
+      }
+      if (!book) return json({ ok: false, error: 'Name one book: /api/arbs/browser?book=22bet' }, 400);
+      let probe = null;
+      let askedUrl = null;
+      let extraPages = [];
+      let waitMs = Number(url.searchParams.get('wait')) || 9000;
+      if (request.method === 'POST') {
+        let spec = {};
+        try { spec = await request.json(); } catch { spec = {}; }
+        if (spec.probe) probe = spec.probe;
+        if (spec.wait) waitMs = Number(spec.wait) || waitMs;
+        if (spec.book) book = spec.book;
+        if (spec.url) askedUrl = spec.url;
+        if (spec.pages) extraPages = spec.pages;
+      }
+      const capture = await captureBookViaBrowser(env, book, { waitMs, probe, pageUrl: askedUrl, pages: extraPages });
+      const quotes = [];
+      const shapes = [];
+      for (const entry of capture.payloads || []) {
+        let payload;
+        try { payload = JSON.parse(entry.body); } catch { continue; }
+        const found = flattenBookPayload(payload, { bookmaker: book });
+        shapes.push({ url: entry.url, quotes: found.length });
+        quotes.push(...found);
+      }
+      return json({
+        ok: capture.ok,
+        note: capture.note,
+        book,
+        quoteCount: quotes.length,
+        quotes: quotes.slice(0, 2000),
+        urls: capture.urls,
+        requests: capture.requests,
+        allPayloads: capture.allPayloads,
+        pageUrl: capture.pageUrl,
+        pageTitle: capture.pageTitle,
+        pageText: capture.pageText,
+        probe: capture.probe,
+        shapes,
+        edge,
+        checkedAt: new Date().toISOString(),
+      });
+    }
     if (path === '/api/arbs/candidates') {
       if (request.method !== 'GET') return json({ ok: false, error: 'Method not allowed.' }, 405);
       const feeds = {};

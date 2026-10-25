@@ -4,6 +4,7 @@ import { flattenBookPayload } from './normalize.js';
 import { fetchLiveScoreBetQuotes, isLiveScoreBetGateway } from './livescorebetFeed.js';
 import { fetchBook } from './httpBook.js';
 import { fetchBookWithBrowser } from './browserBook.js';
+import { fetchMsportQuotes } from './msportFeed.js';
 
 export const CONNECTORS = [
   { id: 'sportybet', label: 'SportyBet NG', envKey: 'SPORTYBET_FEED_URL' },
@@ -11,6 +12,7 @@ export const CONNECTORS = [
   { id: '22bet', label: '22Bet NG', envKey: 'BET22_FEED_URL' },
   { id: '1xbet', label: '1xBet', envKey: 'BET1X_FEED_URL' },
   { id: 'livescorebet', label: 'LiveScore Bet NG', envKey: 'LSCB_FEED_URL' },
+  { id: 'msport', label: 'MSport', envKey: 'MSPORT_FEED_URL', viaBrowser: true },
 ];
 
 function configured(definition, env) {
@@ -61,10 +63,18 @@ export async function loadConnectorQuotes(env = {}) {
     }
     try {
       const feedUrl = env[definition.envKey];
-      if (isLiveScoreBetGateway(feedUrl)) {
+      if (definition.viaBrowser) {
+        // this book's edge only serves a real browser, so the price request
+        // is made from inside the book's own page
+        const result = await fetchMsportQuotes(env, feedUrl);
+        if (result.error) throw result.error;
+        specific.push({ quotes: result.quotes, error: null, attempted: true });
+      } else if (isLiveScoreBetGateway(feedUrl)) {
         // this book's whole slate does not fit in memory at once, so it is
         // read in pieces
-        const result = await fetchLiveScoreBetQuotes(feedUrl, { maxCompetitions: 20 });
+        const result = await fetchLiveScoreBetQuotes(feedUrl, {
+          maxCompetitions: Number(env.LSB_MAX_COMPETITIONS || 28),
+        });
         if (result.error) throw result.error;
         specific.push({ quotes: result.quotes, error: null, attempted: true });
       } else {
@@ -96,7 +106,7 @@ export async function loadConnectorQuotes(env = {}) {
 
     // The book may also be read through its own JSON endpoint, or through a
     // headless browser when the prices are only in the page.
-    if (!usable.length && (env[definition.envKey] || env[`${definition.id.toUpperCase()}_BROWSER_URL`] || env.BROWSER_BOOK_URL)) {
+    if (!usable.length && !definition.viaBrowser && (env[definition.envKey] || env[`${definition.id.toUpperCase()}_BROWSER_URL`] || env.BROWSER_BOOK_URL)) {
       const viaHttp = await fetchBook(env, definition);
       const viaBrowser = viaHttp.quotes.length ? { quotes: [], error: null }
         : await fetchBookWithBrowser(env, definition);

@@ -50,6 +50,7 @@ const CHECKS = [
 ];
 const DEFAULT_CONNECTORS = [
   { id: 'sportybet', label: 'SportyBet NG', status: 'not_configured', detail: 'No verified server-side feed is configured.', quoteCount: 0 },
+  { id: 'msport', label: 'MSport', status: 'not_configured', detail: 'No verified server-side feed is configured.', quoteCount: 0 },
   { id: 'nairabet', label: 'NairaBet', status: 'not_configured', detail: 'No verified server-side feed is configured.', quoteCount: 0 },
   { id: '22bet', label: '22Bet NG', status: 'not_configured', detail: 'No verified server-side feed is configured.', quoteCount: 0 },
 ];
@@ -426,6 +427,7 @@ export default function ArbScannerView() {
         booksBlocked: connectors.filter((connector) => connector.status === 'error').length,
         books: connectors.length,
         errors: Array.isArray(data.errors) ? data.errors : [],
+        overlap: data.overlap || null,
         ok: true,
       };
       setRunSummary(record);
@@ -449,6 +451,7 @@ export default function ArbScannerView() {
         booksBlocked: 0,
         books: connection.connectors?.length || 0,
         errors: [message],
+        overlap: null,
         ok: false,
       };
       setRunSummary(record);
@@ -484,7 +487,7 @@ export default function ArbScannerView() {
     setDiscovering(true);
     // one book per request: the server may only open a limited number of
     // connections at a time, and hunting a single book takes a good many
-    const books = ['sportybet', 'nairabet', '22bet', '1xbet', 'livescorebet'];
+    const books = ['sportybet', 'msport', 'livescorebet', 'nairabet', '22bet', '1xbet'];
     const collected = new Map();
     const remember = (entry) => {
       if (!entry || !entry.id) return;
@@ -921,6 +924,37 @@ export default function ArbScannerView() {
           <Stat label="edge" value={edge || '—'} hint={runSummary ? timeLabel(runSummary.at) : 'press run'} />
         </div>
       </div>
+
+      {runSummary?.overlap && (
+        <Panel
+          title="What the books have in common"
+          subtitle="an arbitrage needs the same match at the same price from two books - this is how much the books actually share"
+          icon={Link2}
+        >
+          <div className="p-4 grid gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <Stat label="shared matches" value={runSummary.overlap.sharedFixtures ?? 0} tone={(runSummary.overlap.sharedFixtures || 0) ? 'emerald' : 'slate'} />
+              <Stat label="two books agree" value={runSummary.overlap.groupsWithTwoBooks ?? 0} tone="sky" />
+              <Stat label="three books agree" value={runSummary.overlap.groupsWithThreeBooks ?? 0} tone={(runSummary.overlap.groupsWithThreeBooks || 0) ? 'emerald' : 'slate'} />
+              <Stat label="markets compared" value={runSummary.overlap.marketGroups ?? 0} />
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {Object.entries(runSummary.overlap.quotesPerBook || {}).map(([book, count]) => (
+                <span key={book} className="rounded-lg border border-white/10 bg-slate-950/50 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-300">
+                  {book} <span className="text-emerald-300 ml-1">{count.toLocaleString()}</span>
+                </span>
+              ))}
+            </div>
+            <p className="text-[11px] leading-relaxed text-slate-400">
+              {runSummary.opportunities > 0
+                ? 'An arbitrage was found in the matches the books share.'
+                : (runSummary.overlap.sharedFixtures || 0) === 0
+                  ? 'The books are not offering the same matches at the same time, so there is nothing to compare yet.'
+                  : 'The books do offer the same matches, but on those matches the prices do not add up to more than 100% — no arbitrage right now.'}
+            </p>
+          </div>
+        </Panel>
+      )}
 
       {discovery && (
         <Panel

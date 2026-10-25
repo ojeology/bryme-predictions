@@ -15,6 +15,9 @@
   "placement": {
     "mode": "smart"
   },
+  "browser": {
+    "binding": "browser"
+  },
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",

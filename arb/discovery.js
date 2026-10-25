@@ -107,6 +107,16 @@ export const KNOWN_FEEDS = {
     // and the older hosts
     ...GENERIC_PATHS.map((path) => `https://api.livescorebet.net${path}?${LINEFEED_QUERY}`),
   ],
+  msport: [
+    // PROVEN: the book publishes its own price tree under /api/ng/facts-center.
+    // Its edge only answers a real browser, so this address is read through
+    // the browser route rather than as a plain request.
+    'https://www.msport.com/api/ng/facts-center/query/frontend/sports-matches-list?sportId=sr:sport:1&timeslot=Today',
+    'https://www.msport.com/api/ng/facts-center/query/frontend/sports-matches-list?sportId=sr:sport:1&timeslot=Tomorrow',
+    'https://www.msport.com/api/ng/facts-center/query/frontend/live-matches?sportId=sr:sport:1',
+    'https://www.msport.com/api/ng/facts-center/query/frontend/soccer-matches/high-light?sportId=sr:sport:1',
+    'https://www.msport.com/api/ng/facts-center/query/frontend/default-market-info/v2?sportId=sr:sport:1&withOthers=1',
+  ],
   sportybet: [
     // PROVEN: the book publishes its own price tree under /api/ng/factsCenter
     'https://www.sportybet.com/api/ng/factsCenter/importantEvents?sportId=sr:sport:1',

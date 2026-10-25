@@ -4,6 +4,7 @@ export const BOOKMAKERS = [
   { id: '22bet', label: '22Bet NG' },
   { id: '1xbet', label: '1xBet' },
   { id: 'livescorebet', label: 'LiveScore Bet NG' },
+  { id: 'msport', label: 'MSport' },
   { id: 'other', label: 'Other' },
 ];
 
@@ -198,6 +199,24 @@ function normalizeText(value) {
   return String(value || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim().replace(/\s+/g, ' ');
 }
 
+/** Books do not use the same words for the same thing. */
+function canonicalOutcomeKey(outcome, marketKey) {
+  const raw = String(outcome || '').trim().toLowerCase();
+  if (marketKey === 'double-chance') {
+    if (/^(1x|home-or-draw|home\/draw)$/.test(raw)) return 'home-or-draw';
+    if (/^(12|home-or-away|home\/away)$/.test(raw)) return 'home-or-away';
+    if (/^(x2|draw-or-away|draw\/away)$/.test(raw)) return 'draw-or-away';
+  }
+  return outcome;
+}
+
+/** "Soccer" and "Football" mean the same sport to a punter. */
+function canonicalSport(value) {
+  const raw = String(value || '').trim();
+  if (/^soccer$/i.test(raw)) return 'Football';
+  return raw || 'other';
+}
+
 export function normalizeQuote(quote, index = 0) {
   const odds = parseOdds(quote.odds ?? quote.price);
   const bookmaker = normalizeBookmaker(quote.bookmaker || quote.book);
@@ -219,9 +238,10 @@ export function normalizeQuote(quote, index = 0) {
     market,
     rulesKey: normalizeText(rules).replace(/ /g, '-') || 'unspecified',
     rules,
+    sport: canonicalSport(quote.sport || 'other'),
     bookmaker,
     bookmakerLabel: bookmakerLabel(bookmaker, quote.bookmakerLabel || quote.bookmaker),
-    outcome,
+    outcome: canonicalOutcomeKey(outcome, String(quote.marketKey || normalizeText(market).replace(/ /g, '-')).trim()),
     label: String(quote.label || quote.outcomeLabel || outcome).trim(),
     odds,
     way,
@@ -348,7 +368,7 @@ function combinations(items, limit = 5000) {
 }
 
 /** Cluster quotes that belong to the same fixture. */
-function clusterFixtures(quotes) {
+export function clusterFixtures(quotes) {
   const clusters = [];
   for (const quote of quotes) {
     let placed = false;
