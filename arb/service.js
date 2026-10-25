@@ -1,6 +1,7 @@
 import { scanOpportunities } from '../src/lib/arbitrage.js';
 import { getConnectorStatus, loadConnectorQuotes } from './connectors/index.js';
 import { discoverBook, proveFeed, BOOK_PAGES } from './discovery.js';
+import { reportDiscovery } from './report.js';
 
 function json(data, status = 200) {
   return new Response(JSON.stringify(data), {
@@ -53,6 +54,7 @@ export async function scanConfiguredFeeds(env = {}, options = {}) {
     // addresses these books are known to publish; the deep crawl (reading the
     // book's own scripts) is what the FIND FEEDS button does.
     const found = await discoverAll(env, [], { crawl: false });
+    await reportDiscovery(env, found, { edge, trigger: 'scan' });
     const usable = found.filter((entry) => entry.status === 'found' && entry.url);
     if (!usable.length) {
       return {
@@ -127,10 +129,14 @@ export async function runDiscovery(bookId, env = {}, options = {}) {
     url: result.url || '',
     quoteCount: result.quoteCount || 0,
     note: result.note || '',
-    attempts: (result.attempts || []).slice(0, 8).map((attempt) => ({
+    evidence: result.evidence || {},
+    attempts: (result.attempts || []).slice(0, 10).map((attempt) => ({
       url: attempt.url,
       ok: Boolean(attempt.ok),
+      status: attempt.status,
+      keys: attempt.keys || [],
       reason: attempt.ok ? `${attempt.quoteCount} quotes` : attempt.reason,
+      sample: attempt.ok ? '' : String(attempt.sample || '').slice(0, 200),
     })),
   };
 }
@@ -263,7 +269,8 @@ export async function handleArbRequest(request, env = {}) {
       const book = url.searchParams.get('book');
       const ids = book ? [book] : [];
       const results = await discoverAll(env, ids, { crawl: true });
-      return json({ ok: true, results, edge, discoveredAt: new Date().toISOString() });
+      const report = await reportDiscovery(env, results, { edge, trigger: 'discover' });
+      return json({ ok: true, results, edge, report, discoveredAt: new Date().toISOString() });
     }
     if (path === '/api/arbs/scan') {
       if (request.method !== 'POST') return json({ ok: false, error: 'Method not allowed.' }, 405);

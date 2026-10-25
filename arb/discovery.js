@@ -22,43 +22,82 @@ import { flattenBookPayload } from './connectors/normalize.js';
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
   + '(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36';
 
+export const BOOK_PAGES = {
+  sportybet: 'https://www.sportybet.com/ng/',
+  nairabet: 'https://nairabet.com/sports',
+  '22bet': 'https://22bet.ng/en/',
+  '1xbet': 'https://1xbet.ng/en/',
+  livescorebet: 'https://livescorebet.com/ng/',
+};
+
+/**
+ * Addresses these books publish their prices on.
+ *
+ * The hosts below were found by resolving the books' own domains (DNS is not
+ * geo-restricted), and the paths are the ones their platforms are known to
+ * use. Every one of them is PROVEN before it is accepted.
+ */
 const LINEFEED_QUERY = 'mode=4&count=200&lng=en&country=566&getEmpty=true';
 
-export const BOOK_PAGES = {
-  sportybet: 'https://www.sportybet.com/ng/sports/football',
-  nairabet: 'https://nairabet.com/sports/football',
-  '22bet': 'https://22bet.ng/en/sports/football',
-  '1xbet': 'https://1xbet.ng/en/sports/football',
-  livescorebet: 'https://livescorebet.com/ng/sports/football',
-};
+const COMMON_PATHS = [
+  '/api/v1/odds',
+  '/api/v1/markets',
+  '/api/v1/events',
+  '/api/v1/sports',
+  '/api/v1/fixtures',
+  '/api/v1/leagues',
+  '/v1/odds',
+  '/v1/markets',
+  '/v1/events',
+  '/odds',
+  '/markets',
+  '/events',
+  '/sports',
+  '/fixtures',
+];
 
-/** Addresses these books are known to publish. Tried before any crawling. */
+const LINEFEED_PATHS = [
+  `/linefeed/getLineFeed?${LINEFEED_QUERY}`,
+  `/linefeed/getPreMatchLineFeed?${LINEFEED_QUERY}`,
+  `/v1/linefeed/getLineFeed?${LINEFEED_QUERY}`,
+  `/api/v1/linefeed/getLineFeed?${LINEFEED_QUERY}`,
+  '/api/v1/odds',
+  '/api/v1/markets',
+  '/api/v1/events',
+  '/api/v1/sports',
+  '/v1/sports',
+  '/v1/events',
+];
+
 export const KNOWN_FEEDS = {
   '1xbet': [
-    `https://linefeed.1xbet.com/linefeed/getLineFeed?${LINEFEED_QUERY}`,
-    `https://sports.1xbet.com/linefeed/getLineFeed?${LINEFEED_QUERY}`,
-    `https://sports.1xbet.ng/linefeed/getLineFeed?${LINEFEED_QUERY}`,
-    `https://linefeed.1xbet.ng/linefeed/getLineFeed?${LINEFEED_QUERY}`,
-    `https://1xbet.ng/linefeed/getLineFeed?${LINEFEED_QUERY}`,
-    `https://sports.1xbet.com/linefeed/getPreMatchLineFeed?${LINEFEED_QUERY}`,
+    ...LINEFEED_PATHS.map((path) => `https://api.1xbet.ng${path}`),
+    ...LINEFEED_PATHS.map((path) => `https://1xbet.ng${path}`),
   ],
   '22bet': [
-    `https://22bet.ng/linefeed/getLineFeed?${LINEFEED_QUERY}`,
-    `https://sports.22bet.ng/linefeed/getLineFeed?${LINEFEED_QUERY}`,
-    `https://linefeed.22bet.com/linefeed/getLineFeed?${LINEFEED_QUERY}`,
-    `https://22bet.com/linefeed/getLineFeed?${LINEFEED_QUERY}`,
+    ...LINEFEED_PATHS.map((path) => `https://api.22bet.ng${path}`),
+    ...LINEFEED_PATHS.map((path) => `https://22bet.ng${path}`),
   ],
   sportybet: [
-    'https://www.sportybet.com/ng/api/v1/odds',
-    'https://www.sportybet.com/ng/api/v1/sports/football',
-    'https://api.sportybet.com/ng/v1/odds',
+    ...COMMON_PATHS.map((path) => `https://sports.sportybet.com${path}`),
+    ...COMMON_PATHS.map((path) => `https://sports.sportybet.com/ng${path}`),
+    ...COMMON_PATHS.map((path) => `https://www.sportybet.com/ng${path}`),
   ],
   nairabet: [
-    'https://nairabet.com/api/sports/football',
-    'https://api.nairabet.com/sports/football',
+    ...COMMON_PATHS.map((path) => `https://api.nairabet.com${path}`),
+    ...COMMON_PATHS.map((path) => `https://nairabet.com${path}`),
   ],
-  livescorebet: [],
+  livescorebet: [
+    ...COMMON_PATHS.map((path) => `https://api.livescorebet.net${path}`),
+    ...COMMON_PATHS.map((path) => `https://livescorebet.com${path}`),
+  ],
 };
+
+/**
+ * Spring Boot applications publish their own map of every endpoint. When one
+ * of these answers, the exact path for the prices is inside it - no guessing.
+ */
+export const API_DOC_PATHS = ['/v3/api-docs', '/v2/api-docs', '/ng/v3/api-docs', '/api-docs'];
 
 function headers(extra = {}) {
   return {
@@ -94,21 +133,35 @@ function blocked(text, status) {
 export async function proveFeed(url, bookmaker, { timeoutMs = 9000 } = {}) {
   const result = await fetchText(url, { timeoutMs, maxBytes: 3_000_000 });
   if (!result.ok) {
-    return { ok: false, url, reason: result.blocked ? `blocked (HTTP ${result.status})` : (result.error || `HTTP ${result.status}`) };
+    return {
+      ok: false,
+      url,
+      status: result.status,
+      reason: result.blocked ? `blocked (HTTP ${result.status})` : (result.error || `HTTP ${result.status}`),
+      sample: result.text.slice(0, 300),
+    };
   }
-  if (result.tooBig) return { ok: false, url, reason: 'response too large' };
+  if (result.tooBig) return { ok: false, url, status: result.status, reason: 'response too large' };
   let payload;
   try {
     payload = JSON.parse(result.text);
   } catch {
-    return { ok: false, url, reason: 'not JSON' };
+    return { ok: false, url, status: result.status, reason: 'not JSON', sample: result.text.slice(0, 300) };
   }
+  const keys = payload && typeof payload === 'object' && !Array.isArray(payload) ? Object.keys(payload).slice(0, 12) : [];
   const quotes = flattenBookPayload(payload, { bookmaker, defaultRules: 'unspecified', now: new Date() });
-  if (!quotes.length) return { ok: false, url, reason: 'JSON, but no prices in it' };
-  return { ok: true, url, quoteCount: quotes.length, quotes, sample: quotes[0] };
+  if (!quotes.length) {
+    return { ok: false, url, status: result.status, reason: 'JSON, but no prices in it', keys, sample: result.text.slice(0, 300) };
+  }
+  return { ok: true, url, status: result.status, quoteCount: quotes.length, quotes, keys, sample: quotes[0] };
 }
 
-/** The scripts a page loads, and any API-looking path inside them. */
+/**
+ * The scripts a page loads, and any API-looking path inside them.
+ *
+ * `scriptBodies` may be plain strings or {url, text} pairs - the pair form
+ * lets chunk references be resolved against the script they were found in.
+ */
 export function extractApiPaths(html, baseUrl, scriptBodies = []) {
   const found = new Set();
   const add = (value) => {
@@ -124,14 +177,25 @@ export function extractApiPaths(html, baseUrl, scriptBodies = []) {
     try { return new URL(src, baseUrl).toString(); } catch { return null; }
   }).filter(Boolean);
 
-  const bodies = [html, ...scriptBodies];
+  const chunks = new Set();
+  const bodies = [{ url: baseUrl, text: html }, ...scriptBodies];
   for (const body of bodies) {
-    const text = String(body || '').slice(0, 1_200_000);
+    const text = String(body?.text ?? body ?? '').slice(0, 1_200_000);
+    const origin = body?.url || baseUrl;
     for (const match of text.matchAll(/https?:\\?\/\\?\/[a-z0-9.-]{3,60}\.[a-z]{2,12}(?:\\?\/[a-z0-9_\-./?=&%]{2,120})?/gi)) {
       add(match[0].replace(/\\/g, ''));
     }
+    // paths with a leading slash
     for (const match of text.matchAll(/["'](\/[a-z0-9_\-.\/?=&%:#{}~]{3,160})["']/gi)) {
       add(match[1]);
+    }
+    // paths without one, e.g. "linefeed/getLineFeed"
+    for (const match of text.matchAll(/["']([a-z0-9][a-z0-9_\-.]*(?:\/[a-z0-9_\-.]{2,60}){1,4})["']/gi)) {
+      add(match[1]);
+    }
+    // chunk references: the app splits itself into hashed files
+    for (const match of text.matchAll(/["'](\.\.\/[A-Za-z0-9_\-.\/]+\.js|\.\/[0-9a-f]{6,16}\.js)["']/gi)) {
+      try { chunks.add(new URL(match[1], origin).toString()); } catch { /* not a url */ }
     }
   }
 
@@ -144,7 +208,7 @@ export function extractApiPaths(html, baseUrl, scriptBodies = []) {
       resolved.push(url.toString());
     } catch { /* not a url */ }
   }
-  return { scriptUrls, candidates: [...new Set(resolved)].slice(0, 14) };
+  return { scriptUrls, candidates: [...new Set(resolved)].slice(0, 18), chunks: [...chunks].slice(0, 16) };
 }
 
 /** Look inside a book's own page for the address it calls for prices. */
@@ -158,12 +222,43 @@ export async function crawlBook(bookId, { timeoutMs = 9000 } = {}) {
   const first = extractApiPaths(html.text, page);
   const bodies = [];
   for (const scriptUrl of first.scriptUrls.slice(0, 6)) {
-    const script = await fetchText(scriptUrl, { timeoutMs: 7000, maxBytes: 1_500_000 });
-    if (script.ok && !script.blocked && script.text) bodies.push(script.text);
+    const script = await fetchText(scriptUrl, { timeoutMs: 7000, maxBytes: 2_500_000 });
+    if (script.ok && !script.blocked && script.text) bodies.push({ url: scriptUrl, text: script.text });
+  }
+  // the app is split into hashed chunks; the addresses live in those
+  const chunkUrls = [...new Set(bodies.flatMap((body) => extractApiPaths('', body.url, [body]).chunks))].slice(0, 10);
+  for (const chunkUrl of chunkUrls) {
+    const chunk = await fetchText(chunkUrl, { timeoutMs: 7000, maxBytes: 2_500_000 });
+    if (chunk.ok && !chunk.blocked && chunk.text) bodies.push({ url: chunkUrl, text: chunk.text });
   }
   const second = extractApiPaths('', page, bodies);
-  const candidates = [...new Set([...first.candidates, ...second.candidates])].slice(0, 14);
-  return { candidates, scriptUrls: first.scriptUrls, note: `page loaded, ${first.scriptUrls.length} scripts read` };
+  const candidates = [...new Set([...first.candidates, ...second.candidates])].slice(0, 18);
+  return {
+    candidates,
+    scriptUrls: first.scriptUrls,
+    chunkUrls,
+    note: `page loaded, ${first.scriptUrls.length} scripts and ${chunkUrls.length} chunks read`,
+  };
+}
+
+/**
+ * If the book runs a Spring Boot (or similar) API, it publishes the whole map
+ * of its endpoints. When that answers, the real path for the prices is inside
+ * it - so the search stops guessing.
+ */
+export async function readApiMap(host, { timeoutMs = 8000 } = {}) {
+  for (const docPath of API_DOC_PATHS) {
+    const url = `https://${host}${docPath}`;
+    const result = await fetchText(url, { timeoutMs, maxBytes: 3_000_000 });
+    if (!result.ok || result.blocked) continue;
+    let payload;
+    try { payload = JSON.parse(result.text); } catch { continue; }
+    const paths = Object.keys(payload?.paths || {});
+    if (!paths.length) continue;
+    const interesting = paths.filter((path) => /odd|market|event|sport|match|fixture|price|line|selection|coupon/i.test(path));
+    return { host, docPath, total: paths.length, paths: (interesting.length ? interesting : paths).slice(0, 20) };
+  }
+  return null;
 }
 
 /** Discover one book's working feed. */
@@ -182,6 +277,30 @@ export async function discoverBook(bookmaker, { timeoutMs = 9000, crawl = true }
   }
 
   if (crawl) {
+    // 1. the book's own API map, if it publishes one
+    const apiHosts = [...new Set((KNOWN_FEEDS[bookmaker] || []).map((url) => {
+      try { return new URL(url).host; } catch { return null; }
+    }).filter(Boolean))].slice(0, 3);
+    const maps = await Promise.all(apiHosts.map((host) => readApiMap(host, { timeoutMs: 7000 }).catch(() => null)));
+    const apiMap = maps.find(Boolean);
+    if (apiMap) {
+      const mapProbes = await Promise.all(apiMap.paths.map(async (path) => {
+        const url = `https://${apiMap.host}${path}`;
+        const result = await proveFeed(url, bookmaker, { timeoutMs: 7000 });
+        attempts.push({ url, ...result });
+        return result;
+      }));
+      const found = mapProbes.find((result) => result.ok);
+      if (found) {
+        return {
+          id: bookmaker, status: 'found', url: found.url, quoteCount: found.quoteCount, attempts,
+          note: `the book's own API map listed ${apiMap.total} endpoints`,
+          evidence: { apiMap: apiMap.docPath, apiPaths: apiMap.paths.slice(0, 10) },
+        };
+      }
+    }
+
+    // 2. the book's own page and scripts
     const crawlResult = await crawlBook(bookmaker, { timeoutMs });
     const probed = await Promise.all(crawlResult.candidates.map(async (url) => {
       const result = await proveFeed(url, bookmaker, { timeoutMs: 7000 });
@@ -189,10 +308,16 @@ export async function discoverBook(bookmaker, { timeoutMs = 9000, crawl = true }
       return result;
     }));
     const found = probed.find((result) => result.ok);
+    const evidence = {
+      page: BOOK_PAGES[bookmaker],
+      scripts: crawlResult.scriptUrls || [],
+      chunks: (crawlResult.chunkUrls || []).slice(0, 10),
+      candidatesTried: crawlResult.candidates.length,
+    };
     if (found) {
-      return { id: bookmaker, status: 'found', url: found.url, quoteCount: found.quoteCount, attempts, note: crawlResult.note };
+      return { id: bookmaker, status: 'found', url: found.url, quoteCount: found.quoteCount, attempts, note: crawlResult.note, evidence };
     }
-    return { id: bookmaker, status: 'none', url: '', quoteCount: 0, attempts, note: crawlResult.note };
+    return { id: bookmaker, status: 'none', url: '', quoteCount: 0, attempts, note: crawlResult.note, evidence };
   }
 
   const blockedCount = attempts.filter((attempt) => /blocked/.test(attempt.reason || '')).length;

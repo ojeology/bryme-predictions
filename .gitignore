@@ -12,3 +12,6 @@ __pycache__/
 
 # discovered feeds and raw page dumps (local only)
 arb/discovered/
+
+# local discovery reports
+arb/last-discovery.json
