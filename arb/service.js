@@ -362,7 +362,16 @@ export async function handleArbRequest(request, env = {}) {
       // subrequests per invocation, and hunting through a whole book takes a
       // good many of them. Round 2 continues where round 1 stopped.
       const results = await discoverAll(env, [book], { crawl: true, round });
-      const report = await reportDiscovery(env, results, { edge, trigger: 'discover' });
+      // The country the Worker reaches the world from decides whether a book
+      // answers at all, so it goes into the report next to the evidence.
+      const egress = await egressTrace();
+      const report = await reportDiscovery(env, results, {
+        edge,
+        trigger: 'discover',
+        phoneCountry: request.cf?.country || null,
+        workerCountry: egress.country || null,
+        workerColo: egress.colo || null,
+      });
       return json({ ok: true, results, edge, report, discoveredAt: new Date().toISOString() });
     }
     if (path === '/api/arbs/scan') {
