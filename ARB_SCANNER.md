@@ -42,6 +42,35 @@ comma decimal (`2,10`, read as `2.10`). The ambiguous three-digit comma form
 dropped from the scan. A missing price costs you an opportunity; a mis-read
 price would invent one.
 
+## The free reader (how four books are read without a browser or a paid plan)
+
+Two of the books answer only a client that looks like an ordinary browser on
+an ordinary connection. The Worker is refused outright — not because of what
+it asks for, but because of where it comes from: the address a Worker calls
+from is on the edge's own list of machines. The same request from an ordinary
+machine is answered with prices.
+
+So the reading is done by **GitHub's runners**, which are free for a public
+repository and are exactly that kind of ordinary machine:
+
+| step | what happens |
+| --- | --- |
+| `.github/workflows/arb-reader.yml` | runs every fifteen minutes, and on demand |
+| `scripts/arb-read.mjs` | reads the books: MSport and LiveScore Bet over plain HTTP, BetKing and SportyBet in the runner's own Chrome |
+| the `prices` branch | the prices are published there, one file per book, already in comparable form |
+| `arb/connectors/snapshot.js` | the Worker reads the published file for the commit that is current, so a cached copy can never be mistaken for fresh prices |
+
+Nothing is bought, nothing is signed into, and no browser time is spent:
+Cloudflare's free ten minutes a day is left alone. The prices carry the time
+they were really read, so the usual freshness check still holds them to
+account — a snapshot that has gone cold is refused exactly like a feed that
+has gone cold.
+
+`GET /api/arbs/snapshot` says what the reader published, book by book.
+
+Each book still has its own way of being read inside the Worker, and that way
+is used if the reader has not published anything yet.
+
 ## How two books are matched to the same fixture
 
 Real books do not write the same fixture the same way. `Manchester United v

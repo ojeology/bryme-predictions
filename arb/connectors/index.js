@@ -99,6 +99,7 @@ export async function loadConnectorQuotes(env = {}, options = {}) {
   const snapshotErrors = [];
   for (const definition of CONNECTORS) {
     if (!definition.snapshot) continue;
+    if (only && !only.has(definition.id)) continue;
     const result = await snapshotQuotes(env, definition.id);
     if (result.quotes.length) {
       published.set(definition.id, result.quotes);
@@ -197,7 +198,14 @@ export async function loadConnectorQuotes(env = {}, options = {}) {
 
     // The book may also be read through its own JSON endpoint, or through a
     // headless browser when the prices are only in the page.
-    if (!usable.length && !definition.viaBrowser && (env[definition.envKey] || env[`${definition.id.toUpperCase()}_BROWSER_URL`] || env.BROWSER_BOOK_URL)) {
+    // The last way of asking a book is only for a book that was asked for,
+    // that has no other way of asking, and whose feed is small enough to
+    // read in one piece.  LiveScore Bet's whole football slate is nearly
+    // ten megabytes: reading it in one piece is what runs a Worker out of
+    // memory, so that book is read in pieces by its own reader.
+    if (own.attempted && !usable.length && !definition.viaBrowser && !definition.reader
+        && !isLiveScoreBetGateway(env[definition.envKey] || '')
+        && (env[definition.envKey] || env[`${definition.id.toUpperCase()}_BROWSER_URL`] || env.BROWSER_BOOK_URL)) {
       const viaHttp = await fetchBook(env, definition);
       const viaBrowser = viaHttp.quotes.length ? { quotes: [], error: null }
         : await fetchBookWithBrowser(env, definition);

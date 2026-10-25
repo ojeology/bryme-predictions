@@ -35,9 +35,11 @@ function snapshotBase(env = {}) {
 /**
  * The commit the reader published last.
  *
- * The branch address can be served from a cache for a few minutes after a
- * new push, so the commit itself is looked up and its address used: that
- * address can never change under us.
+ * The commit address can never change under us, which is why it is used
+ * when it is known.  Looking it up costs a call to GitHub, and that call
+ * has a limit, so the branch address is used when the lookup does not
+ * answer - a copy that is a few minutes old is no older than the prices
+ * themselves.
  */
 async function headCommit(env = {}) {
   if (env.ARB_SNAPSHOT_URL) return null;
@@ -80,7 +82,10 @@ export async function readSnapshotBook(env = {}, book = '') {
   void now;
 
   const sha = await headCommit(env);
-  const addresses = sha ? [`${RAW}/${sha}/${book}.json`, `${base}/${book}.json`] : [`${base}/${book}.json`];
+  // the branch address first: it always answers, and a copy a few minutes
+  // old is no older than the prices themselves.  The commit address, when
+  // it is known, is the one that can never change.
+  const addresses = sha ? [`${base}/${book}.json`, `${RAW}/${sha}/${book}.json`] : [`${base}/${book}.json`];
 
   let value = { capturedAt: null, entry: null, quotes: [], error: null };
   try {

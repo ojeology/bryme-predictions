@@ -24,6 +24,7 @@ import { flattenMsport } from '../arb/connectors/msport.js';
 import { flattenBetking } from '../arb/connectors/betking.js';
 import { flattenSportyBet } from '../arb/connectors/sportybet.js';
 import { fetchLiveScoreBetQuotes } from '../arb/connectors/livescorebetFeed.js';
+import { clusterFixtures } from '../src/lib/arbitrage.js';
 
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36';
 
@@ -455,6 +456,43 @@ async function readSportyBet(browser) {
 }
 
 /* ------------------------------------------------------------------ *
+ * The fixtures the books share.
+ *
+ * A price for a match no other book is showing cannot be compared with
+ * anything, so it is left out of what is published.  What is left is the
+ * part of each book that can be compared: a few thousand prices instead of
+ * tens of thousands, and a scan that fits in the Worker.
+ * ------------------------------------------------------------------ */
+function sharedFixturesOnly(books) {
+  const all = [];
+  for (const [book, quotes] of Object.entries(books)) {
+    quotes.forEach((quote, index) => all.push({ quote, book, index }));
+  }
+  if (!all.length) return books;
+
+  // The same search the scanner makes: the two names and the kick-off time.
+  const keep = new Map();
+  const byQuote = new Map();
+  for (const item of all) byQuote.set(item.quote, item);
+  for (const cluster of clusterFixtures(all.map((item) => item.quote))) {
+    const members = cluster.map((quote) => byQuote.get(quote)).filter(Boolean);
+    const bookNames = new Set(members.map((item) => item.book));
+    if (bookNames.size < 2) continue;
+    for (const item of members) {
+      if (!keep.has(item.book)) keep.set(item.book, new Set());
+      keep.get(item.book).add(item.index);
+    }
+  }
+
+  const result = {};
+  for (const [book, quotes] of Object.entries(books)) {
+    const kept = keep.get(book);
+    result[book] = kept ? quotes.filter((_, index) => kept.has(index)) : [];
+  }
+  return result;
+}
+
+/* ------------------------------------------------------------------ *
  * Read everything, then write the snapshot.
  * ------------------------------------------------------------------ */
 async function main() {
@@ -483,10 +521,16 @@ async function main() {
     try { await browser?.close(); } catch { /* the browser may already be gone */ }
   }
 
+  // only the prices that another book is also showing
+  const shared = sharedFixturesOnly(books);
+  for (const [book, quotes] of Object.entries(books)) {
+    note(book, `${quotes.length} prices read, ${shared[book].length} of them a match another book is showing`);
+  }
+
   // one file per book, so the Worker reads one book's prices at a time
   await mkdir('out', { recursive: true });
   const summary = { capturedAt, books: {}, notes };
-  for (const [book, quotes] of Object.entries(books)) {
+  for (const [book, quotes] of Object.entries(shared)) {
     const file = {
       capturedAt,
       book,
