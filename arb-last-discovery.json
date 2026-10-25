@@ -1,5 +1,5 @@
 {
- "at": "2026-10-25T21:48:46.892Z",
+ "at": "2026-10-25T21:48:50.361Z",
  "edge": "SEA",
  "phoneCountry": "US",
  "workerCountry": "US",
@@ -995,20 +995,9 @@
    "id": "livescorebet",
    "status": "found",
    "url": "https://gateway-ng.livescorebet.com/sportsbook/gateway/v3/view/events/matches?sportcategoryid=SBTC1_1&categoryid=SBTC1_1",
-   "quoteCount": 12584,
-   "note": "page loaded, 5 scripts and 0 chunks read",
-   "evidence": {
-    "page": "https://livescorebet.com/ng/",
-    "scripts": [
-     "https://cdn-ukwest.onetrust.com/scripttemplates/otSDKStub.js",
-     "https://livescorebet.com/ng/vendors.3735969d.js",
-     "https://livescorebet.com/ng/firebase.4c03da06.js",
-     "https://livescorebet.com/ng/index.de45d74b.js",
-     "https://livescorebet.com/ng/modules.a23cbfb8.js"
-    ],
-    "chunks": [],
-    "candidatesTried": 7
-   },
+   "quoteCount": 12608,
+   "note": "",
+   "evidence": {},
    "attempts": [
     {
      "url": "https://sports.livescorebet.net/linefeed/getLineFeed?mode=4&count=200&lng=en&country=566&getEmpty=true",
