@@ -7,15 +7,21 @@ import { fetchBookWithBrowser } from './browserBook.js';
 import { fetchMsportQuotes } from './msportFeed.js';
 import { fetchBetkingQuotes } from './betkingFeed.js';
 import { openSharedBrowser, closeSharedBrowser } from './browserSession.js';
+import { snapshotQuotes } from './snapshot.js';
 
 export const CONNECTORS = [
-  { id: 'sportybet', label: 'SportyBet NG', envKey: 'SPORTYBET_FEED_URL' },
+  // these three are also read by the free reader on GitHub's runners, and
+  // its published prices come first: they carry the whole slate and cost no
+  // browser time
+  { id: 'sportybet', label: 'SportyBet NG', envKey: 'SPORTYBET_FEED_URL', snapshot: true },
   { id: 'nairabet', label: 'NairaBet', envKey: 'NAIRABET_FEED_URL' },
   { id: '22bet', label: '22Bet NG', envKey: 'BET22_FEED_URL' },
   { id: '1xbet', label: '1xBet', envKey: 'BET1X_FEED_URL' },
   { id: 'livescorebet', label: 'LiveScore Bet NG', envKey: 'LSCB_FEED_URL' },
-  { id: 'msport', label: 'MSport', envKey: 'MSPORT_FEED_URL', viaBrowser: true },
-  { id: 'betking', label: 'BetKing', envKey: 'BETKING_FEED_URL', viaBrowser: true },
+  // MSport is read over plain HTTP (with the browser as a fallback)
+  { id: 'msport', label: 'MSport', envKey: 'MSPORT_FEED_URL', reader: fetchMsportQuotes, snapshot: true },
+  // BetKing's edge only answers a real browser, so it gets one
+  { id: 'betking', label: 'BetKing', envKey: 'BETKING_FEED_URL', reader: fetchBetkingQuotes, viaBrowser: true, snapshot: true },
 ];
 
 function configured(definition, env) {
@@ -97,6 +103,7 @@ export async function loadConnectorQuotes(env = {}) {
   }
 
   const specific = [];
+  const snapshotErrors = [];
   try {
   for (const definition of CONNECTORS) {
     if (!env[definition.envKey]) {
@@ -105,18 +112,25 @@ export async function loadConnectorQuotes(env = {}) {
     }
     try {
       const feedUrl = env[definition.envKey];
-      if (definition.viaBrowser) {
-        // this book's edge only serves a real browser, so the price request
-        // is made from inside the book's own page
+
+      // the free reader's published prices come first
+      if (definition.snapshot) {
+        const published = await snapshotQuotes(env, definition.id);
+        if (published.quotes.length) {
+          specific.push({ quotes: published.quotes, error: null, attempted: true, source: 'reader' });
+          continue;
+        }
+        if (published.error) snapshotErrors.push(`${definition.label}: ${published.error.message}`);
+      }
+
+      if (definition.reader) {
+        // a book that needs its own way of asking (a POST, or a browser)
         const hit = cached.get(definition.id);
         if (hit) {
           specific.push({ quotes: hit.quotes, error: null, attempted: true, cached: true });
           continue;
         }
-        if (!sharedBrowser) throw browserError || new Error('no browser available');
-        const result = definition.id === 'betking'
-          ? await fetchBetkingQuotes(env, feedUrl, { browser: sharedBrowser })
-          : await fetchMsportQuotes(env, feedUrl, { browser: sharedBrowser });
+        const result = await definition.reader(env, feedUrl, { browser: sharedBrowser });
         if (result.error) throw result.error;
         browserCachePut(definition.id, feedUrl, result.quotes);
         specific.push({ quotes: result.quotes, error: null, attempted: true });
@@ -194,5 +208,6 @@ export async function loadConnectorQuotes(env = {}) {
   }));
 
   if (combined.error) errors.push(`Combined feed: ${combined.error.message}`);
+  errors.push(...snapshotErrors);
   return { quotes: allQuotes, connectors, errors: [...new Set(errors)] };
 }

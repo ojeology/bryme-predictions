@@ -1,0 +1,72 @@
+# The free reader.
+#
+# GitHub's runners are free for a public repository, and they are ordinary
+# machines on ordinary networks - which is exactly what the two books that
+# refuse server requests want to see.  This workflow reads those books and
+# publishes the prices to the "prices" branch, where the Worker picks them
+# up.  No browser time from the daily allowance is spent, and no secret is
+# needed: the built-in token writes the branch and the prices are read from
+# the public raw address.
+#
+# The schedule can also be started by hand, or by the Worker when the phone
+# asks for a fresh scan.
+name: ARB Reader
+
+on:
+  schedule:
+    # every fifteen minutes, day and night
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: arb-reader
+  cancel-in-progress: true
+
+jobs:
+  read:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install the reader
+        # puppeteer-core only: the runner already carries Chrome, so no
+        # browser is downloaded and the run starts straight away.
+        run: npm install --no-save --no-audit --no-fund puppeteer-core
+
+      - name: Read the books
+        run: node scripts/arb-read.mjs
+
+      - name: Publish the prices
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/prices
+          mkdir -p /tmp/prices
+          cp out/*.json /tmp/prices/
+          cd /tmp/prices
+          git init -q -b prices
+          git config user.name "Ground Zero Reader"
+          git config user.email "reader@thebryme.com"
+          git add .
+          git commit -q -m "prices"
+          git push -q --force "https://x-access-token:${GITHUB_TOKEN}@github.com/${REPOSITORY}.git" prices:prices
+          echo "published $(wc -c < latest.json) bytes summary"
+
+      - name: Keep a copy of the prices
+        uses: actions/upload-artifact@v4
+        with:
+          name: arb-prices
+          path: out/latest.json
+          retention-days: 7

@@ -1,21 +1,28 @@
 /**
  * Reading MSport's prices.
  *
- * MSport's edge sends a bot check to plain server requests - the Worker gets
- * a challenge page instead of prices.  A real browser, opened on the book's
- * own page, is served normally, so the price request is made from inside that
- * page: same origin, no cross-origin question to answer, and the page's own
- * session is used.
+ * MSport publishes its price tree here:
+ *   POST https://www.msport.com/api/ng/facts-center/query/frontend/sports-matches-list?sportId=sr:sport:1&timeslot=Today
  *
- * Nothing is guessed and nothing is bypassed: the browser opens the public
- * page a visitor would open, and asks the public price endpoint the same
- * question the page asks.
+ * The edge in front of it answers a normal web client with the prices, and
+ * answers an unknown client with a "your browser is out of date" page.  The
+ * request is a plain public call - no account, no cookie, no bet - so it is
+ * made as an ordinary web client would make it, with the headers the book's
+ * own web app sends.
+ *
+ * If the edge ever stops answering that way, the same question is asked from
+ * inside a real browser on the book's own page, which is what a visitor
+ * opening the site does.  Nothing is guessed, no check is solved, no bet is
+ * placed.
  */
-import puppeteer from '@cloudflare/puppeteer';
+import { fetchMsportQuotesViaBrowser } from './msportBrowser.js';
 import { flattenMsport } from './msport.js';
-import { browserLimitNote } from './browserSession.js';
 
-const PAGE = 'https://www.msport.com/ng/web/';
+/** A current web client's identity, the way any browser sends it. */
+export const WEB_CLIENT = {
+  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+  'Accept-Language': 'en-NG,en;q=0.9',
+};
 
 /** The headers the book's own web app sends with every price request. */
 function appHeaders() {
@@ -33,78 +40,70 @@ function appHeaders() {
   };
 }
 
-/** Runs inside the page: ask the book for prices and hand back the answer. */
-const ASK = `
-  (async function (request) {
-    try {
-      const response = await fetch(request.url, {
-        method: request.method || 'POST',
-        headers: request.headers || {},
-        body: request.body === null ? undefined : request.body,
-      });
-      const text = await response.text();
-      return { status: response.status, length: text.length, body: text.slice(0, 2000000) };
-    } catch (error) {
-      return { status: 0, length: 0, error: String((error && error.message) || error) };
+/**
+ * Ask the book for its prices over plain HTTP.
+ *
+ * @param {string} url the price endpoint (server-side configuration)
+ * @returns {Promise<{payload: object|null, error: Error|null}>}
+ */
+async function fetchMsportPayload(url) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 20000);
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { ...WEB_CLIENT, ...appHeaders() },
+      body: '[]',
+      signal: controller.signal,
+      redirect: 'follow',
+    });
+    const text = await response.text();
+    if (!response.ok) {
+      return { payload: null, error: new Error(`MSport answered HTTP ${response.status}.`) };
     }
-  })
-`;
+    try {
+      const payload = JSON.parse(text);
+      if (!payload || typeof payload !== 'object' || !payload.data) {
+        return { payload: null, error: new Error('MSport answered with something that is not a price tree.') };
+      }
+      return { payload, error: null };
+    } catch {
+      return { payload: null, error: new Error('MSport answered with a page instead of prices.') };
+    }
+  } catch (error) {
+    if (error?.name === 'AbortError') return { payload: null, error: new Error('MSport did not answer in time.') };
+    return { payload: null, error };
+  } finally {
+    clearTimeout(timer);
+  }
+}
 
 /**
- * Fetch MSport's prices through a real browser.
+ * Fetch MSport's prices.
  *
- * @param {object} env    the Worker environment (needs the browser binding)
+ * @param {object} env    the Worker environment (needs the browser binding
+ *                         only for the fallback)
  * @param {string} url    the price endpoint (server-side configuration)
  * @returns {Promise<{quotes: Array, error: Error|null, detail: string}>}
  */
 export async function fetchMsportQuotes(env = {}, url = '', options = {}) {
   if (!url) return { quotes: [], error: null, detail: 'no endpoint configured' };
-  if (!env?.browser) {
-    return { quotes: [], error: new Error('This deployment has no browser available.'), detail: 'no browser binding' };
+
+  const fetchedAt = new Date().toISOString();
+  const direct = await fetchMsportPayload(url);
+  if (direct.payload) {
+    const quotes = flattenMsport(direct.payload, { bookmaker: 'msport', url, now: fetchedAt });
+    if (quotes.length) {
+      return { quotes, error: null, detail: `${quotes.length} quotes from MSport` };
+    }
+    // an answer with no prices in it is no better than no answer
   }
 
-  // a browser opened by the scan is shared between the books that need one
-  const shared = options.browser || null;
-  const ownsBrowser = !shared;
-  let browser = shared;
-  try {
-    if (!browser) browser = await puppeteer.launch(env.browser);
-    const page = await browser.newPage();
-    await page.setViewport({ width: 412, height: 900 });
-    await page.goto(PAGE, { waitUntil: 'domcontentloaded', timeout: 25000 }).catch(() => {});
-    await new Promise((resolve) => setTimeout(resolve, 5000));
-
-    await page.evaluate(`window.__msportAsk = ${ASK}; true`).catch(() => {});
-    const answer = await page.evaluate(`window.__msportAsk(${JSON.stringify({
-      url,
-      method: 'POST',
-      headers: appHeaders(),
-      body: '[]',
-    })})`);
-
-    if (!answer || answer.status !== 200 || !answer.body) {
-      const why = answer?.error
-        ? answer.error
-        : `the book answered HTTP ${answer?.status ?? 'nothing'}`;
-      return { quotes: [], error: new Error(`MSport did not return prices: ${why}.`), detail: why };
-    }
-
-    let payload;
-    try {
-      payload = JSON.parse(answer.body);
-    } catch {
-      return { quotes: [], error: new Error('MSport returned something that is not JSON (a challenge page?).'), detail: 'not json' };
-    }
-
-    const fetchedAt = new Date().toISOString();
-    const quotes = flattenMsport(payload, { bookmaker: 'msport', url, now: fetchedAt })
-      .map((quote) => ({ ...quote, fetchedAt }));
-    return { quotes, error: null, detail: `${quotes.length} quotes from MSport` };
-  } catch (error) {
-    return { quotes: [], error: new Error(browserLimitNote(error)), detail: error?.message || String(error) };
-  } finally {
-    if (ownsBrowser) {
-      try { await browser?.close(); } catch { /* the session may already be gone */ }
-    }
+  // the fallback: the same question, asked from inside a real browser
+  const viaBrowser = await fetchMsportQuotesViaBrowser(env, url, options);
+  if (viaBrowser.error) {
+    const why = direct.error ? `${direct.error.message} The browser route failed too: ${viaBrowser.error.message}` : viaBrowser.error.message;
+    return { quotes: [], error: new Error(`MSport did not return prices: ${why}`), detail: why };
   }
+  return viaBrowser;
 }

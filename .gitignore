@@ -15,3 +15,6 @@ arb/discovered/
 
 # local discovery reports
 arb/last-discovery.json
+
+# the reader output (published by the workflow, not committed)
+out/
