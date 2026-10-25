@@ -142,7 +142,7 @@ export async function runDiscovery(bookId, env = {}, options = {}) {
       status: attempt.status,
       keys: attempt.keys || [],
       reason: attempt.ok ? `${attempt.quoteCount} quotes` : attempt.reason,
-      sample: attempt.ok ? '' : String(attempt.sample || '').slice(0, 200),
+      sample: String(attempt.ok ? (attempt.rawSample || '') : (attempt.sample || '')).slice(0, 400),
     })),
   };
 }
