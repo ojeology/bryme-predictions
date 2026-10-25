@@ -74,6 +74,34 @@ with invented odds.
 
 ## Connecting the books (without a terminal)
 
+### The free reader — four books, no browser minutes, no paid plan
+
+Two of the books (MSport and BetKing) answer only a client that looks like an
+ordinary browser on an ordinary connection. The Worker is refused outright,
+because the address a Worker calls from is on the edge's own list of
+machines — the same request from an ordinary machine is answered with prices.
+
+So the reading is done by **GitHub's runners**, which are free for a public
+repository:
+
+- `.github/workflows/arb-reader.yml` runs every fifteen minutes (and on
+  demand), reads all four books and publishes the prices to the `prices`
+  branch of this repository.
+- MSport and LiveScore Bet are read over plain HTTP; BetKing and SportyBet
+  are read in the runner's own Chrome — the answers the site's own page
+  fetches for itself are the answers that are used, so nothing is guessed.
+- Only the prices another book is also showing are published: a price for a
+  match nobody else is listing cannot be compared with anything.
+- The Worker reads the published file for the commit that is current, so a
+  cached copy can never be mistaken for fresh prices, and the prices carry
+  the time they were really read.
+
+Cloudflare's ten free browser minutes a day are left alone. `GET
+/api/arbs/snapshot` shows what the reader published, book by book. The full
+picture is in **[ARB_SCANNER.md](./ARB_SCANNER.md#the-free-reader-how-four-books-are-read-without-a-browser-or-a-paid-plan)**.
+
+### Finding the feeds yourself
+
 The Worker can find the books' feeds itself:
 
 - **FIND FEEDS** in the console makes the server open each book, read the
