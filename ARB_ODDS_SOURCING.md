@@ -169,3 +169,35 @@ instead of prices. Run it from your own connection.
    opportunity actually held at the book (the `minReturn >= totalStake` gate
    already protects you, but measure it).
 5. Then, and only then, talk about licensed data.
+
+## Two feeds that are now PROVEN (25 Oct 2026)
+
+**SportyBet NG** publishes its own price tree:
+
+```
+https://www.sportybet.com/api/ng/factsCenter/importantEvents?sportId=sr:sport:1
+```
+
+`data[]` is a tournament, `events[]` a match (`estimateStartTime` in ms,
+`homeTeamName` / `awayTeamName`), `markets[]` a market (`name`, `marketGuide`)
+and `outcomes[]` the prices (`desc` = "Home"/"Draw"/"Away"/"Over 2.5", `odds` a
+string). `liveOrPrematchEvents?sportId=sr:sport:1` returns the in-play events;
+`importantEvents` is the pre-match list. Adapter: `arb/connectors/sportybet.js`.
+
+**LiveScore Bet NG** publishes through its own gateway:
+
+```
+https://gateway-ng.livescorebet.com/sportsbook/gateway/v3/view/events/matches
+  ?sportcategoryid=SBTC1_1&categoryid=SBTC1_1
+```
+
+It needs a `Request-Id` header (any UUID) and answers with
+`events.categories[]` -> `childs[]` -> `events[]` -> `markets[]` ->
+`selections[]`. The whole football slate in one answer is nearly ten megabytes,
+which is more than a Worker can hold, so the book is read in pieces instead:
+the league list first, then the busiest competitions one at a time
+(`arb/connectors/livescorebetFeed.js`). Adapter:
+`arb/connectors/livescorebet.js`.
+
+Both are pinned as Worker secrets (`SPORTYBET_FEED_URL`, `LSCB_FEED_URL`), so
+RUN works without any discovery step.
