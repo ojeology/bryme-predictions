@@ -17,6 +17,7 @@
 
 import { flattenLineFeed, isLineFeed } from './linefeed.js';
 import { flattenSportyBet, isSportyBet } from './sportybet.js';
+import { flattenLiveScoreBet, isLiveScoreBet } from './livescorebet.js';
 
 const STOP = new Set(['total', 'goals', 'goal', 'over', 'under', 'more', 'less', 'the', 'a', 'an', 'of', 'and']);
 
@@ -128,6 +129,8 @@ export function flattenBookPayload(payload, options = {}) {
   if (isLineFeed(payload)) return flattenLineFeed(payload, options);
   // SportyBet publishes its own price tree
   if (isSportyBet(payload)) return flattenSportyBet(payload, options);
+  // LiveScore Bet publishes its own tree through its gateway
+  if (isLiveScoreBet(payload)) return flattenLiveScoreBet(payload, options);
   const bookmaker = options.bookmaker;
   const defaultRules = options.defaultRules || 'unspecified';
   const defaultFamily = options.defaultFamily || '';
@@ -159,7 +162,9 @@ export function flattenBookPayload(payload, options = {}) {
       way: q.way || 2,
       outcome,
       label: q.outcomeLabel || outcome,
-      bookmaker,
+      // a quote keeps the book it came from; the connector only names the
+      // book when the payload did not say
+      bookmaker: q.bookmaker || bookmaker,
       odds,
       minStake: q.minStake ?? options.minStake ?? null,
       fetchedAt: q.fetchedAt || now.toISOString(),
@@ -185,6 +190,7 @@ export function flattenBookPayload(payload, options = {}) {
       pushQuote({
         event: eventName, eventId: pick(item, ['eventId', 'event_id', 'matchId']), home, away,
         startsAt, marketName, marketKey, outcomeLabel, odds,
+        bookmaker: pick(item, ['bookmaker', 'book', 'source']),
         rules: pick(item, ['rules', 'rulesKey', 'settlement']),
         way: pick(item, ['way', 'outcomeCount']),
         fetchedAt: pick(item, ['fetchedAt', 'timestamp', 'updatedAt']),

@@ -1,5 +1,7 @@
 import { normalizeBookmaker, normalizeQuote, parseOdds } from '../../src/lib/arbitrage.js';
 import { fetchJsonFeed } from './jsonFeed.js';
+import { flattenBookPayload } from './normalize.js';
+import { fetchLiveScoreBetQuotes, isLiveScoreBetGateway } from './livescorebetFeed.js';
 import { fetchBook } from './httpBook.js';
 import { fetchBookWithBrowser } from './browserBook.js';
 
@@ -41,21 +43,39 @@ function usableQuote(quote) {
  * JSON feed; no access-control bypass or browser challenge solving is included.
  */
 export async function loadConnectorQuotes(env = {}) {
-  const combinedPromise = env.ARB_FEED_URL
-    ? fetchJsonFeed(env.ARB_FEED_URL).then((quotes) => ({ quotes, error: null })).catch((error) => ({ quotes: [], error }))
-    : Promise.resolve({ quotes: [], error: null });
+  // One book at a time, on purpose: a book's own price tree can be several
+  // megabytes of JSON, and holding two of them at once is enough to run the
+  // Worker out of memory. Each payload is released before the next one is
+  // fetched.
+  const combined = env.ARB_FEED_URL
+    ? await fetchJsonFeed(env.ARB_FEED_URL)
+      .then((payload) => ({ quotes: flattenBookPayload(payload, { bookmaker: 'combined' }), error: null }))
+      .catch((error) => ({ quotes: [], error }))
+    : { quotes: [], error: null };
 
-  const [combined, ...specific] = await Promise.all([
-    combinedPromise,
-    ...CONNECTORS.map(async (definition) => {
-      if (!env[definition.envKey]) return { quotes: [], error: null, attempted: false };
-      try {
-        return { quotes: await fetchJsonFeed(env[definition.envKey]), error: null, attempted: true };
-      } catch (error) {
-        return { quotes: [], error, attempted: true };
+  const specific = [];
+  for (const definition of CONNECTORS) {
+    if (!env[definition.envKey]) {
+      specific.push({ quotes: [], error: null, attempted: false });
+      continue;
+    }
+    try {
+      const feedUrl = env[definition.envKey];
+      if (isLiveScoreBetGateway(feedUrl)) {
+        // this book's whole slate does not fit in memory at once, so it is
+        // read in pieces
+        const result = await fetchLiveScoreBetQuotes(feedUrl, { maxCompetitions: 20 });
+        if (result.error) throw result.error;
+        specific.push({ quotes: result.quotes, error: null, attempted: true });
+      } else {
+        const payload = await fetchJsonFeed(feedUrl);
+        const quotes = flattenBookPayload(payload, { bookmaker: definition.id });
+        specific.push({ quotes, error: null, attempted: true });
       }
-    }),
-  ]);
+    } catch (error) {
+      specific.push({ quotes: [], error, attempted: true });
+    }
+  }
 
   const allQuotes = [];
   const errors = [];

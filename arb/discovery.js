@@ -18,6 +18,7 @@
  * which is what the books require.
  */
 import { flattenBookPayload } from './connectors/normalize.js';
+import { feedHeaders } from './connectors/feedHeaders.js';
 
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
   + '(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36';
@@ -87,7 +88,15 @@ export const KNOWN_FEEDS = {
     ...GROUP_PATHS.slice(0, 4).map((path) => `https://api.nairabet.com${path}?${LINEFEED_QUERY}`),
   ],
   livescorebet: [
-    ...GROUP_PATHS.slice(0, 4).map((path) => `https://sports.livescorebet.net${path}?${LINEFEED_QUERY}`),
+    // PROVEN: the book publishes its own tree through its gateway
+    'https://gateway-ng.livescorebet.com/sportsbook/gateway/v3/view/events/matches?sportcategoryid=SBTC1_1&categoryid=SBTC1_1',
+    'https://gateway-ng.livescorebet.com/sportsbook/gateway/v2/view/coupon?id=3103&sportcategoryid=SBTC1_1',
+    'https://gateway-ng.livescorebet.com/sportsbook/gateway/v3/view/sport/groupedleagues?sportcategoryid=SBTC1_1',
+    'https://gateway-ng.livescorebet.com/sportsbook/gateway/v1/view/sport/leagues?sportcategoryid=SBTC1_1',
+    'https://gateway-ng.livescorebet.com/sportsbook/gateway/v3/view/az/sports?sportcategoryid=SBTC1_1',
+    'https://gateway-ng.livescorebet.com/sportsbook/gateway/v3/view/events/matches?sportcategoryid=SBTC1_1&categoryid=SBTC3_9916',
+    'https://gateway-ng.livescorebet.com/sportsbook/gateway/v3/view/configs',
+    // and the older hosts
     ...GENERIC_PATHS.map((path) => `https://api.livescorebet.net${path}?${LINEFEED_QUERY}`),
   ],
   sportybet: [
@@ -171,7 +180,7 @@ function blocked(text, status) {
 
 /** Fetch a candidate and prove it produces quotes through the real normaliser. */
 export async function proveFeed(url, bookmaker, { timeoutMs = 9000 } = {}) {
-  const result = await fetchText(url, { timeoutMs, maxBytes: 3_000_000 });
+  const result = await fetchText(url, { timeoutMs, maxBytes: 12_000_000, extraHeaders: feedHeaders(url) });
   if (!result.ok) {
     return {
       ok: false,

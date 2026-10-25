@@ -1,4 +1,8 @@
-const MAX_FEED_BYTES = 2_000_000;
+import { feedHeaders } from './feedHeaders.js';
+
+// A book's own price tree can be several megabytes; the limit keeps a
+// runaway response from taking the Worker down, nothing more.
+const MAX_FEED_BYTES = Number(process?.env?.ARB_MAX_FEED_BYTES || 12_000_000);
 
 /**
  * Fetch an operator-configured JSON quote feed. The URL comes only from server
@@ -20,6 +24,7 @@ export async function fetchJsonFeed(url, options = {}) {
       headers: {
         Accept: 'application/json',
         'User-Agent': 'BrymeArbScanner/1.0 (+https://predictions.thebryme.com)',
+        ...feedHeaders(url),
         ...(options.headers || {}),
       },
       signal: controller.signal,
@@ -27,15 +32,14 @@ export async function fetchJsonFeed(url, options = {}) {
     });
     if (!response.ok) throw new Error(`Feed returned HTTP ${response.status}.`);
     const declaredLength = Number(response.headers.get('content-length') || 0);
-    if (declaredLength > MAX_FEED_BYTES) throw new Error('Feed exceeds the 2 MB safety limit.');
+    if (declaredLength > MAX_FEED_BYTES) throw new Error('Feed is larger than the 12 MB safety limit.');
     const text = await response.text();
-    if (text.length > MAX_FEED_BYTES) throw new Error('Feed exceeds the 2 MB safety limit.');
+    if (text.length > MAX_FEED_BYTES) throw new Error('Feed is larger than the 12 MB safety limit.');
     let payload;
     try { payload = JSON.parse(text); } catch { throw new Error('Feed did not return valid JSON.'); }
-    const quotes = Array.isArray(payload) ? payload : payload.quotes || payload.data;
-    if (!Array.isArray(quotes)) throw new Error('Feed JSON must be an array or contain a quotes array.');
-    if (quotes.length > 5000) throw new Error('Feed exceeds the 5,000-quote safety limit.');
-    return quotes;
+    // The feed may be a plain list of quotes, or the book's own price tree.
+    // The normaliser knows how to read both.
+    return payload;
   } catch (error) {
     if (error?.name === 'AbortError') throw new Error('Feed timed out after 8 seconds.');
     throw error;

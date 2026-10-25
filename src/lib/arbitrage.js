@@ -258,16 +258,63 @@ function tokenize(value) {
     .filter(Boolean);
 }
 
+/**
+ * Two tokens name the same thing when they are the same word, or when one is
+ * the beginning of the other ("manchester" and "man", "united" and "unite").
+ *
+ * A token that appears somewhere inside another word is NOT the same thing:
+ * "enschede" contains "sc", and treating those as a match put
+ * "Excelsior Rotterdam v FC Twente Enschede" and "SC Telstar v FC Utrecht" in
+ * the same fixture, which invented arbs that did not exist.
+ */
+/** The short names one book uses for a club the other spells out. */
+const TOKEN_ALIASES = {
+  utd: 'united',
+  spurs: 'tottenham',
+  hotspur: 'tottenham',
+  weds: 'wednesday',
+};
+
 function tokenSimilar(a, b) {
   if (a === b) return true;
-  if (a.length >= 4 && b.length >= 4 && (a.startsWith(b.slice(0, 4)) || b.startsWith(a.slice(0, 4)))) return true;
-  if (a.length >= 3 && (a.includes(b) || b.includes(a))) return true;
+  const left = TOKEN_ALIASES[a] || a;
+  const right = TOKEN_ALIASES[b] || b;
+  if (left === right) return true;
+  if (left.length >= 3 && right.length >= 3 && (left.startsWith(right) || right.startsWith(left))) return true;
   return false;
 }
 
-function slotMatches(aTokens, bTokens) {
-  if (!aTokens.length || !bTokens.length) return true;
-  return aTokens.some((x) => bTokens.some((y) => tokenSimilar(x, y)));
+/**
+ * Words that say nothing about which club is meant. "FC", "SC", "Club",
+ * "Deportivo" style prefixes are shared by thousands of teams, so they never
+ * count as a match on their own.
+ */
+const NOISE_TOKENS = new Set([
+  'fc', 'sc', 'ac', 'afc', 'cf', 'cd', 'ca', 'sa', 'sd', 'ss', 'as', 'us', 'un',
+  'cd', 'ud', 'rc', 'club', 'clube', 'clubes', 'futebol', 'football', 'sports',
+  'sport', 'de', 'da', 'do', 'dos', 'das', 'la', 'el', 'the', 'and', 'of',
+  'calcio', 'ssc', 'cff', 'ffc', 'if', 'sk', 'bk', 'aik', 'ff', 'fs', 'sir',
+]);
+
+/** The tokens that actually carry the club's identity. */
+function meaningful(tokens) {
+  return tokens.filter((token) => token.length >= 3 && !NOISE_TOKENS.has(token));
+}
+
+/**
+ * Do these two sides name the same club?
+ *
+ * Both sides have to agree: every word of one side must be matched by a word
+ * of the other, and the other way round as well. One matching word is never
+ * enough - that was how two different clubs ended up in one fixture.
+ */
+function sideMatches(aTokens, bTokens) {
+  const left = meaningful(aTokens);
+  const right = meaningful(bTokens);
+  if (!left.length || !right.length) return false;
+  const leftCovers = left.every((x) => right.some((y) => tokenSimilar(x, y)));
+  const rightCovers = right.every((x) => left.some((y) => tokenSimilar(x, y)));
+  return leftCovers && rightCovers;
 }
 
 /** Are these two quotes about the same fixture? */
@@ -280,16 +327,9 @@ export function sameFixture(a, b) {
 
   const [ah, aa] = splitFixture(a.event);
   const [bh, ba] = splitFixture(b.event);
-  const homeOk = slotMatches(tokenize(ah), tokenize(bh));
-  const awayOk = slotMatches(tokenize(aa), tokenize(ba));
-  if (homeOk && awayOk) return true;
-
-  const all = [...tokenize(ah), ...tokenize(aa)];
-  const other = [...tokenize(bh), ...tokenize(ba)];
-  if (!all.length || !other.length) return false;
-  let hits = 0;
-  for (const x of all) if (other.some((y) => tokenSimilar(x, y))) hits += 1;
-  return hits >= Math.min(2, Math.min(all.length, other.length));
+  // home must match home and away must match away: a book that lists the
+  // sides the other way round is a different price, not the same fixture
+  return sideMatches(tokenize(ah), tokenize(bh)) && sideMatches(tokenize(aa), tokenize(ba));
 }
 
 function combinations(items, limit = 5000) {

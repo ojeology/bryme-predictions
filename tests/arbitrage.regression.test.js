@@ -118,3 +118,46 @@ test('the fixture matcher rejects two clearly different teams', () => {
     { event: 'Liverpool v Chelsea', startsAt: future },
   ), false);
 });
+
+test('a club prefix never makes two different fixtures match', () => {
+  // "FC", "SC" and a two-letter fragment inside a longer word used to be
+  // enough to put two unrelated matches in one fixture - which invented arbs
+  assert.equal(sameFixture(
+    { event: 'Excelsior Rotterdam v FC Twente Enschede', startsAt: future },
+    { event: 'SC Telstar v FC Utrecht', startsAt: future },
+  ), false);
+  assert.equal(sameFixture(
+    { event: 'FC Santa Coloma v Inter Club d Escalades', startsAt: future },
+    { event: 'Alkmaar v FC Twente Enschede', startsAt: future },
+  ), false);
+  assert.equal(sameFixture(
+    { event: 'Jaguares de Cordoba v Llaneros F.C.', startsAt: future },
+    { event: 'Club Bolivar v FC Universitario de Vinto', startsAt: future },
+  ), false);
+});
+
+test('the same fixture written two ways still matches', () => {
+  assert.equal(sameFixture(
+    { event: 'Alkmaar v FC Twente Enschede', startsAt: future },
+    { event: 'AZ Alkmaar v FC Twente Enschede', startsAt: future },
+  ), true);
+  assert.equal(sameFixture(
+    { event: 'Manchester United v Liverpool', startsAt: future },
+    { event: 'Man Utd v Liverpool FC', startsAt: future },
+  ), true);
+  assert.equal(sameFixture(
+    { event: 'Tottenham Hotspur v Arsenal', startsAt: future },
+    { event: 'Spurs v Arsenal', startsAt: future },
+  ), true);
+});
+
+test('one side matching is never enough', () => {
+  assert.equal(sameFixture(
+    { event: 'Real Madrid v Barcelona', startsAt: future },
+    { event: 'Real Madrid v Atletico Madrid', startsAt: future },
+  ), false);
+  assert.equal(sameFixture(
+    { event: 'Ajax v Feyenoord', startsAt: future },
+    { event: 'Ajax v PSV', startsAt: future },
+  ), false);
+});
