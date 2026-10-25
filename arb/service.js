@@ -1,6 +1,7 @@
 import { scanOpportunities } from '../src/lib/arbitrage.js';
 import { getConnectorStatus, loadConnectorQuotes } from './connectors/index.js';
-import { discoverBook, proveFeed, BOOK_PAGES } from './discovery.js';
+import { discoverBook, proveFeed, BOOK_PAGES, KNOWN_FEEDS } from './discovery.js';
+import { flattenBookPayload } from './connectors/normalize.js';
 import { reportDiscovery, readKnownFeeds } from './report.js';
 
 function json(data, status = 200) {
@@ -274,7 +275,7 @@ async function egressTrace() {
 export async function handleArbRequest(request, env = {}) {
   const url = new URL(request.url);
   const path = url.pathname.replace(/\/$/, '');
-  if (!['/api/arbs', '/api/arbs/status', '/api/arbs/scan', '/api/arbs/discover', '/api/arbs/whereami'].includes(path)) return null;
+  if (!['/api/arbs', '/api/arbs/status', '/api/arbs/scan', '/api/arbs/discover', '/api/arbs/whereami', '/api/arbs/candidates', '/api/arbs/ingest'].includes(path)) return null;
   if (request.method === 'OPTIONS') {
     return new Response(null, { status: 204, headers: { Allow: 'GET, POST, OPTIONS', 'Cache-Control': 'no-store' } });
   }
@@ -284,6 +285,52 @@ export async function handleArbRequest(request, env = {}) {
   // pressed the button - which is what decides whether the books answer.
   const edge = request.cf?.colo || null;
   try {
+    if (path === '/api/arbs/candidates') {
+      if (request.method !== 'GET') return json({ ok: false, error: 'Method not allowed.' }, 405);
+      const feeds = {};
+      for (const [book, urls] of Object.entries(KNOWN_FEEDS)) feeds[book] = urls.slice(0, 8);
+      return json({ ok: true, feeds });
+    }
+    if (path === '/api/arbs/ingest') {
+      if (request.method !== 'POST') return json({ ok: false, error: 'Method not allowed.' }, 405);
+      // The phone collected the books' own answers on the phone's own
+      // network - the phone's connection is inside the country the books
+      // answer. The server only turns them into comparable quotes.
+      let body;
+      try { body = await request.json(); } catch { return json({ ok: false, error: 'The body must be JSON.' }, 400); }
+      const feeds = Array.isArray(body?.feeds) ? body.feeds : [];
+      if (!feeds.length) return json({ ok: false, error: 'Send {feeds:[{book, payload}]}.' }, 400);
+      const quotes = [];
+      const perBook = [];
+      for (const feed of feeds) {
+        const book = String(feed?.book || 'unknown');
+        try {
+          const bookQuotes = flattenBookPayload(feed?.payload, { bookmaker: book });
+          quotes.push(...bookQuotes);
+          perBook.push({ book, quoteCount: bookQuotes.length, ok: true });
+        } catch (error) {
+          perBook.push({ book, quoteCount: 0, ok: false, error: error?.message || 'could not read that answer' });
+        }
+      }
+      const opportunities = scanOpportunities(quotes, {
+        totalStake: numberOption(body?.totalStake, 100000, { min: 1, max: 1_000_000_000, name: 'totalStake' }),
+        rounding: numberOption(body?.rounding, 100, { min: 0, max: 1_000_000, name: 'rounding' }),
+        maxQuoteAgeSeconds: maxFeedAge(env),
+        now: new Date(),
+      });
+      const fresh = quotes.filter((quote) => isFreshPreMatch(quote, Date.now(), maxFeedAge(env)));
+      return json({
+        ok: true,
+        perBook,
+        quoteCount: quotes.length,
+        freshQuoteCount: fresh.length,
+        rejectedQuoteCount: quotes.length - fresh.length,
+        opportunities,
+        rejectedGroupCount: opportunities.rejectedGroupCount || 0,
+        edge,
+        checkedAt: new Date().toISOString(),
+      });
+    }
     if (path === '/api/arbs/whereami') {
       if (request.method !== 'GET') return json({ ok: false, error: 'Method not allowed.' }, 405);
       const cf = request.cf || {};

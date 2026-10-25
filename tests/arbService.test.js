@@ -115,3 +115,46 @@ test('configured combined feed scans fresh pre-match quotes and rejects stale pr
     await new Promise((resolve) => server.close(resolve));
   }
 });
+
+test('the phone can hand over a book answer and the server turns it into quotes', async () => {
+  const generatedAt = Date.now();
+  const payload = {
+    bizCode: 10000,
+    data: [{
+      id: 'sr:tournament:1', name: 'Test League',
+      events: [{
+        eventId: 'sr:match:1',
+        estimateStartTime: generatedAt + 3600_000,
+        homeTeamName: 'Alpha', awayTeamName: 'Beta',
+        sport: { name: 'Football' },
+        markets: [{
+          id: '1', name: '1X2', marketGuide: 'Which team will win the match. Overtime not included.',
+          outcomes: [
+            { id: '1', odds: '2.10', desc: 'Home', isActive: 1 },
+            { id: '2', odds: '3.40', desc: 'Draw', isActive: 1 },
+            { id: '3', odds: '3.60', desc: 'Away', isActive: 1 },
+          ],
+        }],
+      }],
+    }],
+  };
+  const response = await handleArbRequest(new Request('http://local/api/arbs/ingest', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ feeds: [{ book: 'sportybet', payload }] }),
+  }), {});
+  const data = await response.json();
+  assert.equal(response.status, 200);
+  assert.equal(data.ok, true);
+  assert.equal(data.quoteCount, 3);
+  assert.equal(data.perBook[0].book, 'sportybet');
+  assert.equal(data.perBook[0].quoteCount, 3);
+});
+
+test('the candidate list is offered so the phone can try the books itself', async () => {
+  const response = await handleArbRequest(new Request('http://local/api/arbs/candidates'), {});
+  const data = await response.json();
+  assert.equal(response.status, 200);
+  assert.ok(data.feeds.sportybet.length >= 1);
+  assert.ok(data.feeds.sportybet.some((url) => url.includes('/api/ng/factsCenter/importantEvents')));
+});

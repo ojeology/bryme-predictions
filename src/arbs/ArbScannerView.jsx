@@ -329,6 +329,8 @@ export default function ArbScannerView() {
   const [edge, setEdge] = useState(null);
   const [whereami, setWhereami] = useState(null);
   const [whereamiBusy, setWhereamiBusy] = useState(false);
+  const [collecting, setCollecting] = useState(false);
+  const [phoneCollected, setPhoneCollected] = useState({});
   const [scanError, setScanError] = useState('');
   const [autoRefresh, setAutoRefresh] = useState(false);
   const [notice, setNotice] = useState('');
@@ -589,6 +591,92 @@ export default function ArbScannerView() {
     setTab('calculator');
   };
 
+  /**
+   * Collect the books on the phone itself.
+   *
+   * Some books only answer traffic that comes from inside their own country,
+   * and the server may be standing far outside it. The phone is standing
+   * inside it, so the phone asks each book and hands the answers back for
+   * the server to compare.
+   */
+  const collectOnPhone = async () => {
+    setCollecting(true);
+    setPhoneCollected({});
+    const gathered = [];
+    const results = {};
+    try {
+      const candidateResponse = await fetch('/api/arbs/candidates', { headers: { Accept: 'application/json' } });
+      const candidateData = await candidateResponse.json();
+      const feeds = candidateData?.feeds || {};
+      for (const [book, urls] of Object.entries(feeds)) {
+        let answered = false;
+        for (const url of urls.slice(0, 3)) {
+          const controller = new AbortController();
+          const timer = setTimeout(() => controller.abort(), 12000);
+          try {
+            const response = await fetch(url, {
+              headers: { Accept: 'application/json' },
+              mode: 'cors',
+              signal: controller.signal,
+            });
+            if (!response.ok) {
+              results[book] = { status: 'blocked', detail: `the book answered HTTP ${response.status}` };
+              continue;
+            }
+            const payload = await response.json();
+            gathered.push({ book, payload });
+            results[book] = { status: 'collected' };
+            answered = true;
+            break;
+          } catch (error) {
+            results[book] = {
+              status: 'blocked',
+              detail: error?.name === 'AbortError'
+                ? 'the book did not answer in time'
+                : 'the book would not let this page read it',
+            };
+          } finally {
+            clearTimeout(timer);
+          }
+        }
+        if (!answered && !results[book]) results[book] = { status: 'none', detail: 'no answer' };
+        setPhoneCollected({ ...results });
+      }
+      if (gathered.length) {
+        const ingest = await fetch('/api/arbs/ingest', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ feeds: gathered, totalStake, rounding }),
+        });
+        const data = await ingest.json();
+        const found = Array.isArray(data.opportunities) ? data.opportunities : [];
+        setOpportunities(found);
+        setRunSummary({
+          id: uid(),
+          at: new Date().toISOString(),
+          ms: 0,
+          mode: 'phone',
+          quoteCount: Number(data.quoteCount || 0),
+          freshQuoteCount: Number(data.freshQuoteCount || 0),
+          rejectedQuoteCount: Number(data.rejectedQuoteCount || 0),
+          opportunities: found.length,
+          booksLive: (data.perBook || []).filter((entry) => entry.ok).length,
+          booksBlocked: (data.perBook || []).filter((entry) => !entry.ok).length,
+          books: (data.perBook || []).length,
+          errors: (data.perBook || []).filter((entry) => !entry.ok).map((entry) => `${entry.book}: ${entry.error || 'no answer'}`),
+          ok: true,
+        });
+        if (data.edge) setEdge(data.edge);
+      } else {
+        setScanError('The phone could not read any of the books directly. Check the "where from" reading above.');
+      }
+    } catch (error) {
+      setScanError(error?.message || 'The phone could not collect the books.');
+    } finally {
+      setCollecting(false);
+    }
+  };
+
   const checkWhere = async () => {
     setWhereamiBusy(true);
     try {
@@ -759,6 +847,21 @@ export default function ArbScannerView() {
             where from
           </button>
 
+          {Object.keys(phoneCollected || {}).length > 0 && (
+            <div className="w-full md:w-auto md:col-span-6 font-mono text-[11px] text-slate-400 bg-white/5 border border-white/10 rounded-lg px-3 py-2 leading-relaxed">
+              collected on this phone:{' '}
+              {Object.entries(phoneCollected).map(([book, result]) => (
+                <span key={book} className="mr-3">
+                  {book}{' '}
+                  <span className={result.status === 'collected' ? 'text-emerald-400' : 'text-amber-400'}>
+                    {result.status}
+                  </span>
+                  {result.detail ? <span className="text-slate-500"> ({result.detail})</span> : null}
+                </span>
+              ))}
+            </div>
+          )}
+
           {whereami && !whereami.error && (
             <div className="w-full md:w-auto md:col-span-6 font-mono text-[11px] text-slate-400 bg-white/5 border border-white/10 rounded-lg px-3 py-2 leading-relaxed">
               your phone reaches the books through{' '}
@@ -796,6 +899,16 @@ export default function ArbScannerView() {
           >
             {discovering ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
             {discovering ? 'looking' : 'find feeds'}
+          </button>
+          <button
+            type="button"
+            onClick={collectOnPhone}
+            disabled={collecting}
+            className="px-4 py-3 rounded-xl border border-sky-500/40 text-sky-200 hover:bg-sky-500/10 disabled:opacity-40 text-xs font-black uppercase tracking-[0.14em] inline-flex items-center gap-2"
+            title="Ask the books from this phone, on this phone's connection"
+          >
+            {collecting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Globe className="w-4 h-4" />}
+            {collecting ? 'collecting' : 'collect here'}
           </button>
         </div>
 
