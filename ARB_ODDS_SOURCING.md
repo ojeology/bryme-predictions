@@ -343,3 +343,67 @@ only be read in a browser, so the scan now:
 A Workers Paid plan removes the ten-minute cap and allows three browser
 instances a second.  That is the difference between a scanner that runs all
 day and one that runs for a few minutes a day.
+
+## HOW TO ADD THE NEXT BOOK - the repeatable method
+
+Four steps, in this order, and they work every time.  BetKing was found with
+these four steps in one sitting.
+
+**1. Read the book's own front-end code.**  Open the book's sports page in a
+browser, and read the addresses the page asks for.  That is where the API
+base, the endpoint, the headers and the parameters come from - not from
+guessing.  This is how MSport's `/api/ng/facts-center/...` recipe and
+BetKing's `/api/feeds/...` recipe were both found, and it is how the 1xBet
+and 22Bet header scheme (`x-language`, `x-referral`, `x-group`, `x-whence`,
+`x-fcountry`) was confirmed.
+
+**2. Try the mobile and API hosts.**  The web host is the one that puts the
+bot check in front; the mobile and API hosts often are not, and some are bare
+IPs with no edge at all.  Hosts tested from the Nigerian Worker on 25 Oct:
+
+| host | what it answered |
+| --- | --- |
+| `m.22bet.ng` | a redirector: every path 301s to the same path on 22bet.ng |
+| `m.msport.ng` | redirects to www.msport.com (same bot check) |
+| `api.msport.ng` | Cloudflare bot check (403) |
+| `api.merrybet.ng`, `mobile.merrybet.ng` | 525 - the origin is down, not blocked |
+| `api.bet9ja.com`, `sports.bet9ja.com` | Akamai 403 "Access Denied" |
+| `api.betking.com` | 530 / error 1016 (origin down) |
+| `sportsapicdn-desktop.betking.com` | Cloudflare challenge, then prices |
+| `betking.com` | Cloudflare challenge, then the page |
+
+**3. If the edge serves a browser, use a browser.**  A real browser passes
+Cloudflare's challenge, so any book whose edge is challenge-based can be
+read - as long as the book does not geo-block the browser's country.  Two
+things follow from where the browser runs:
+- Browser Run's egress is **US**: 1xBet answers "prohibited in the USA" and
+  22Bet says the site is restricted, so those two cannot be read this way.
+- MSport and BetKing do not care, and both work.
+
+**4. Some books are not blocked - they are broken.**  22Bet's price service
+answers HTTP 500 to every variant of its line-feed address, NairaBet's hosts
+answer 530 and 1016, Merrybet's answer 525.  These are outages at the book.
+No amount of reading, probing or browsing will produce a price from a
+service that is returning an error, so the right move is to wait and keep
+the recipe ready.
+
+**What is left, and what it would take:**
+
+| book | state | what is needed |
+| --- | --- | --- |
+| SportyBet | live | - |
+| LiveScore Bet | live | - |
+| MSport | live (browser) | - |
+| BetKing | live (browser) | - |
+| Bet9ja | untried in a browser | Akamai blocks the Worker; a real browser may pass it |
+| 22Bet | origin 500 | wait for the price service; the header scheme is ready |
+| 1xBet | geo-blocked to the browser | would need a licensed feed or the book's own cooperation |
+| NairaBet | origin down | wait |
+
+The honest truth about adding books: more books only help if they price the
+same fixture.  Three books agreeing on a match is the normal case and is
+not an arbitrage; an arbitrage appears when one book prices a market
+differently from the others.  A fourth and fifth book raise the chance of
+finding that difference, and BetKing, MSport and SportyBet all feed from the
+same Sportradar/SportyNet family, so they will often agree - which is a
+fact about the odds, not a defect in the reader.
