@@ -26,21 +26,30 @@ const FOOTBALL = 'SBTC1_1';
  * largest remaining slates.
  */
 const MAJOR_LEAGUES = [
+  // The competitions that carry most of the action, and the ones the other
+  // Nigerian books are actually showing.
   'England - Premier League', 'Spain - La Liga', 'Italy - Serie A', 'Germany - 1.Bundesliga',
   'France - Ligue 1', 'Champions League', 'Europa League', 'Conference League',
   'UEFA Nations League', 'Netherlands - Eredivisie', 'Portugal - Primeira Liga',
   'Belgium - First Division A', 'Turkey - Super League', 'Scotland - Premiership',
-  'Switzerland - Super League', 'Austria - Bundesliga', 'Czech Republic - First League',
-  'Croatia - 1.HNL', 'Serbia - SuperLiga', 'Poland - Ekstraklasa', 'Greece - Super League',
-  'Israel - Premier League', 'Norway - Eliteserien', 'Sweden - Allsvenskan',
-  'Denmark - Superligaen', 'Russia - Premier League', 'Ukraine - Premier League',
   'USA - MLS', 'Brazil - Serie A', 'Argentina - Liga Profesional', 'Mexico - Liga MX',
-  'Chile - Primera League', 'Colombia - Primera', 'Ecuador - Liga Pro', 'Peru - Liga 1',
+  'Colombia - Primera', 'Peru - Liga 1', 'Chile - Primera League', 'Ecuador - Liga Pro',
   'Paraguay - Primera Div', 'Uruguay - Primera Div', 'Japan - J1 League',
   'South Korea - K League 1', 'Australia - A-League', 'Saudi Arabia - Premier',
+  // The smaller competitions the Nigerian books still carry.  These were the
+  // ones being missed: a scan that read only the big leagues met none of the
+  // matches the other books were showing, so there was nothing to compare.
+  'Nicaragua - Primera Div', 'Panama - LFP', 'Honduras - Liga Nacional',
+  'Guatemala - Liga Nacional', 'Costa Rica - Primera Div', 'El Salvador - Primera',
+  'USA - MLS NEXT Pro', 'Venezuela - Primera', 'Bolivia - Premiera', 'Jamaica - Premier League',
+  'Switzerland - Super League', 'Austria - Bundesliga', 'Czech Republic - First League',
+  'Croatia - 1.HNL', 'Serbia - SuperLiga', 'Poland - Ekstraklasa', 'Greece - Super League',
+  'Ireland - Premier', 'Denmark - Superligaen', 'Norway - Eliteserien', 'Sweden - Allsvenskan',
+  'Romania - Liga 1', 'Slovakia - Nik', 'Hungary - OTP', 'Algeria - Ligue 1',
   'Nigeria - NPFL', 'South Africa - Premier Division', 'Ivory Coast - Ligue 1',
-  'Egypt - Premier', 'Morocco - Botola', 'Canada - Premier League', 'Romania - Liga 1',
-  'Slovakia - Nik', 'Hungary - OTP', 'Algeria - Ligue 1', 'Vietnam - V.League',
+  'Egypt - Premier', 'Morocco - Botola', 'Canada - Premier League', 'Vietnam - V.League',
+  'India - Super League', 'Israel - Premier League', 'Russia - Premier League',
+  'Ukraine - Premier League',
 ];
 
 /** The major competitions first, then the biggest of the rest. */
@@ -92,7 +101,7 @@ export function isLiveScoreBetGateway(url = '') {
 /**
  * @returns {Promise<{quotes: Array, competitions: number, error: Error|null}>}
  */
-export async function fetchLiveScoreBetQuotes(url, { maxCompetitions = 28, timeoutMs = 12000 } = {}) {
+export async function fetchLiveScoreBetQuotes(url, { maxCompetitions = 32, timeoutMs = 12000 } = {}) {
   const base = gatewayBase(url);
   try {
     const leagues = await getJson(`${base}/v1/view/sport/leagues?sportcategoryid=${FOOTBALL}`, { timeoutMs });

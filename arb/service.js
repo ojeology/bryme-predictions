@@ -137,6 +137,7 @@ function overlapReport(quotes) {
   // two team names and the kick-off time, not by the book's own event id.
   const fixtureCounts = {};
   const sharedFixtures = new Map();
+  const closest = [];
   let twoBooks = 0;
   let threeBooks = 0;
   for (const groupQuotes of groups.values()) {
@@ -150,8 +151,62 @@ function overlapReport(quotes) {
         if (!sharedFixtures.has(key)) sharedFixtures.set(key, books);
         if (books.size >= 3) threeBooks += 1;
       }
+
+      // How close the books came on the same market.  This is the same
+      // calculation the scanner makes: the best price for each outcome, from
+      // any book, added up.  Under 1.000 is an arbitrage; the nearer it is
+      // to 1.000, the nearer the books are to disagreeing.  This is the
+      // honest answer to "why was nothing found?".
+      const outcomes = new Map();
+      for (const quote of cluster) {
+        if (!outcomes.has(quote.outcome)) outcomes.set(quote.outcome, []);
+        outcomes.get(quote.outcome).push(quote);
+      }
+      const way = cluster[0].way;
+      if (outcomes.size === way && way >= 2 && way <= 3) {
+        const legs = [];
+        for (const outcomeQuotes of outcomes.values()) {
+          const unique = new Map();
+          for (const quote of outcomeQuotes.sort((a, b) => b.odds - a.odds)) {
+            const key = `${quote.bookmaker}|${quote.odds}`;
+            if (!unique.has(key)) unique.set(key, quote);
+          }
+          const best = [...unique.values()].slice(0, 4);
+          legs.push(best);
+        }
+        // take the best combination that uses at least two books
+        const pick = (index, chosen, books) => {
+          if (index === legs.length) {
+            if (books.size < 2) return;
+            const sum = chosen.reduce((total, leg) => total + 1 / leg.odds, 0);
+            if (closest.length >= 12 && sum >= closest[closest.length - 1].impliedSum) return;
+            closest.push({
+              fixture: cluster[0].event,
+              startsAt: cluster[0].startsAt || null,
+              market: cluster[0].market,
+              marketKey: cluster[0].marketKey,
+              outcome: chosen.map((leg) => leg.outcome).join(' + '),
+              impliedSum: Number(sum.toFixed(4)),
+              books: chosen.map((leg) => leg.bookmaker),
+              odds: chosen.map((leg) => leg.odds),
+            });
+            closest.sort((a, b) => a.impliedSum - b.impliedSum);
+            if (closest.length > 12) closest.length = 12;
+            return;
+          }
+          for (const leg of legs[index]) {
+            chosen.push(leg);
+            books.add(leg.bookmaker);
+            pick(index + 1, chosen, books);
+            chosen.pop();
+            books.delete(leg.bookmaker);
+          }
+        };
+        pick(0, [], new Set());
+      }
     }
   }
+
   return {
     quotesPerBook: byBook,
     sharedFixtures: sharedFixtures.size,
@@ -159,6 +214,8 @@ function overlapReport(quotes) {
     marketGroups: groups.size,
     groupsWithTwoBooks: twoBooks,
     groupsWithThreeBooks: threeBooks,
+    closestPairs: closest.slice(0, 8),
+    arbitragePairs: closest.filter((entry) => entry.impliedSum < 1).length,
   };
 }
 
@@ -218,11 +275,11 @@ export async function scanConfiguredFeeds(env = {}, options = {}) {
     rejectedQuoteCount: quotes.length - freshQuotes.length,
     maxQuoteAgeSeconds,
     overlap: overlapReport(freshQuotes),
-    ...(options.debug === 2 ? { allQuotes: quotes.map((quote) => ({
-      bookmaker: quote.bookmaker, event: quote.event, eventId: quote.eventId, startsAt: quote.startsAt,
-      competition: quote.competition, marketKey: quote.marketKey, outcome: quote.outcome,
-      odds: quote.odds, rulesKey: quote.rulesKey, way: quote.way,
-    })) } : options.debug ? { sample: sampleQuotes(quotes) } : {}),
+    ...(options.debug === 2 ? { allQuotes: quotes.slice(0, 2500).map((quote) => ({
+      bookmaker: quote.bookmaker, event: quote.event, startsAt: quote.startsAt,
+      marketKey: quote.marketKey, outcome: quote.outcome, odds: quote.odds,
+      rulesKey: quote.rulesKey, way: quote.way,
+    })), allQuotesTruncated: quotes.length > 2500 } : options.debug ? { sample: sampleQuotes(quotes) } : {}),
     errors: [...new Set(errors)],
     scannedAt: new Date().toISOString(),
   };

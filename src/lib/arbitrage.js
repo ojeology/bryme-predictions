@@ -272,6 +272,10 @@ function splitFixture(event) {
 function tokenize(value) {
   return String(value || '')
     .toLowerCase()
+    // "Cordoba" and "C\u00f3rdoba" are the same club: strip the accents
+    // before anything else, or the two spellings never line up
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
     .replace(/[^a-z0-9]+/g, ' ')
     .trim()
     .split(/\s+/)
@@ -322,11 +326,26 @@ function meaningful(tokens) {
 }
 
 /**
+ * Words that appear in thousands of club names and so cannot tell two clubs
+ * apart on their own.  A book may write "Deportes Tolima" where another
+ * writes "CD Tolima": the extra word is noise, not a different club.  These
+ * words are allowed to be extra on ONE side only - "Independiente Santa Fe"
+ * and "Independiente del Valle" are different clubs, and the shared word
+ * "independiente" must never carry a match on its own.
+ */
+const GENERIC_CLUB_WORDS = new Set([
+  'deportivo', 'deportes', 'atletico', 'atletica', 'america', 'independiente',
+  'sporting', 'sociedad', 'liga', 'league', 'futbol', 'futebol', 'athletic',
+  'rc', 'club', 'cd', 'ad', 'ca', 'sd', 'sa', 'fc', 'cf', 'sc', 'ac',
+]);
+
+/**
  * Do these two sides name the same club?
  *
- * Both sides have to agree: every word of one side must be matched by a word
- * of the other, and the other way round as well. One matching word is never
- * enough - that was how two different clubs ended up in one fixture.
+ * Every word of one side must be matched by a word of the other. The other
+ * side may carry extra words, but only words that say nothing about which
+ * club is meant ("CD Tolima" and "Deportes Tolima" are the same club; the
+ * first has an abbreviation the second spells out).
  */
 function sideMatches(aTokens, bTokens) {
   const left = meaningful(aTokens);
@@ -334,7 +353,14 @@ function sideMatches(aTokens, bTokens) {
   if (!left.length || !right.length) return false;
   const leftCovers = left.every((x) => right.some((y) => tokenSimilar(x, y)));
   const rightCovers = right.every((x) => left.some((y) => tokenSimilar(x, y)));
-  return leftCovers && rightCovers;
+  if (leftCovers && rightCovers) return true;
+
+  // one side may be the fuller spelling of the same name
+  const extraLeft = left.filter((x) => !right.some((y) => tokenSimilar(x, y)));
+  const extraRight = right.filter((x) => !left.some((y) => tokenSimilar(x, y)));
+  if (rightCovers && extraRight.every((word) => GENERIC_CLUB_WORDS.has(word))) return true;
+  if (leftCovers && extraLeft.every((word) => GENERIC_CLUB_WORDS.has(word))) return true;
+  return false;
 }
 
 /** Are these two quotes about the same fixture? */

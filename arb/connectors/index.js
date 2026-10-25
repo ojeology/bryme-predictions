@@ -124,7 +124,7 @@ export async function loadConnectorQuotes(env = {}) {
         // this book's whole slate does not fit in memory at once, so it is
         // read in pieces
         const result = await fetchLiveScoreBetQuotes(feedUrl, {
-          maxCompetitions: Number(env.LSB_MAX_COMPETITIONS || 28),
+          maxCompetitions: Number(env.LSB_MAX_COMPETITIONS || 32),
         });
         if (result.error) throw result.error;
         specific.push({ quotes: result.quotes, error: null, attempted: true });

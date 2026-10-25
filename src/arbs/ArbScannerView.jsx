@@ -953,6 +953,30 @@ export default function ArbScannerView() {
                   ? 'The books are not offering the same matches at the same time, so there is nothing to compare yet.'
                   : 'The books do offer the same matches, but on those matches the prices do not add up to more than 100% — no arbitrage right now.'}
             </p>
+            {(runSummary.overlap.closestPairs || []).length > 0 && (
+              <div className="rounded-xl border border-white/10 bg-slate-950/40 p-3">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-2">
+                  how close the books came (under 1.000 would be an arbitrage)
+                </p>
+                <div className="grid gap-1.5">
+                  {(runSummary.overlap.closestPairs || []).slice(0, 5).map((pair, index) => (
+                    <div key={`${pair.fixture}-${pair.market}-${pair.outcome}-${index}`} className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5 text-[11px]">
+                      <span className="font-mono text-amber-300/90 w-14 shrink-0">{pair.impliedSum?.toFixed?.(4)}</span>
+                      <span className="text-slate-200 truncate max-w-[46%]">{pair.fixture}</span>
+                      <span className="text-slate-500 truncate">{pair.market} · {pair.outcome}</span>
+                      <span className="text-slate-400 ml-auto font-mono">
+                        {(pair.books || []).join(' ')} {(pair.odds || []).join(' / ')}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+                <p className="text-[10px] leading-relaxed text-slate-500 mt-2">
+                  {(runSummary.overlap.arbitragePairs || 0) > 0
+                    ? `${runSummary.overlap.arbitragePairs} pair(s) sum under 1.000 — that is an arbitrage.`
+                    : `Nothing summed under 1.000. The closest was ${(runSummary.overlap.closestPairs || [])[0]?.impliedSum ?? '—'} — that is how near the books came to disagreeing.`}
+                </p>
+              </div>
+            )}
           </div>
         </Panel>
       )}
