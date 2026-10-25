@@ -154,6 +154,10 @@ arb/
   connectors/
     httpBook.js           reads a book's own JSON endpoint
     browserBook.js        reads the page in a headless browser (fallback)
+    browserFeed.js        a real browser on the server (Cloudflare Browser
+                           Rendering) - opens a book's page, watches what it
+                           asks for, and fetches price addresses from inside it
+    msport.js/msportFeed.js   MSport: the price tree and the browser read
     normalize.js          any book payload -> the scanner's quote shape
 src/
   arbs/ArbScannerView.jsx the scanner UI (RUN, calculator, ledger)

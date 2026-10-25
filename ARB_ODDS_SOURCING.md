@@ -47,6 +47,46 @@ Both are implemented behind one interface, so they are interchangeable:
 
 ---
 
+## WHAT THE BROWSER ACTUALLY SOLVED (25 Oct 2026)
+
+Cloudflare's **Browser Rendering** is enabled on this account
+(`"browser": { "binding": "browser" }` in `wrangler.jsonc`), so the server can
+open a real browser. That turned out to be the answer for the books whose
+edge refuses plain server requests:
+
+| Book | Plain request from the Worker | In a real browser | Why |
+|---|---|---|---|
+| **MSport** | HTTP 403 (Cloudflare bot check) | **works** | the edge wants a real browser signature |
+| **SportyBet** | works | works | no check |
+| **LiveScore Bet** | works | works | no check |
+| 1xBet / 22Bet (`.ng`) | HTTP 403 (error 1010) on 1xBet; the line feed is HTTP 500 at their origin | HTTP 403 + "prohibited in the USA" | the browser runs from a US data centre and both books block US addresses; their own price service is down |
+| NairaBet | HTTP 530 / 1016 (origin dead) | the page loads, the data host does not | their origin is down |
+
+So the browser is not a fallback here — it is the **only** way in for MSport.
+
+`arb/browserFeed.js` opens the book's own page, watches what the page asks
+for, and can then ask the page to fetch a price address for us (same origin,
+the page's own session). `arb/connectors/msportFeed.js` uses it to read:
+
+```
+POST https://www.msport.com/api/ng/facts-center/query/frontend/sports-matches-list?sportId=sr:sport:1&timeslot=Today
+headers: operid: 2, deviceId: <uuid>, ApiLevel: 2, devMem: 2, network: 4g,
+         screenWH: 412x900, clientid: WEB, platform: WEB
+body:    []
+```
+
+MSport runs on the same platform as SportyBet, so the price tree has the same
+shape (`data.tournaments[].events[].markets[].outcomes[]`) and the adapter
+(`arb/connectors/msport.js`) reads it the same way.
+
+**The one thing to remember:** the browser runs where Cloudflare runs it, not
+where the reader is. A book that blocks that country will not answer, no
+matter how real the browser is. For a Nigerian book that blocks US traffic,
+only a Nigerian exit will do — and Cloudflare Browser Rendering does not
+offer one.
+
+---
+
 ## WHAT WAS VERIFIED FROM THIS MACHINE (25 Oct 2026)
 
 | Host | Result |
@@ -104,10 +144,14 @@ not configured, and the browser can never supply a URL.
 ```bash
 # route A — the book's own JSON endpoint
 SPORTYBET_FEED_URL=https://...
+MSPORT_FEED_URL=https://...
 NAIRABET_FEED_URL=https://...
 BET22_FEED_URL=https://...
 BET1X_FEED_URL=https://...
 LSCB_FEED_URL=https://...
+
+# how many LiveScore Bet competitions to read in one scan (default 28)
+LSB_MAX_COMPETITIONS=28
 
 # route B — read the page in a real browser
 BROWSER_BOOK_URL=https://...
@@ -201,3 +245,33 @@ the league list first, then the busiest competitions one at a time
 
 Both are pinned as Worker secrets (`SPORTYBET_FEED_URL`, `LSCB_FEED_URL`), so
 RUN works without any discovery step.
+
+## The third book, and the slate that finally lines up (25 Oct 2026)
+
+**MSport** (see above) is pinned as `MSPORT_FEED_URL` and read through the
+browser. Three books now answer:
+
+| Book | Prices in a scan |
+|---|---|
+| SportyBet NG | ~670 |
+| LiveScore Bet NG | ~3,760 |
+| MSport | ~520 |
+
+**The slate has to line up.** LiveScore Bet's gateway hands over the whole
+football season in one answer (nearly ten megabytes - more than a Worker can
+hold), so it is read competition by competition. Picking the competitions
+with the *most* matches fills the slate with next month's reserve football
+and misses the matches the other books are showing today, so the popular
+leagues are read first and the biggest of the rest fill the remaining budget
+(`arb/connectors/livescorebetFeed.js`, `LSB_MAX_COMPETITIONS`).
+
+With that fixed, a scan reports how much the books actually share:
+
+```
+quotes 4943 | fresh 4943 | 19 shared fixtures
+7 markets compared across all three books | 113 across two
+```
+
+A scan that finds no arbitrage now says **why**: either the books are not
+offering the same matches, or they are, and the prices do not add up to more
+than 100%.

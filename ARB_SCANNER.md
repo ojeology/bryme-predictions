@@ -12,7 +12,9 @@ This feature calculates and tracks manually placed arbitrage bets. It does **not
 - Optional bookmaker verification links and a four-item manual verification gate.
 - A local placement ledger with per-leg placed markers, actual-return settlement and CSV export. Records are not deleted by the UI.
 - A shared Web Request API for Cloudflare Workers and Vite development/preview.
-- Modular SportyBet, NairaBet and 22Bet connector definitions. They are **not connected by default**.
+- Modular connector definitions for SportyBet, MSport, LiveScore Bet, NairaBet, 22Bet and 1xBet.
+  **SportyBet, MSport and LiveScore Bet are connected and live**; the other three are **not
+  configured** (their books block or are down - see `ARB_ODDS_SOURCING.md`).
 - A five-minute default stale-price cutoff for configured feeds, plus rejection of missing timestamps and matches that have already started.
 
 ## Run locally
@@ -94,6 +96,8 @@ The included connector adapters accept operator-configured JSON feeds. Configure
 | --- | --- |
 | `ARB_FEED_URL` | One combined feed containing quotes for multiple bookmakers |
 | `SPORTYBET_FEED_URL` | SportyBet-specific normalized JSON feed |
+| `MSPORT_FEED_URL` | MSport's own price endpoint (read through a real browser) |
+| `LSCB_FEED_URL` | LiveScore Bet gateway address |
 | `NAIRABET_FEED_URL` | NairaBet-specific normalized JSON feed |
 | `BET22_FEED_URL` | 22Bet-specific normalized JSON feed |
 | `ARB_MAX_QUOTE_AGE_SECONDS` | Optional freshness limit, 30–3600 seconds; default 300 |
