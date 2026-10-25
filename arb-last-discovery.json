@@ -1,5 +1,5 @@
 {
- "at": "2026-10-25T18:19:56.138Z",
+ "at": "2026-10-25T18:37:08.636Z",
  "edge": "SEA",
  "results": [
   {
@@ -101,7 +101,96 @@
      "sample": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"utf-8\">\n    <title>404 Not Found</title>\n    <base href=\"/\">\n    <meta name=\"description\" content=\"404\">\n    <meta name=\"keywords\" content=\"4"
     }
    ]
+  },
+  {
+   "id": "1xbet",
+   "status": "none",
+   "url": "",
+   "quoteCount": 0,
+   "note": "page loaded, 2 scripts and 3 chunks read",
+   "evidence": {
+    "page": "https://1xbet.ng/en/",
+    "scripts": [
+     "https://1xbet.ng/sys-static/sys-technical-pages-app-static/Desktop/Default/entry-8ceaf66281.js",
+     "https://1xbet.ng/sys-static/shared-assets/check-ob.js"
+    ],
+    "chunks": [
+     "https://1xbet.ng/sys-static/sys-technical-pages-app-static/Desktop/Default/5b70c0f4e0.js",
+     "https://1xbet.ng/sys-static/sys-technical-pages-app-static/Desktop/Default/7b0ed269bb.js",
+     "https://1xbet.ng/sys-static/sys-technical-pages-app-static/Desktop/Default/b37d85c543.js"
+    ],
+    "candidatesTried": 1
+   },
+   "attempts": [
+    {
+     "url": "https://api.1xbet.ng/linefeed/getLineFeed?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "<html>\r\n<title>404 Not Found</title>\r\n<style>html{color-scheme:light dark;}</style>\r\n</head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>Angie</center>\r\n</body>\r\n</html>\r\n<!-- a padd"
+    },
+    {
+     "url": "https://api.1xbet.ng/linefeed/getPreMatchLineFeed?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "<html>\r\n<title>404 Not Found</title>\r\n<style>html{color-scheme:light dark;}</style>\r\n</head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>Angie</center>\r\n</body>\r\n</html>\r\n<!-- a padd"
+    },
+    {
+     "url": "https://1xbet.ng/linefeed/getLineFeed?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 203,
+     "keys": [],
+     "reason": "not JSON",
+     "sample": "<!DOCTYPE html><html  data-capo=\"\"><head><meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1, viewport-fit=cover\">\n<link rel=\"stylesheet\" href=\"/sys-static/shared"
+    },
+    {
+     "url": "https://api.1xbet.ng/api/v1/linefeed/getLineFeed?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "<html>\r\n<title>404 Not Found</title>\r\n<style>html{color-scheme:light dark;}</style>\r\n</head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>Angie</center>\r\n</body>\r\n</html>\r\n<!-- a padd"
+    },
+    {
+     "url": "https://api.1xbet.ng/v1/linefeed/getLineFeed?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "<html>\r\n<title>404 Not Found</title>\r\n<style>html{color-scheme:light dark;}</style>\r\n</head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>Angie</center>\r\n</body>\r\n</html>\r\n<!-- a padd"
+    },
+    {
+     "url": "https://1xbet.ng/v1/linefeed/getLineFeed?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 203,
+     "keys": [],
+     "reason": "not JSON",
+     "sample": "<!DOCTYPE html><html  data-capo=\"\"><head><meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1, viewport-fit=cover\">\n<link rel=\"stylesheet\" href=\"/sys-static/shared"
+    },
+    {
+     "url": "https://1xbet.ng/linefeed/getPreMatchLineFeed?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 203,
+     "keys": [],
+     "reason": "not JSON",
+     "sample": "<!DOCTYPE html><html  data-capo=\"\"><head><meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1, viewport-fit=cover\">\n<link rel=\"stylesheet\" href=\"/sys-static/shared"
+    },
+    {
+     "url": "https://1xbet.ng/bff-api/config/v2/contacts.json",
+     "ok": false,
+     "status": 200,
+     "keys": [
+      "networks",
+      "emails",
+      "phones"
+     ],
+     "reason": "JSON, but no prices in it",
+     "sample": "{\"networks\":[{\"placement\":4,\"title\":\"X\",\"value\":\"https:\\/\\/x.com\\/1xbetngofficial\",\"labelKey\":\"1xbet.nigeria.official\",\"iconId\":\"twitter\",\"iconPath\":\"\",\"iconUrl\":\"\",\"iconSection\":\"logos\",\"templateType"
+    }
+   ]
   }
- ],
- "trigger": "discover"
+ ]
 }
