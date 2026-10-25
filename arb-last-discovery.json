@@ -1,6 +1,9 @@
 {
- "at": "2026-10-25T19:13:22.542Z",
- "edge": "SEA",
+ "at": "2026-10-25T19:13:48.683Z",
+ "edge": "PDX",
+ "phoneCountry": "US",
+ "workerCountry": "US",
+ "workerColo": "PDX",
  "results": [
   {
    "id": "22bet",
