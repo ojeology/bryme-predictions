@@ -1,5 +1,5 @@
 {
- "at": "2026-10-25T18:45:37.302Z",
+ "at": "2026-10-25T18:45:39.329Z",
  "edge": "LHR",
  "results": [
   {
@@ -378,6 +378,59 @@
     },
     {
      "url": "https://1xbet.ng/service-api/gamespreview/GetGamesPreviewLight?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 200,
+     "keys": [
+      "Value",
+      "Success",
+      "Error",
+      "ErrorCode"
+     ],
+     "reason": "JSON, but no prices in it",
+     "sample": "{\"Value\":null,\"Success\":false,\"Error\":\"Invalid parameters\",\"ErrorCode\":157176}"
+    },
+    {
+     "url": "https://api.1xbet.ng/service-api/linefeed/getPreMatchLineFeed?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "<html>\r\n<title>404 Not Found</title>\r\n<style>html{color-scheme:light dark;}</style>\r\n</head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>Angie</center>\r\n</body>\r\n</html>\r\n<!-- a padding to disable MSIE and Chrome friendly error page -->\r\n<!-- a padding to disable MSIE and Chrome fr"
+    },
+    {
+     "url": "https://api.1xbet.ng/service-api/linefeed/getLineFeed?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "<html>\r\n<title>404 Not Found</title>\r\n<style>html{color-scheme:light dark;}</style>\r\n</head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>Angie</center>\r\n</body>\r\n</html>\r\n<!-- a padding to disable MSIE and Chrome friendly error page -->\r\n<!-- a padding to disable MSIE and Chrome fr"
+    },
+    {
+     "url": "https://api.1xbet.ng/api/v1/linefeed/getPreMatchLineFeed?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "<html>\r\n<title>404 Not Found</title>\r\n<style>html{color-scheme:light dark;}</style>\r\n</head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>Angie</center>\r\n</body>\r\n</html>\r\n<!-- a padding to disable MSIE and Chrome friendly error page -->\r\n<!-- a padding to disable MSIE and Chrome fr"
+    },
+    {
+     "url": "https://api.1xbet.ng/service-api/sports/getSports?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "<html>\r\n<title>404 Not Found</title>\r\n<style>html{color-scheme:light dark;}</style>\r\n</head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>Angie</center>\r\n</body>\r\n</html>\r\n<!-- a padding to disable MSIE and Chrome friendly error page -->\r\n<!-- a padding to disable MSIE and Chrome fr"
+    },
+    {
+     "url": "https://api.1xbet.ng/service-api/linefeed/getLiveLineFeed?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "<html>\r\n<title>404 Not Found</title>\r\n<style>html{color-scheme:light dark;}</style>\r\n</head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>Angie</center>\r\n</body>\r\n</html>\r\n<!-- a padding to disable MSIE and Chrome friendly error page -->\r\n<!-- a padding to disable MSIE and Chrome fr"
+    },
+    {
+     "url": "https://api.1xbet.ng/service-api/gamespreview/GetGamesPreviewLight?mode=4&count=200&lng=en&country=566&getEmpty=true",
      "ok": false,
      "status": 200,
      "keys": [
