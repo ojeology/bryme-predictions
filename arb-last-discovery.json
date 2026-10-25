@@ -1,6 +1,6 @@
 {
- "at": "2026-10-25T18:40:49.949Z",
- "edge": "SEA",
+ "at": "2026-10-25T18:45:25.445Z",
+ "edge": "LHR",
  "results": [
   {
    "id": "22bet",
@@ -335,6 +335,141 @@
      ],
      "reason": "JSON, but no prices in it",
      "sample": "{\"networks\":[{\"placement\":4,\"title\":\"X\",\"value\":\"https:\\/\\/x.com\\/1xbetngofficial\",\"labelKey\":\"1xbet.nigeria.official\",\"iconId\":\"twitter\",\"iconPath\":\"\",\"iconUrl\":\"\",\"iconSection\":\"logos\",\"templateType"
+    }
+   ]
+  },
+  {
+   "id": "sportybet",
+   "status": "none",
+   "url": "",
+   "quoteCount": 0,
+   "note": "page loaded, 7 scripts and 0 chunks read",
+   "evidence": {
+    "page": "https://www.sportybet.com/ng/",
+    "scripts": [
+     "https://s.sporty.net/global/main/third-lib/classlist.2ac35fe294",
+     "https://s.sporty.net/global/main/modules/main/desktop/common/lib/base-lib.041385da55.js",
+     "https://s.sporty.net/global/main/modules/main/desktop/common/lib/index.9a78ce9ae8.js",
+     "https://s.sporty.net/global/main/modules/main/desktop/common/base/base.c61b819a2d.js",
+     "https://s.sporty.net/global/main/modules/main/desktop/common/core/core.0d106173d2.js",
+     "https://s.sporty.net/global/main/main-desktop/8692.009b9440ac.js",
+     "https://s.sporty.net/global/main/modules/main/desktop/home/index.e25a8b4b15.js"
+    ],
+    "chunks": [],
+    "candidatesTried": 18
+   },
+   "attempts": [
+    {
+     "url": "https://sports.sportybet.com/api/v1/sports?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "<html>\r\n<head><title>404 Not Found</title></head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>nginx</center>\r\n</body>\r\n</html>\r\n<!-- a padding to disable MSIE and Chrome friendly error page -->\r\n<!-- a padding to disable MSIE and Chrome friendly error page -->\r\n<!-- a padding to di"
+    },
+    {
+     "url": "https://sports.sportybet.com/api/v1/odds?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "<html>\r\n<head><title>404 Not Found</title></head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>nginx</center>\r\n</body>\r\n</html>\r\n<!-- a padding to disable MSIE and Chrome friendly error page -->\r\n<!-- a padding to disable MSIE and Chrome friendly error page -->\r\n<!-- a padding to di"
+    },
+    {
+     "url": "https://sports.sportybet.com/api/v1/events?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "<html>\r\n<head><title>404 Not Found</title></head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>nginx</center>\r\n</body>\r\n</html>\r\n<!-- a padding to disable MSIE and Chrome friendly error page -->\r\n<!-- a padding to disable MSIE and Chrome friendly error page -->\r\n<!-- a padding to di"
+    },
+    {
+     "url": "https://sports.sportybet.com/api/v1/markets?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "<html>\r\n<head><title>404 Not Found</title></head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>nginx</center>\r\n</body>\r\n</html>\r\n<!-- a padding to disable MSIE and Chrome friendly error page -->\r\n<!-- a padding to disable MSIE and Chrome friendly error page -->\r\n<!-- a padding to di"
+    },
+    {
+     "url": "https://sports.sportybet.com/v1/events?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "<html>\r\n<head><title>404 Not Found</title></head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>nginx</center>\r\n</body>\r\n</html>\r\n<!-- a padding to disable MSIE and Chrome friendly error page -->\r\n<!-- a padding to disable MSIE and Chrome friendly error page -->\r\n<!-- a padding to di"
+    },
+    {
+     "url": "https://sports.sportybet.com/v1/sports?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "<html>\r\n<head><title>404 Not Found</title></head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>nginx</center>\r\n</body>\r\n</html>\r\n<!-- a padding to disable MSIE and Chrome friendly error page -->\r\n<!-- a padding to disable MSIE and Chrome friendly error page -->\r\n<!-- a padding to di"
+    },
+    {
+     "url": "https://sports.sportybet.com/v1/odds?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "<html>\r\n<head><title>404 Not Found</title></head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>nginx</center>\r\n</body>\r\n</html>\r\n<!-- a padding to disable MSIE and Chrome friendly error page -->\r\n<!-- a padding to disable MSIE and Chrome friendly error page -->\r\n<!-- a padding to di"
+    },
+    {
+     "url": "https://sports.sportybet.com/v1/markets?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "<html>\r\n<head><title>404 Not Found</title></head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>nginx</center>\r\n</body>\r\n</html>\r\n<!-- a padding to disable MSIE and Chrome friendly error page -->\r\n<!-- a padding to disable MSIE and Chrome friendly error page -->\r\n<!-- a padding to di"
+    },
+    {
+     "url": "https://www.sportybet.com/ng/",
+     "ok": false,
+     "status": 200,
+     "keys": [],
+     "reason": "not JSON",
+     "sample": "<!-- ! new-countries -->\n<!-- ! new-countries [media] -->\n<!-- ! new-countries --><!-- ! new-countries [media] -->\n<!-- ! new-countries --><!-- ! new-countries [media] -->\n<!-- ! new-countries --><!-- ! new-countries [media] -->\n<!-- ! new-countries --><!-- ! new-countries [media] -->\n<!-- ! new-cou"
+    },
+    {
+     "url": "https://fonts.googleapis.com/",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "<html lang=\"en\" dir=ltr><meta charset=utf-8><meta name=viewport content=\"initial-scale=1, minimum-scale=1, width=device-width\"><title>Error 404 (Not Found)!!1</title><style>*{margin:0;padding:0}html,code{font:15px/22px arial,sans-serif}html{background:#fff;color:#222;padding:15px}body{color:#222;tex"
+    },
+    {
+     "url": "https://faro-sportybet.sportydog.net/",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "404 page not found\n"
+    },
+    {
+     "url": "https://www.sportybet.com/",
+     "ok": false,
+     "status": 200,
+     "keys": [],
+     "reason": "not JSON",
+     "sample": "<!-- ! new-countries -->\n<!-- ! new-countries [media] -->\n<!-- ! new-countries --><!-- ! new-countries [media] -->\n<!-- ! new-countries --><!-- ! new-countries [media] -->\n<!-- ! new-countries --><!-- ! new-countries [media] -->\n<!-- ! new-countries --><!-- ! new-countries [media] -->\n<!-- ! new-cou"
+    },
+    {
+     "url": "https://www.sportybet.com/gh/",
+     "ok": false,
+     "status": 200,
+     "keys": [],
+     "reason": "not JSON",
+     "sample": "<!-- ! new-countries -->\n<!-- ! new-countries [media] -->\n<!-- ! new-countries --><!-- ! new-countries [media] -->\n<!-- ! new-countries --><!-- ! new-countries [media] -->\n<!-- ! new-countries --><!-- ! new-countries [media] -->\n<!-- ! new-countries --><!-- ! new-countries [media] -->\n<!-- ! new-cou"
+    },
+    {
+     "url": "https://www.sportybet.com/tz/",
+     "ok": false,
+     "status": 200,
+     "keys": [],
+     "reason": "not JSON",
+     "sample": "<!-- ! new-countries -->\n<!-- ! new-countries [media] -->\n<!-- ! new-countries --><!-- ! new-countries [media] -->\n<!-- ! new-countries --><!-- ! new-countries [media] -->\n<!-- ! new-countries --><!-- ! new-countries [media] -->\n<!-- ! new-countries --><!-- ! new-countries [media] -->\n<!-- ! new-cou"
     }
    ]
   }
