@@ -1,10 +1,14 @@
 import { normalizeBookmaker, normalizeQuote, parseOdds } from '../../src/lib/arbitrage.js';
 import { fetchJsonFeed } from './jsonFeed.js';
+import { fetchBook } from './httpBook.js';
+import { fetchBookWithBrowser } from './browserBook.js';
 
 export const CONNECTORS = [
   { id: 'sportybet', label: 'SportyBet NG', envKey: 'SPORTYBET_FEED_URL' },
   { id: 'nairabet', label: 'NairaBet', envKey: 'NAIRABET_FEED_URL' },
   { id: '22bet', label: '22Bet NG', envKey: 'BET22_FEED_URL' },
+  { id: '1xbet', label: '1xBet', envKey: 'BET1X_FEED_URL' },
+  { id: 'livescorebet', label: 'LiveScore Bet NG', envKey: 'LSCB_FEED_URL' },
 ];
 
 function configured(definition, env) {
@@ -55,8 +59,9 @@ export async function loadConnectorQuotes(env = {}) {
 
   const allQuotes = [];
   const errors = [];
-  const connectors = CONNECTORS.map((definition, index) => {
+  const connectors = await Promise.all(CONNECTORS.map(async (definition, index) => {
     const own = specific[index];
+    const ownQuotes = [];
     const sources = [];
     if (own.attempted && !own.error) {
       sources.push(...own.quotes.map((quote) => ({ ...quote, bookmaker: definition.id })));
@@ -68,6 +73,20 @@ export async function loadConnectorQuotes(env = {}) {
     const normalized = sources.map((quote) => normalizeQuote({ ...quote, bookmaker: definition.id }));
     const usable = normalized.filter(usableQuote);
     allQuotes.push(...usable);
+
+    // The book may also be read through its own JSON endpoint, or through a
+    // headless browser when the prices are only in the page.
+    if (!usable.length && (env[definition.envKey] || env[`${definition.id.toUpperCase()}_BROWSER_URL`] || env.BROWSER_BOOK_URL)) {
+      const viaHttp = await fetchBook(env, definition);
+      const viaBrowser = viaHttp.quotes.length ? { quotes: [], error: null }
+        : await fetchBookWithBrowser(env, definition);
+      const chosen = viaHttp.quotes.length ? viaHttp : viaBrowser;
+      if (chosen.quotes.length) {
+        allQuotes.push(...chosen.quotes);
+        ownQuotes.push(...chosen.quotes);
+      }
+      if (chosen.error) errors.push(`${definition.label}: ${chosen.error}`);
+    }
 
     if (own.error) errors.push(`${definition.label}: ${own.error.message}`);
     if (configured(definition, env) && own.error && (combined.error || !env.ARB_FEED_URL)) {
@@ -86,9 +105,9 @@ export async function loadConnectorQuotes(env = {}) {
       detail: usable.length
         ? 'JSON feed reachable. Quotes still pass exact-market and stale-price checks during scanning.'
         : 'Feed reachable, but it returned no usable quotes for this bookmaker.',
-      quoteCount: usable.length,
+      quoteCount: usable.length + ownQuotes.length,
     };
-  });
+  }));
 
   if (combined.error) errors.push(`Combined feed: ${combined.error.message}`);
   return { quotes: allQuotes, connectors, errors: [...new Set(errors)] };

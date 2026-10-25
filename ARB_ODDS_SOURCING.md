@@ -1,0 +1,171 @@
+# GETTING ODDS FROM DIFFERENT BOOKS
+
+The scanner is only as good as the prices it can read. This is the honest
+picture of where those prices can come from, what each route costs, and the
+order to build them in.
+
+---
+
+## THE THREE ROUTES
+
+| Route | What it is | Speed | Completeness | Fragility | Cost |
+|---|---|---|---|---|---|
+| **A. The book's own JSON endpoint** | the same API the book's web app calls | fast (one request per book) | every market | breaks when they change it | free |
+| **B. Headless browser** | Playwright/Chromium opens the page and reads the rendered prices | slow | only what is on screen | breaks on every redesign | free, heavy |
+| **C. Licensed data feed** | Sportradar, Betradar, Genius Sports | fast | everything, with settlement rules attached | stable | paid |
+
+**Build in the order A → B → C.** Route A is the foundation and will carry
+most of the value. Route B is the fallback for the books that will not give
+you A. Route C is what "taking arbitrage seriously at scale" actually means —
+it is also the only route that comes with *permission* and with the rules
+attached (overtime, void, postponement) instead of you guessing them.
+
+### Can we use a headless browser?
+
+Yes, and it is worth having — but it is a fallback, not the foundation.
+
+**Use it when:**
+- the book renders prices into the page and exposes no plain JSON;
+- the JSON endpoint needs a session cookie or a token the page mints;
+- the book blocks plain server requests but serves a real browser;
+- **you are still learning a book** — a browser lets you watch the real
+  network requests the app makes, which is how you find route A for that book
+  in the first place. This is the single most useful thing a browser does here.
+
+**Do not use it when the book has a JSON endpoint**, because:
+- it is 10–100× heavier (a Chromium process per book per scan);
+- it only sees the markets on screen, not the full book;
+- it breaks every time the site redesigns its markup;
+- it is the most obvious automation, so it is the first thing that gets blocked.
+
+Both are implemented behind one interface, so they are interchangeable:
+
+- `arb/connectors/httpBook.js` — route A
+- `arb/connectors/browserBook.js` — route B (Playwright, lazily imported, so
+  the app still runs on a machine without it)
+- `arb/connectors/normalize.js` — turns either into the scanner's quote shape
+
+---
+
+## WHAT WAS VERIFIED FROM THIS MACHINE (25 Oct 2026)
+
+| Host | Result |
+|---|---|
+| `sportybetonline.ng` | an **affiliate landing page**, not the book. The real app is `sportybet.com/ng/` (redirected from `sportybet.ng`) |
+| `football55.com` | an affiliate mirror of 22Bet, not the book |
+| `nairabet.com` | the real book — a Next.js app on the twoup platform |
+| `22bet.ng` / `22bet.com` | served **HTTP 203** from `Angie` and set `ua=deleted` / `user_id_hash=deleted` cookies — the platform's bot/IP flagging |
+
+**This machine exits from a Google Cloud IP in Oregon, USA.** Nigerian books
+geo-target and rate-limit by IP, so from here 22Bet serves a challenge rather
+than prices. That is not a bug in the connector — it is the reason the
+scanner must run **from your own Nigerian connection**, or from a worker with
+a Nigerian exit, not from a generic cloud sandbox.
+
+Playwright's Chromium downloads fine, but this sandbox image lacks the shared
+libraries (`playwright install --with-deps` fails on apt packages). On a normal
+machine `npx playwright install chromium` is enough.
+
+---
+
+## THE PART THAT ACTUALLY MATTERS: MAKING TWO BOOKS COMPARABLE
+
+Two books never describe the same market the same way. If you compare them
+naively you will find nothing — or worse, pair two different bets.
+
+`arb/connectors/normalize.js` solves this:
+
+| Book A says | Book B says | Normalised |
+|---|---|---|
+| `Over 2.5` (market key `total_goals`) | `Total 2.5 goals` | market `goals-2.5` |
+| `Over` / `Under` selections | `Over 2.5` / `Under 2.5` selections | outcomes `over` / `under` |
+| `Manchester United v AFC Bournemouth` | `Man Utd vs Bournemouth` | the same fixture (token match, 120-minute window) |
+| `90 minutes` | `Full Time Result` | rules `90-minutes` |
+| `including overtime` | `90 minutes` | **never paired** — different bet |
+
+The direction (`over` / `under`) lives in the **outcome**, not in the market
+key. That is the detail that makes "Total 2.5" and "Over 2.5" the same
+market instead of two dead ends.
+
+When a book only says "Over 2.5" with no market key and no family word, the
+normaliser will **not guess** that it means goals. Declare it once:
+
+```bash
+SPORTYBET_DEFAULT_FAMILY=goals
+```
+
+---
+
+## CONFIGURATION
+
+Copy `.env.example` to `.env`. Nothing here is ever sent to a book that is
+not configured, and the browser can never supply a URL.
+
+```bash
+# route A — the book's own JSON endpoint
+SPORTYBET_FEED_URL=https://...
+NAIRABET_FEED_URL=https://...
+BET22_FEED_URL=https://...
+BET1X_FEED_URL=https://...
+LSCB_FEED_URL=https://...
+
+# route B — read the page in a real browser
+BROWSER_BOOK_URL=https://...
+BROWSER_BOOK_ROWS={"row":".market-row","event":".event","market":".market","outcome":".sel","odds":".odds"}
+BROWSER_BOOK_COOKIE=session=...      # optional
+
+# per-book declarations
+SPORTYBET_DEFAULT_RULES=90-minutes  # what "Over 2.5" settles on, if the book does not say
+SPORTYBET_DEFAULT_FAMILY=goals
+SPORTYBET_MIN_STAKE=500
+ARB_MAX_QUOTE_AGE_SECONDS=300
+```
+
+### Probe before you trust
+
+```bash
+node arb/probe.mjs          # what can we read right now, from this machine?
+node arb/probe.mjs --scan   # and what arbitrage is live across the books?
+```
+
+The probe reports, per book: reachable, latency, how many quotes, how many
+markets, the kick-off range, and — for a blocked book — what came back
+instead of prices. Run it from your own connection.
+
+---
+
+## THE RULES THAT STAY
+
+1. **No automatic betting.** The app never places a bet, never logs in, never
+   moves money, never solves a challenge, and never bypasses geo-blocks or
+   rate limits. It reads prices you are allowed to see and does arithmetic.
+2. **No invented odds.** Every price carries the time it was fetched; the
+   scanner refuses anything older than the freshness window, and any match
+   that has already kicked off is refused outright.
+3. **Verify before you place.** The manual verification gate stays. A
+   calculated edge is not a filled bet.
+4. **Respect the books' terms.** Most books prohibit automated collection and
+   will block the IP. If a book blocks us, the answer is to stop, not to
+   evade. Route C (a licensed feed) is the route where this question does not
+   arise.
+5. **Keep the feed server-side.** Reading prices for your own account is one
+   thing; republishing a book's price feed on a public site is a different
+   question about data licensing. The connectors run on the server; the
+   browser only ever receives the scanner's own results.
+6. **18+ only**, as everywhere else in this project.
+
+---
+
+## WHAT TO DO NEXT, IN ORDER
+
+1. Run `node arb/probe.mjs` from your own machine with one book's endpoint
+   set. Find out which of the three books will talk to you at all.
+2. For a book that will not, open it in a browser, watch the network tab,
+   and write down the JSON endpoint and the market keys it uses. That is how
+   route A is discovered.
+3. Set the per-book defaults (`DEFAULT_RULES`, `DEFAULT_FAMILY`) from what the
+   book actually says on the page.
+4. Only when the three books are readable: measure how often a scanned
+   opportunity actually held at the book (the `minReturn >= totalStake` gate
+   already protects you, but measure it).
+5. Then, and only then, talk about licensed data.

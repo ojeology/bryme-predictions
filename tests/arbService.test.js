@@ -21,7 +21,11 @@ test('status route is honest when no automatic feed is configured', async () => 
   assert.equal(response.status, 200);
   const data = await response.json();
   assert.equal(data.mode, 'manual');
-  assert.equal(data.connectors.length, 3);
+  // the connector list may grow, but the three books we work with must be in it
+  const ids = data.connectors.map((connector) => connector.id);
+  for (const expected of ['sportybet', 'nairabet', '22bet']) {
+    assert.ok(ids.includes(expected), `${expected} should be a connector`);
+  }
   assert.ok(data.connectors.every((connector) => connector.status === 'not_configured'));
 });
 
