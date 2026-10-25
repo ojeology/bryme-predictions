@@ -72,14 +72,13 @@ export function snapshotMaxAgeSeconds(env = {}) {
  * @param {string} book the book's id
  * @returns {Promise<{capturedAt: string|null, entry: object|null, error: Error|null}>}
  */
-export async function readSnapshotBook(env = {}, book = '') {
+export async function readSnapshotBook(env = {}, book = '', { force = false } = {}) {
   const base = snapshotBase(env);
   if (!base || !book) return { capturedAt: null, entry: null, error: null };
 
   const now = Date.now();
   const hit = cache.get(`${base}|${book}`);
-  if (hit && now - hit.at <= CACHE_MS) return hit.value;
-  void now;
+  if (!force && hit && now - hit.at <= CACHE_MS) return hit.value;
 
   const sha = await headCommit(env);
   // The commit address can never change under us: it is always the file the
@@ -119,6 +118,81 @@ export async function readSnapshotBook(env = {}, book = '') {
 
   cache.set(`${base}|${book}`, { at: now, value });
   return value;
+}
+
+/**
+ * Start the free reader.
+ *
+ * GitHub's own schedule is not always run - the times it is late or does not
+ * fire at all are the times the prices go cold - so the reader is started
+ * from here: by the Worker on its own clock, and by the scan when the
+ * prices it has are too old to compare.
+ *
+ * @param {object} env the Worker environment
+ * @returns {Promise<{dispatched: boolean, error: string|null}>}
+ */
+export async function dispatchReader(env = {}) {
+  const token = String(env.ARB_GITHUB_TOKEN || '').trim();
+  const repo = String(env.ARB_READER_REPO || REPO).trim();
+  const workflow = String(env.ARB_READER_WORKFLOW || 'arb-reader.yml').trim();
+  if (!token) return { dispatched: false, error: 'no token for the reader' };
+  try {
+    const response = await fetch(`https://api.github.com/repos/${repo}/actions/workflows/${workflow}/dispatches`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Accept': 'application/vnd.github+json',
+        'User-Agent': 'BrymeArbScanner/1.0',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ ref: 'main' }),
+    });
+    if (response.status === 204) return { dispatched: true, error: null };
+    return { dispatched: false, error: `the reader was not started (HTTP ${response.status})` };
+  } catch (error) {
+    return { dispatched: false, error: error?.message || String(error) };
+  }
+}
+
+/**
+ * The small summary the reader publishes: when the prices were read, and
+ * which books it read.
+ */
+export async function readSnapshotSummary(env = {}) {
+  const base = snapshotBase(env);
+  if (!base) return { capturedAt: null, books: {}, error: null };
+  try {
+    const response = await fetch(`${base}/latest.json`, {
+      headers: { 'User-Agent': 'BrymeArbScanner/1.0', Accept: 'application/json' },
+      redirect: 'follow',
+    });
+    if (!response.ok) return { capturedAt: null, books: {}, error: new Error(`HTTP ${response.status}`) };
+    const payload = await response.json();
+    return { capturedAt: payload?.capturedAt || null, books: payload?.books || {}, error: null };
+  } catch (error) {
+    return { capturedAt: null, books: {}, error };
+  }
+}
+
+/**
+ * Wait for the reader to publish fresh prices.
+ *
+ * The wait is a wait, not work: it costs the Worker nothing while it lasts.
+ */
+export async function waitForFreshReader(env = {}, { timeoutMs = 150000 } = {}) {
+  const deadline = Date.now() + timeoutMs;
+  let last = null;
+  while (Date.now() < deadline) {
+    last = await readSnapshotSummary(env);
+    if (last.capturedAt) {
+      const ageSeconds = (Date.now() - new Date(last.capturedAt).getTime()) / 1000;
+      if (Number.isFinite(ageSeconds) && ageSeconds <= 150) {
+        return { ok: true, capturedAt: last.capturedAt, books: last.books };
+      }
+    }
+    await new Promise((resolve) => setTimeout(resolve, 12000));
+  }
+  return { ok: false, capturedAt: last?.capturedAt || null, books: last?.books || {} };
 }
 
 /**
@@ -173,7 +247,7 @@ function flattenInto(value, book, env) {
  * @param {string} book the book's id
  * @returns {Promise<{quotes: Array, error: Error|null, capturedAt: string|null}>}
  */
-export async function snapshotQuotes(env = {}, book = '') {
-  const value = await readSnapshotBook(env, book);
+export async function snapshotQuotes(env = {}, book = '', options = {}) {
+  const value = await readSnapshotBook(env, book, options);
   return { quotes: value.quotes || [], error: value.error || null, capturedAt: value.capturedAt || null };
 }

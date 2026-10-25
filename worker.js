@@ -1,4 +1,5 @@
 import { handleArbRequest } from './arb/service.js';
+import { dispatchReader } from './arb/connectors/snapshot.js';
 
 /**
  * BRYME ARB SCANNER — Edge Worker
@@ -25,6 +26,21 @@ function jsonResponse(data, status = 200) {
 }
 
 export default {
+  /**
+   * The clock on the Worker starts the free reader.
+   *
+   * GitHub's own schedule is not always run, and the prices cannot be left
+   * to go cold while it is not.  Every thirteen minutes the reader is
+   * started, so the prices on the phone are never more than a quarter of an
+   * hour old.
+   */
+  async scheduled(event, env, ctx) {
+    const started = dispatchReader(env);
+    ctx.waitUntil(started.then((result) => {
+      console.log(`reader: ${result.dispatched ? 'started' : 'not started'} (${result.error || 'ok'})`);
+    }));
+  },
+
   async fetch(request, env) {
     const url = new URL(request.url);
 

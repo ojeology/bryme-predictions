@@ -7,7 +7,7 @@ import { fetchBookWithBrowser } from './browserBook.js';
 import { fetchMsportQuotes } from './msportFeed.js';
 import { fetchBetkingQuotes } from './betkingFeed.js';
 import { openSharedBrowser, closeSharedBrowser } from './browserSession.js';
-import { snapshotQuotes } from './snapshot.js';
+import { snapshotQuotes, dispatchReader, waitForFreshReader, snapshotMaxAgeSeconds } from './snapshot.js';
 
 export const CONNECTORS = [
   // these three are also read by the free reader on GitHub's runners, and
@@ -95,18 +95,65 @@ export async function loadConnectorQuotes(env = {}, options = {}) {
 
   // The prices the free reader published come first: they carry the whole
   // slate, and they cost no browser time at all.
+  //
+  // If they have gone cold, the reader is started and waited for: the
+  // prices of a match that is already being played are no use, and the
+  // reader takes about a minute and a half.
   const published = new Map();
   const publishedAt = new Map();
   const snapshotErrors = [];
-  for (const definition of CONNECTORS) {
-    if (!definition.snapshot) continue;
-    if (only && !only.has(definition.id)) continue;
-    const result = await snapshotQuotes(env, definition.id);
-    if (result.quotes.length) {
-      published.set(definition.id, result.quotes);
-      publishedAt.set(definition.id, result.capturedAt);
-    } else if (result.error) {
-      snapshotErrors.push(`${definition.label}: ${result.error.message}`);
+  const readerNotes = [];
+
+  const readBooks = async (force) => {
+    published.clear();
+    publishedAt.clear();
+    for (const definition of CONNECTORS) {
+      if (!definition.snapshot) continue;
+      if (only && !only.has(definition.id)) continue;
+      const result = await snapshotQuotes(env, definition.id, { force });
+      if (result.quotes.length) {
+        published.set(definition.id, result.quotes);
+        publishedAt.set(definition.id, result.capturedAt);
+      } else if (result.error) {
+        snapshotErrors.push(`${definition.label}: ${result.error.message}`);
+      }
+    }
+  };
+  await readBooks(false);
+
+  // How old are the prices?  The age is taken from the prices themselves,
+  // not from a summary: the summary can be served from a copy kept by the
+  // address, and a copy of a copy is how a scan ends up looking at prices
+  // that have been cold for an hour.
+  const ages = [...publishedAt.values()]
+    .map((at) => (Date.now() - new Date(at).getTime()) / 1000)
+    .filter((age) => Number.isFinite(age));
+  const oldest = ages.length ? Math.max(...ages) : Infinity;
+  const maxAge = snapshotMaxAgeSeconds(env);
+
+  if (!Number.isFinite(oldest) || oldest > maxAge) {
+    // the prices have expired: there is nothing to compare, so the read is
+    // started and waited for
+    const started = await dispatchReader(env);
+    if (started.dispatched) {
+      const fresh = await waitForFreshReader(env, { timeoutMs: 200000 });
+      await readBooks(true);
+      const newAges = [...publishedAt.values()]
+        .map((at) => (Date.now() - new Date(at).getTime()) / 1000)
+        .filter((age) => Number.isFinite(age));
+      const age = newAges.length ? Math.round(Math.max(...newAges) / 60) : null;
+      readerNotes.push(fresh.ok
+        ? `The prices had expired (${Math.round(oldest / 60)} minutes old), so a fresh read was started and waited for. The prices now are ${age} minute${age === 1 ? '' : 's'} old.`
+        : `The prices had expired (${Math.round(oldest / 60)} minutes old) and a fresh read was started.`);
+    } else {
+      readerNotes.push(`The prices had expired and the reader could not be started: ${started.error}.`);
+    }
+  } else if (oldest > 600) {
+    // the prices are still good, but they are getting old: a fresh read is
+    // started in the background so the next press has the newest ones
+    const started = await dispatchReader(env);
+    if (started.dispatched) {
+      readerNotes.push(`The prices are ${Math.round(oldest / 60)} minutes old; a fresh read has been started in the background.`);
     }
   }
 
@@ -253,5 +300,6 @@ export async function loadConnectorQuotes(env = {}, options = {}) {
 
   if (combined.error) errors.push(`Combined feed: ${combined.error.message}`);
   errors.push(...snapshotErrors);
+  errors.push(...readerNotes);
   return { quotes: allQuotes, connectors, errors: [...new Set(errors)] };
 }
