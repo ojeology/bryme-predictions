@@ -1,5 +1,5 @@
 {
- "at": "2026-10-25T18:45:35.226Z",
+ "at": "2026-10-25T18:45:37.302Z",
  "edge": "LHR",
  "results": [
   {
@@ -335,6 +335,59 @@
      ],
      "reason": "JSON, but no prices in it",
      "sample": "{\"networks\":[{\"placement\":4,\"title\":\"X\",\"value\":\"https:\\/\\/x.com\\/1xbetngofficial\",\"labelKey\":\"1xbet.nigeria.official\",\"iconId\":\"twitter\",\"iconPath\":\"\",\"iconUrl\":\"\",\"iconSection\":\"logos\",\"templateType"
+    },
+    {
+     "url": "https://1xbet.ng/service-api/linefeed/getLineFeed?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 500,
+     "keys": [],
+     "reason": "HTTP 500",
+     "sample": "<html>\r\n<title>500 Internal Server Error</title>\r\n<style>html{color-scheme:light dark;}</style>\r\n</head>\r\n<body>\r\n<center><h1>500 Internal Server Error</h1></center>\r\n<hr><center>Angie</center>\r\n</body>\r\n</html>\r\n<!-- a padding to disable MSIE and Chrome friendly error page -->\r\n<!-- a padding to di"
+    },
+    {
+     "url": "https://1xbet.ng/service-api/linefeed/getPreMatchLineFeed?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 500,
+     "keys": [],
+     "reason": "HTTP 500",
+     "sample": "<html>\r\n<title>500 Internal Server Error</title>\r\n<style>html{color-scheme:light dark;}</style>\r\n</head>\r\n<body>\r\n<center><h1>500 Internal Server Error</h1></center>\r\n<hr><center>Angie</center>\r\n</body>\r\n</html>\r\n<!-- a padding to disable MSIE and Chrome friendly error page -->\r\n<!-- a padding to di"
+    },
+    {
+     "url": "https://1xbet.ng/service-api/linefeed/getLiveLineFeed?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 500,
+     "keys": [],
+     "reason": "HTTP 500",
+     "sample": "<html>\r\n<title>500 Internal Server Error</title>\r\n<style>html{color-scheme:light dark;}</style>\r\n</head>\r\n<body>\r\n<center><h1>500 Internal Server Error</h1></center>\r\n<hr><center>Angie</center>\r\n</body>\r\n</html>\r\n<!-- a padding to disable MSIE and Chrome friendly error page -->\r\n<!-- a padding to di"
+    },
+    {
+     "url": "https://1xbet.ng/service-api/sports/getSports?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "<html>\r\n<title>404 Not Found</title>\r\n<style>html{color-scheme:light dark;}</style>\r\n</head>\r\n<body>\r\n<center><h1>404 Not Found</h1></center>\r\n<hr><center>Angie</center>\r\n</body>\r\n</html>\r\n<!-- a padding to disable MSIE and Chrome friendly error page -->\r\n<!-- a padding to disable MSIE and Chrome fr"
+    },
+    {
+     "url": "https://1xbet.ng/api/v1/linefeed/getPreMatchLineFeed?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 203,
+     "keys": [],
+     "reason": "not JSON",
+     "sample": "<!DOCTYPE html><html  data-capo=\"\"><head><meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1, viewport-fit=cover\">\n<link rel=\"stylesheet\" href=\"/sys-static/shared-assets/Desktop/__shared_css_a7c668.css\" crossorigin>\n<script type=\"module\" src=\"/sys-static/sys-tec"
+    },
+    {
+     "url": "https://1xbet.ng/service-api/gamespreview/GetGamesPreviewLight?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 200,
+     "keys": [
+      "Value",
+      "Success",
+      "Error",
+      "ErrorCode"
+     ],
+     "reason": "JSON, but no prices in it",
+     "sample": "{\"Value\":null,\"Success\":false,\"Error\":\"Invalid parameters\",\"ErrorCode\":157176}"
     }
    ]
   },
