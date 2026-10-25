@@ -1,5 +1,5 @@
 {
- "at": "2026-10-25T19:05:25.700Z",
+ "at": "2026-10-25T19:05:28.537Z",
  "edge": "AMS",
  "results": [
   {
@@ -937,6 +937,54 @@
      "keys": [],
      "reason": "HTTP 525",
      "sample": "error code: 525\n"
+    },
+    {
+     "url": "https://sb2commongateway-alternar2.biahosted.com/api/sports",
+     "ok": false,
+     "status": 530,
+     "keys": [],
+     "reason": "HTTP 530",
+     "sample": "error code: 1016\n"
+    },
+    {
+     "url": "https://sb2commongateway-alternar2.biahosted.com/api/events",
+     "ok": false,
+     "status": 530,
+     "keys": [],
+     "reason": "HTTP 530",
+     "sample": "error code: 1016\n"
+    },
+    {
+     "url": "https://sb2frontend-alternar2.biahosted.com/api/events",
+     "ok": false,
+     "status": 530,
+     "keys": [],
+     "reason": "HTTP 530",
+     "sample": "error code: 1016\n"
+    },
+    {
+     "url": "https://sb2frontend-alternar2.biahosted.com/api/sports",
+     "ok": false,
+     "status": 530,
+     "keys": [],
+     "reason": "HTTP 530",
+     "sample": "error code: 1016\n"
+    },
+    {
+     "url": "https://ps.tabet-live.io/sports",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"UTF-8\">\n<title>Page Not Found</title>\n<style>\n        body {\n            text-align: center;\n            padding: 150px;\n        }\n        h1 {\n            font-size: 50px;\n        }\n        body {\n            font: 20px Helvetica, sans-serif;\n "
+    },
+    {
+     "url": "https://nairabet.nairabet.twoup.io/beapi/sports",
+     "ok": false,
+     "status": 530,
+     "keys": [],
+     "reason": "HTTP 530",
+     "sample": "error code: 1016\n"
     }
    ]
   },
