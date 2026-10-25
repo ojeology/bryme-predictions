@@ -1,5 +1,5 @@
 {
- "at": "2026-10-25T19:05:20.965Z",
+ "at": "2026-10-25T19:05:25.700Z",
  "edge": "AMS",
  "results": [
   {
@@ -448,7 +448,7 @@
    "id": "sportybet",
    "status": "found",
    "url": "https://www.sportybet.com/api/ng/factsCenter/importantEvents?sportId=sr:sport:1",
-   "quoteCount": 603,
+   "quoteCount": 605,
    "note": "",
    "evidence": {},
    "attempts": [
@@ -715,6 +715,98 @@
      ],
      "reason": "JSON, but no prices in it",
      "sample": "{\"bizCode\":10000,\"message\":\"0#0\",\"data\":[{\"id\":\"sr:sport:1\",\"name\":\"Football\",\"eventSize\":1140,\"categories\":[{\"id\":\"sr:category:257\",\"name\":\"Albania\",\"eventSize\":1,\"tournaments\":[{\"id\":\"sr:tournament:720\",\"name\":\"Kategoria Superiore\",\"eventSize\":1}]},{\"id\":\"sr:category:376\",\"name\":\"Andorra\",\"eventSi"
+    },
+    {
+     "url": "https://sports.sportybet.com/api/ng/factsCenter/commonThumbnailEvents?sportId=sr:sport:1",
+     "ok": false,
+     "status": 200,
+     "keys": [
+      "bizCode",
+      "message",
+      "data"
+     ],
+     "reason": "JSON, but no prices in it",
+     "sample": "{\"bizCode\":10000,\"message\":\"0#0\",\"data\":[{\"id\":\"sr:tournament:8\",\"name\":\"LaLiga\",\"events\":[{\"eventId\":\"sr:match:72478660\",\"gameId\":\"42077\",\"productStatus\":\"0#0\",\"estimateStartTime\":1792949400000,\"status\":1,\"setScore\":\"2:1\",\"gameScore\":[\"2:1\",\"0:0\"],\"period\":\"2\",\"matchStatus\":\"H2\",\"playedSeconds\":\"75"
+    },
+    {
+     "url": "https://sports.sportybet.com/api/ng/factsCenter/pcUpcomingEvents?sportId=sr:sport:1",
+     "ok": false,
+     "status": 422,
+     "keys": [],
+     "reason": "HTTP 422",
+     "sample": "{\"bizCode\":19000,\"innerMsg\":\"Invalid\",\"message\":\"Invalid\",\"data\":{}}"
+    },
+    {
+     "url": "https://sports.sportybet.com/api/ng/factsCenter/importantEvents?sportId=sr:sport:1",
+     "ok": true,
+     "status": 200,
+     "keys": [
+      "bizCode",
+      "message",
+      "data"
+     ],
+     "reason": "605 quotes",
+     "sample": ""
+    },
+    {
+     "url": "https://sports.sportybet.com/api/ng/factsCenter/liveOrPrematchEvents?sportId=sr:sport:1",
+     "ok": true,
+     "status": 200,
+     "keys": [
+      "bizCode",
+      "message",
+      "data"
+     ],
+     "reason": "878 quotes",
+     "sample": ""
+    },
+    {
+     "url": "https://sports.sportybet.com/api/ng/factsCenter/marketGroups?sportId=sr:sport:1",
+     "ok": false,
+     "status": 200,
+     "keys": [
+      "bizCode",
+      "message",
+      "data"
+     ],
+     "reason": "JSON, but no prices in it",
+     "sample": "{\"bizCode\":10000,\"message\":\"0#0\",\"data\":[{\"id\":\"171121135724MGI11262166\",\"name\":\"Main\"},{\"id\":\"171121144758MGI11271357\",\"name\":\"Goals\"},{\"id\":\"171121154448MGI11275318\",\"name\":\"Half\"},{\"id\":\"171121175348MGI11283628\",\"name\":\"Bookings\"},{\"id\":\"171121181907MGI11283762\",\"name\":\"Corners\"},{\"id\":\"171124164"
+    },
+    {
+     "url": "https://sports.sportybet.com/api/ng/factsCenter/orderedSportList",
+     "ok": false,
+     "status": 200,
+     "keys": [
+      "bizCode",
+      "message",
+      "data"
+     ],
+     "reason": "JSON, but no prices in it",
+     "sample": "{\"bizCode\":10000,\"message\":\"0#0\",\"data\":[{\"id\":\"sr:sport:1\",\"name\":\"Football\",\"eventSize\":65},{\"id\":\"sr:sport:202120001\",\"name\":\"vFootball\",\"eventSize\":38},{\"id\":\"sr:sport:2\",\"name\":\"Basketball\",\"eventSize\":20},{\"id\":\"sr:sport:5\",\"name\":\"Tennis\",\"eventSize\":13},{\"id\":\"sr:sport:137\",\"name\":\"eFootball"
+    },
+    {
+     "url": "https://sports.sportybet.com/api/ng/factsCenter/sportList",
+     "ok": false,
+     "status": 200,
+     "keys": [
+      "bizCode",
+      "message",
+      "data"
+     ],
+     "reason": "JSON, but no prices in it",
+     "sample": "{\"bizCode\":10000,\"message\":\"0#0\",\"data\":[{\"id\":\"sr:sport:1\",\"name\":\"Football\",\"eventSize\":1137,\"categories\":[{\"id\":\"sr:category:257\",\"name\":\"Albania\",\"eventSize\":1,\"tournaments\":[{\"id\":\"sr:tournament:720\",\"name\":\"Kategoria Superiore\",\"eventSize\":1}]},{\"id\":\"sr:category:376\",\"name\":\"Andorra\",\"eventSi"
+    },
+    {
+     "url": "https://sports.sportybet.com/api/ng/factsCenter/popularAndSportList",
+     "ok": false,
+     "status": 200,
+     "keys": [
+      "bizCode",
+      "message",
+      "data"
+     ],
+     "reason": "JSON, but no prices in it",
+     "sample": "{\"bizCode\":10000,\"message\":\"0#0\",\"data\":{\"sportList\":[{\"id\":\"sr:sport:1\",\"name\":\"Football\",\"eventSize\":1118,\"categories\":[{\"id\":\"sr:category:48\",\"name\":\"Argentina\",\"eventSize\":37,\"tournaments\":[{\"id\":\"sr:tournament:1347\",\"name\":\"Primera B\",\"eventSize\":1},{\"id\":\"sr:tournament:155\",\"name\":\"Primera LPF"
     }
    ]
   },
