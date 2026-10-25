@@ -93,6 +93,10 @@ export async function snapshotQuotes(env = {}, book = '') {
   const stamp = (quotes) => quotes.map((quote) => ({ ...quote, fetchedAt: capturedAt }));
 
   try {
+    // the reader publishes the prices already in comparable form
+    if (Array.isArray(entry.quotes)) {
+      return { quotes: stamp(entry.quotes), error: null, capturedAt };
+    }
     if (book === 'msport' && entry.payload) {
       return { quotes: stamp(flattenMsport(entry.payload, { bookmaker: 'msport', url: entry.url, now: capturedAt })), error: null, capturedAt };
     }
