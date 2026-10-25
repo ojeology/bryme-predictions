@@ -1,6 +1,6 @@
 {
- "at": "2026-10-25T18:54:58.120Z",
- "edge": "SEA",
+ "at": "2026-10-25T19:05:20.965Z",
+ "edge": "AMS",
  "results": [
   {
    "id": "22bet",
@@ -448,7 +448,7 @@
    "id": "sportybet",
    "status": "found",
    "url": "https://www.sportybet.com/api/ng/factsCenter/importantEvents?sportId=sr:sport:1",
-   "quoteCount": 389,
+   "quoteCount": 603,
    "note": "",
    "evidence": {},
    "attempts": [
