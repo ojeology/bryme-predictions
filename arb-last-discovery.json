@@ -1,5 +1,5 @@
 {
- "at": "2026-10-25T22:53:08.778Z",
+ "at": "2026-10-25T22:53:10.354Z",
  "edge": "AMS",
  "phoneCountry": "NG",
  "workerCountry": "NG",
@@ -1307,6 +1307,22 @@
     },
     {
      "url": "https://www.msport.com/api/ng/facts-center/query/frontend/live-matches?sportId=sr:sport:1",
+     "ok": false,
+     "status": 403,
+     "keys": [],
+     "reason": "blocked (HTTP 403)",
+     "sample": "<!DOCTYPE html>\n<!--[if lt IE 7]> <html class=\"no-js ie6 oldie\" lang=\"en-US\"> <![endif]-->\n<!--[if IE 7]>    <html class=\"no-js ie7 oldie\" lang=\"en-US\"> <![endif]-->\n<!--[if IE 8]>    <html class=\"no-js ie8 oldie\" lang=\"en-US\"> <![endif]-->\n<!--[if gt IE 8]><!--> <html class=\"no-js\" lang=\"en-US\"> <!"
+    },
+    {
+     "url": "https://www.msport.com/api/ng/facts-center/query/frontend/soccer-matches/high-light?sportId=sr:sport:1",
+     "ok": false,
+     "status": 403,
+     "keys": [],
+     "reason": "blocked (HTTP 403)",
+     "sample": "<!DOCTYPE html>\n<!--[if lt IE 7]> <html class=\"no-js ie6 oldie\" lang=\"en-US\"> <![endif]-->\n<!--[if IE 7]>    <html class=\"no-js ie7 oldie\" lang=\"en-US\"> <![endif]-->\n<!--[if IE 8]>    <html class=\"no-js ie8 oldie\" lang=\"en-US\"> <![endif]-->\n<!--[if gt IE 8]><!--> <html class=\"no-js\" lang=\"en-US\"> <!"
+    },
+    {
+     "url": "https://www.msport.com/api/ng/facts-center/query/frontend/default-market-info/v2?sportId=sr:sport:1&withOthers=1",
      "ok": false,
      "status": 403,
      "keys": [],
