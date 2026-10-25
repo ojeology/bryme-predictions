@@ -1,5 +1,5 @@
 {
- "at": "2026-10-25T18:45:29.324Z",
+ "at": "2026-10-25T18:45:30.885Z",
  "edge": "LHR",
  "results": [
   {
@@ -632,6 +632,38 @@
      "keys": [],
      "reason": "not JSON",
      "sample": "<!DOCTYPE html><html lang=\"en\" data-critters-container><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0\"><link rel=\"apple-touch-icon\" sizes=\"76x76\" href=\"/nairabet/apple-touch-icon.png\"><link rel=\"icon\" type=\"image/png\" "
+    },
+    {
+     "url": "https://api.nairabet.com/linefeed/getLineFeed?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 525,
+     "keys": [],
+     "reason": "HTTP 525",
+     "sample": "error code: 525\n"
+    },
+    {
+     "url": "https://api.nairabet.com/service-api/linefeed/getPreMatchLineFeed?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 525,
+     "keys": [],
+     "reason": "HTTP 525",
+     "sample": "error code: 525\n"
+    },
+    {
+     "url": "https://api.nairabet.com/linefeed/getPreMatchLineFeed?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 525,
+     "keys": [],
+     "reason": "HTTP 525",
+     "sample": "error code: 525\n"
+    },
+    {
+     "url": "https://api.nairabet.com/service-api/linefeed/getLineFeed?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 525,
+     "keys": [],
+     "reason": "HTTP 525",
+     "sample": "error code: 525\n"
     }
    ]
   }
