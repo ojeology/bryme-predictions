@@ -9,3 +9,6 @@ dist
 # Python cache
 __pycache__/
 *.pyc
+
+# discovered feeds and raw page dumps (local only)
+arb/discovered/

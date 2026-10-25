@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "lab": "vite --host 0.0.0.0",
+    "setup": "node arb/setup.mjs",
     "build": "vite build && cp dist/index.html dist/404.html",
     "preview": "vite preview",
     "test": "node --test tests/*.test.js",
