@@ -1,0 +1,107 @@
+{
+ "at": "2026-10-25T18:19:56.138Z",
+ "edge": "SEA",
+ "results": [
+  {
+   "id": "22bet",
+   "status": "none",
+   "url": "",
+   "quoteCount": 0,
+   "note": "page loaded, 4 scripts and 0 chunks read",
+   "evidence": {
+    "page": "https://22bet.ng/en/",
+    "scripts": [
+     "https://22bet.ng/hd-api/external/apps/a1047eab1035d58682a53557e0b2a75edbfd15fd/api.js",
+     "https://22bet.ng/hd-api/external/apps/a1047eab1035d58682a53557e0b2a75edbfd15fd/api.js",
+     "https://v2l.traincdn.com/bundle/app/cdnChecker/Default/cdnChecker.66b509943bee75b5.bundle.js",
+     "https://v2l.traincdn.com/bundle/app/Application/Desktop/application.2428398ff493bed5.bundle.js"
+    ],
+    "chunks": [],
+    "candidatesTried": 17
+   },
+   "attempts": [
+    {
+     "url": "https://linefeed.22bet.com/linefeed/getLineFeed?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 530,
+     "keys": [],
+     "reason": "HTTP 530",
+     "sample": "error code: 1016\n"
+    },
+    {
+     "url": "https://sports.22bet.ng/linefeed/getLineFeed?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 530,
+     "keys": [],
+     "reason": "HTTP 530",
+     "sample": "error code: 1016\n"
+    },
+    {
+     "url": "https://22bet.com/linefeed/getLineFeed?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"utf-8\">\n    <title>404 Not Found</title>\n    <base href=\"/\">\n    <meta name=\"description\" content=\"404\">\n    <meta name=\"keywords\" content=\"4"
+    },
+    {
+     "url": "https://22bet.ng/linefeed/getLineFeed?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"utf-8\">\n    <title>404 Not Found</title>\n    <base href=\"/\">\n    <meta name=\"description\" content=\"404\">\n    <meta name=\"keywords\" content=\"4"
+    },
+    {
+     "url": "https://22bet.ng/api/v1/sms-auth/check-code",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"utf-8\">\n    <title>404 Not Found</title>\n    <base href=\"/\">\n    <meta name=\"description\" content=\"404\">\n    <meta name=\"keywords\" content=\"4"
+    },
+    {
+     "url": "https://22bet.ng/api/internal/user/two-auth",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"utf-8\">\n    <title>404 Not Found</title>\n    <base href=\"/\">\n    <meta name=\"description\" content=\"404\">\n    <meta name=\"keywords\" content=\"4"
+    },
+    {
+     "url": "https://22bet.ng/api/internal/user/auth",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"utf-8\">\n    <title>404 Not Found</title>\n    <base href=\"/\">\n    <meta name=\"description\" content=\"404\">\n    <meta name=\"keywords\" content=\"4"
+    },
+    {
+     "url": "https://22bet.ng/api/internal/user/disconnect",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"utf-8\">\n    <title>404 Not Found</title>\n    <base href=\"/\">\n    <meta name=\"description\" content=\"404\">\n    <meta name=\"keywords\" content=\"4"
+    },
+    {
+     "url": "https://22bet.ng/api/internal/socauth/telegram",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"utf-8\">\n    <title>404 Not Found</title>\n    <base href=\"/\">\n    <meta name=\"description\" content=\"404\">\n    <meta name=\"keywords\" content=\"4"
+    },
+    {
+     "url": "https://22bet.ng/api/internal/socauth/two-factor-telegram",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"utf-8\">\n    <title>404 Not Found</title>\n    <base href=\"/\">\n    <meta name=\"description\" content=\"404\">\n    <meta name=\"keywords\" content=\"4"
+    }
+   ]
+  }
+ ],
+ "trigger": "discover"
+}
