@@ -1,5 +1,5 @@
 {
- "at": "2026-10-25T18:37:08.636Z",
+ "at": "2026-10-25T18:40:44.001Z",
  "edge": "SEA",
  "results": [
   {
@@ -17,7 +17,7 @@
      "https://v2l.traincdn.com/bundle/app/Application/Desktop/application.2428398ff493bed5.bundle.js"
     ],
     "chunks": [],
-    "candidatesTried": 17
+    "candidatesTried": 2
    },
    "attempts": [
     {
@@ -99,6 +99,83 @@
      "keys": [],
      "reason": "HTTP 404",
      "sample": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"utf-8\">\n    <title>404 Not Found</title>\n    <base href=\"/\">\n    <meta name=\"description\" content=\"404\">\n    <meta name=\"keywords\" content=\"4"
+    },
+    {
+     "url": "https://22bet.ng/service-api/linefeed/getLineFeed?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 500,
+     "keys": [],
+     "reason": "HTTP 500",
+     "sample": "<html>\r\n<title>500 Internal Server Error</title>\r\n<style>html{color-scheme:light dark;}</style>\r\n</head>\r\n<body>\r\n<center><h1>500 Internal Server Error</h1></center>\r\n<hr><center>Angie</center>\r\n</bod"
+    },
+    {
+     "url": "https://22bet.ng/service-api/linefeed/getPreMatchLineFeed?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 500,
+     "keys": [],
+     "reason": "HTTP 500",
+     "sample": "<html>\r\n<title>500 Internal Server Error</title>\r\n<style>html{color-scheme:light dark;}</style>\r\n</head>\r\n<body>\r\n<center><h1>500 Internal Server Error</h1></center>\r\n<hr><center>Angie</center>\r\n</bod"
+    },
+    {
+     "url": "https://22bet.ng/linefeed/getPreMatchLineFeed?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"utf-8\">\n    <title>404 Not Found</title>\n    <base href=\"/\">\n    <meta name=\"description\" content=\"404\">\n    <meta name=\"keywords\" content=\"4"
+    },
+    {
+     "url": "https://22bet.ng/service-api/linefeed/getLiveLineFeed?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 500,
+     "keys": [],
+     "reason": "HTTP 500",
+     "sample": "<html>\r\n<title>500 Internal Server Error</title>\r\n<style>html{color-scheme:light dark;}</style>\r\n</head>\r\n<body>\r\n<center><h1>500 Internal Server Error</h1></center>\r\n<hr><center>Angie</center>\r\n</bod"
+    },
+    {
+     "url": "https://22bet.ng/service-api/gamespreview/GetGamesPreviewLight?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 200,
+     "keys": [
+      "Value",
+      "Success",
+      "Error",
+      "ErrorCode"
+     ],
+     "reason": "JSON, but no prices in it",
+     "sample": "{\"Value\":null,\"Success\":false,\"Error\":\"Invalid parameters\",\"ErrorCode\":157176}"
+    },
+    {
+     "url": "https://22bet.ng/service-api/sports/getSports?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"utf-8\">\n    <title>404 Not Found</title>\n    <base href=\"/\">\n    <meta name=\"description\" content=\"404\">\n    <meta name=\"keywords\" content=\"4"
+    },
+    {
+     "url": "https://22bet.ng/api/v1/linefeed/getPreMatchLineFeed?mode=4&count=200&lng=en&country=566&getEmpty=true",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"utf-8\">\n    <title>404 Not Found</title>\n    <base href=\"/\">\n    <meta name=\"description\" content=\"404\">\n    <meta name=\"keywords\" content=\"4"
+    },
+    {
+     "url": "https://22bet.ng/hd-api/external",
+     "ok": false,
+     "status": 530,
+     "keys": [],
+     "reason": "HTTP 530",
+     "sample": "error code: 1016\n"
+    },
+    {
+     "url": "https://22bet.ng/captcha-api",
+     "ok": false,
+     "status": 404,
+     "keys": [],
+     "reason": "HTTP 404",
+     "sample": ""
     }
    ]
   },
