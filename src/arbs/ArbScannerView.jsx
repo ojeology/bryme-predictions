@@ -477,20 +477,49 @@ export default function ArbScannerView() {
   const findFeeds = useCallback(async () => {
     if (discovering) return;
     setDiscovering(true);
-    setDiscovery({ state: 'running' });
-    try {
-      const response = await fetch('/api/arbs/discover', { headers: { Accept: 'application/json' } });
-      if (!response.ok || !response.headers.get('content-type')?.includes('application/json')) {
-        throw new Error('The discovery endpoint is not available on this deployment.');
+    // one book per request: the server may only open a limited number of
+    // connections at a time, and hunting a single book takes a good many
+    const books = ['sportybet', 'nairabet', '22bet', '1xbet', 'livescorebet'];
+    const collected = new Map();
+    const remember = (entry) => {
+      if (!entry || !entry.id) return;
+      const previous = collected.get(entry.id);
+      if (!previous) { collected.set(entry.id, entry); return; }
+      const attempts = [...(previous.attempts || [])];
+      const seen = new Set(attempts.map((attempt) => attempt.url));
+      for (const attempt of entry.attempts || []) {
+        if (!seen.has(attempt.url)) { attempts.push(attempt); seen.add(attempt.url); }
       }
-      const data = await response.json();
-      if (data.edge) setEdge(data.edge);
-      setDiscovery({ state: 'done', results: Array.isArray(data.results) ? data.results : [] });
-    } catch (error) {
-      setDiscovery({ state: 'error', error: error.message || 'Discovery failed.' });
-    } finally {
-      setDiscovering(false);
+      const found = [previous, entry].find((item) => item.status === 'found');
+      collected.set(entry.id, {
+        ...previous,
+        ...entry,
+        status: found ? 'found' : entry.status,
+        url: found ? found.url : entry.url,
+        quoteCount: Math.max(previous.quoteCount || 0, entry.quoteCount || 0),
+        note: found ? found.note : entry.note,
+        attempts,
+      });
+    };
+    setDiscovery({ state: 'running', results: [] });
+    for (const book of books) {
+      for (const round of [1, 2]) {
+        try {
+          const response = await fetch(`/api/arbs/discover?book=${book}&round=${round}`, { headers: { Accept: 'application/json' } });
+          if (!response.ok || !response.headers.get('content-type')?.includes('application/json')) {
+            throw new Error('the discovery endpoint is not available here');
+          }
+          const data = await response.json();
+          if (data.edge) setEdge(data.edge);
+          remember((data.results || [])[0]);
+        } catch (error) {
+          remember({ id: book, status: 'error', url: '', quoteCount: 0, note: error.message || 'failed', attempts: [] });
+        }
+        setDiscovery({ state: 'running', results: [...collected.values()] });
+      }
     }
+    setDiscovery({ state: 'done', results: [...collected.values()] });
+    setDiscovering(false);
   }, [discovering]);
 
   const updateLeg = (index, patch) => {

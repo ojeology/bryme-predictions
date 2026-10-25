@@ -1,7 +1,7 @@
 import { scanOpportunities } from '../src/lib/arbitrage.js';
 import { getConnectorStatus, loadConnectorQuotes } from './connectors/index.js';
 import { discoverBook, proveFeed, BOOK_PAGES } from './discovery.js';
-import { reportDiscovery } from './report.js';
+import { reportDiscovery, readKnownFeeds } from './report.js';
 
 function json(data, status = 200) {
   return new Response(JSON.stringify(data), {
@@ -48,11 +48,16 @@ export async function scanConfiguredFeeds(env = {}, options = {}) {
     if (env.ARB_AUTO_DISCOVER === '0') {
       return { ...status, opportunities: [], quoteCount: 0, freshQuoteCount: 0, errors: [], scannedAt: new Date().toISOString() };
     }
-    // Nothing is pinned. Rather than showing an empty table, the Worker hunts
-    // for the feeds itself - from the point of presence nearest the person who
-    // pressed RUN, which is what the books require. The hunt starts with the
-    // addresses these books are known to publish; the deep crawl (reading the
-    // book's own scripts) is what the FIND FEEDS button does.
+    // Nothing is pinned. Two possibilities:
+    //   a) a previous FIND FEEDS run already found the addresses - use them;
+    //   b) nothing is known yet - hunt for one book now, and say so.
+    const known = await readKnownFeeds(env);
+    const knownList = Object.entries(known).map(([id, entry]) => ({
+      id, status: 'found', url: entry.url, quoteCount: entry.quoteCount || 0, note: 'found by an earlier FIND FEEDS run', attempts: [],
+    }));
+    if (knownList.length) {
+      return scanWithDiscovered(env, options, knownList, knownList);
+    }
     const found = await discoverAll(env, [], { crawl: false });
     await reportDiscovery(env, found, { edge, trigger: 'scan' });
     const usable = found.filter((entry) => entry.status === 'found' && entry.url);
@@ -119,6 +124,7 @@ export async function runDiscovery(bookId, env = {}, options = {}) {
   const result = await discoverBook(bookId, {
     timeoutMs: Number(env.ARB_DISCOVERY_TIMEOUT_MS || 9000),
     crawl: options.crawl !== false,
+    round: options.round === 2 ? 2 : 1,
   });
   if (result.status === 'found') {
     discoveredCache.set(bookId, { url: result.url, quoteCount: result.quoteCount, at: Date.now() });
@@ -130,7 +136,7 @@ export async function runDiscovery(bookId, env = {}, options = {}) {
     quoteCount: result.quoteCount || 0,
     note: result.note || '',
     evidence: result.evidence || {},
-    attempts: (result.attempts || []).slice(0, 10).map((attempt) => ({
+    attempts: (result.attempts || []).slice(0, 20).map((attempt) => ({
       url: attempt.url,
       ok: Boolean(attempt.ok),
       status: attempt.status,
@@ -267,8 +273,12 @@ export async function handleArbRequest(request, env = {}) {
     if (path === '/api/arbs/discover') {
       if (request.method !== 'GET' && request.method !== 'POST') return json({ ok: false, error: 'Method not allowed.' }, 405);
       const book = url.searchParams.get('book');
-      const ids = book ? [book] : [];
-      const results = await discoverAll(env, ids, { crawl: true });
+      if (!book) return json({ ok: false, error: 'Name one book: /api/arbs/discover?book=sportybet' }, 400);
+      const round = url.searchParams.get('round') === '2' ? 2 : 1;
+      // One book per request: Cloudflare allows a limited number of open
+      // subrequests per invocation, and hunting through a whole book takes a
+      // good many of them. Round 2 continues where round 1 stopped.
+      const results = await discoverAll(env, [book], { crawl: true, round });
       const report = await reportDiscovery(env, results, { edge, trigger: 'discover' });
       return json({ ok: true, results, edge, report, discoveredAt: new Date().toISOString() });
     }
