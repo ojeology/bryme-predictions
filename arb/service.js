@@ -8,7 +8,11 @@ import { captureBookViaBrowser } from './browserFeed.js';
 const PROBE_HOSTS = [
   '1xbet.ng', '22bet.ng', 'nairabet.com', '1xbet.com', '22bet.com',
   'api.1xbet.ng', 'api.22bet.ng', 'api.nairabet.com',
-  'msport.com', 'www.msport.com', 'bet9ja.com', 'www.bet9ja.com',
+  'msport.com', 'www.msport.com', 'm.msport.ng', 'api.msport.ng',
+  'bet9ja.com', 'www.bet9ja.com', 'api.bet9ja.com', 'sports.bet9ja.com',
+  'merrybet.com', 'www.merrybet.com', 'merrybet.ng', 'api.merrybet.ng', 'mobile.merrybet.ng',
+  'betking.com', 'www.betking.com', 'api.betking.com', 'sportsapicdn-desktop.betking.com',
+  'm.22bet.ng', 'm.22bet.com', 'm.1xbet.ng',
   'gateway-ng.livescorebet.com', 'www.sportybet.com', 'sports.sportybet.com',
 ];
 

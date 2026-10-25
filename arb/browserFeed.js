@@ -19,6 +19,7 @@
  * that read a direct feed read these too.
  */
 import puppeteer from '@cloudflare/puppeteer';
+import { openSharedBrowser } from './connectors/browserSession.js';
 
 const WAIT_MS = 9000;
 
@@ -29,12 +30,13 @@ const BOOK_PAGES = {
   nairabet: 'https://nairabet.com/sports',
   msport: 'https://www.msport.com/ng/web/sports/list/Soccer',
   bet9ja: 'https://bet9ja.com/',
+  betking: 'https://betking.com/',
 };
 
 /** Only these hosts may be opened. */
 const PAGE_HOSTS = [
   '22bet.ng', '1xbet.ng', 'nairabet.com', 'msport.com', 'bet9ja.com',
-  'livescorebet.com', 'sportybet.com',
+  'livescorebet.com', 'sportybet.com', 'betking.com', 'merrybet.com', 'sportsapicdn-desktop.betking.com', 'sportsapicdn.betking.com', 'virtual-horizon.com',
 ];
 
 export function pageAllowed(address) {
@@ -197,7 +199,9 @@ export async function captureBookViaBrowser(env, bookId, { waitMs = WAIT_MS, pro
 
   let browser = null;
   try {
-    browser = await puppeteer.launch(env.browser);
+    const opened = await openSharedBrowser(env);
+    if (!opened.browser) throw opened.error;
+    browser = opened.browser;
     const page = await browser.newPage();
     await page.setViewport({ width: 412, height: 900 });
     try {

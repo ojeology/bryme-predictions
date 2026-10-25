@@ -97,6 +97,7 @@ The included connector adapters accept operator-configured JSON feeds. Configure
 | `ARB_FEED_URL` | One combined feed containing quotes for multiple bookmakers |
 | `SPORTYBET_FEED_URL` | SportyBet-specific normalized JSON feed |
 | `MSPORT_FEED_URL` | MSport's own price endpoint (read through a real browser) |
+| `BETKING_FEED_URL` | BetKing's public price feeds, comma separated (read through a real browser) |
 | `LSCB_FEED_URL` | LiveScore Bet gateway address |
 | `NAIRABET_FEED_URL` | NairaBet-specific normalized JSON feed |
 | `BET22_FEED_URL` | 22Bet-specific normalized JSON feed |

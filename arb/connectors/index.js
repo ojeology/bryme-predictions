@@ -5,6 +5,8 @@ import { fetchLiveScoreBetQuotes, isLiveScoreBetGateway } from './livescorebetFe
 import { fetchBook } from './httpBook.js';
 import { fetchBookWithBrowser } from './browserBook.js';
 import { fetchMsportQuotes } from './msportFeed.js';
+import { fetchBetkingQuotes } from './betkingFeed.js';
+import { openSharedBrowser, closeSharedBrowser } from './browserSession.js';
 
 export const CONNECTORS = [
   { id: 'sportybet', label: 'SportyBet NG', envKey: 'SPORTYBET_FEED_URL' },
@@ -13,6 +15,7 @@ export const CONNECTORS = [
   { id: '1xbet', label: '1xBet', envKey: 'BET1X_FEED_URL' },
   { id: 'livescorebet', label: 'LiveScore Bet NG', envKey: 'LSCB_FEED_URL' },
   { id: 'msport', label: 'MSport', envKey: 'MSPORT_FEED_URL', viaBrowser: true },
+  { id: 'betking', label: 'BetKing', envKey: 'BETKING_FEED_URL', viaBrowser: true },
 ];
 
 function configured(definition, env) {
@@ -32,6 +35,30 @@ export function getConnectorStatus(env = {}) {
         : 'No verified server-side feed is configured.',
     })),
   };
+}
+
+// Prices read through a browser are kept for a minute and a half, so a
+// second press of RUN does not spend more of the daily browser budget.  The
+// quotes keep the time they were really fetched, so the freshness check
+// still holds them to account.
+const BROWSER_CACHE_MS = 90_000;
+const browserCache = new Map();
+
+function browserCachePick(definitions, env) {
+  const hits = new Map();
+  const now = Date.now();
+  for (const definition of definitions) {
+    const entry = browserCache.get(definition.id);
+    if (entry && entry.url === env[definition.envKey] && now - entry.at <= BROWSER_CACHE_MS) {
+      hits.set(definition.id, entry);
+    }
+  }
+  return hits;
+}
+
+function browserCachePut(id, url, quotes) {
+  if (!quotes?.length) return;
+  browserCache.set(id, { id, url, at: Date.now(), quotes });
 }
 
 function usableQuote(quote) {
@@ -55,7 +82,22 @@ export async function loadConnectorQuotes(env = {}) {
       .catch((error) => ({ quotes: [], error }))
     : { quotes: [], error: null };
 
+  // The books whose edge only serves a real browser share ONE browser
+  // session, with a tab each: the free plan allows ten minutes of browser
+  // time a day and one new browser every twenty seconds.
+  const browserBooks = CONNECTORS.filter((d) => d.viaBrowser && env[d.envKey]);
+  const cached = browserCachePick(browserBooks, env);
+  const needsBrowser = browserBooks.filter((d) => !cached.has(d.id));
+  let sharedBrowser = null;
+  let browserError = null;
+  if (needsBrowser.length) {
+    const opened = await openSharedBrowser(env);
+    sharedBrowser = opened.browser;
+    browserError = opened.error;
+  }
+
   const specific = [];
+  try {
   for (const definition of CONNECTORS) {
     if (!env[definition.envKey]) {
       specific.push({ quotes: [], error: null, attempted: false });
@@ -66,8 +108,17 @@ export async function loadConnectorQuotes(env = {}) {
       if (definition.viaBrowser) {
         // this book's edge only serves a real browser, so the price request
         // is made from inside the book's own page
-        const result = await fetchMsportQuotes(env, feedUrl);
+        const hit = cached.get(definition.id);
+        if (hit) {
+          specific.push({ quotes: hit.quotes, error: null, attempted: true, cached: true });
+          continue;
+        }
+        if (!sharedBrowser) throw browserError || new Error('no browser available');
+        const result = definition.id === 'betking'
+          ? await fetchBetkingQuotes(env, feedUrl, { browser: sharedBrowser })
+          : await fetchMsportQuotes(env, feedUrl, { browser: sharedBrowser });
         if (result.error) throw result.error;
+        browserCachePut(definition.id, feedUrl, result.quotes);
         specific.push({ quotes: result.quotes, error: null, attempted: true });
       } else if (isLiveScoreBetGateway(feedUrl)) {
         // this book's whole slate does not fit in memory at once, so it is
@@ -85,6 +136,9 @@ export async function loadConnectorQuotes(env = {}) {
     } catch (error) {
       specific.push({ quotes: [], error, attempted: true });
     }
+  }
+  } finally {
+    await closeSharedBrowser(sharedBrowser);
   }
 
   const allQuotes = [];

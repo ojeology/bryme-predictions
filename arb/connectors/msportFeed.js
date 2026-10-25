@@ -13,6 +13,7 @@
  */
 import puppeteer from '@cloudflare/puppeteer';
 import { flattenMsport } from './msport.js';
+import { browserLimitNote } from './browserSession.js';
 
 const PAGE = 'https://www.msport.com/ng/web/';
 
@@ -56,15 +57,18 @@ const ASK = `
  * @param {string} url    the price endpoint (server-side configuration)
  * @returns {Promise<{quotes: Array, error: Error|null, detail: string}>}
  */
-export async function fetchMsportQuotes(env = {}, url = '') {
+export async function fetchMsportQuotes(env = {}, url = '', options = {}) {
   if (!url) return { quotes: [], error: null, detail: 'no endpoint configured' };
   if (!env?.browser) {
     return { quotes: [], error: new Error('This deployment has no browser available.'), detail: 'no browser binding' };
   }
 
-  let browser = null;
+  // a browser opened by the scan is shared between the books that need one
+  const shared = options.browser || null;
+  const ownsBrowser = !shared;
+  let browser = shared;
   try {
-    browser = await puppeteer.launch(env.browser);
+    if (!browser) browser = await puppeteer.launch(env.browser);
     const page = await browser.newPage();
     await page.setViewport({ width: 412, height: 900 });
     await page.goto(PAGE, { waitUntil: 'domcontentloaded', timeout: 25000 }).catch(() => {});
@@ -97,8 +101,10 @@ export async function fetchMsportQuotes(env = {}, url = '') {
       .map((quote) => ({ ...quote, fetchedAt }));
     return { quotes, error: null, detail: `${quotes.length} quotes from MSport` };
   } catch (error) {
-    return { quotes: [], error, detail: error?.message || String(error) };
+    return { quotes: [], error: new Error(browserLimitNote(error)), detail: error?.message || String(error) };
   } finally {
-    try { await browser?.close(); } catch { /* the session may already be gone */ }
+    if (ownsBrowser) {
+      try { await browser?.close(); } catch { /* the session may already be gone */ }
+    }
   }
 }

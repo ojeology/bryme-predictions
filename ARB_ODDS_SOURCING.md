@@ -275,3 +275,71 @@ quotes 4943 | fresh 4943 | 19 shared fixtures
 A scan that finds no arbitrage now says **why**: either the books are not
 offering the same matches, or they are, and the prices do not add up to more
 than 100%.
+
+## BetKing: the fourth book, found by reading their own page
+
+BetKing (Nigeria) runs on the **Betagy sportsbook API**, with prices fed by
+Sportradar.  Its edge answers a plain server request with a "Just a moment"
+challenge page - on the book domain *and* on the price service - so it is
+read through a real browser, the same way MSport is.
+
+The recipe was found by opening the book's own sports page in a browser and
+reading the addresses the page asks for.  Those addresses are public, and the
+book asks them itself:
+
+```
+GET https://sportsapicdn-desktop.betking.com/api/feeds/prematch/info
+GET https://sportsapicdn-desktop.betking.com/api/feeds/prematch/matches/custommenu/en/4
+GET https://sportsapicdn-desktop.betking.com/api/feeds/prematch/mostpopularsports/en/1/7/3/
+GET https://sportsapicdn-desktop.betking.com/api/feeds/prematch/lastminute/en/1/15/
+GET https://sportsapicdn-desktop.betking.com/api/feeds/live
+```
+
+The two lists that carry prices are `mostpopularsports` (790 KB) and
+`lastminute` (347 KB).  Their shape:
+
+```
+[ { AreaMatches: [ {
+      SportID, SportName, Area: { AreaID, AreaName },
+      Items: [ {
+        ItemID, SmartBetCode,
+        ItemName: "Fleetwood - Arsenal",
+        ItemDate: "2026-10-27T21:00:00+01:00",
+        TournamentName, CategoryName,
+        OddsCollection: [ {
+          OddsType: { OddsTypeID, OddsTypeName: "1X2" },
+          MatchOdds: [ {
+            SmartBetCode,                       which match the price belongs to
+            OddAttribute: { OddTypeID, OddName: "1" },
+            Outcome: { OddOutcome: 1.62, ScheduleStatus: 0 }
+          } ]
+        } ]
+      } ] } ] } ]
+```
+
+Read it like this: a market holds prices for **several matches**, so the
+price belongs to the match whose `SmartBetCode` matches the item's.  A price
+whose `ScheduleStatus` is not 0 is suspended and is left out.  The markets
+that are translated are 1X2, Double Chance, Total Goals (the line is in the
+market name), GG/NG and Draw No Bet; "1X2 - (1up)", "1X2 - (2up)" and the
+half-time variants settle differently and are left alone.
+
+BetKing writes GG and NG where the other books write Yes and No; the adapter
+translates, so the four books can be compared without a human renaming
+anything.
+
+## The browser budget, in plain words
+
+Cloudflare's free plan allows **ten minutes of browser time a day** and **one
+new browser instance every twenty seconds**.  Two books (MSport, BetKing) can
+only be read in a browser, so the scan now:
+
+- opens **one** browser for the whole scan and gives each book its own tab;
+- keeps the prices it read for ninety seconds, so a second press of RUN does
+  not spend more of the daily budget (the quotes keep the time they were
+  really fetched, so the freshness check still applies);
+- says plainly when the budget is gone, instead of showing an error code.
+
+A Workers Paid plan removes the ten-minute cap and allows three browser
+instances a second.  That is the difference between a scanner that runs all
+day and one that runs for a few minutes a day.

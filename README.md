@@ -158,6 +158,9 @@ arb/
                            Rendering) - opens a book's page, watches what it
                            asks for, and fetches price addresses from inside it
     msport.js/msportFeed.js   MSport: the price tree and the browser read
+- `arb/connectors/betking.js` - BetKing adapter (Betagy tree, prices inside each match)
+- `arb/connectors/betkingFeed.js` - BetKing browser reader
+- `arb/connectors/browserSession.js` - one shared browser for the whole scan
     normalize.js          any book payload -> the scanner's quote shape
 src/
   arbs/ArbScannerView.jsx the scanner UI (RUN, calculator, ledger)

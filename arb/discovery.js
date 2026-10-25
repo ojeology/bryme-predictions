@@ -117,6 +117,16 @@ export const KNOWN_FEEDS = {
     'https://www.msport.com/api/ng/facts-center/query/frontend/soccer-matches/high-light?sportId=sr:sport:1',
     'https://www.msport.com/api/ng/facts-center/query/frontend/default-market-info/v2?sportId=sr:sport:1&withOthers=1',
   ],
+  betking: [
+    // PROVEN: BetKing runs on the Betagy sportsbook API and publishes its
+    // prices under /api/feeds.  Its edge answers a real browser only, so
+    // these addresses are read through the browser route.
+    'https://sportsapicdn-desktop.betking.com/api/feeds/prematch/info',
+    'https://sportsapicdn-desktop.betking.com/api/feeds/prematch/matches/custommenu/en/4',
+    'https://sportsapicdn-desktop.betking.com/api/feeds/prematch/mostpopularsports/en/1/7/3/',
+    'https://sportsapicdn-desktop.betking.com/api/feeds/prematch/lastminute/en/1/15/',
+    'https://sportsapicdn-desktop.betking.com/api/feeds/live',
+  ],
   sportybet: [
     // PROVEN: the book publishes its own price tree under /api/ng/factsCenter
     'https://www.sportybet.com/api/ng/factsCenter/importantEvents?sportId=sr:sport:1',
