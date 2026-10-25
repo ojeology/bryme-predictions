@@ -1,5 +1,5 @@
 {
- "at": "2026-10-25T22:53:10.354Z",
+ "at": "2026-10-25T22:53:12.042Z",
  "edge": "AMS",
  "phoneCountry": "NG",
  "workerCountry": "NG",
@@ -1228,15 +1228,11 @@
   },
   {
    "id": "betking",
-   "status": "none",
-   "url": "",
-   "quoteCount": 0,
-   "note": "no known page for this book",
-   "evidence": {
-    "scripts": [],
-    "chunks": [],
-    "candidatesTried": 0
-   },
+   "status": "found",
+   "url": "https://sportsapicdn-desktop.betking.com/api/feeds/prematch/mostpopularsports/en/1/7/3/",
+   "quoteCount": 1048,
+   "note": "",
+   "evidence": {},
    "attempts": [
     {
      "url": "https://sportsapicdn-desktop.betking.com/api/feeds/prematch/info",
