@@ -267,6 +267,7 @@ export async function scanConfiguredFeeds(env = {}, options = {}) {
     ...options,
     maxQuoteAgeSeconds,
     now: new Date(now),
+    alreadyNormalized: true,
   });
   return {
     ok: true,
@@ -381,6 +382,7 @@ async function scanWithDiscovered(env, options, usable, found) {
     ...options,
     maxQuoteAgeSeconds,
     now: new Date(now),
+    alreadyNormalized: true,
   });
   return {
     ok: true,
@@ -542,7 +544,7 @@ export async function handleArbRequest(request, env = {}) {
     if (path === '/api/arbs/snapshot') {
       // what the free reader published, book by book
       const books = {};
-      for (const book of ['sportybet', 'msport', 'betking']) {
+      for (const book of ['sportybet', 'msport', 'betking', 'livescorebet']) {
         const result = await snapshotQuotes(env, book);
         books[book] = {
           quotes: result.quotes.length,

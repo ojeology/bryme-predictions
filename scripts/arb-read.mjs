@@ -490,7 +490,24 @@ async function main() {
     const file = {
       capturedAt,
       book,
-      quotes: quotes.map((quote) => ({ ...quote, bookmaker: book, fetchedAt: capturedAt })),
+      // only what the scanner compares: the settlement wording, the address
+      // the price came from and the stake note are left behind
+      quotes: quotes.map((quote) => ({
+        event: quote.event,
+        eventId: quote.eventId,
+        sport: quote.sport,
+        competition: quote.competition,
+        startsAt: quote.startsAt,
+        market: quote.market,
+        marketKey: quote.marketKey,
+        rulesKey: quote.rulesKey,
+        way: quote.way,
+        outcome: quote.outcome,
+        label: quote.label,
+        bookmaker: book,
+        odds: quote.odds,
+        fetchedAt: capturedAt,
+      })),
     };
     await writeFile(`out/${book}.json`, JSON.stringify(file));
     summary.books[book] = { quotes: file.quotes.length, bytes: JSON.stringify(file).length };

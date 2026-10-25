@@ -187,7 +187,11 @@ export async function loadConnectorQuotes(env = {}, options = {}) {
       sources.push(...combined.quotes.filter((quote) => normalizeBookmaker(quote.bookmaker || quote.book) === definition.id));
     }
 
-    const normalized = sources.map((quote) => normalizeQuote({ ...quote, bookmaker: definition.id }));
+    // normalizeQuote builds a new object of its own, so the quote is not
+    // copied again first
+    const normalized = sources.map((quote) => normalizeQuote(
+      quote.bookmaker === definition.id ? quote : { ...quote, bookmaker: definition.id },
+    ));
     const usable = normalized.filter(usableQuote);
     allQuotes.push(...usable);
 

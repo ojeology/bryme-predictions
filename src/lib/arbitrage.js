@@ -364,6 +364,26 @@ function sideMatches(aTokens, bTokens) {
 }
 
 /** Are these two quotes about the same fixture? */
+/**
+ * The two sides of a fixture, taken apart once and kept.
+ *
+ * A scan compares every price with every price of the same market, and each
+ * comparison used to take the names apart again - which, with a few thousand
+ * prices, meant millions of short-lived lists of words and the Worker ran
+ * out of memory.  The names are now taken apart once each.
+ */
+const fixtureSidesCache = new WeakMap();
+
+function fixtureSides(quote) {
+  let sides = fixtureSidesCache.get(quote);
+  if (!sides) {
+    const [home, away] = splitFixture(quote?.event);
+    sides = { home: tokenize(home), away: tokenize(away) };
+    fixtureSidesCache.set(quote, sides);
+  }
+  return sides;
+}
+
 export function sameFixture(a, b) {
   const ta = new Date(a.startsAt || '').getTime();
   const tb = new Date(b.startsAt || '').getTime();
@@ -371,11 +391,11 @@ export function sameFixture(a, b) {
       && Math.abs(ta - tb) > TIME_WINDOW_MINUTES * 60000) return false;
   if (a.eventId && b.eventId && a.eventId === b.eventId) return true;
 
-  const [ah, aa] = splitFixture(a.event);
-  const [bh, ba] = splitFixture(b.event);
+  const ah = fixtureSides(a);
+  const bh = fixtureSides(b);
   // home must match home and away must match away: a book that lists the
   // sides the other way round is a different price, not the same fixture
-  return sideMatches(tokenize(ah), tokenize(bh)) && sideMatches(tokenize(aa), tokenize(ba));
+  return sideMatches(ah.home, bh.home) && sideMatches(ah.away, bh.away);
 }
 
 function combinations(items, limit = 5000) {
@@ -417,8 +437,11 @@ export function clusterFixtures(quotes) {
  */
 export function scanOpportunities(rawQuotes, options = {}) {
   const now = options.now ? new Date(options.now) : new Date();
-  const quotes = (Array.isArray(rawQuotes) ? rawQuotes : [])
-    .map(normalizeQuote)
+  const list = Array.isArray(rawQuotes) ? rawQuotes : [];
+  // prices that have already been through the normaliser are used as they
+  // are: with thousands of prices, a second copy of each one is what runs
+  // the Worker out of memory
+  const quotes = (options.alreadyNormalized ? list : list.map(normalizeQuote))
     .filter((quote) => quote.event && quote.market && quote.outcome && quote.bookmaker
       && quote.rulesKey !== 'unspecified' && Number.isFinite(quote.odds) && quote.odds > 1)
     // never offer a match that has already kicked off
