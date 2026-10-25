@@ -1,3 +1,5 @@
+import { handleArbRequest } from './arb/service.js';
+
 /**
  * GROUND ZERO — Match Behaviour Lab Edge Worker (Clean Editorial v8)
  * Forces fresh no-store HTML delivery on / so mobile browsers never show stale layouts.
@@ -31,6 +33,8 @@ function getKvBinding(env) {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    const arbResponse = await handleArbRequest(request, env, url);
+    if (arbResponse) return arbResponse;
     if (request.method === 'OPTIONS') {
       return new Response(null, { status: 204, headers: corsHeaders });
     }

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Search, Layers, ShieldCheck, ClipboardCheck, Flame } from 'lucide-react';
+import { Search, Layers, ShieldCheck, ClipboardCheck, Flame, Scale } from 'lucide-react';
 import { GROUND_ZERO } from './data/groundZeroData';
+import ArbScannerView from './arbs/ArbScannerView';
 import CommandCenterView from './groundzero/CommandCenterView';
 import LeagueBatchesView from './groundzero/LeagueBatchesView';
 import { VaultView, DedicatedTeamPage } from './groundzero/VaultAndClubPageView';
@@ -56,6 +57,7 @@ function parseRoute(hashStr) {
     return { view: 'leagues', day: 'all', league: 'all' };
   }
   if (clean.startsWith('/vault')) return { view: 'vault' };
+  if (clean.startsWith('/arbs')) return { view: 'arbs' };
   if (clean.startsWith('/referees')) return { view: 'ledger', tab: 'referees' };
   if (clean.startsWith('/retrain')) return { view: 'ledger', tab: 'retrain' };
   if (clean.startsWith('/ledger') || clean.startsWith('/whynot') || clean.startsWith('/calculator') || clean.startsWith('/uefa')) {
@@ -111,10 +113,11 @@ export default function App() {
   }, [quickQuery]);
 
   const navItems = [
-    { id: 'home', label: 'Rollover (Step 1–4)', to: '/', icon: Flame },
-    { id: 'leagues', label: 'Weekend by League', to: '/leagues', icon: Layers },
-    { id: 'vault', label: '100% Vault & Teams', to: '/vault', icon: ShieldCheck },
-    { id: 'ledger', label: 'Results & Referees', to: '/ledger', icon: ClipboardCheck },
+    { id: 'home', label: 'Rollover (Step 1–4)', compactLabel: 'Rollover', to: '/', icon: Flame },
+    { id: 'leagues', label: 'Weekend by League', compactLabel: 'Leagues', to: '/leagues', icon: Layers },
+    { id: 'vault', label: '100% Vault & Teams', compactLabel: 'Vault', to: '/vault', icon: ShieldCheck },
+    { id: 'ledger', label: 'Results & Referees', compactLabel: 'Results', to: '/ledger', icon: ClipboardCheck },
+    { id: 'arbs', label: 'Arb Scanner', compactLabel: 'Arb Scanner', to: '/arbs', icon: Scale },
   ];
 
   const activeNav = route.view === 'team' ? 'vault' : route.view;
@@ -144,7 +147,7 @@ export default function App() {
               </div>
             </button>
 
-            {/* 4 SIMPLE DESKTOP NAVIGATION TABS */}
+            {/* 5 SIMPLE DESKTOP NAVIGATION TABS */}
             <nav className="hidden md:flex items-center gap-1">
               {navItems.map((item) => {
                 const active = activeNav === item.id;
@@ -159,14 +162,15 @@ export default function App() {
                         : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                     }`}
                   >
-                    {item.label}
+                    <span className="xl:hidden">{item.compactLabel}</span>
+                    <span className="hidden xl:inline">{item.label}</span>
                   </button>
                 );
               })}
             </nav>
 
             {/* SIMPLE QUICK SEARCH FOR ANY TEAM OR LEAGUE */}
-            <div className="relative w-44 sm:w-56">
+            <div className="relative hidden lg:block w-44 xl:w-56">
               <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
@@ -204,6 +208,7 @@ export default function App() {
       <main className="max-w-5xl mx-auto px-4 sm:px-6 pt-6 sm:pt-8">
         <AppErrorBoundary>
           {route.view === 'home' && <CommandCenterView data={GROUND_ZERO} navigate={navigate} />}
+          {route.view === 'arbs' && <ArbScannerView navigate={navigate} />}
           {route.view === 'leagues' && (
             <LeagueBatchesView
               data={GROUND_ZERO}
@@ -222,8 +227,8 @@ export default function App() {
         </AppErrorBoundary>
       </main>
 
-      {/* SIMPLE 4-BUTTON MOBILE BOTTOM BAR */}
-      <nav className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t border-slate-200 grid grid-cols-4 py-1.5 px-2">
+      {/* SIMPLE 5-BUTTON MOBILE BOTTOM BAR */}
+      <nav className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t border-slate-200 grid grid-cols-5 py-1.5 px-2">
         {navItems.map((item) => {
           const Icon = item.icon;
           const active = activeNav === item.id;
@@ -244,7 +249,9 @@ export default function App() {
                   ? 'Leagues'
                   : item.id === 'vault'
                   ? '100% Vault'
-                  : 'Results'}
+                  : item.id === 'ledger'
+                  ? 'Results'
+                  : 'Arbs'}
               </span>
             </button>
           );
