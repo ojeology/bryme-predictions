@@ -1,4 +1,4 @@
-import { normalizeBookmaker, normalizeQuote } from '../../src/lib/arbitrage.js';
+import { normalizeBookmaker, normalizeQuote, parseOdds } from '../../src/lib/arbitrage.js';
 import { fetchJsonFeed } from './jsonFeed.js';
 
 export const CONNECTORS = [
@@ -27,7 +27,9 @@ export function getConnectorStatus(env = {}) {
 }
 
 function usableQuote(quote) {
-  return quote.event && quote.market && quote.outcome && quote.bookmaker && quote.rulesKey !== 'unspecified' && Number.isFinite(quote.odds) && quote.odds > 1;
+  const odds = parseOdds(quote.odds ?? quote.price);
+  return quote.event && quote.market && quote.outcome && quote.bookmaker
+    && quote.rulesKey !== 'unspecified' && Number.isFinite(odds) && odds > 1;
 }
 
 /**

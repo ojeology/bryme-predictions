@@ -1,0 +1,6557 @@
+{
+ "1.5": {
+  "base": 0.8835078534031413,
+  "table": {
+   "Adam Ladeb\u00e4ck": {
+    "n": 11,
+    "raw": 0.6363636363636364,
+    "eff": -0.08769633507853403
+   },
+   "Erik Mattsson": {
+    "n": 8,
+    "raw": 0.625,
+    "eff": -0.0738593866866118
+   },
+   "Fredrik Klitte": {
+    "n": 10,
+    "raw": 0.9,
+    "eff": 0.005497382198952905
+   },
+   "Kristoffer Karlsson": {
+    "n": 10,
+    "raw": 0.8,
+    "eff": -0.02783595113438042
+   },
+   "Richard Sundell": {
+    "n": 8,
+    "raw": 0.75,
+    "eff": -0.03814510097232609
+   },
+   "Mohammed Al Hakim": {
+    "n": 11,
+    "raw": 0.6363636363636364,
+    "eff": -0.08769633507853403
+   },
+   "Victor Wolf": {
+    "n": 10,
+    "raw": 0.9,
+    "eff": 0.005497382198952905
+   },
+   "Oscar Johnson": {
+    "n": 11,
+    "raw": 0.8181818181818182,
+    "eff": -0.023180206046275933
+   },
+   "Granit Maqedonci": {
+    "n": 9,
+    "raw": 0.7777777777777778,
+    "eff": -0.03281278209063006
+   },
+   "Adi Aganovic": {
+    "n": 9,
+    "raw": 0.8888888888888888,
+    "eff": 0.0016699765300595788
+   },
+   "Joakim Sars": {
+    "n": 8,
+    "raw": 0.875,
+    "eff": -0.0024308152580403736
+   },
+   "Ivan Abrosimov": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.02329842931937174
+   },
+   "Bartosz Frankowski": {
+    "n": 6,
+    "raw": 1.0,
+    "eff": 0.026882803060813545
+   },
+   "Jaros\u0142aw Przyby\u0142": {
+    "n": 6,
+    "raw": 0.8333333333333334,
+    "eff": -0.01157873540072491
+   },
+   "Andrey Prokopov": {
+    "n": 7,
+    "raw": 1.0,
+    "eff": 0.03020166763622262
+   },
+   "Rafael Shafeev": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.02329842931937174
+   },
+   "Igor Kaplenkov": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": -0.02828363305258365
+   },
+   "Matvey Zaika": {
+    "n": 3,
+    "raw": 0.3333333333333333,
+    "eff": -0.07176189392214888
+   },
+   "Damian Sylwestrzak": {
+    "n": 6,
+    "raw": 1.0,
+    "eff": 0.026882803060813545
+   },
+   "Marcin Szczerbowicz": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.02329842931937174
+   },
+   "Karol Arys": {
+    "n": 6,
+    "raw": 0.3333333333333333,
+    "eff": -0.12696335078534032
+   },
+   "Nikita Novikov": {
+    "n": 6,
+    "raw": 1.0,
+    "eff": 0.026882803060813545
+   },
+   "Artem Chistyakov": {
+    "n": 6,
+    "raw": 0.8333333333333334,
+    "eff": -0.01157873540072491
+   },
+   "Kirill Levnikov": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.02329842931937174
+   },
+   "Pawe\u0142 Malec": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.015194627816981568
+   },
+   "\u0141ukasz Ku\u017ama": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.02329842931937174
+   },
+   "Pawe\u0142 Raczkowski": {
+    "n": 7,
+    "raw": 0.8571428571428571,
+    "eff": -0.006835369400814425
+   },
+   "Piotr Rzucid\u0142o": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.034864350309376485
+   },
+   "Danil Naboka": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.015194627816981568
+   },
+   "Mateusz Piszczelok": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.015194627816981568
+   },
+   "Tomasz Kwiatkowski": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.02329842931937174
+   },
+   "Nick Walsh": {
+    "n": 7,
+    "raw": 1.0,
+    "eff": 0.03020166763622262
+   },
+   "Evgeni Bulanov": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Sergey Karasev": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.019415357766143115
+   },
+   "Yan Bobrovskiy": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.015194627816981568
+   },
+   "Inal Tanashev": {
+    "n": 7,
+    "raw": 1.0,
+    "eff": 0.03020166763622262
+   },
+   "Wojciech My\u0107": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.015194627816981568
+   },
+   "Tomasz Marciniak": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.015194627816981568
+   },
+   "Duncan Nicolson": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": -0.016701570680628254
+   },
+   "David Dickinson": {
+    "n": 6,
+    "raw": 0.8333333333333334,
+    "eff": -0.01157873540072491
+   },
+   "Anton Frolov": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.02329842931937174
+   },
+   "Evgeni Kukulyak": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.010590195145168972
+   },
+   "Stanislav Matveev": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": -0.016701570680628254
+   },
+   "Patryk Gryckiewicz": {
+    "n": 7,
+    "raw": 1.0,
+    "eff": 0.03020166763622262
+   },
+   "Szymon Marciniak": {
+    "n": 9,
+    "raw": 0.8888888888888888,
+    "eff": 0.0016699765300595788
+   },
+   "John Beaton": {
+    "n": 6,
+    "raw": 1.0,
+    "eff": 0.026882803060813545
+   },
+   "Steven McLean": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": -0.016701570680628254
+   },
+   "Matthew McDermid": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Allard Lindhout": {
+    "n": 8,
+    "raw": 0.625,
+    "eff": -0.0738593866866118
+   },
+   "Miguel Andr\u00e9 Monteiro Fonseca": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.034864350309376485
+   },
+   "Wolfgang Haslberger": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.015194627816981568
+   },
+   "Lothar D'hondt": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.010590195145168972
+   },
+   "Robin Hensgens": {
+    "n": 5,
+    "raw": 0.6,
+    "eff": -0.05670157068062827
+   },
+   "Martijn Vos": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.015194627816981568
+   },
+   "Alex Bos": {
+    "n": 5,
+    "raw": 0.6,
+    "eff": -0.05670157068062827
+   },
+   "Erwin Blank": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": -0.02225130890052355
+   },
+   "S\u00e9rgio Jos\u00e9 dos Santos Guelho": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Miguel Bertolo Nogueira": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.010590195145168972
+   },
+   "Jo\u00e3o Ant\u00f3nio Ferreira Gon\u00e7alves": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.010590195145168972
+   },
+   "Felix Prigan": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.015194627816981568
+   },
+   "Michael Bacher": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.019415357766143115
+   },
+   "Felix Bickel": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.019415357766143115
+   },
+   "Florian Exner": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": -0.016701570680628254
+   },
+   "Eric-Dominic Weisbach": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.02329842931937174
+   },
+   "Sergey Tsyganok": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Vasili Kazartsev": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Marcin Kochanek": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": -0.02828363305258365
+   },
+   "Glenn Nyberg": {
+    "n": 9,
+    "raw": 0.8888888888888888,
+    "eff": 0.0016699765300595788
+   },
+   "Anthony Letellier": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": -0.02828363305258365
+   },
+   "Jasper Vergoote": {
+    "n": 7,
+    "raw": 0.7142857142857143,
+    "eff": -0.043872406437851445
+   },
+   "Bert Put": {
+    "n": 4,
+    "raw": 0.5,
+    "eff": -0.06391797556719021
+   },
+   "Ross Hardie": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.019415357766143115
+   },
+   "Calum Scott": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": -0.02225130890052355
+   },
+   "Jannick van der Laan": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": -0.016701570680628254
+   },
+   "Sander van der Eijk": {
+    "n": 7,
+    "raw": 1.0,
+    "eff": 0.03020166763622262
+   },
+   "Joey Kooij": {
+    "n": 7,
+    "raw": 0.8571428571428571,
+    "eff": -0.006835369400814425
+   },
+   "Marc Nagtegaal": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.034864350309376485
+   },
+   "Jos\u00e9 Armando Torres Bessa": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.010590195145168972
+   },
+   "David Rafael Oliveira Silva": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.010590195145168972
+   },
+   "Lu\u00eds Miguel Branco Godinho": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Gustavo Fernandes Correia": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Harm Osmers": {
+    "n": 6,
+    "raw": 0.8333333333333334,
+    "eff": -0.01157873540072491
+   },
+   "Jarno Wienefeld": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.019415357766143115
+   },
+   "Lars Erbst": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": -0.02225130890052355
+   },
+   "Pavel Kukuyan": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.010590195145168972
+   },
+   "Damian Kos": {
+    "n": 6,
+    "raw": 1.0,
+    "eff": 0.026882803060813545
+   },
+   "Niclas Karlsson": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.04207180254300673
+   },
+   "Michiel Allaerts": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.019415357766143115
+   },
+   "Erik Lambrechts": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": -0.02828363305258365
+   },
+   "Lawrence Visser": {
+    "n": 8,
+    "raw": 1.0,
+    "eff": 0.033283470456245336
+   },
+   "Wesli De Cremer": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.015194627816981568
+   },
+   "Kevin Van Damme": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.034864350309376485
+   },
+   "Ryan Lee": {
+    "n": 5,
+    "raw": 0.4,
+    "eff": -0.09670157068062826
+   },
+   "Don Robertson": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.019415357766143115
+   },
+   "Chris Graham": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.015194627816981568
+   },
+   "Kevin Clancy": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.010590195145168972
+   },
+   "H\u00e9lder Filipe Cl\u00e1udio Carvalho": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Aleksey Sukhoy": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": -0.02225130890052355
+   },
+   "Ingmar Oostrom": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.019415357766143115
+   },
+   "Farai Hallam": {
+    "n": 7,
+    "raw": 1.0,
+    "eff": 0.03020166763622262
+   },
+   "Eder Mallo Fern\u00e1ndez": {
+    "n": 6,
+    "raw": 1.0,
+    "eff": 0.026882803060813545
+   },
+   "Max Burda": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.015194627816981568
+   },
+   "Marc-Philipp Eckermann": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Wojciech Myc": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.034864350309376485
+   },
+   "Batuhan Kolak": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": -0.016701570680628254
+   },
+   "Jan Boterberg": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": -0.02225130890052355
+   },
+   "Manuel Jes\u00fas Orellana Cid": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.02329842931937174
+   },
+   "Ricardo De Burgos Bengoetxea": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Serdar G\u00f6z\u00fcb\u00fcy\u00fck": {
+    "n": 9,
+    "raw": 0.8888888888888888,
+    "eff": 0.0016699765300595788
+   },
+   "Danny Desmond Makkelie": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Martin van den Kerkhof": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": -0.016701570680628254
+   },
+   "Ben Speedie": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.02329842931937174
+   },
+   "Lewis Smith": {
+    "n": 6,
+    "raw": 0.8333333333333334,
+    "eff": -0.01157873540072491
+   },
+   "Adam Herczeg": {
+    "n": 7,
+    "raw": 1.0,
+    "eff": 0.03020166763622262
+   },
+   "Tim Robinson": {
+    "n": 6,
+    "raw": 1.0,
+    "eff": 0.026882803060813545
+   },
+   "Oliver Langford": {
+    "n": 6,
+    "raw": 0.8333333333333334,
+    "eff": -0.01157873540072491
+   },
+   "William James Finnie": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.04207180254300673
+   },
+   "Gavin Ward": {
+    "n": 6,
+    "raw": 0.8333333333333334,
+    "eff": -0.01157873540072491
+   },
+   "Robert Madley": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.019415357766143115
+   },
+   "Andr\u00e9s Fuentes Molina": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.02329842931937174
+   },
+   "D\u00e1maso Arcediano Monescillo": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.015194627816981568
+   },
+   "Rafael S\u00e1nchez L\u00f3pez": {
+    "n": 6,
+    "raw": 0.8333333333333334,
+    "eff": -0.01157873540072491
+   },
+   "Manuel \u00c1ngel P\u00e9rez Hern\u00e1ndez": {
+    "n": 6,
+    "raw": 1.0,
+    "eff": 0.026882803060813545
+   },
+   "Justin Joel Hasmann": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Lukas Benen": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.015194627816981568
+   },
+   "Tom Bauer": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.019415357766143115
+   },
+   "Richard Hempel": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.019415357766143115
+   },
+   "Mateusz Jenda": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.034864350309376485
+   },
+   "Cihan Ayd\u0131n": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.015194627816981568
+   },
+   "G\u00fcrcan Hasova": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.015194627816981568
+   },
+   "O\u011fuzhan Aksu": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.034864350309376485
+   },
+   "Yasin Kol": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": -0.02225130890052355
+   },
+   "Nicolas Laforge": {
+    "n": 5,
+    "raw": 0.6,
+    "eff": -0.05670157068062827
+   },
+   "Miguel Sesma Espinosa": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.02329842931937174
+   },
+   "Carlos Mu\u00f1iz Mu\u00f1oz": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.019415357766143115
+   },
+   "Jeroen Manschot": {
+    "n": 6,
+    "raw": 0.8333333333333334,
+    "eff": -0.01157873540072491
+   },
+   "Bruno Jos\u00e9 Ribeiro Pires Costa": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Andr\u00e9 Filipe Domingues Narciso": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Joshua Smith": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Matt Donohue": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.02329842931937174
+   },
+   "Jos\u00e9 Luis Guzm\u00e1n Mansilla": {
+    "n": 6,
+    "raw": 0.6666666666666666,
+    "eff": -0.05004027386226339
+   },
+   "Daniel Miranda Bola\u00f1o": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.02329842931937174
+   },
+   "Olatz Rivera Olmedo": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.02329842931937174
+   },
+   "Iosu Galech Apeztegu\u00eda": {
+    "n": 6,
+    "raw": 1.0,
+    "eff": 0.026882803060813545
+   },
+   "Konrad Oldhfer": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Timo Gansloweit": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.015194627816981568
+   },
+   "Florian Lechner": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": -0.02828363305258365
+   },
+   "Halil Umut Meler": {
+    "n": 7,
+    "raw": 0.8571428571428571,
+    "eff": -0.006835369400814425
+   },
+   "O\u011fuzhan \u00c7ak\u0131r": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Mehmet T\u00fcrkmen": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": -0.02225130890052355
+   },
+   "Bram Van Driessche": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Nathan Verboomen": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": -0.016701570680628254
+   },
+   "Francisco Jos\u00e9 Hern\u00e1ndez Maeso": {
+    "n": 5,
+    "raw": 0.6,
+    "eff": -0.05670157068062827
+   },
+   "Jo\u00e3o Pinheiro": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": -0.016701570680628254
+   },
+   "Andrew Kitchen": {
+    "n": 7,
+    "raw": 1.0,
+    "eff": 0.03020166763622262
+   },
+   "Abraham Dom\u00ednguez Cervantes": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.02329842931937174
+   },
+   "Alejandro Ojaos Valera": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.02329842931937174
+   },
+   "Kadir Saglam": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Adri\u00e1n Cordero Vega": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.015194627816981568
+   },
+   "Jos\u00e9 Luis Munuera Montero": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": -0.016701570680628254
+   },
+   "Thomas Bramall": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": -0.016701570680628254
+   },
+   "Isidro D\u00edaz de Mera Escuderos": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.02329842931937174
+   },
+   "Ruddy Buquet": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.019415357766143115
+   },
+   "Germ\u00e1n Cid Camacho": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.02329842931937174
+   },
+   "Cagdas Altay": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.034864350309376485
+   },
+   "Robert Jones": {
+    "n": 7,
+    "raw": 0.8571428571428571,
+    "eff": -0.006835369400814425
+   },
+   "Michael Oliver": {
+    "n": 9,
+    "raw": 0.8888888888888888,
+    "eff": 0.0016699765300595788
+   },
+   "Darren England": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.02329842931937174
+   },
+   "Paul Tierney": {
+    "n": 6,
+    "raw": 0.6666666666666666,
+    "eff": -0.05004027386226339
+   },
+   "C\u00e9sar Soto Grado": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.015194627816981568
+   },
+   "Jos\u00e9 Mar\u00eda S\u00e1nchez Mart\u00ednez": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": -0.016701570680628254
+   },
+   "Jes\u00fas Gil Manzano": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.02329842931937174
+   },
+   "Livio Marinelli": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.019415357766143115
+   },
+   "Marco Di Bello": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.019415357766143115
+   },
+   "Daniele Perenzoni": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.019415357766143115
+   },
+   "Alberto Arena": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": -0.02225130890052355
+   },
+   "Aur\u00e9lien Petit": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": -0.02828363305258365
+   },
+   "Romain Lissorgue": {
+    "n": 3,
+    "raw": 0.3333333333333333,
+    "eff": -0.07176189392214888
+   },
+   "Marc Bollengier": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.015194627816981568
+   },
+   "Guillaume Paradis": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.019415357766143115
+   },
+   "Mathieu Vernice": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": -0.02225130890052355
+   },
+   "Dennis Higler": {
+    "n": 5,
+    "raw": 0.4,
+    "eff": -0.09670157068062826
+   },
+   "Richard Martens": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.015194627816981568
+   },
+   "Lu\u00eds Carlos Mateus Filipe": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.015194627816981568
+   },
+   "F\u00e1bio Ver\u00edssimo": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.019415357766143115
+   },
+   "Carlos Macedo": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.019415357766143115
+   },
+   "Sam Allison": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.02329842931937174
+   },
+   "Edward Duckworth": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.019415357766143115
+   },
+   "Will Finnie": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.015194627816981568
+   },
+   "Steve Martin": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.015194627816981568
+   },
+   "Ruebyn Ricardo": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.02329842931937174
+   },
+   "Tom Reeves": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.019415357766143115
+   },
+   "Tony Harrington": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.02329842931937174
+   },
+   "Elliot Bell": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.02329842931937174
+   },
+   "John Busby": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.02329842931937174
+   },
+   "Tom Nield": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": -0.016701570680628254
+   },
+   "Gorka Etayo Herrera": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.02329842931937174
+   },
+   "Daniel Palencia Caballero": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.02329842931937174
+   },
+   "Salvador Lax Franco": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.02329842931937174
+   },
+   "Pablo Morales Moreno": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.02329842931937174
+   },
+   "Paride Tremolada": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.019415357766143115
+   },
+   "Edoardo Mazzoni": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": -0.02225130890052355
+   },
+   "Maria Ferrieri Caputi": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.010590195145168972
+   },
+   "Mattia Drigo": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": -0.02828363305258365
+   },
+   "Andrea Calzavara": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.019415357766143115
+   },
+   "Sergei Ivanov": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Atilla Karaoglan": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.010590195145168972
+   },
+   "Fatih Tokail": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.010590195145168972
+   },
+   "\u00d6mer Faruk Turtay": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Stuart Attwell": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.019415357766143115
+   },
+   "Peter Bankes": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.019415357766143115
+   },
+   "Jarred Gillett": {
+    "n": 7,
+    "raw": 1.0,
+    "eff": 0.03020166763622262
+   },
+   "Juan Mart\u00ednez Munuera": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": -0.016701570680628254
+   },
+   "Alejandro Quintero Gonz\u00e1lez": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": -0.02225130890052355
+   },
+   "Alejandro Jos\u00e9 Hern\u00e1ndez Hern\u00e1ndez": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.02329842931937174
+   },
+   "Luca Zufferli": {
+    "n": 4,
+    "raw": 0.5,
+    "eff": -0.06391797556719021
+   },
+   "Valerio Crezzini": {
+    "n": 3,
+    "raw": 0.3333333333333333,
+    "eff": -0.07176189392214888
+   },
+   "Giovanni Ayroldi": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.019415357766143115
+   },
+   "Antonio Rapuano": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.019415357766143115
+   },
+   "Bastien Dechepy": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.019415357766143115
+   },
+   "Jeremy Stinat": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": -0.016701570680628254
+   },
+   "Jeremie Pignard": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Danny Makkelie": {
+    "n": 6,
+    "raw": 0.6666666666666666,
+    "eff": -0.05004027386226339
+   },
+   "Iancu Vasilica": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.015194627816981568
+   },
+   "Pedro Ramalho": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.015194627816981568
+   },
+   "Anthony Backhouse": {
+    "n": 6,
+    "raw": 0.8333333333333334,
+    "eff": -0.01157873540072491
+   },
+   "Alejandro Morilla Turri\u00f3n": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.02329842931937174
+   },
+   "Marta Huerta de Aza": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.015194627816981568
+   },
+   "Gonzalo Romero Freixas": {
+    "n": 6,
+    "raw": 1.0,
+    "eff": 0.026882803060813545
+   },
+   "Juan Gordillo Escamilla": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.019415357766143115
+   },
+   "Marco Di Loreto": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.019415357766143115
+   },
+   "Juan Luca Sacchi": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.02329842931937174
+   },
+   "Mario Perri": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.02329842931937174
+   },
+   "Giuseppe Collu": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.019415357766143115
+   },
+   "Evgeniy Bulanov": {
+    "n": 3,
+    "raw": 0.3333333333333333,
+    "eff": -0.07176189392214888
+   },
+   "Vasily Kazartsev": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.010590195145168972
+   },
+   "Lukasz Kuzma": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.010590195145168972
+   },
+   "Resat Onur Coskunses": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Ali Sansalan": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Adnan Deniz Kayatepe": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.04207180254300673
+   },
+   "Bert Verbeke": {
+    "n": 5,
+    "raw": 0.6,
+    "eff": -0.05670157068062827
+   },
+   "John Brooks": {
+    "n": 7,
+    "raw": 0.8571428571428571,
+    "eff": -0.006835369400814425
+   },
+   "Javier Alberola Rojas": {
+    "n": 7,
+    "raw": 1.0,
+    "eff": 0.03020166763622262
+   },
+   "Victor Garc\u00eda Verdura": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Fabio Maresca": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.019415357766143115
+   },
+   "Matteo Marcenaro": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.019415357766143115
+   },
+   "Anzhony Rodrigues": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.010590195145168972
+   },
+   "Sa\u00fal Ais Reig": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.019415357766143115
+   },
+   "Jos\u00e9 Antonio S\u00e1nchez Villalobos": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.02329842931937174
+   },
+   "Umit Ozturk": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.010590195145168972
+   },
+   "Jon Ander Gonz\u00e1lez Esteban": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.02329842931937174
+   },
+   "Mateo Busquets Ferrer": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.02329842931937174
+   },
+   "Miguel \u00c1ngel Ortiz Arias": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.019415357766143115
+   },
+   "Andy Madley": {
+    "n": 6,
+    "raw": 0.8333333333333334,
+    "eff": -0.01157873540072491
+   },
+   "S\u00f6ren Storks": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.019415357766143115
+   },
+   "Gianluca Manganiello": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": -0.02828363305258365
+   },
+   "Eric Wattellier": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.02329842931937174
+   },
+   "Bruno Pires Costa": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.010590195145168972
+   },
+   "Felix Wagner": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.010590195145168972
+   },
+   "Pavel Shadyhanov": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Samuel Barrott": {
+    "n": 6,
+    "raw": 0.6666666666666666,
+    "eff": -0.05004027386226339
+   },
+   "Josh Smith": {
+    "n": 6,
+    "raw": 1.0,
+    "eff": 0.026882803060813545
+   },
+   "Chris Kavanagh": {
+    "n": 6,
+    "raw": 1.0,
+    "eff": 0.026882803060813545
+   },
+   "Ricardo de Burgos Bengoetxea": {
+    "n": 6,
+    "raw": 1.0,
+    "eff": 0.026882803060813545
+   },
+   "Robert Hartmann": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.019415357766143115
+   },
+   "Bastian Dankert": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.010590195145168972
+   },
+   "Tobias Stieler": {
+    "n": 6,
+    "raw": 0.6666666666666666,
+    "eff": -0.05004027386226339
+   },
+   "Felix Zwayer": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": -0.02225130890052355
+   },
+   "Florian Badst\u00fcbner": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": -0.016701570680628254
+   },
+   "Davide Di Marco": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.010590195145168972
+   },
+   "Sven Jablonski": {
+    "n": 6,
+    "raw": 0.6666666666666666,
+    "eff": -0.05004027386226339
+   },
+   "Claudio Giuseppe Allegretta": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": -0.02828363305258365
+   },
+   "Francesco Fourneau": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.015194627816981568
+   },
+   "Jerome Brisard": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Fran\u00e7ois Letexier": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.02329842931937174
+   },
+   "Azzedine Souifi": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.034864350309376485
+   },
+   "Hakim Ben El Hadj": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.019415357766143115
+   },
+   "Gustavo Correia": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.02329842931937174
+   },
+   "Diogo Rosa": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Miguel Nogueira": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": -0.02828363305258365
+   },
+   "James Bell": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.015194627816981568
+   },
+   "David Webb": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": -0.02225130890052355
+   },
+   "Andrea Zanotti": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.010590195145168972
+   },
+   "Giuseppe Mucera": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": -0.02225130890052355
+   },
+   "Patrick Schwengers": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.010590195145168972
+   },
+   "Felix Weller": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": -0.02828363305258365
+   },
+   "Pawel Raczkowski": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Piotr Lasyk": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": -0.02225130890052355
+   },
+   "Gurcan Hasova": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Kevin van Damme": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.015194627816981568
+   },
+   "Massimiliano Ledda": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.010590195145168972
+   },
+   "Michael Salisbury": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.019415357766143115
+   },
+   "Craig Pawson": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.019415357766143115
+   },
+   "Sascha Stegemann": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.015194627816981568
+   },
+   "Daniel Siebert": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.02329842931937174
+   },
+   "Michael Fabbri": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.015194627816981568
+   },
+   "Luca Pairetto": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": -0.02828363305258365
+   },
+   "Ermanno Feliciani": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.015194627816981568
+   },
+   "Willy Delajod": {
+    "n": 7,
+    "raw": 0.8571428571428571,
+    "eff": -0.006835369400814425
+   },
+   "Lu\u00eds Godinho": {
+    "n": 6,
+    "raw": 1.0,
+    "eff": 0.026882803060813545
+   },
+   "David Silva": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.015194627816981568
+   },
+   "Andrea Colombo": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.02329842931937174
+   },
+   "Timo Gerach": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.010590195145168972
+   },
+   "Danil Kashirin": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Jaroslaw Przybyl": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.04207180254300673
+   },
+   "Cihan Aydin": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Simon Bourdeaud'hui": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": -0.02225130890052355
+   },
+   "Bram van Driessche": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.015194627816981568
+   },
+   "Matthew MacDermid": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.015194627816981568
+   },
+   "Daniele Doveri": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": -0.02225130890052355
+   },
+   "Daniele Chiffi": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.019415357766143115
+   },
+   "H\u00e9lder Carvalho": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.04207180254300673
+   },
+   "Andr\u00e9 Narciso": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.010590195145168972
+   },
+   "V\u00edctor Garc\u00eda Verdura": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": -0.02225130890052355
+   },
+   "Christian Dingert": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.015194627816981568
+   },
+   "Marco Guida": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": -0.02225130890052355
+   },
+   "J\u00e9r\u00f4me Brisard": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.02329842931937174
+   },
+   "Stan Teuben": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.010590195145168972
+   },
+   "Ant\u00f3nio Nobre": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.010590195145168972
+   },
+   "Daniel Stefanski": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.019415357766143115
+   },
+   "Kadir Sa\u011flam": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.010590195145168972
+   },
+   "Robin Braun": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": -0.02828363305258365
+   },
+   "Robert Schr\u00f6der": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.015194627816981568
+   },
+   "Dr. Matthias J\u00f6llenbeck": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.010590195145168972
+   },
+   "Benjamin Brand": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": -0.02828363305258365
+   },
+   "Martin Petersen": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.015194627816981568
+   },
+   "Davide Massa": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": -0.016701570680628254
+   },
+   "Simone Sozza": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.019415357766143115
+   },
+   "J\u00e9r\u00e9mie Pignard": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.019415357766143115
+   },
+   "S\u00e9rgio Guelho": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": -0.02828363305258365
+   },
+   "Vitor Ferreira": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.010590195145168972
+   },
+   "Lothar D'Hondt": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": -0.02225130890052355
+   },
+   "Dan McFarlane": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Luis Bestard Servera": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.019415357766143115
+   },
+   "Tobias Reichel": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.010590195145168972
+   },
+   "Daniel Schlager": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": -0.02828363305258365
+   },
+   "Federico La Penna": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": -0.02828363305258365
+   },
+   "Maurizio Mariani": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.010590195145168972
+   },
+   "Cl\u00e9ment Turpin": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.019415357766143115
+   },
+   "Geoffrey Kubler": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.010590195145168972
+   },
+   "Konrad Oldhafer": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.010590195145168972
+   },
+   "Re\u015fat Onur Co\u015fkunses": {
+    "n": 3,
+    "raw": 0.3333333333333333,
+    "eff": -0.07176189392214888
+   },
+   "Davut Dakul \u00c7elik": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.019415357766143115
+   },
+   "O\u011fuzhan \u00c7akir": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.015194627816981568
+   },
+   "\u00c7a\u011fda\u015f Altay": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.034864350309376485
+   },
+   "Yusuke Araki": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": -0.02828363305258365
+   },
+   "Wim Smet": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.010590195145168972
+   },
+   "Matteo Marchetti": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": -0.02828363305258365
+   },
+   "Albert R\u00f3\u017cycki": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Abdullah Ta\u015fk\u0131nsoy": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.015194627816981568
+   },
+   "\u00dcmit \u00d6zt\u00fcrk": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.010590195145168972
+   },
+   "Sandro Sch\u00e4rer": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.010590195145168972
+   },
+   "Georgi Kabakov": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.015194627816981568
+   },
+   "Nenad Minakovi\u0107": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.010590195145168972
+   },
+   "Espen Esk\u00e5s": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.010590195145168972
+   },
+   "Mykola Balakin": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.034864350309376485
+   },
+   "Rade Obrenovi\u0107": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.010590195145168972
+   },
+   "Vasilis Fotias": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.010590195145168972
+   },
+   "Vladimir Moskalev": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Miguel Fonseca": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Jos\u00e9 Bessa": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Thomas Parsons": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.010590195145168972
+   },
+   "Stephen Martin": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Marc Philip Eckermann": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.010590195145168972
+   },
+   "Mikhail Plisko": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Ali \u015eansalan": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.010590195145168972
+   },
+   "Ozan Erg\u00fcn": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": -0.02828363305258365
+   },
+   "Kevin Bonacina": {
+    "n": 2,
+    "raw": 0.0,
+    "eff": -0.08031889576392194
+   },
+   "Jo\u00e3o Ferreira": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.015194627816981568
+   },
+   "Justin Hasmann": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.010590195145168972
+   },
+   "Atilla Karao\u011flan": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.019415357766143115
+   },
+   "F\u00e1bio Melo": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Balazs Berke": {
+    "n": 2,
+    "raw": 0.0,
+    "eff": -0.08031889576392194
+   },
+   "Manfredas Lukjan\u010dukas": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.010590195145168972
+   },
+   "Miguel \u00c1ngel Chua Ortiz": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Mohammed Al Emara": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.010590195145168972
+   },
+   "Michal O\u010den\u00e1\u0161": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Oleksiy Derevinskyi": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.010590195145168972
+   },
+   "Ond\u0159ej Berka": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.010590195145168972
+   },
+   "Yigal Frid": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Patrik Kolari\u0107": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.010590195145168972
+   },
+   "Christian Ballweg": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Rosario Abisso": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.010590195145168972
+   },
+   "Alper Akarsu": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.010590195145168972
+   },
+   "Simone Galip\u00f2": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Cl\u00e1udio Pereira": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Thomas Kirk": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.015194627816981568
+   },
+   "Niccol\u00f2 Turrini": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Sebastian Gishamer": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.034864350309376485
+   },
+   "Igor Paja\u010d": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Rohit Saggi": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Matthew Corlett": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Donatas Rum\u0161as": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Urs Schnyder": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Irfan Peljto": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Ivan Kru\u017eliak": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Goga Kikacheishvili": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Martin Mato\u0161a": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Hora\u021biu Fe\u0219nic": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Milo\u0161 Milanovi\u0107": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Elchin M\u0259siyev": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Nikola Dabanovi\u0107": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Radoslav Gidzhenov": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Enea Jorgji": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Orel Grinfeeld": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Anastasios Papapetrou": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "\u018fliyar Aghayev": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.04207180254300673
+   },
+   "Bulat Sariyev": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Christian-Petru Ciochirca": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Ishmael Barbara": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Antoniou Menelaus": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Edgars Ma\u013ccevs": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Genc Nuza": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Florjan Lata": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Bence Csonka": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Mikkel Redder": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.04207180254300673
+   },
+   "Dalibor \u010cern\u00fd": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "David \u0160majc": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Stefan Ebner": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.04207180254300673
+   },
+   "Simon Hooper": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Dario Madonia": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Sebastian Krasny": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Erdem Merto\u011flu": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.04207180254300673
+   },
+   "Alpaslan \u015een": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Istv\u00e1n Kov\u00e1cs": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Morten Krogh": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Radu Mari\u00e1n Petrescu": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "\u00cdvar Kristj\u00e1nsson": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Ante \u010culina": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Juxhin Xhaja": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Andris Treimanis": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Marian Barbu": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Christos Vergetis": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Sigurd Smehus Kringstad": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Pavle Ili\u0107": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   },
+   "Sergey Cheban": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.00554724507604089
+   }
+  }
+ },
+ "2.5": {
+  "base": 0.7480366492146597,
+  "table": {
+   "Adam Ladeb\u00e4ck": {
+    "n": 11,
+    "raw": 0.36363636363636365,
+    "eff": -0.1364001013342341
+   },
+   "Erik Mattsson": {
+    "n": 8,
+    "raw": 0.25,
+    "eff": -0.14229618548990278
+   },
+   "Fredrik Klitte": {
+    "n": 10,
+    "raw": 0.7,
+    "eff": -0.016012216404886592
+   },
+   "Kristoffer Karlsson": {
+    "n": 10,
+    "raw": 0.4,
+    "eff": -0.11601221640488657
+   },
+   "Richard Sundell": {
+    "n": 8,
+    "raw": 0.625,
+    "eff": -0.03515332834704563
+   },
+   "Mohammed Al Hakim": {
+    "n": 11,
+    "raw": 0.6363636363636364,
+    "eff": -0.03962590778584701
+   },
+   "Victor Wolf": {
+    "n": 10,
+    "raw": 0.6,
+    "eff": -0.04934554973821992
+   },
+   "Oscar Johnson": {
+    "n": 11,
+    "raw": 0.8181818181818182,
+    "eff": 0.024890221246411083
+   },
+   "Granit Maqedonci": {
+    "n": 9,
+    "raw": 0.7777777777777778,
+    "eff": 0.009230005416140087
+   },
+   "Adi Aganovic": {
+    "n": 9,
+    "raw": 0.5555555555555556,
+    "eff": -0.05973551182523922
+   },
+   "Joakim Sars": {
+    "n": 8,
+    "raw": 0.75,
+    "eff": 0.0005609573672400764
+   },
+   "Ivan Abrosimov": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": 0.010392670157068063
+   },
+   "Bartosz Frankowski": {
+    "n": 6,
+    "raw": 0.8333333333333334,
+    "eff": 0.01968385018123238
+   },
+   "Jaros\u0142aw Przyby\u0142": {
+    "n": 6,
+    "raw": 0.8333333333333334,
+    "eff": 0.01968385018123238
+   },
+   "Andrey Prokopov": {
+    "n": 7,
+    "raw": 0.8571428571428571,
+    "eff": 0.028286794648051165
+   },
+   "Rafael Shafeev": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.050392670157068054
+   },
+   "Igor Kaplenkov": {
+    "n": 3,
+    "raw": 0.3333333333333333,
+    "eff": -0.05409173685408605
+   },
+   "Matvey Zaika": {
+    "n": 3,
+    "raw": 0.3333333333333333,
+    "eff": -0.05409173685408605
+   },
+   "Damian Sylwestrzak": {
+    "n": 6,
+    "raw": 1.0,
+    "eff": 0.058145388642770836
+   },
+   "Marcin Szczerbowicz": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.050392670157068054
+   },
+   "Karol Arys": {
+    "n": 6,
+    "raw": 0.3333333333333333,
+    "eff": -0.09570076520338303
+   },
+   "Nikita Novikov": {
+    "n": 6,
+    "raw": 1.0,
+    "eff": 0.058145388642770836
+   },
+   "Artem Chistyakov": {
+    "n": 6,
+    "raw": 0.8333333333333334,
+    "eff": 0.01968385018123238
+   },
+   "Kirill Levnikov": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.050392670157068054
+   },
+   "Pawe\u0142 Malec": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": -0.010613475984520839
+   },
+   "\u0141ukasz Ku\u017ama": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.050392670157068054
+   },
+   "Pawe\u0142 Raczkowski": {
+    "n": 7,
+    "raw": 0.8571428571428571,
+    "eff": 0.028286794648051165
+   },
+   "Piotr Rzucid\u0142o": {
+    "n": 2,
+    "raw": 0.0,
+    "eff": -0.06800333174678724
+   },
+   "Danil Naboka": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.03286478488504438
+   },
+   "Mateusz Piszczelok": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.03286478488504438
+   },
+   "Tomasz Kwiatkowski": {
+    "n": 5,
+    "raw": 0.6,
+    "eff": -0.02960732984293195
+   },
+   "Nick Walsh": {
+    "n": 7,
+    "raw": 1.0,
+    "eff": 0.06532383168508821
+   },
+   "Evgeni Bulanov": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Sergey Karasev": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.04199389179755671
+   },
+   "Yan Bobrovskiy": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": -0.010613475984520839
+   },
+   "Inal Tanashev": {
+    "n": 7,
+    "raw": 0.8571428571428571,
+    "eff": 0.028286794648051165
+   },
+   "Wojciech My\u0107": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.03286478488504438
+   },
+   "Tomasz Marciniak": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.03286478488504438
+   },
+   "Duncan Nicolson": {
+    "n": 5,
+    "raw": 0.6,
+    "eff": -0.02960732984293195
+   },
+   "David Dickinson": {
+    "n": 6,
+    "raw": 0.8333333333333334,
+    "eff": 0.01968385018123238
+   },
+   "Anton Frolov": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.050392670157068054
+   },
+   "Evgeni Kukulyak": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.02290575916230366
+   },
+   "Stanislav Matveev": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": 0.010392670157068063
+   },
+   "Patryk Gryckiewicz": {
+    "n": 7,
+    "raw": 0.5714285714285714,
+    "eff": -0.0457872794260229
+   },
+   "Szymon Marciniak": {
+    "n": 9,
+    "raw": 0.5555555555555556,
+    "eff": -0.05973551182523922
+   },
+   "John Beaton": {
+    "n": 6,
+    "raw": 0.8333333333333334,
+    "eff": 0.01968385018123238
+   },
+   "Steven McLean": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": 0.010392670157068063
+   },
+   "Matthew McDermid": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.0356207928197457
+   },
+   "Allard Lindhout": {
+    "n": 8,
+    "raw": 0.375,
+    "eff": -0.10658189977561706
+   },
+   "Miguel Andr\u00e9 Monteiro Fonseca": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.022548786292241794
+   },
+   "Wolfgang Haslberger": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.03286478488504438
+   },
+   "Lothar D'hondt": {
+    "n": 2,
+    "raw": 0.0,
+    "eff": -0.06800333174678724
+   },
+   "Robin Hensgens": {
+    "n": 5,
+    "raw": 0.6,
+    "eff": -0.02960732984293195
+   },
+   "Martijn Vos": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": -0.010613475984520839
+   },
+   "Alex Bos": {
+    "n": 5,
+    "raw": 0.2,
+    "eff": -0.10960732984293196
+   },
+   "Erwin Blank": {
+    "n": 4,
+    "raw": 0.5,
+    "eff": -0.04133944153577662
+   },
+   "S\u00e9rgio Jos\u00e9 dos Santos Guelho": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Miguel Bertolo Nogueira": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.02290575916230366
+   },
+   "Jo\u00e3o Ant\u00f3nio Ferreira Gon\u00e7alves": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.02290575916230366
+   },
+   "Felix Prigan": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.03286478488504438
+   },
+   "Michael Bacher": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.04199389179755671
+   },
+   "Felix Bickel": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": 0.00032722513089004457
+   },
+   "Florian Exner": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": 0.010392670157068063
+   },
+   "Eric-Dominic Weisbach": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": 0.010392670157068063
+   },
+   "Sergey Tsyganok": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Vasili Kazartsev": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Marcin Kochanek": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": -0.010613475984520839
+   },
+   "Glenn Nyberg": {
+    "n": 9,
+    "raw": 0.7777777777777778,
+    "eff": 0.009230005416140087
+   },
+   "Anthony Letellier": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": -0.010613475984520839
+   },
+   "Jasper Vergoote": {
+    "n": 7,
+    "raw": 0.42857142857142855,
+    "eff": -0.08282431646305993
+   },
+   "Bert Put": {
+    "n": 4,
+    "raw": 0.5,
+    "eff": -0.04133944153577662
+   },
+   "Ross Hardie": {
+    "n": 4,
+    "raw": 0.5,
+    "eff": -0.04133944153577662
+   },
+   "Calum Scott": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": 0.00032722513089004457
+   },
+   "Jannick van der Laan": {
+    "n": 5,
+    "raw": 0.6,
+    "eff": -0.02960732984293195
+   },
+   "Sander van der Eijk": {
+    "n": 7,
+    "raw": 0.7142857142857143,
+    "eff": -0.008750242388985852
+   },
+   "Joey Kooij": {
+    "n": 7,
+    "raw": 0.5714285714285714,
+    "eff": -0.0457872794260229
+   },
+   "Marc Nagtegaal": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.022548786292241794
+   },
+   "Jos\u00e9 Armando Torres Bessa": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.02290575916230366
+   },
+   "David Rafael Oliveira Silva": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.02290575916230366
+   },
+   "Lu\u00eds Miguel Branco Godinho": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Gustavo Fernandes Correia": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Harm Osmers": {
+    "n": 6,
+    "raw": 0.6666666666666666,
+    "eff": -0.018777688280306102
+   },
+   "Jarno Wienefeld": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": 0.00032722513089004457
+   },
+   "Lars Erbst": {
+    "n": 4,
+    "raw": 0.5,
+    "eff": -0.04133944153577662
+   },
+   "Pavel Kukuyan": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.02290575916230366
+   },
+   "Damian Kos": {
+    "n": 6,
+    "raw": 1.0,
+    "eff": 0.058145388642770836
+   },
+   "Niclas Karlsson": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.0356207928197457
+   },
+   "Michiel Allaerts": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.04199389179755671
+   },
+   "Erik Lambrechts": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": -0.010613475984520839
+   },
+   "Lawrence Visser": {
+    "n": 8,
+    "raw": 1.0,
+    "eff": 0.0719895287958115
+   },
+   "Wesli De Cremer": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": -0.010613475984520839
+   },
+   "Kevin Van Damme": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.022548786292241794
+   },
+   "Ryan Lee": {
+    "n": 5,
+    "raw": 0.4,
+    "eff": -0.06960732984293194
+   },
+   "Don Robertson": {
+    "n": 4,
+    "raw": 0.5,
+    "eff": -0.04133944153577662
+   },
+   "Chris Graham": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.03286478488504438
+   },
+   "Kevin Clancy": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.02290575916230366
+   },
+   "H\u00e9lder Filipe Cl\u00e1udio Carvalho": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Aleksey Sukhoy": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": 0.00032722513089004457
+   },
+   "Ingmar Oostrom": {
+    "n": 4,
+    "raw": 0.5,
+    "eff": -0.04133944153577662
+   },
+   "Farai Hallam": {
+    "n": 7,
+    "raw": 0.7142857142857143,
+    "eff": -0.008750242388985852
+   },
+   "Eder Mallo Fern\u00e1ndez": {
+    "n": 6,
+    "raw": 1.0,
+    "eff": 0.058145388642770836
+   },
+   "Max Burda": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.03286478488504438
+   },
+   "Marc-Philipp Eckermann": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Wojciech Myc": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.022548786292241794
+   },
+   "Batuhan Kolak": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": 0.010392670157068063
+   },
+   "Jan Boterberg": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": 0.00032722513089004457
+   },
+   "Manuel Jes\u00fas Orellana Cid": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.050392670157068054
+   },
+   "Ricardo De Burgos Bengoetxea": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Serdar G\u00f6z\u00fcb\u00fcy\u00fck": {
+    "n": 9,
+    "raw": 0.7777777777777778,
+    "eff": 0.009230005416140087
+   },
+   "Danny Desmond Makkelie": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Martin van den Kerkhof": {
+    "n": 5,
+    "raw": 0.4,
+    "eff": -0.06960732984293194
+   },
+   "Ben Speedie": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": 0.010392670157068063
+   },
+   "Lewis Smith": {
+    "n": 6,
+    "raw": 0.8333333333333334,
+    "eff": 0.01968385018123238
+   },
+   "Adam Herczeg": {
+    "n": 7,
+    "raw": 1.0,
+    "eff": 0.06532383168508821
+   },
+   "Tim Robinson": {
+    "n": 6,
+    "raw": 0.6666666666666666,
+    "eff": -0.018777688280306102
+   },
+   "Oliver Langford": {
+    "n": 6,
+    "raw": 0.6666666666666666,
+    "eff": -0.018777688280306102
+   },
+   "William James Finnie": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.0356207928197457
+   },
+   "Gavin Ward": {
+    "n": 6,
+    "raw": 0.8333333333333334,
+    "eff": 0.01968385018123238
+   },
+   "Robert Madley": {
+    "n": 4,
+    "raw": 0.5,
+    "eff": -0.04133944153577662
+   },
+   "Andr\u00e9s Fuentes Molina": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.050392670157068054
+   },
+   "D\u00e1maso Arcediano Monescillo": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": -0.010613475984520839
+   },
+   "Rafael S\u00e1nchez L\u00f3pez": {
+    "n": 6,
+    "raw": 0.8333333333333334,
+    "eff": 0.01968385018123238
+   },
+   "Manuel \u00c1ngel P\u00e9rez Hern\u00e1ndez": {
+    "n": 6,
+    "raw": 1.0,
+    "eff": 0.058145388642770836
+   },
+   "Justin Joel Hasmann": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.0356207928197457
+   },
+   "Lukas Benen": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.03286478488504438
+   },
+   "Tom Bauer": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.04199389179755671
+   },
+   "Richard Hempel": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": 0.00032722513089004457
+   },
+   "Mateusz Jenda": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.022548786292241794
+   },
+   "Cihan Ayd\u0131n": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.03286478488504438
+   },
+   "G\u00fcrcan Hasova": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": -0.010613475984520839
+   },
+   "O\u011fuzhan Aksu": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.022548786292241794
+   },
+   "Yasin Kol": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": 0.00032722513089004457
+   },
+   "Nicolas Laforge": {
+    "n": 5,
+    "raw": 0.6,
+    "eff": -0.02960732984293195
+   },
+   "Miguel Sesma Espinosa": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.050392670157068054
+   },
+   "Carlos Mu\u00f1iz Mu\u00f1oz": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": 0.00032722513089004457
+   },
+   "Jeroen Manschot": {
+    "n": 6,
+    "raw": 0.8333333333333334,
+    "eff": 0.01968385018123238
+   },
+   "Bruno Jos\u00e9 Ribeiro Pires Costa": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Andr\u00e9 Filipe Domingues Narciso": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Joshua Smith": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Matt Donohue": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.050392670157068054
+   },
+   "Jos\u00e9 Luis Guzm\u00e1n Mansilla": {
+    "n": 6,
+    "raw": 0.6666666666666666,
+    "eff": -0.018777688280306102
+   },
+   "Daniel Miranda Bola\u00f1o": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.050392670157068054
+   },
+   "Olatz Rivera Olmedo": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.050392670157068054
+   },
+   "Iosu Galech Apeztegu\u00eda": {
+    "n": 6,
+    "raw": 1.0,
+    "eff": 0.058145388642770836
+   },
+   "Konrad Oldhfer": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Timo Gansloweit": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.03286478488504438
+   },
+   "Florian Lechner": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": -0.010613475984520839
+   },
+   "Halil Umut Meler": {
+    "n": 7,
+    "raw": 0.8571428571428571,
+    "eff": 0.028286794648051165
+   },
+   "O\u011fuzhan \u00c7ak\u0131r": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Mehmet T\u00fcrkmen": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": 0.00032722513089004457
+   },
+   "Bram Van Driessche": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Nathan Verboomen": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": 0.010392670157068063
+   },
+   "Francisco Jos\u00e9 Hern\u00e1ndez Maeso": {
+    "n": 5,
+    "raw": 0.6,
+    "eff": -0.02960732984293195
+   },
+   "Jo\u00e3o Pinheiro": {
+    "n": 5,
+    "raw": 0.6,
+    "eff": -0.02960732984293195
+   },
+   "Andrew Kitchen": {
+    "n": 7,
+    "raw": 0.7142857142857143,
+    "eff": -0.008750242388985852
+   },
+   "Abraham Dom\u00ednguez Cervantes": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.050392670157068054
+   },
+   "Alejandro Ojaos Valera": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.050392670157068054
+   },
+   "Kadir Saglam": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Adri\u00e1n Cordero Vega": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.03286478488504438
+   },
+   "Jos\u00e9 Luis Munuera Montero": {
+    "n": 5,
+    "raw": 0.6,
+    "eff": -0.02960732984293195
+   },
+   "Thomas Bramall": {
+    "n": 5,
+    "raw": 0.6,
+    "eff": -0.02960732984293195
+   },
+   "Isidro D\u00edaz de Mera Escuderos": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.050392670157068054
+   },
+   "Ruddy Buquet": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": 0.00032722513089004457
+   },
+   "Germ\u00e1n Cid Camacho": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": 0.010392670157068063
+   },
+   "Cagdas Altay": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.022548786292241794
+   },
+   "Robert Jones": {
+    "n": 7,
+    "raw": 0.8571428571428571,
+    "eff": 0.028286794648051165
+   },
+   "Michael Oliver": {
+    "n": 9,
+    "raw": 0.5555555555555556,
+    "eff": -0.05973551182523922
+   },
+   "Darren England": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": 0.010392670157068063
+   },
+   "Paul Tierney": {
+    "n": 6,
+    "raw": 0.6666666666666666,
+    "eff": -0.018777688280306102
+   },
+   "C\u00e9sar Soto Grado": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": -0.010613475984520839
+   },
+   "Jos\u00e9 Mar\u00eda S\u00e1nchez Mart\u00ednez": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": 0.010392670157068063
+   },
+   "Jes\u00fas Gil Manzano": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.050392670157068054
+   },
+   "Livio Marinelli": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": 0.00032722513089004457
+   },
+   "Marco Di Bello": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.04199389179755671
+   },
+   "Daniele Perenzoni": {
+    "n": 4,
+    "raw": 0.5,
+    "eff": -0.04133944153577662
+   },
+   "Alberto Arena": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": 0.00032722513089004457
+   },
+   "Aur\u00e9lien Petit": {
+    "n": 3,
+    "raw": 0.3333333333333333,
+    "eff": -0.05409173685408605
+   },
+   "Romain Lissorgue": {
+    "n": 3,
+    "raw": 0.3333333333333333,
+    "eff": -0.05409173685408605
+   },
+   "Marc Bollengier": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.03286478488504438
+   },
+   "Guillaume Paradis": {
+    "n": 4,
+    "raw": 0.5,
+    "eff": -0.04133944153577662
+   },
+   "Mathieu Vernice": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": 0.00032722513089004457
+   },
+   "Dennis Higler": {
+    "n": 5,
+    "raw": 0.4,
+    "eff": -0.06960732984293194
+   },
+   "Richard Martens": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": -0.010613475984520839
+   },
+   "Lu\u00eds Carlos Mateus Filipe": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.03286478488504438
+   },
+   "F\u00e1bio Ver\u00edssimo": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.04199389179755671
+   },
+   "Carlos Macedo": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": 0.00032722513089004457
+   },
+   "Sam Allison": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.050392670157068054
+   },
+   "Edward Duckworth": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.04199389179755671
+   },
+   "Will Finnie": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.03286478488504438
+   },
+   "Steve Martin": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.03286478488504438
+   },
+   "Ruebyn Ricardo": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": 0.010392670157068063
+   },
+   "Tom Reeves": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": 0.00032722513089004457
+   },
+   "Tony Harrington": {
+    "n": 5,
+    "raw": 0.6,
+    "eff": -0.02960732984293195
+   },
+   "Elliot Bell": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": 0.010392670157068063
+   },
+   "John Busby": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": 0.010392670157068063
+   },
+   "Tom Nield": {
+    "n": 5,
+    "raw": 0.6,
+    "eff": -0.02960732984293195
+   },
+   "Gorka Etayo Herrera": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.050392670157068054
+   },
+   "Daniel Palencia Caballero": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": 0.010392670157068063
+   },
+   "Salvador Lax Franco": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": 0.010392670157068063
+   },
+   "Pablo Morales Moreno": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": 0.010392670157068063
+   },
+   "Paride Tremolada": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.04199389179755671
+   },
+   "Edoardo Mazzoni": {
+    "n": 4,
+    "raw": 0.25,
+    "eff": -0.08300610820244328
+   },
+   "Maria Ferrieri Caputi": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.02290575916230366
+   },
+   "Mattia Drigo": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": -0.010613475984520839
+   },
+   "Andrea Calzavara": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": 0.00032722513089004457
+   },
+   "Sergei Ivanov": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Atilla Karaoglan": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.02290575916230366
+   },
+   "Fatih Tokail": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.02290575916230366
+   },
+   "\u00d6mer Faruk Turtay": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.0356207928197457
+   },
+   "Stuart Attwell": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.04199389179755671
+   },
+   "Peter Bankes": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.04199389179755671
+   },
+   "Jarred Gillett": {
+    "n": 7,
+    "raw": 0.8571428571428571,
+    "eff": 0.028286794648051165
+   },
+   "Juan Mart\u00ednez Munuera": {
+    "n": 5,
+    "raw": 0.6,
+    "eff": -0.02960732984293195
+   },
+   "Alejandro Quintero Gonz\u00e1lez": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": 0.00032722513089004457
+   },
+   "Alejandro Jos\u00e9 Hern\u00e1ndez Hern\u00e1ndez": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": 0.010392670157068063
+   },
+   "Luca Zufferli": {
+    "n": 4,
+    "raw": 0.5,
+    "eff": -0.04133944153577662
+   },
+   "Valerio Crezzini": {
+    "n": 3,
+    "raw": 0.0,
+    "eff": -0.09756999772365127
+   },
+   "Giovanni Ayroldi": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.04199389179755671
+   },
+   "Antonio Rapuano": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.04199389179755671
+   },
+   "Bastien Dechepy": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.04199389179755671
+   },
+   "Jeremy Stinat": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": 0.010392670157068063
+   },
+   "Jeremie Pignard": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Danny Makkelie": {
+    "n": 6,
+    "raw": 0.3333333333333333,
+    "eff": -0.09570076520338303
+   },
+   "Iancu Vasilica": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.03286478488504438
+   },
+   "Pedro Ramalho": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": -0.010613475984520839
+   },
+   "Anthony Backhouse": {
+    "n": 6,
+    "raw": 0.8333333333333334,
+    "eff": 0.01968385018123238
+   },
+   "Alejandro Morilla Turri\u00f3n": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": 0.010392670157068063
+   },
+   "Marta Huerta de Aza": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.03286478488504438
+   },
+   "Gonzalo Romero Freixas": {
+    "n": 6,
+    "raw": 0.8333333333333334,
+    "eff": 0.01968385018123238
+   },
+   "Juan Gordillo Escamilla": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.04199389179755671
+   },
+   "Marco Di Loreto": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.04199389179755671
+   },
+   "Juan Luca Sacchi": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": 0.010392670157068063
+   },
+   "Mario Perri": {
+    "n": 5,
+    "raw": 0.6,
+    "eff": -0.02960732984293195
+   },
+   "Giuseppe Collu": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.04199389179755671
+   },
+   "Evgeniy Bulanov": {
+    "n": 3,
+    "raw": 0.3333333333333333,
+    "eff": -0.05409173685408605
+   },
+   "Vasily Kazartsev": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.02290575916230366
+   },
+   "Lukasz Kuzma": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.02290575916230366
+   },
+   "Resat Onur Coskunses": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Ali Sansalan": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Adnan Deniz Kayatepe": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.0356207928197457
+   },
+   "Bert Verbeke": {
+    "n": 5,
+    "raw": 0.6,
+    "eff": -0.02960732984293195
+   },
+   "John Brooks": {
+    "n": 7,
+    "raw": 0.7142857142857143,
+    "eff": -0.008750242388985852
+   },
+   "Javier Alberola Rojas": {
+    "n": 7,
+    "raw": 1.0,
+    "eff": 0.06532383168508821
+   },
+   "Victor Garc\u00eda Verdura": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Fabio Maresca": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": 0.00032722513089004457
+   },
+   "Matteo Marcenaro": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": 0.00032722513089004457
+   },
+   "Anzhony Rodrigues": {
+    "n": 2,
+    "raw": 0.0,
+    "eff": -0.06800333174678724
+   },
+   "Sa\u00fal Ais Reig": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.04199389179755671
+   },
+   "Jos\u00e9 Antonio S\u00e1nchez Villalobos": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.050392670157068054
+   },
+   "Umit Ozturk": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.022548786292241794
+   },
+   "Jon Ander Gonz\u00e1lez Esteban": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": 0.010392670157068063
+   },
+   "Mateo Busquets Ferrer": {
+    "n": 5,
+    "raw": 0.6,
+    "eff": -0.02960732984293195
+   },
+   "Miguel \u00c1ngel Ortiz Arias": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.04199389179755671
+   },
+   "Andy Madley": {
+    "n": 6,
+    "raw": 0.6666666666666666,
+    "eff": -0.018777688280306102
+   },
+   "S\u00f6ren Storks": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.04199389179755671
+   },
+   "Gianluca Manganiello": {
+    "n": 3,
+    "raw": 0.3333333333333333,
+    "eff": -0.05409173685408605
+   },
+   "Eric Wattellier": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": 0.010392670157068063
+   },
+   "Bruno Pires Costa": {
+    "n": 2,
+    "raw": 0.0,
+    "eff": -0.06800333174678724
+   },
+   "Felix Wagner": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.02290575916230366
+   },
+   "Pavel Shadyhanov": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Samuel Barrott": {
+    "n": 6,
+    "raw": 0.6666666666666666,
+    "eff": -0.018777688280306102
+   },
+   "Josh Smith": {
+    "n": 6,
+    "raw": 0.8333333333333334,
+    "eff": 0.01968385018123238
+   },
+   "Chris Kavanagh": {
+    "n": 6,
+    "raw": 1.0,
+    "eff": 0.058145388642770836
+   },
+   "Ricardo de Burgos Bengoetxea": {
+    "n": 6,
+    "raw": 0.6666666666666666,
+    "eff": -0.018777688280306102
+   },
+   "Robert Hartmann": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.04199389179755671
+   },
+   "Bastian Dankert": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.02290575916230366
+   },
+   "Tobias Stieler": {
+    "n": 6,
+    "raw": 0.5,
+    "eff": -0.057239226741844555
+   },
+   "Felix Zwayer": {
+    "n": 4,
+    "raw": 0.5,
+    "eff": -0.04133944153577662
+   },
+   "Florian Badst\u00fcbner": {
+    "n": 5,
+    "raw": 0.6,
+    "eff": -0.02960732984293195
+   },
+   "Davide Di Marco": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.02290575916230366
+   },
+   "Sven Jablonski": {
+    "n": 6,
+    "raw": 0.3333333333333333,
+    "eff": -0.09570076520338303
+   },
+   "Claudio Giuseppe Allegretta": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": -0.010613475984520839
+   },
+   "Francesco Fourneau": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.03286478488504438
+   },
+   "Jerome Brisard": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Fran\u00e7ois Letexier": {
+    "n": 5,
+    "raw": 0.6,
+    "eff": -0.02960732984293195
+   },
+   "Azzedine Souifi": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.022548786292241794
+   },
+   "Hakim Ben El Hadj": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.04199389179755671
+   },
+   "Gustavo Correia": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.050392670157068054
+   },
+   "Diogo Rosa": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Miguel Nogueira": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": -0.010613475984520839
+   },
+   "James Bell": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.03286478488504438
+   },
+   "David Webb": {
+    "n": 4,
+    "raw": 0.5,
+    "eff": -0.04133944153577662
+   },
+   "Andrea Zanotti": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.02290575916230366
+   },
+   "Giuseppe Mucera": {
+    "n": 4,
+    "raw": 0.5,
+    "eff": -0.04133944153577662
+   },
+   "Patrick Schwengers": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.022548786292241794
+   },
+   "Felix Weller": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": -0.010613475984520839
+   },
+   "Pawel Raczkowski": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Piotr Lasyk": {
+    "n": 4,
+    "raw": 0.25,
+    "eff": -0.08300610820244328
+   },
+   "Gurcan Hasova": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Kevin van Damme": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": -0.010613475984520839
+   },
+   "Massimiliano Ledda": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.022548786292241794
+   },
+   "Michael Salisbury": {
+    "n": 4,
+    "raw": 0.5,
+    "eff": -0.04133944153577662
+   },
+   "Craig Pawson": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.04199389179755671
+   },
+   "Sascha Stegemann": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": -0.010613475984520839
+   },
+   "Daniel Siebert": {
+    "n": 5,
+    "raw": 0.4,
+    "eff": -0.06960732984293194
+   },
+   "Michael Fabbri": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.03286478488504438
+   },
+   "Luca Pairetto": {
+    "n": 3,
+    "raw": 0.3333333333333333,
+    "eff": -0.05409173685408605
+   },
+   "Ermanno Feliciani": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": -0.010613475984520839
+   },
+   "Willy Delajod": {
+    "n": 7,
+    "raw": 0.5714285714285714,
+    "eff": -0.0457872794260229
+   },
+   "Lu\u00eds Godinho": {
+    "n": 6,
+    "raw": 1.0,
+    "eff": 0.058145388642770836
+   },
+   "David Silva": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.03286478488504438
+   },
+   "Andrea Colombo": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.050392670157068054
+   },
+   "Timo Gerach": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.02290575916230366
+   },
+   "Danil Kashirin": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Jaroslaw Przybyl": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.0356207928197457
+   },
+   "Cihan Aydin": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Simon Bourdeaud'hui": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": 0.00032722513089004457
+   },
+   "Bram van Driessche": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.03286478488504438
+   },
+   "Matthew MacDermid": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": -0.010613475984520839
+   },
+   "Daniele Doveri": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": 0.00032722513089004457
+   },
+   "Daniele Chiffi": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": 0.00032722513089004457
+   },
+   "H\u00e9lder Carvalho": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.0356207928197457
+   },
+   "Andr\u00e9 Narciso": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.02290575916230366
+   },
+   "V\u00edctor Garc\u00eda Verdura": {
+    "n": 4,
+    "raw": 0.5,
+    "eff": -0.04133944153577662
+   },
+   "Christian Dingert": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.03286478488504438
+   },
+   "Marco Guida": {
+    "n": 4,
+    "raw": 0.5,
+    "eff": -0.04133944153577662
+   },
+   "J\u00e9r\u00f4me Brisard": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": 0.010392670157068063
+   },
+   "Stan Teuben": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.022548786292241794
+   },
+   "Ant\u00f3nio Nobre": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.02290575916230366
+   },
+   "Daniel Stefanski": {
+    "n": 4,
+    "raw": 0.5,
+    "eff": -0.04133944153577662
+   },
+   "Kadir Sa\u011flam": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.022548786292241794
+   },
+   "Robin Braun": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": -0.010613475984520839
+   },
+   "Robert Schr\u00f6der": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": -0.010613475984520839
+   },
+   "Dr. Matthias J\u00f6llenbeck": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.02290575916230366
+   },
+   "Benjamin Brand": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": -0.010613475984520839
+   },
+   "Martin Petersen": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.03286478488504438
+   },
+   "Davide Massa": {
+    "n": 5,
+    "raw": 0.2,
+    "eff": -0.10960732984293196
+   },
+   "Simone Sozza": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.04199389179755671
+   },
+   "J\u00e9r\u00e9mie Pignard": {
+    "n": 4,
+    "raw": 0.5,
+    "eff": -0.04133944153577662
+   },
+   "S\u00e9rgio Guelho": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": -0.010613475984520839
+   },
+   "Vitor Ferreira": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.02290575916230366
+   },
+   "Lothar D'Hondt": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": 0.00032722513089004457
+   },
+   "Dan McFarlane": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Luis Bestard Servera": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.04199389179755671
+   },
+   "Tobias Reichel": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.02290575916230366
+   },
+   "Daniel Schlager": {
+    "n": 3,
+    "raw": 0.3333333333333333,
+    "eff": -0.05409173685408605
+   },
+   "Federico La Penna": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": -0.010613475984520839
+   },
+   "Maurizio Mariani": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.02290575916230366
+   },
+   "Cl\u00e9ment Turpin": {
+    "n": 4,
+    "raw": 0.5,
+    "eff": -0.04133944153577662
+   },
+   "Geoffrey Kubler": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.022548786292241794
+   },
+   "Konrad Oldhafer": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.022548786292241794
+   },
+   "Re\u015fat Onur Co\u015fkunses": {
+    "n": 3,
+    "raw": 0.3333333333333333,
+    "eff": -0.05409173685408605
+   },
+   "Davut Dakul \u00c7elik": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.04199389179755671
+   },
+   "O\u011fuzhan \u00c7akir": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.03286478488504438
+   },
+   "\u00c7a\u011fda\u015f Altay": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.022548786292241794
+   },
+   "Yusuke Araki": {
+    "n": 3,
+    "raw": 0.3333333333333333,
+    "eff": -0.05409173685408605
+   },
+   "Wim Smet": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.02290575916230366
+   },
+   "Matteo Marchetti": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": -0.010613475984520839
+   },
+   "Albert R\u00f3\u017cycki": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Abdullah Ta\u015fk\u0131nsoy": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": -0.010613475984520839
+   },
+   "\u00dcmit \u00d6zt\u00fcrk": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.02290575916230366
+   },
+   "Sandro Sch\u00e4rer": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.02290575916230366
+   },
+   "Georgi Kabakov": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.03286478488504438
+   },
+   "Nenad Minakovi\u0107": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.02290575916230366
+   },
+   "Espen Esk\u00e5s": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.02290575916230366
+   },
+   "Mykola Balakin": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.022548786292241794
+   },
+   "Rade Obrenovi\u0107": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.02290575916230366
+   },
+   "Vasilis Fotias": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.02290575916230366
+   },
+   "Vladimir Moskalev": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Miguel Fonseca": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Jos\u00e9 Bessa": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Thomas Parsons": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.02290575916230366
+   },
+   "Stephen Martin": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.0356207928197457
+   },
+   "Marc Philip Eckermann": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.02290575916230366
+   },
+   "Mikhail Plisko": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Ali \u015eansalan": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.02290575916230366
+   },
+   "Ozan Erg\u00fcn": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": -0.010613475984520839
+   },
+   "Kevin Bonacina": {
+    "n": 2,
+    "raw": 0.0,
+    "eff": -0.06800333174678724
+   },
+   "Jo\u00e3o Ferreira": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.03286478488504438
+   },
+   "Justin Hasmann": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.02290575916230366
+   },
+   "Atilla Karao\u011flan": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.04199389179755671
+   },
+   "F\u00e1bio Melo": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Balazs Berke": {
+    "n": 2,
+    "raw": 0.0,
+    "eff": -0.06800333174678724
+   },
+   "Manfredas Lukjan\u010dukas": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.022548786292241794
+   },
+   "Miguel \u00c1ngel Chua Ortiz": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Mohammed Al Emara": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.02290575916230366
+   },
+   "Michal O\u010den\u00e1\u0161": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.0356207928197457
+   },
+   "Oleksiy Derevinskyi": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.022548786292241794
+   },
+   "Ond\u0159ej Berka": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.02290575916230366
+   },
+   "Yigal Frid": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Patrik Kolari\u0107": {
+    "n": 2,
+    "raw": 0.0,
+    "eff": -0.06800333174678724
+   },
+   "Christian Ballweg": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Rosario Abisso": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.02290575916230366
+   },
+   "Alper Akarsu": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.02290575916230366
+   },
+   "Simone Galip\u00f2": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Cl\u00e1udio Pereira": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Thomas Kirk": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.03286478488504438
+   },
+   "Niccol\u00f2 Turrini": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Sebastian Gishamer": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.022548786292241794
+   },
+   "Igor Paja\u010d": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.0356207928197457
+   },
+   "Rohit Saggi": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Matthew Corlett": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Donatas Rum\u0161as": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Urs Schnyder": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.0356207928197457
+   },
+   "Irfan Peljto": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Ivan Kru\u017eliak": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.0356207928197457
+   },
+   "Goga Kikacheishvili": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Martin Mato\u0161a": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Hora\u021biu Fe\u0219nic": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Milo\u0161 Milanovi\u0107": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Elchin M\u0259siyev": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Nikola Dabanovi\u0107": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Radoslav Gidzhenov": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Enea Jorgji": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Orel Grinfeeld": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Anastasios Papapetrou": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "\u018fliyar Aghayev": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.0356207928197457
+   },
+   "Bulat Sariyev": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Christian-Petru Ciochirca": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Ishmael Barbara": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Antoniou Menelaus": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Edgars Ma\u013ccevs": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Genc Nuza": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Florjan Lata": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Bence Csonka": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Mikkel Redder": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.0356207928197457
+   },
+   "Dalibor \u010cern\u00fd": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "David \u0160majc": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Stefan Ebner": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.0356207928197457
+   },
+   "Simon Hooper": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Dario Madonia": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.0356207928197457
+   },
+   "Sebastian Krasny": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Erdem Merto\u011flu": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.0356207928197457
+   },
+   "Alpaslan \u015een": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Istv\u00e1n Kov\u00e1cs": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.0356207928197457
+   },
+   "Morten Krogh": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.0356207928197457
+   },
+   "Radu Mari\u00e1n Petrescu": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "\u00cdvar Kristj\u00e1nsson": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Ante \u010culina": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Juxhin Xhaja": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Andris Treimanis": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Marian Barbu": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Christos Vergetis": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.0356207928197457
+   },
+   "Sigurd Smehus Kringstad": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Pavle Ili\u0107": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   },
+   "Sergey Cheban": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.011998254799301916
+   }
+  }
+ },
+ "3.5": {
+  "base": 0.568717277486911,
+  "table": {
+   "Adam Ladeb\u00e4ck": {
+    "n": 11,
+    "raw": 0.2727272727272727,
+    "eff": -0.10502871136632329
+   },
+   "Erik Mattsson": {
+    "n": 8,
+    "raw": 0.0,
+    "eff": -0.162490650710546
+   },
+   "Fredrik Klitte": {
+    "n": 10,
+    "raw": 0.6,
+    "eff": 0.010427574171029647
+   },
+   "Kristoffer Karlsson": {
+    "n": 10,
+    "raw": 0.4,
+    "eff": -0.056239092495637
+   },
+   "Richard Sundell": {
+    "n": 8,
+    "raw": 0.5,
+    "eff": -0.01963350785340315
+   },
+   "Mohammed Al Hakim": {
+    "n": 11,
+    "raw": 0.2727272727272727,
+    "eff": -0.10502871136632329
+   },
+   "Victor Wolf": {
+    "n": 10,
+    "raw": 0.4,
+    "eff": -0.056239092495637
+   },
+   "Oscar Johnson": {
+    "n": 11,
+    "raw": 0.5454545454545454,
+    "eff": -0.008254517817936187
+   },
+   "Granit Maqedonci": {
+    "n": 9,
+    "raw": 0.4444444444444444,
+    "eff": -0.038567430944213776
+   },
+   "Adi Aganovic": {
+    "n": 9,
+    "raw": 0.3333333333333333,
+    "eff": -0.07305018956490343
+   },
+   "Joakim Sars": {
+    "n": 8,
+    "raw": 0.625,
+    "eff": 0.01608077786088256
+   },
+   "Ivan Abrosimov": {
+    "n": 5,
+    "raw": 0.6,
+    "eff": 0.00625654450261779
+   },
+   "Bartosz Frankowski": {
+    "n": 6,
+    "raw": 0.6666666666666666,
+    "eff": 0.022603705195328217
+   },
+   "Jaros\u0142aw Przyby\u0142": {
+    "n": 6,
+    "raw": 0.5,
+    "eff": -0.01585783326621024
+   },
+   "Andrey Prokopov": {
+    "n": 7,
+    "raw": 0.8571428571428571,
+    "eff": 0.07477700213302305
+   },
+   "Rafael Shafeev": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": 0.046256544502617805
+   },
+   "Igor Kaplenkov": {
+    "n": 3,
+    "raw": 0.3333333333333333,
+    "eff": -0.030702253585249268
+   },
+   "Matvey Zaika": {
+    "n": 3,
+    "raw": 0.3333333333333333,
+    "eff": -0.030702253585249268
+   },
+   "Damian Sylwestrzak": {
+    "n": 6,
+    "raw": 1.0,
+    "eff": 0.09952678211840515
+   },
+   "Marcin Szczerbowicz": {
+    "n": 5,
+    "raw": 0.6,
+    "eff": 0.00625654450261779
+   },
+   "Karol Arys": {
+    "n": 6,
+    "raw": 0.3333333333333333,
+    "eff": -0.05431937172774871
+   },
+   "Nikita Novikov": {
+    "n": 6,
+    "raw": 0.8333333333333334,
+    "eff": 0.0610652436568667
+   },
+   "Artem Chistyakov": {
+    "n": 6,
+    "raw": 0.5,
+    "eff": -0.01585783326621024
+   },
+   "Kirill Levnikov": {
+    "n": 5,
+    "raw": 0.6,
+    "eff": 0.00625654450261779
+   },
+   "Pawe\u0142 Malec": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": 0.012776007284315946
+   },
+   "\u0141ukasz Ku\u017ama": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": 0.046256544502617805
+   },
+   "Pawe\u0142 Raczkowski": {
+    "n": 7,
+    "raw": 0.7142857142857143,
+    "eff": 0.03773996509598603
+   },
+   "Piotr Rzucid\u0142o": {
+    "n": 2,
+    "raw": 0.0,
+    "eff": -0.05170157068062828
+   },
+   "Danil Naboka": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": 0.012776007284315946
+   },
+   "Mateusz Piszczelok": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": 0.012776007284315946
+   },
+   "Tomasz Kwiatkowski": {
+    "n": 5,
+    "raw": 0.2,
+    "eff": -0.0737434554973822
+   },
+   "Nick Walsh": {
+    "n": 7,
+    "raw": 0.8571428571428571,
+    "eff": 0.07477700213302305
+   },
+   "Evgeni Bulanov": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.027081775118424332
+   },
+   "Sergey Karasev": {
+    "n": 4,
+    "raw": 0.5,
+    "eff": -0.011452879581151838
+   },
+   "Yan Bobrovskiy": {
+    "n": 3,
+    "raw": 0.3333333333333333,
+    "eff": -0.030702253585249268
+   },
+   "Inal Tanashev": {
+    "n": 7,
+    "raw": 0.7142857142857143,
+    "eff": 0.03773996509598603
+   },
+   "Wojciech My\u0107": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": 0.012776007284315946
+   },
+   "Tomasz Marciniak": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": 0.012776007284315946
+   },
+   "Duncan Nicolson": {
+    "n": 5,
+    "raw": 0.6,
+    "eff": 0.00625654450261779
+   },
+   "David Dickinson": {
+    "n": 6,
+    "raw": 0.8333333333333334,
+    "eff": 0.0610652436568667
+   },
+   "Anton Frolov": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": 0.046256544502617805
+   },
+   "Evgeni Kukulyak": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.03920752022846263
+   },
+   "Stanislav Matveev": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": 0.046256544502617805
+   },
+   "Patryk Gryckiewicz": {
+    "n": 7,
+    "raw": 0.5714285714285714,
+    "eff": 0.0007029280589489833
+   },
+   "Szymon Marciniak": {
+    "n": 9,
+    "raw": 0.1111111111111111,
+    "eff": -0.14201570680628275
+   },
+   "John Beaton": {
+    "n": 6,
+    "raw": 0.6666666666666666,
+    "eff": 0.022603705195328217
+   },
+   "Steven McLean": {
+    "n": 5,
+    "raw": 0.4,
+    "eff": -0.0337434554973822
+   },
+   "Matthew McDermid": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.027081775118424332
+   },
+   "Allard Lindhout": {
+    "n": 8,
+    "raw": 0.25,
+    "eff": -0.09106207928197457
+   },
+   "Miguel Andr\u00e9 Monteiro Fonseca": {
+    "n": 2,
+    "raw": 0.0,
+    "eff": -0.05170157068062828
+   },
+   "Wolfgang Haslberger": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.05625426815388117
+   },
+   "Lothar D'hondt": {
+    "n": 2,
+    "raw": 0.0,
+    "eff": -0.05170157068062828
+   },
+   "Robin Hensgens": {
+    "n": 5,
+    "raw": 0.0,
+    "eff": -0.11374345549738221
+   },
+   "Martijn Vos": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": 0.012776007284315946
+   },
+   "Alex Bos": {
+    "n": 5,
+    "raw": 0.2,
+    "eff": -0.0737434554973822
+   },
+   "Erwin Blank": {
+    "n": 4,
+    "raw": 0.5,
+    "eff": -0.011452879581151838
+   },
+   "S\u00e9rgio Jos\u00e9 dos Santos Guelho": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Miguel Bertolo Nogueira": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.0062470252260828215
+   },
+   "Jo\u00e3o Ant\u00f3nio Ferreira Gon\u00e7alves": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.03920752022846263
+   },
+   "Felix Prigan": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": 0.012776007284315946
+   },
+   "Michael Bacher": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": 0.030213787085514827
+   },
+   "Felix Bickel": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": 0.030213787085514827
+   },
+   "Florian Exner": {
+    "n": 5,
+    "raw": 0.6,
+    "eff": 0.00625654450261779
+   },
+   "Eric-Dominic Weisbach": {
+    "n": 5,
+    "raw": 0.6,
+    "eff": 0.00625654450261779
+   },
+   "Sergey Tsyganok": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Vasili Kazartsev": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.027081775118424332
+   },
+   "Marcin Kochanek": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": 0.012776007284315946
+   },
+   "Glenn Nyberg": {
+    "n": 9,
+    "raw": 0.5555555555555556,
+    "eff": -0.004084672323524106
+   },
+   "Anthony Letellier": {
+    "n": 3,
+    "raw": 0.3333333333333333,
+    "eff": -0.030702253585249268
+   },
+   "Jasper Vergoote": {
+    "n": 7,
+    "raw": 0.42857142857142855,
+    "eff": -0.03633410897808805
+   },
+   "Bert Put": {
+    "n": 4,
+    "raw": 0.25,
+    "eff": -0.053119546247818505
+   },
+   "Ross Hardie": {
+    "n": 4,
+    "raw": 0.25,
+    "eff": -0.053119546247818505
+   },
+   "Calum Scott": {
+    "n": 4,
+    "raw": 0.5,
+    "eff": -0.011452879581151838
+   },
+   "Jannick van der Laan": {
+    "n": 5,
+    "raw": 0.4,
+    "eff": -0.0337434554973822
+   },
+   "Sander van der Eijk": {
+    "n": 7,
+    "raw": 0.5714285714285714,
+    "eff": 0.0007029280589489833
+   },
+   "Joey Kooij": {
+    "n": 7,
+    "raw": 0.42857142857142855,
+    "eff": -0.03633410897808805
+   },
+   "Marc Nagtegaal": {
+    "n": 2,
+    "raw": 0.0,
+    "eff": -0.05170157068062828
+   },
+   "Jos\u00e9 Armando Torres Bessa": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.03920752022846263
+   },
+   "David Rafael Oliveira Silva": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.03920752022846263
+   },
+   "Lu\u00eds Miguel Branco Godinho": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Gustavo Fernandes Correia": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Harm Osmers": {
+    "n": 6,
+    "raw": 0.5,
+    "eff": -0.01585783326621024
+   },
+   "Jarno Wienefeld": {
+    "n": 4,
+    "raw": 0.5,
+    "eff": -0.011452879581151838
+   },
+   "Lars Erbst": {
+    "n": 4,
+    "raw": 0.5,
+    "eff": -0.011452879581151838
+   },
+   "Pavel Kukuyan": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.0062470252260828215
+   },
+   "Damian Kos": {
+    "n": 6,
+    "raw": 0.8333333333333334,
+    "eff": 0.0610652436568667
+   },
+   "Niclas Karlsson": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.027081775118424332
+   },
+   "Michiel Allaerts": {
+    "n": 4,
+    "raw": 0.25,
+    "eff": -0.053119546247818505
+   },
+   "Erik Lambrechts": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": 0.012776007284315946
+   },
+   "Lawrence Visser": {
+    "n": 8,
+    "raw": 0.75,
+    "eff": 0.051795063575168276
+   },
+   "Wesli De Cremer": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": 0.012776007284315946
+   },
+   "Kevin Van Damme": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.0062470252260828215
+   },
+   "Ryan Lee": {
+    "n": 5,
+    "raw": 0.2,
+    "eff": -0.0737434554973822
+   },
+   "Don Robertson": {
+    "n": 4,
+    "raw": 0.25,
+    "eff": -0.053119546247818505
+   },
+   "Chris Graham": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.05625426815388117
+   },
+   "Kevin Clancy": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.0062470252260828215
+   },
+   "H\u00e9lder Filipe Cl\u00e1udio Carvalho": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Aleksey Sukhoy": {
+    "n": 4,
+    "raw": 0.5,
+    "eff": -0.011452879581151838
+   },
+   "Ingmar Oostrom": {
+    "n": 4,
+    "raw": 0.5,
+    "eff": -0.011452879581151838
+   },
+   "Farai Hallam": {
+    "n": 7,
+    "raw": 0.42857142857142855,
+    "eff": -0.03633410897808805
+   },
+   "Eder Mallo Fern\u00e1ndez": {
+    "n": 6,
+    "raw": 1.0,
+    "eff": 0.09952678211840515
+   },
+   "Max Burda": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.05625426815388117
+   },
+   "Marc-Philipp Eckermann": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Wojciech Myc": {
+    "n": 2,
+    "raw": 0.0,
+    "eff": -0.05170157068062828
+   },
+   "Batuhan Kolak": {
+    "n": 5,
+    "raw": 0.2,
+    "eff": -0.0737434554973822
+   },
+   "Jan Boterberg": {
+    "n": 4,
+    "raw": 0.25,
+    "eff": -0.053119546247818505
+   },
+   "Manuel Jes\u00fas Orellana Cid": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.0862565445026178
+   },
+   "Ricardo De Burgos Bengoetxea": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Serdar G\u00f6z\u00fcb\u00fcy\u00fck": {
+    "n": 9,
+    "raw": 0.4444444444444444,
+    "eff": -0.038567430944213776
+   },
+   "Danny Desmond Makkelie": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Martin van den Kerkhof": {
+    "n": 5,
+    "raw": 0.2,
+    "eff": -0.0737434554973822
+   },
+   "Ben Speedie": {
+    "n": 5,
+    "raw": 0.2,
+    "eff": -0.0737434554973822
+   },
+   "Lewis Smith": {
+    "n": 6,
+    "raw": 0.5,
+    "eff": -0.01585783326621024
+   },
+   "Adam Herczeg": {
+    "n": 7,
+    "raw": 0.5714285714285714,
+    "eff": 0.0007029280589489833
+   },
+   "Tim Robinson": {
+    "n": 6,
+    "raw": 0.6666666666666666,
+    "eff": 0.022603705195328217
+   },
+   "Oliver Langford": {
+    "n": 6,
+    "raw": 0.5,
+    "eff": -0.01585783326621024
+   },
+   "William James Finnie": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.027081775118424332
+   },
+   "Gavin Ward": {
+    "n": 6,
+    "raw": 0.6666666666666666,
+    "eff": 0.022603705195328217
+   },
+   "Robert Madley": {
+    "n": 4,
+    "raw": 0.5,
+    "eff": -0.011452879581151838
+   },
+   "Andr\u00e9s Fuentes Molina": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.0862565445026178
+   },
+   "D\u00e1maso Arcediano Monescillo": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": 0.012776007284315946
+   },
+   "Rafael S\u00e1nchez L\u00f3pez": {
+    "n": 6,
+    "raw": 0.6666666666666666,
+    "eff": 0.022603705195328217
+   },
+   "Manuel \u00c1ngel P\u00e9rez Hern\u00e1ndez": {
+    "n": 6,
+    "raw": 0.8333333333333334,
+    "eff": 0.0610652436568667
+   },
+   "Justin Joel Hasmann": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.027081775118424332
+   },
+   "Lukas Benen": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": 0.012776007284315946
+   },
+   "Tom Bauer": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.0718804537521815
+   },
+   "Richard Hempel": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": 0.030213787085514827
+   },
+   "Mateusz Jenda": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.0062470252260828215
+   },
+   "Cihan Ayd\u0131n": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": 0.012776007284315946
+   },
+   "G\u00fcrcan Hasova": {
+    "n": 3,
+    "raw": 0.3333333333333333,
+    "eff": -0.030702253585249268
+   },
+   "O\u011fuzhan Aksu": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.0062470252260828215
+   },
+   "Yasin Kol": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": 0.030213787085514827
+   },
+   "Nicolas Laforge": {
+    "n": 5,
+    "raw": 0.2,
+    "eff": -0.0737434554973822
+   },
+   "Miguel Sesma Espinosa": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": 0.046256544502617805
+   },
+   "Carlos Mu\u00f1iz Mu\u00f1oz": {
+    "n": 4,
+    "raw": 0.25,
+    "eff": -0.053119546247818505
+   },
+   "Jeroen Manschot": {
+    "n": 6,
+    "raw": 0.5,
+    "eff": -0.01585783326621024
+   },
+   "Bruno Jos\u00e9 Ribeiro Pires Costa": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Andr\u00e9 Filipe Domingues Narciso": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Joshua Smith": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Matt Donohue": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": 0.046256544502617805
+   },
+   "Jos\u00e9 Luis Guzm\u00e1n Mansilla": {
+    "n": 6,
+    "raw": 0.6666666666666666,
+    "eff": 0.022603705195328217
+   },
+   "Daniel Miranda Bola\u00f1o": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": 0.046256544502617805
+   },
+   "Olatz Rivera Olmedo": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": 0.046256544502617805
+   },
+   "Iosu Galech Apeztegu\u00eda": {
+    "n": 6,
+    "raw": 0.8333333333333334,
+    "eff": 0.0610652436568667
+   },
+   "Konrad Oldhfer": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Timo Gansloweit": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": 0.012776007284315946
+   },
+   "Florian Lechner": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": 0.012776007284315946
+   },
+   "Halil Umut Meler": {
+    "n": 7,
+    "raw": 0.7142857142857143,
+    "eff": 0.03773996509598603
+   },
+   "O\u011fuzhan \u00c7ak\u0131r": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Mehmet T\u00fcrkmen": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": 0.030213787085514827
+   },
+   "Bram Van Driessche": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.027081775118424332
+   },
+   "Nathan Verboomen": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": 0.046256544502617805
+   },
+   "Francisco Jos\u00e9 Hern\u00e1ndez Maeso": {
+    "n": 5,
+    "raw": 0.4,
+    "eff": -0.0337434554973822
+   },
+   "Jo\u00e3o Pinheiro": {
+    "n": 5,
+    "raw": 0.2,
+    "eff": -0.0737434554973822
+   },
+   "Andrew Kitchen": {
+    "n": 7,
+    "raw": 0.42857142857142855,
+    "eff": -0.03633410897808805
+   },
+   "Abraham Dom\u00ednguez Cervantes": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.0862565445026178
+   },
+   "Alejandro Ojaos Valera": {
+    "n": 5,
+    "raw": 0.6,
+    "eff": 0.00625654450261779
+   },
+   "Kadir Saglam": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Adri\u00e1n Cordero Vega": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.05625426815388117
+   },
+   "Jos\u00e9 Luis Munuera Montero": {
+    "n": 5,
+    "raw": 0.4,
+    "eff": -0.0337434554973822
+   },
+   "Thomas Bramall": {
+    "n": 5,
+    "raw": 0.4,
+    "eff": -0.0337434554973822
+   },
+   "Isidro D\u00edaz de Mera Escuderos": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.0862565445026178
+   },
+   "Ruddy Buquet": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": 0.030213787085514827
+   },
+   "Germ\u00e1n Cid Camacho": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": 0.046256544502617805
+   },
+   "Cagdas Altay": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.0062470252260828215
+   },
+   "Robert Jones": {
+    "n": 7,
+    "raw": 0.2857142857142857,
+    "eff": -0.07337114601512508
+   },
+   "Michael Oliver": {
+    "n": 9,
+    "raw": 0.4444444444444444,
+    "eff": -0.038567430944213776
+   },
+   "Darren England": {
+    "n": 5,
+    "raw": 0.6,
+    "eff": 0.00625654450261779
+   },
+   "Paul Tierney": {
+    "n": 6,
+    "raw": 0.5,
+    "eff": -0.01585783326621024
+   },
+   "C\u00e9sar Soto Grado": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": 0.012776007284315946
+   },
+   "Jos\u00e9 Mar\u00eda S\u00e1nchez Mart\u00ednez": {
+    "n": 5,
+    "raw": 0.4,
+    "eff": -0.0337434554973822
+   },
+   "Jes\u00fas Gil Manzano": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.0862565445026178
+   },
+   "Livio Marinelli": {
+    "n": 4,
+    "raw": 0.5,
+    "eff": -0.011452879581151838
+   },
+   "Marco Di Bello": {
+    "n": 4,
+    "raw": 0.5,
+    "eff": -0.011452879581151838
+   },
+   "Daniele Perenzoni": {
+    "n": 4,
+    "raw": 0.25,
+    "eff": -0.053119546247818505
+   },
+   "Alberto Arena": {
+    "n": 4,
+    "raw": 0.5,
+    "eff": -0.011452879581151838
+   },
+   "Aur\u00e9lien Petit": {
+    "n": 3,
+    "raw": 0.0,
+    "eff": -0.07418051445481448
+   },
+   "Romain Lissorgue": {
+    "n": 3,
+    "raw": 0.3333333333333333,
+    "eff": -0.030702253585249268
+   },
+   "Marc Bollengier": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": 0.012776007284315946
+   },
+   "Guillaume Paradis": {
+    "n": 4,
+    "raw": 0.25,
+    "eff": -0.053119546247818505
+   },
+   "Mathieu Vernice": {
+    "n": 4,
+    "raw": 0.5,
+    "eff": -0.011452879581151838
+   },
+   "Dennis Higler": {
+    "n": 5,
+    "raw": 0.2,
+    "eff": -0.0737434554973822
+   },
+   "Richard Martens": {
+    "n": 3,
+    "raw": 0.3333333333333333,
+    "eff": -0.030702253585249268
+   },
+   "Lu\u00eds Carlos Mateus Filipe": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.05625426815388117
+   },
+   "F\u00e1bio Ver\u00edssimo": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.0718804537521815
+   },
+   "Carlos Macedo": {
+    "n": 4,
+    "raw": 0.5,
+    "eff": -0.011452879581151838
+   },
+   "Sam Allison": {
+    "n": 5,
+    "raw": 0.2,
+    "eff": -0.0737434554973822
+   },
+   "Edward Duckworth": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": 0.030213787085514827
+   },
+   "Will Finnie": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.05625426815388117
+   },
+   "Steve Martin": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.05625426815388117
+   },
+   "Ruebyn Ricardo": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": 0.046256544502617805
+   },
+   "Tom Reeves": {
+    "n": 4,
+    "raw": 0.5,
+    "eff": -0.011452879581151838
+   },
+   "Tony Harrington": {
+    "n": 5,
+    "raw": 0.6,
+    "eff": 0.00625654450261779
+   },
+   "Elliot Bell": {
+    "n": 5,
+    "raw": 0.6,
+    "eff": 0.00625654450261779
+   },
+   "John Busby": {
+    "n": 5,
+    "raw": 0.6,
+    "eff": 0.00625654450261779
+   },
+   "Tom Nield": {
+    "n": 5,
+    "raw": 0.6,
+    "eff": 0.00625654450261779
+   },
+   "Gorka Etayo Herrera": {
+    "n": 5,
+    "raw": 1.0,
+    "eff": 0.0862565445026178
+   },
+   "Daniel Palencia Caballero": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": 0.046256544502617805
+   },
+   "Salvador Lax Franco": {
+    "n": 5,
+    "raw": 0.6,
+    "eff": 0.00625654450261779
+   },
+   "Pablo Morales Moreno": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": 0.046256544502617805
+   },
+   "Paride Tremolada": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.0718804537521815
+   },
+   "Edoardo Mazzoni": {
+    "n": 4,
+    "raw": 0.0,
+    "eff": -0.09478621291448516
+   },
+   "Maria Ferrieri Caputi": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.03920752022846263
+   },
+   "Mattia Drigo": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": 0.012776007284315946
+   },
+   "Andrea Calzavara": {
+    "n": 4,
+    "raw": 0.5,
+    "eff": -0.011452879581151838
+   },
+   "Sergei Ivanov": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Atilla Karaoglan": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.0062470252260828215
+   },
+   "Fatih Tokail": {
+    "n": 2,
+    "raw": 0.0,
+    "eff": -0.05170157068062828
+   },
+   "\u00d6mer Faruk Turtay": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.027081775118424332
+   },
+   "Stuart Attwell": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.0718804537521815
+   },
+   "Peter Bankes": {
+    "n": 4,
+    "raw": 0.5,
+    "eff": -0.011452879581151838
+   },
+   "Jarred Gillett": {
+    "n": 7,
+    "raw": 0.7142857142857143,
+    "eff": 0.03773996509598603
+   },
+   "Juan Mart\u00ednez Munuera": {
+    "n": 5,
+    "raw": 0.4,
+    "eff": -0.0337434554973822
+   },
+   "Alejandro Quintero Gonz\u00e1lez": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": 0.030213787085514827
+   },
+   "Alejandro Jos\u00e9 Hern\u00e1ndez Hern\u00e1ndez": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": 0.046256544502617805
+   },
+   "Luca Zufferli": {
+    "n": 4,
+    "raw": 0.25,
+    "eff": -0.053119546247818505
+   },
+   "Valerio Crezzini": {
+    "n": 3,
+    "raw": 0.0,
+    "eff": -0.07418051445481448
+   },
+   "Giovanni Ayroldi": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.0718804537521815
+   },
+   "Antonio Rapuano": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": 0.030213787085514827
+   },
+   "Bastien Dechepy": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.0718804537521815
+   },
+   "Jeremy Stinat": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": 0.046256544502617805
+   },
+   "Jeremie Pignard": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Danny Makkelie": {
+    "n": 6,
+    "raw": 0.3333333333333333,
+    "eff": -0.05431937172774871
+   },
+   "Iancu Vasilica": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": 0.012776007284315946
+   },
+   "Pedro Ramalho": {
+    "n": 3,
+    "raw": 0.3333333333333333,
+    "eff": -0.030702253585249268
+   },
+   "Anthony Backhouse": {
+    "n": 6,
+    "raw": 0.5,
+    "eff": -0.01585783326621024
+   },
+   "Alejandro Morilla Turri\u00f3n": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": 0.046256544502617805
+   },
+   "Marta Huerta de Aza": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.05625426815388117
+   },
+   "Gonzalo Romero Freixas": {
+    "n": 6,
+    "raw": 0.8333333333333334,
+    "eff": 0.0610652436568667
+   },
+   "Juan Gordillo Escamilla": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.0718804537521815
+   },
+   "Marco Di Loreto": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.0718804537521815
+   },
+   "Juan Luca Sacchi": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": 0.046256544502617805
+   },
+   "Mario Perri": {
+    "n": 5,
+    "raw": 0.2,
+    "eff": -0.0737434554973822
+   },
+   "Giuseppe Collu": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.0718804537521815
+   },
+   "Evgeniy Bulanov": {
+    "n": 3,
+    "raw": 0.3333333333333333,
+    "eff": -0.030702253585249268
+   },
+   "Vasily Kazartsev": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.0062470252260828215
+   },
+   "Lukasz Kuzma": {
+    "n": 2,
+    "raw": 0.0,
+    "eff": -0.05170157068062828
+   },
+   "Resat Onur Coskunses": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.027081775118424332
+   },
+   "Ali Sansalan": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Adnan Deniz Kayatepe": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.027081775118424332
+   },
+   "Bert Verbeke": {
+    "n": 5,
+    "raw": 0.4,
+    "eff": -0.0337434554973822
+   },
+   "John Brooks": {
+    "n": 7,
+    "raw": 0.7142857142857143,
+    "eff": 0.03773996509598603
+   },
+   "Javier Alberola Rojas": {
+    "n": 7,
+    "raw": 1.0,
+    "eff": 0.1118140391700601
+   },
+   "Victor Garc\u00eda Verdura": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.027081775118424332
+   },
+   "Fabio Maresca": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": 0.030213787085514827
+   },
+   "Matteo Marcenaro": {
+    "n": 4,
+    "raw": 0.5,
+    "eff": -0.011452879581151838
+   },
+   "Anzhony Rodrigues": {
+    "n": 2,
+    "raw": 0.0,
+    "eff": -0.05170157068062828
+   },
+   "Sa\u00fal Ais Reig": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": 0.030213787085514827
+   },
+   "Jos\u00e9 Antonio S\u00e1nchez Villalobos": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": 0.046256544502617805
+   },
+   "Umit Ozturk": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.0062470252260828215
+   },
+   "Jon Ander Gonz\u00e1lez Esteban": {
+    "n": 5,
+    "raw": 0.6,
+    "eff": 0.00625654450261779
+   },
+   "Mateo Busquets Ferrer": {
+    "n": 5,
+    "raw": 0.4,
+    "eff": -0.0337434554973822
+   },
+   "Miguel \u00c1ngel Ortiz Arias": {
+    "n": 4,
+    "raw": 0.5,
+    "eff": -0.011452879581151838
+   },
+   "Andy Madley": {
+    "n": 6,
+    "raw": 0.3333333333333333,
+    "eff": -0.05431937172774871
+   },
+   "S\u00f6ren Storks": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.0718804537521815
+   },
+   "Gianluca Manganiello": {
+    "n": 3,
+    "raw": 0.3333333333333333,
+    "eff": -0.030702253585249268
+   },
+   "Eric Wattellier": {
+    "n": 5,
+    "raw": 0.4,
+    "eff": -0.0337434554973822
+   },
+   "Bruno Pires Costa": {
+    "n": 2,
+    "raw": 0.0,
+    "eff": -0.05170157068062828
+   },
+   "Felix Wagner": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.03920752022846263
+   },
+   "Pavel Shadyhanov": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Samuel Barrott": {
+    "n": 6,
+    "raw": 0.5,
+    "eff": -0.01585783326621024
+   },
+   "Josh Smith": {
+    "n": 6,
+    "raw": 0.6666666666666666,
+    "eff": 0.022603705195328217
+   },
+   "Chris Kavanagh": {
+    "n": 6,
+    "raw": 1.0,
+    "eff": 0.09952678211840515
+   },
+   "Ricardo de Burgos Bengoetxea": {
+    "n": 6,
+    "raw": 0.6666666666666666,
+    "eff": 0.022603705195328217
+   },
+   "Robert Hartmann": {
+    "n": 4,
+    "raw": 0.5,
+    "eff": -0.011452879581151838
+   },
+   "Bastian Dankert": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.03920752022846263
+   },
+   "Tobias Stieler": {
+    "n": 6,
+    "raw": 0.3333333333333333,
+    "eff": -0.05431937172774871
+   },
+   "Felix Zwayer": {
+    "n": 4,
+    "raw": 0.25,
+    "eff": -0.053119546247818505
+   },
+   "Florian Badst\u00fcbner": {
+    "n": 5,
+    "raw": 0.4,
+    "eff": -0.0337434554973822
+   },
+   "Davide Di Marco": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.03920752022846263
+   },
+   "Sven Jablonski": {
+    "n": 6,
+    "raw": 0.16666666666666666,
+    "eff": -0.09278091018928718
+   },
+   "Claudio Giuseppe Allegretta": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": 0.012776007284315946
+   },
+   "Francesco Fourneau": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": 0.012776007284315946
+   },
+   "Jerome Brisard": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Fran\u00e7ois Letexier": {
+    "n": 5,
+    "raw": 0.6,
+    "eff": 0.00625654450261779
+   },
+   "Azzedine Souifi": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.0062470252260828215
+   },
+   "Hakim Ben El Hadj": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.0718804537521815
+   },
+   "Gustavo Correia": {
+    "n": 5,
+    "raw": 0.8,
+    "eff": 0.046256544502617805
+   },
+   "Diogo Rosa": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.027081775118424332
+   },
+   "Miguel Nogueira": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": 0.012776007284315946
+   },
+   "James Bell": {
+    "n": 3,
+    "raw": 0.3333333333333333,
+    "eff": -0.030702253585249268
+   },
+   "David Webb": {
+    "n": 4,
+    "raw": 0.25,
+    "eff": -0.053119546247818505
+   },
+   "Andrea Zanotti": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.03920752022846263
+   },
+   "Giuseppe Mucera": {
+    "n": 4,
+    "raw": 0.25,
+    "eff": -0.053119546247818505
+   },
+   "Patrick Schwengers": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.0062470252260828215
+   },
+   "Felix Weller": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": 0.012776007284315946
+   },
+   "Pawel Raczkowski": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Piotr Lasyk": {
+    "n": 4,
+    "raw": 0.0,
+    "eff": -0.09478621291448516
+   },
+   "Gurcan Hasova": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Kevin van Damme": {
+    "n": 3,
+    "raw": 0.3333333333333333,
+    "eff": -0.030702253585249268
+   },
+   "Massimiliano Ledda": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.0062470252260828215
+   },
+   "Michael Salisbury": {
+    "n": 4,
+    "raw": 0.25,
+    "eff": -0.053119546247818505
+   },
+   "Craig Pawson": {
+    "n": 4,
+    "raw": 1.0,
+    "eff": 0.0718804537521815
+   },
+   "Sascha Stegemann": {
+    "n": 3,
+    "raw": 0.0,
+    "eff": -0.07418051445481448
+   },
+   "Daniel Siebert": {
+    "n": 5,
+    "raw": 0.4,
+    "eff": -0.0337434554973822
+   },
+   "Michael Fabbri": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": 0.012776007284315946
+   },
+   "Luca Pairetto": {
+    "n": 3,
+    "raw": 0.3333333333333333,
+    "eff": -0.030702253585249268
+   },
+   "Ermanno Feliciani": {
+    "n": 3,
+    "raw": 0.3333333333333333,
+    "eff": -0.030702253585249268
+   },
+   "Willy Delajod": {
+    "n": 7,
+    "raw": 0.2857142857142857,
+    "eff": -0.07337114601512508
+   },
+   "Lu\u00eds Godinho": {
+    "n": 6,
+    "raw": 0.8333333333333334,
+    "eff": 0.0610652436568667
+   },
+   "David Silva": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.05625426815388117
+   },
+   "Andrea Colombo": {
+    "n": 5,
+    "raw": 0.6,
+    "eff": 0.00625654450261779
+   },
+   "Timo Gerach": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.03920752022846263
+   },
+   "Danil Kashirin": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Jaroslaw Przybyl": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.027081775118424332
+   },
+   "Cihan Aydin": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Simon Bourdeaud'hui": {
+    "n": 4,
+    "raw": 0.25,
+    "eff": -0.053119546247818505
+   },
+   "Bram van Driessche": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.05625426815388117
+   },
+   "Matthew MacDermid": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": 0.012776007284315946
+   },
+   "Daniele Doveri": {
+    "n": 4,
+    "raw": 0.25,
+    "eff": -0.053119546247818505
+   },
+   "Daniele Chiffi": {
+    "n": 4,
+    "raw": 0.25,
+    "eff": -0.053119546247818505
+   },
+   "H\u00e9lder Carvalho": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.027081775118424332
+   },
+   "Andr\u00e9 Narciso": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.03920752022846263
+   },
+   "V\u00edctor Garc\u00eda Verdura": {
+    "n": 4,
+    "raw": 0.5,
+    "eff": -0.011452879581151838
+   },
+   "Christian Dingert": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": 0.012776007284315946
+   },
+   "Marco Guida": {
+    "n": 4,
+    "raw": 0.0,
+    "eff": -0.09478621291448516
+   },
+   "J\u00e9r\u00f4me Brisard": {
+    "n": 5,
+    "raw": 0.6,
+    "eff": 0.00625654450261779
+   },
+   "Stan Teuben": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.0062470252260828215
+   },
+   "Ant\u00f3nio Nobre": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.03920752022846263
+   },
+   "Daniel Stefanski": {
+    "n": 4,
+    "raw": 0.5,
+    "eff": -0.011452879581151838
+   },
+   "Kadir Sa\u011flam": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.0062470252260828215
+   },
+   "Robin Braun": {
+    "n": 3,
+    "raw": 0.3333333333333333,
+    "eff": -0.030702253585249268
+   },
+   "Robert Schr\u00f6der": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": 0.012776007284315946
+   },
+   "Dr. Matthias J\u00f6llenbeck": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.03920752022846263
+   },
+   "Benjamin Brand": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": 0.012776007284315946
+   },
+   "Martin Petersen": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.05625426815388117
+   },
+   "Davide Massa": {
+    "n": 5,
+    "raw": 0.2,
+    "eff": -0.0737434554973822
+   },
+   "Simone Sozza": {
+    "n": 4,
+    "raw": 0.5,
+    "eff": -0.011452879581151838
+   },
+   "J\u00e9r\u00e9mie Pignard": {
+    "n": 4,
+    "raw": 0.5,
+    "eff": -0.011452879581151838
+   },
+   "S\u00e9rgio Guelho": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": 0.012776007284315946
+   },
+   "Vitor Ferreira": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.03920752022846263
+   },
+   "Lothar D'Hondt": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": 0.030213787085514827
+   },
+   "Dan McFarlane": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Luis Bestard Servera": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": 0.030213787085514827
+   },
+   "Tobias Reichel": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.0062470252260828215
+   },
+   "Daniel Schlager": {
+    "n": 3,
+    "raw": 0.3333333333333333,
+    "eff": -0.030702253585249268
+   },
+   "Federico La Penna": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": 0.012776007284315946
+   },
+   "Maurizio Mariani": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.03920752022846263
+   },
+   "Cl\u00e9ment Turpin": {
+    "n": 4,
+    "raw": 0.25,
+    "eff": -0.053119546247818505
+   },
+   "Geoffrey Kubler": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.0062470252260828215
+   },
+   "Konrad Oldhafer": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.0062470252260828215
+   },
+   "Re\u015fat Onur Co\u015fkunses": {
+    "n": 3,
+    "raw": 0.3333333333333333,
+    "eff": -0.030702253585249268
+   },
+   "Davut Dakul \u00c7elik": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": 0.030213787085514827
+   },
+   "O\u011fuzhan \u00c7akir": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.05625426815388117
+   },
+   "\u00c7a\u011fda\u015f Altay": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.0062470252260828215
+   },
+   "Yusuke Araki": {
+    "n": 3,
+    "raw": 0.3333333333333333,
+    "eff": -0.030702253585249268
+   },
+   "Wim Smet": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.03920752022846263
+   },
+   "Matteo Marchetti": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": 0.012776007284315946
+   },
+   "Albert R\u00f3\u017cycki": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.027081775118424332
+   },
+   "Abdullah Ta\u015fk\u0131nsoy": {
+    "n": 3,
+    "raw": 0.3333333333333333,
+    "eff": -0.030702253585249268
+   },
+   "\u00dcmit \u00d6zt\u00fcrk": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.03920752022846263
+   },
+   "Sandro Sch\u00e4rer": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.0062470252260828215
+   },
+   "Georgi Kabakov": {
+    "n": 3,
+    "raw": 1.0,
+    "eff": 0.05625426815388117
+   },
+   "Nenad Minakovi\u0107": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.0062470252260828215
+   },
+   "Espen Esk\u00e5s": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.03920752022846263
+   },
+   "Mykola Balakin": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.0062470252260828215
+   },
+   "Rade Obrenovi\u0107": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.0062470252260828215
+   },
+   "Vasilis Fotias": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.0062470252260828215
+   },
+   "Vladimir Moskalev": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Miguel Fonseca": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.027081775118424332
+   },
+   "Jos\u00e9 Bessa": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Thomas Parsons": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.03920752022846263
+   },
+   "Stephen Martin": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.027081775118424332
+   },
+   "Marc Philip Eckermann": {
+    "n": 2,
+    "raw": 0.0,
+    "eff": -0.05170157068062828
+   },
+   "Mikhail Plisko": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Ali \u015eansalan": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.0062470252260828215
+   },
+   "Ozan Erg\u00fcn": {
+    "n": 3,
+    "raw": 0.3333333333333333,
+    "eff": -0.030702253585249268
+   },
+   "Kevin Bonacina": {
+    "n": 2,
+    "raw": 0.0,
+    "eff": -0.05170157068062828
+   },
+   "Jo\u00e3o Ferreira": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": 0.012776007284315946
+   },
+   "Justin Hasmann": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.0062470252260828215
+   },
+   "Atilla Karao\u011flan": {
+    "n": 4,
+    "raw": 0.75,
+    "eff": 0.030213787085514827
+   },
+   "F\u00e1bio Melo": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Balazs Berke": {
+    "n": 2,
+    "raw": 0.0,
+    "eff": -0.05170157068062828
+   },
+   "Manfredas Lukjan\u010dukas": {
+    "n": 2,
+    "raw": 0.0,
+    "eff": -0.05170157068062828
+   },
+   "Miguel \u00c1ngel Chua Ortiz": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Mohammed Al Emara": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.0062470252260828215
+   },
+   "Michal O\u010den\u00e1\u0161": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.027081775118424332
+   },
+   "Oleksiy Derevinskyi": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.0062470252260828215
+   },
+   "Ond\u0159ej Berka": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.03920752022846263
+   },
+   "Yigal Frid": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Patrik Kolari\u0107": {
+    "n": 2,
+    "raw": 0.0,
+    "eff": -0.05170157068062828
+   },
+   "Christian Ballweg": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Rosario Abisso": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.03920752022846263
+   },
+   "Alper Akarsu": {
+    "n": 2,
+    "raw": 1.0,
+    "eff": 0.03920752022846263
+   },
+   "Simone Galip\u00f2": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Cl\u00e1udio Pereira": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Thomas Kirk": {
+    "n": 3,
+    "raw": 0.6666666666666666,
+    "eff": 0.012776007284315946
+   },
+   "Niccol\u00f2 Turrini": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Sebastian Gishamer": {
+    "n": 2,
+    "raw": 0.5,
+    "eff": -0.0062470252260828215
+   },
+   "Igor Paja\u010d": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.027081775118424332
+   },
+   "Rohit Saggi": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Matthew Corlett": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Donatas Rum\u0161as": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Urs Schnyder": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.027081775118424332
+   },
+   "Irfan Peljto": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Ivan Kru\u017eliak": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.027081775118424332
+   },
+   "Goga Kikacheishvili": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.027081775118424332
+   },
+   "Martin Mato\u0161a": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Hora\u021biu Fe\u0219nic": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Milo\u0161 Milanovi\u0107": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.027081775118424332
+   },
+   "Elchin M\u0259siyev": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Nikola Dabanovi\u0107": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.027081775118424332
+   },
+   "Radoslav Gidzhenov": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Enea Jorgji": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Orel Grinfeeld": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Anastasios Papapetrou": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "\u018fliyar Aghayev": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.027081775118424332
+   },
+   "Bulat Sariyev": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Christian-Petru Ciochirca": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.027081775118424332
+   },
+   "Ishmael Barbara": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Antoniou Menelaus": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Edgars Ma\u013ccevs": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Genc Nuza": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Florjan Lata": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.027081775118424332
+   },
+   "Bence Csonka": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.027081775118424332
+   },
+   "Mikkel Redder": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.027081775118424332
+   },
+   "Dalibor \u010cern\u00fd": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "David \u0160majc": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Stefan Ebner": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.027081775118424332
+   },
+   "Simon Hooper": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Dario Madonia": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.027081775118424332
+   },
+   "Sebastian Krasny": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Erdem Merto\u011flu": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.027081775118424332
+   },
+   "Alpaslan \u015een": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Istv\u00e1n Kov\u00e1cs": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.027081775118424332
+   },
+   "Morten Krogh": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.027081775118424332
+   },
+   "Radu Mari\u00e1n Petrescu": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "\u00cdvar Kristj\u00e1nsson": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.027081775118424332
+   },
+   "Ante \u010culina": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Juxhin Xhaja": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.027081775118424332
+   },
+   "Andris Treimanis": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.027081775118424332
+   },
+   "Marian Barbu": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.027081775118424332
+   },
+   "Christos Vergetis": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.027081775118424332
+   },
+   "Sigurd Smehus Kringstad": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Pavle Ili\u0107": {
+    "n": 1,
+    "raw": 1.0,
+    "eff": 0.020537272500623285
+   },
+   "Sergey Cheban": {
+    "n": 1,
+    "raw": 0.0,
+    "eff": -0.027081775118424332
+   }
+  }
+ }
+}

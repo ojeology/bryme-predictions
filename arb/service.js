@@ -78,6 +78,7 @@ export async function scanSubmittedQuotes(payload) {
   const opportunities = scanOpportunities(payload.quotes, {
     ...options,
     maxQuoteAgeSeconds: Number(payload.maxQuoteAgeSeconds) > 0 ? Number(payload.maxQuoteAgeSeconds) : 0,
+    now: new Date(),
   });
   return {
     ok: true,
@@ -85,7 +86,8 @@ export async function scanSubmittedQuotes(payload) {
     opportunities,
     quoteCount: payload.quotes.length,
     scannedAt: new Date().toISOString(),
-    notice: 'Calculations use only the submitted quotes. Verify current prices and rules manually before placement.',
+    rejectedGroupCount: opportunities.rejectedGroupCount || 0,
+    notice: 'Calculations use only the submitted quotes. Matches that have already started are excluded. Verify current prices and rules manually before placement.',
   };
 }
 

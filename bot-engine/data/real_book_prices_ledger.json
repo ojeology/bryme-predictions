@@ -1,0 +1,443 @@
+[
+ {
+  "date": "2026-10-22",
+  "comp": "Europa League",
+  "fx": "Lech Pozna\u0144 v Sunderland",
+  "mk": "fouls",
+  "line": 11.5,
+  "px": 2.18,
+  "won": true
+ },
+ {
+  "date": "2026-10-22",
+  "comp": "Europa League",
+  "fx": "Lech Pozna\u0144 v Sunderland",
+  "mk": "fouls",
+  "line": 21.5,
+  "px": 1.33,
+  "won": false
+ },
+ {
+  "date": "2026-10-22",
+  "comp": "Europa League",
+  "fx": "Lech Pozna\u0144 v Sunderland",
+  "mk": "cards",
+  "line": 3.5,
+  "px": 1.77,
+  "won": false
+ },
+ {
+  "date": "2026-10-22",
+  "comp": "Conference League",
+  "fx": "Getafe CF v FC Lugano",
+  "mk": "cards",
+  "line": 3.5,
+  "px": 1.27,
+  "won": true
+ },
+ {
+  "date": "2026-10-22",
+  "comp": "Conference League",
+  "fx": "Getafe CF v FC Lugano",
+  "mk": "cards",
+  "line": 3.5,
+  "px": 1.27,
+  "won": true
+ },
+ {
+  "date": "2026-10-22",
+  "comp": "Europa League",
+  "fx": "Juventus v Rennes",
+  "mk": "corners",
+  "line": 7.5,
+  "px": 1.26,
+  "won": true
+ },
+ {
+  "date": "2026-10-22",
+  "comp": "Europa League",
+  "fx": "Juventus v Rennes",
+  "mk": "corners",
+  "line": 7.5,
+  "px": 1.26,
+  "won": true
+ },
+ {
+  "date": "2026-10-22",
+  "comp": "Europa League",
+  "fx": "SK Sturm Graz v Olympique Marseille",
+  "mk": "fouls",
+  "line": 20.5,
+  "px": 1.24,
+  "won": true
+ },
+ {
+  "date": "2026-10-22",
+  "comp": "Europa League",
+  "fx": "SK Sturm Graz v Olympique Marseille",
+  "mk": "fouls",
+  "line": 20.5,
+  "px": 1.24,
+  "won": true
+ },
+ {
+  "date": "2026-10-22",
+  "comp": "Conference League",
+  "fx": "Crvena Zvezda v FC Copenhagen",
+  "mk": "fouls",
+  "line": 20.5,
+  "px": 1.26,
+  "won": true
+ },
+ {
+  "date": "2026-10-22",
+  "comp": "Conference League",
+  "fx": "Crvena Zvezda v FC Copenhagen",
+  "mk": "corners",
+  "line": 8.5,
+  "px": 1.35,
+  "won": true
+ },
+ {
+  "date": "2026-10-22",
+  "comp": "Conference League",
+  "fx": "Crvena Zvezda v FC Copenhagen",
+  "mk": "cards",
+  "line": 3.5,
+  "px": 1.68,
+  "won": true
+ },
+ {
+  "date": "2026-10-22",
+  "comp": "Conference League",
+  "fx": "Crvena Zvezda v FC Copenhagen",
+  "mk": "fouls",
+  "line": 20.5,
+  "px": 1.26,
+  "won": true
+ },
+ {
+  "date": "2026-10-22",
+  "comp": "Conference League",
+  "fx": "Crvena Zvezda v FC Copenhagen",
+  "mk": "corners",
+  "line": 8.5,
+  "px": 1.35,
+  "won": true
+ },
+ {
+  "date": "2026-10-22",
+  "comp": "Conference League",
+  "fx": "Crvena Zvezda v FC Copenhagen",
+  "mk": "cards",
+  "line": 3.5,
+  "px": 1.68,
+  "won": true
+ },
+ {
+  "date": "2026-10-22",
+  "comp": "UEL",
+  "fx": "AFC Bournemouth v AC Milan",
+  "mk": "fouls",
+  "line": 20.5,
+  "px": 1.35,
+  "won": true
+ },
+ {
+  "date": "2026-10-22",
+  "comp": "UEL",
+  "fx": "TSG Hoffenheim v Lyon",
+  "mk": "corners",
+  "line": 8.5,
+  "px": 1.4,
+  "won": true
+ },
+ {
+  "date": "2026-10-22",
+  "comp": "UEL",
+  "fx": "TSG Hoffenheim v Lyon",
+  "mk": "fouls",
+  "line": 21.5,
+  "px": 1.32,
+  "won": true
+ },
+ {
+  "date": "2026-10-22",
+  "comp": "UEL",
+  "fx": "Celtic FC v Celta Vigo",
+  "mk": "fouls",
+  "line": 20.5,
+  "px": 1.4,
+  "won": false
+ },
+ {
+  "date": "2026-10-22",
+  "comp": "UEL",
+  "fx": "Celtic FC v Celta Vigo",
+  "mk": "corners",
+  "line": 8.5,
+  "px": 1.44,
+  "won": false
+ },
+ {
+  "date": "2026-10-22",
+  "comp": "UEL",
+  "fx": "Lillestr\u00f8m v Real Sociedad",
+  "mk": "corners",
+  "line": 8.5,
+  "px": 1.35,
+  "won": false
+ },
+ {
+  "date": "2026-10-22",
+  "comp": "UECL",
+  "fx": "AS Monaco v SC Freiburg",
+  "mk": "fouls",
+  "line": 21.5,
+  "px": 1.28,
+  "won": true
+ },
+ {
+  "date": "2026-10-22",
+  "comp": "UECL",
+  "fx": "SC Braga v KAA Gent",
+  "mk": "fouls",
+  "line": 20.5,
+  "px": 1.28,
+  "won": false
+ },
+ {
+  "date": "2026-10-22",
+  "comp": "UEL",
+  "fx": "Olympiacos v Sparta Prague",
+  "mk": "corners",
+  "line": 8.5,
+  "px": 1.55,
+  "won": true
+ },
+ {
+  "date": "2026-10-22",
+  "comp": "UECL",
+  "fx": "FC Thun v Hajduk Split",
+  "mk": "fouls",
+  "line": 21.5,
+  "px": 1.3,
+  "won": true
+ },
+ {
+  "date": "2026-10-22",
+  "comp": "UECL",
+  "fx": "FC Thun v Hajduk Split",
+  "mk": "cards",
+  "line": 3.5,
+  "px": 1.72,
+  "won": true
+ },
+ {
+  "date": "2026-10-22",
+  "comp": "UECL",
+  "fx": "Lincoln Red Imps v FC Twente",
+  "mk": "corners",
+  "line": 9.5,
+  "px": 1.38,
+  "won": false
+ },
+ {
+  "date": "2026-10-22",
+  "comp": "UECL",
+  "fx": "Lincoln Red Imps v FC Twente",
+  "mk": "fouls",
+  "line": 21.5,
+  "px": 1.35,
+  "won": true
+ },
+ {
+  "date": "2026-10-22",
+  "comp": "UEFA Europa League",
+  "fx": "Union SG v Hapoel Be'er Sheva",
+  "mk": "fouls",
+  "line": 21.5,
+  "px": 1.32,
+  "won": false
+ },
+ {
+  "date": "2026-10-22",
+  "comp": "UEFA Europa League",
+  "fx": "Ferencv\u00e1ros v SCU Torreense",
+  "mk": "fouls",
+  "line": 21.5,
+  "px": 1.32,
+  "won": true
+ },
+ {
+  "date": "2026-10-22",
+  "comp": "UEFA Conference League",
+  "fx": "Borac Banja Luka v KuPS Kuopio",
+  "mk": "fouls",
+  "line": 21.5,
+  "px": 1.32,
+  "won": true
+ },
+ {
+  "date": "2026-10-22",
+  "comp": "UEFA Europa League",
+  "fx": "NK Celje v RB Salzburg",
+  "mk": "corners",
+  "line": 8.5,
+  "px": 1.4,
+  "won": true
+ },
+ {
+  "date": "2026-10-22",
+  "comp": "UEFA Europa League",
+  "fx": "Dinamo Zagreb v NEC Nijmegen",
+  "mk": "fouls",
+  "line": 21.5,
+  "px": 1.32,
+  "won": true
+ },
+ {
+  "date": "2026-10-22",
+  "comp": "UEFA Conference League",
+  "fx": "Trabzonspor v Heart of Midlothian",
+  "mk": "fouls",
+  "line": 21.5,
+  "px": 1.32,
+  "won": true
+ },
+ {
+  "date": "2026-10-22",
+  "comp": "UEFA Conference League",
+  "fx": "FC Nordsj\u00e6lland v CSKA Sofia",
+  "mk": "corners",
+  "line": 8.5,
+  "px": 1.4,
+  "won": false
+ },
+ {
+  "date": "2026-10-22",
+  "comp": "UEFA Conference League",
+  "fx": "FC Nordsj\u00e6lland v CSKA Sofia",
+  "mk": "fouls",
+  "line": 21.5,
+  "px": 1.32,
+  "won": true
+ },
+ {
+  "date": "2026-10-22",
+  "comp": "UEFA Conference League",
+  "fx": "AGF Aarhus v Egnatia",
+  "mk": "fouls",
+  "line": 21.5,
+  "px": 1.32,
+  "won": true
+ },
+ {
+  "date": "2026-10-22",
+  "comp": "UEFA Conference League",
+  "fx": "Pafos FC v Riga FC",
+  "mk": "corners",
+  "line": 8.5,
+  "px": 1.4,
+  "won": true
+ },
+ {
+  "date": "2026-10-22",
+  "comp": "UEFA Conference League",
+  "fx": "Pafos FC v Riga FC",
+  "mk": "cards",
+  "line": 3.5,
+  "px": 1.72,
+  "won": true
+ },
+ {
+  "date": "2026-10-22",
+  "comp": "UEFA Conference League",
+  "fx": "Kairat Almaty v Panathinaikos",
+  "mk": "fouls",
+  "line": 21.5,
+  "px": 1.32,
+  "won": true
+ },
+ {
+  "date": "2026-10-22",
+  "comp": "UEFA Conference League",
+  "fx": "Kairat Almaty v Panathinaikos",
+  "mk": "corners",
+  "line": 8.5,
+  "px": 1.4,
+  "won": true
+ },
+ {
+  "date": "2026-10-22",
+  "comp": "UEFA Conference League",
+  "fx": "Kauno \u017dalgiris v SK Brann",
+  "mk": "cards",
+  "line": 3.5,
+  "px": 1.72,
+  "won": true
+ },
+ {
+  "date": "2026-10-22",
+  "comp": "UEFA Conference League",
+  "fx": "Inter Club d'Escaldes v Universitatea Craiova",
+  "mk": "fouls",
+  "line": 21.5,
+  "px": 1.32,
+  "won": true
+ },
+ {
+  "date": "2026-10-20",
+  "comp": "Champions League",
+  "fx": "Fenerbah\u00e7e v Slavia Praha",
+  "mk": "fouls",
+  "line": 21.5,
+  "px": 1.32,
+  "won": true
+ },
+ {
+  "date": "2026-10-20",
+  "comp": "Champions League",
+  "fx": "Sabah FK v Borussia Dortmund",
+  "mk": "corners",
+  "line": 8.5,
+  "px": 1.38,
+  "won": true
+ },
+ {
+  "date": "2026-10-20",
+  "comp": "Champions League",
+  "fx": "Liverpool v Villarreal",
+  "mk": "fouls",
+  "line": 21.5,
+  "px": 1.32,
+  "won": true
+ },
+ {
+  "date": "2026-10-20",
+  "comp": "Champions League",
+  "fx": "Paris Saint-Germain v FC Barcelona",
+  "mk": "corners",
+  "line": 8.5,
+  "px": 1.38,
+  "won": false
+ },
+ {
+  "date": "2026-10-20",
+  "comp": "Champions League",
+  "fx": "VfB Stuttgart v Atl\u00e9tico Madrid",
+  "mk": "corners",
+  "line": 8.5,
+  "px": 1.38,
+  "won": true
+ },
+ {
+  "date": "2026-10-21",
+  "comp": "UEFA Champions League (Wed)",
+  "fx": "Club Brugge v RC Lens",
+  "mk": "corners",
+  "line": 9.5,
+  "px": 1.55,
+  "won": false
+ }
+]

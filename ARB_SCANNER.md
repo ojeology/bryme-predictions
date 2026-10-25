@@ -32,6 +32,44 @@ npm run build
 
 Without feed environment variables, `/api/arbs/status` reports `manual` mode. This is expected. The NGN calculator, labelled training example and device ledger still work; the Opportunities tab remains empty.
 
+## How prices are read
+
+Prices are parsed strictly. A price is either a plain decimal (`2.10`) or a
+comma decimal (`2,10`, read as `2.10`). The ambiguous three-digit comma form
+(`1,850`) is **rejected**, never guessed, and a price that cannot be read is
+dropped from the scan. A missing price costs you an opportunity; a mis-read
+price would invent one.
+
+## How two books are matched to the same fixture
+
+Real books do not write the same fixture the same way. `Manchester United v
+AFC Bournemouth` on one book is `Man Utd vs Bournemouth` on another, and one
+feed may hand back the kick-off in UTC while another uses West Africa Time.
+The scanner therefore matches the **fixture**, not the label:
+
+- kick-off times may differ by up to **120 minutes** and still be the same fixture;
+- team names are compared token by token, so short forms still match;
+- a fixture on a different date, or with different teams, is never paired;
+- an exact `eventId` in the feed always wins.
+
+Market, line and settlement rules must still match exactly. A match that has
+already kicked off is never returned, in either feed mode or manual mode.
+
+## Bookmaker minimum stakes
+
+A quote may carry `minStake` (the bookmaker's minimum stake for that market).
+If the rounded stake on a leg falls below it, the leg cannot be placed, so the
+whole arbitrage is reported as **not executable** rather than as a clean edge.
+
+## Incomplete markets
+
+A market group is only compared when it holds every outcome the market has.
+A group with extra outcome keys (for example a stray half-time price on a
+90-minute market) is refused and counted in `rejectedGroupCount` instead of
+disappearing without a trace. It is never resolved by picking a subset: in a
+three-way market, home and away can both lose, so a subset is not an
+arbitrage.
+
 ## Calculation
 
 For decimal odds `odds[i]`:
@@ -89,7 +127,8 @@ A feed can be a JSON array or an object with a `quotes` (or `data`) array. Each 
 | `outcome` | yes | Canonical outcome key shared across books, such as `home`, `draw`, `over` |
 | `label` | recommended | Human-readable outcome label |
 | `bookmaker` | yes in combined feeds | Bookmaker ID/name |
-| `odds` | yes | Decimal odds greater than 1.00 |
+| `odds` | yes | Decimal odds greater than 1.00 (`2.10` or `2,10`) |
+| `minStake` | no | The bookmaker's minimum stake for that market, in the stake currency |
 | `fetchedAt` | yes for automatic feeds | ISO 8601 time when this price was obtained |
 | `url` | no | HTTP(S) event page for manual verification |
 
