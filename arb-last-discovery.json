@@ -1,9 +1,9 @@
 {
- "at": "2026-10-25T19:13:48.683Z",
- "edge": "PDX",
+ "at": "2026-10-25T21:48:42.950Z",
+ "edge": "SEA",
  "phoneCountry": "US",
  "workerCountry": "US",
- "workerColo": "PDX",
+ "workerColo": "SEA",
  "results": [
   {
    "id": "22bet",
@@ -1234,6 +1234,44 @@
      ],
      "reason": "JSON, but no prices in it",
      "sample": "{\"header\":{\"requestId\":\"1b656773-291b-4823-b7cb-519f068251dc\",\"versionApi\":\"2.35.0-415\",\"serverTime\":\"2026-10-25 18:54:50\",\"version\":\"20261025185450667\",\"viewType\":\"SportsViewV3\",\"sourceUid\":\"39ebf621-d5e9-4540-8209-5b612b99b7f5\"},\"sports\":[{\"id\":\"SBTC1_3\",\"originalId\":\"SBTC1_3\",\"name\":\"American Foo"
+    }
+   ]
+  },
+  {
+   "id": "betking",
+   "status": "none",
+   "url": "",
+   "quoteCount": 0,
+   "note": "no known page for this book",
+   "evidence": {
+    "scripts": [],
+    "chunks": [],
+    "candidatesTried": 0
+   },
+   "attempts": [
+    {
+     "url": "https://sportsapicdn-desktop.betking.com/api/feeds/prematch/info",
+     "ok": false,
+     "status": 403,
+     "keys": [],
+     "reason": "blocked (HTTP 403)",
+     "sample": "<!DOCTYPE html><html lang=\"en-US\"><head><title>Just a moment...</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\"><meta name=\"robots\" content=\"noindex,nofollow\"><meta name=\"viewport\" content=\"width=device-width,initial-scal"
+    },
+    {
+     "url": "https://sportsapicdn-desktop.betking.com/api/feeds/prematch/mostpopularsports/en/1/7/3/",
+     "ok": false,
+     "status": 403,
+     "keys": [],
+     "reason": "blocked (HTTP 403)",
+     "sample": "<!DOCTYPE html><html lang=\"en-US\"><head><title>Just a moment...</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\"><meta name=\"robots\" content=\"noindex,nofollow\"><meta name=\"viewport\" content=\"width=device-width,initial-scal"
+    },
+    {
+     "url": "https://sportsapicdn-desktop.betking.com/api/feeds/prematch/matches/custommenu/en/4",
+     "ok": false,
+     "status": 403,
+     "keys": [],
+     "reason": "blocked (HTTP 403)",
+     "sample": "<!DOCTYPE html><html lang=\"en-US\"><head><title>Just a moment...</title><meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"><meta http-equiv=\"X-UA-Compatible\" content=\"IE=Edge\"><meta name=\"robots\" content=\"noindex,nofollow\"><meta name=\"viewport\" content=\"width=device-width,initial-scal"
     }
    ]
   }
