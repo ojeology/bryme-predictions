@@ -82,10 +82,11 @@ export async function readSnapshotBook(env = {}, book = '') {
   void now;
 
   const sha = await headCommit(env);
-  // the branch address first: it always answers, and a copy a few minutes
-  // old is no older than the prices themselves.  The commit address, when
-  // it is known, is the one that can never change.
-  const addresses = sha ? [`${base}/${book}.json`, `${RAW}/${sha}/${book}.json`] : [`${base}/${book}.json`];
+  // The commit address can never change under us: it is always the file the
+  // reader published last, never a copy the address has kept from an older
+  // publish.  The branch address is the second try, for when the lookup of
+  // the commit does not answer.
+  const addresses = sha ? [`${RAW}/${sha}/${book}.json`, `${base}/${book}.json`] : [`${base}/${book}.json`];
 
   let value = { capturedAt: null, entry: null, quotes: [], error: null };
   try {

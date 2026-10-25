@@ -96,6 +96,7 @@ export async function loadConnectorQuotes(env = {}, options = {}) {
   // The prices the free reader published come first: they carry the whole
   // slate, and they cost no browser time at all.
   const published = new Map();
+  const publishedAt = new Map();
   const snapshotErrors = [];
   for (const definition of CONNECTORS) {
     if (!definition.snapshot) continue;
@@ -103,6 +104,7 @@ export async function loadConnectorQuotes(env = {}, options = {}) {
     const result = await snapshotQuotes(env, definition.id);
     if (result.quotes.length) {
       published.set(definition.id, result.quotes);
+      publishedAt.set(definition.id, result.capturedAt);
     } else if (result.error) {
       snapshotErrors.push(`${definition.label}: ${result.error.message}`);
     }
@@ -135,7 +137,13 @@ export async function loadConnectorQuotes(env = {}, options = {}) {
 
       // the free reader's published prices come first
       if (published.has(definition.id)) {
-        specific.push({ quotes: published.get(definition.id), error: null, attempted: true, source: 'reader' });
+        specific.push({
+          quotes: published.get(definition.id),
+          error: null,
+          attempted: true,
+          source: 'reader',
+          readAt: publishedAt.get(definition.id) || null,
+        });
         continue;
       }
 
@@ -227,14 +235,19 @@ export async function loadConnectorQuotes(env = {}, options = {}) {
     if (!configured(definition, env)) {
       return { id: definition.id, label: definition.label, status: 'not_configured', detail: 'No verified server-side feed is configured.', quoteCount: 0 };
     }
+    const readBy = own.source === 'reader' ? own.readAt : null;
+    const ageMinutes = readBy ? Math.max(0, Math.round((Date.now() - new Date(readBy).getTime()) / 60000)) : null;
     return {
       id: definition.id,
       label: definition.label,
       status: 'connected',
       detail: usable.length
-        ? 'JSON feed reachable. Quotes still pass exact-market and stale-price checks during scanning.'
+        ? (readBy
+          ? `Read by the free runner ${ageMinutes} minute${ageMinutes === 1 ? '' : 's'} ago. Every price still passes the exact-market and freshness checks.`
+          : 'JSON feed reachable. Quotes still pass exact-market and stale-price checks during scanning.')
         : 'Feed reachable, but it returned no usable quotes for this bookmaker.',
       quoteCount: usable.length + ownQuotes.length,
+      readAt: readBy,
     };
   }));
 
