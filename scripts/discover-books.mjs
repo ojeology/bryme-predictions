@@ -164,12 +164,29 @@ async function inspectNairaBet(browser) {
         const key = `${row.typeId}|${row.name}`;
         byType[key] = (byType[key] || 0) + 1;
       }
-      const sample = totals.slice(0, 3).map((row) => ({
+      const sample = totals.slice(0, 2).map((row) => ({
         name: row.name,
         typeId: row.typeId,
         keys: row.keys,
         odds: row.odds,
       }));
+      // the whole of two total-goals markets, so the line and the
+      // money-back flag can be read
+      const full = [];
+      const walkFull = (node) => {
+        if (!node || typeof node !== 'object' || full.length >= 2) return;
+        if (Array.isArray(node)) { for (const item of node) walkFull(item); return; }
+        const typeId = node.typeId ?? node.type?.id ?? null;
+        if (typeId === 18 && node.mst) {
+          full.push(JSON.parse(JSON.stringify(node)));
+          return;
+        }
+        for (const [key, value] of Object.entries(node)) {
+          if (key === 'odds') continue;
+          walkFull(value);
+        }
+      };
+      walkFull(payload);
       const isMbValues = {};
       for (const row of totals) {
         for (const odd of Object.values(row.odds || {})) {
@@ -185,6 +202,7 @@ async function inspectNairaBet(browser) {
         isMbValues,
         marketTypes: Object.entries(byType).sort((a, b) => b[1] - a[1]).slice(0, 40),
         sample,
+        full,
       };
     }, NAIRABET_TREE);
     log(`== nairabet: ${JSON.stringify(summary, null, 1)}`);
