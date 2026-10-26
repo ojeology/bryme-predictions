@@ -12,6 +12,11 @@
       "custom_domain": true
     }
   ],
+  "triggers": {
+    "crons": [
+      "*/10 * * * *"
+    ]
+  },
   "placement": {
     "mode": "smart"
   },
