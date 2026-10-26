@@ -57,6 +57,22 @@ function lineFrom(label) {
   return match ? match[1] : '';
 }
 
+/**
+ * When the book last moved the price of a selection.
+ *
+ * The book stamps every price with the moment it last changed, written as
+ * YYYYMMDDHHMMSSmmm.  A price that has not moved for days may be one the
+ * book has left behind.
+ */
+function priceMovedAt(selection) {
+  const raw = String(selection?.version || '').trim();
+  if (!/^\d{17}$/.test(raw)) return null;
+  const iso = `${raw.slice(0, 4)}-${raw.slice(4, 6)}-${raw.slice(6, 8)}`
+    + `T${raw.slice(8, 10)}:${raw.slice(10, 12)}:${raw.slice(12, 14)}.${raw.slice(14, 17)}Z`;
+  const date = new Date(iso);
+  return Number.isFinite(date.getTime()) ? date.toISOString() : null;
+}
+
 function marketIdentity(market) {
   const name = String(market?.name || '').trim();
   const period = String(market?.periodType || '').toUpperCase();
@@ -179,6 +195,7 @@ export function flattenLiveScoreBet(payload, options = {}) {
               bookmaker,
               odds,
               minStake: null,
+              priceMovedAt: priceMovedAt(selection),
               fetchedAt: now.toISOString(),
               url: options.url || '',
             });

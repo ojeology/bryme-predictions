@@ -60,6 +60,21 @@ function marketIdentity(market) {
   return null;
 }
 
+/**
+ * When the book last moved the price of a market.
+ *
+ * A price that has not moved for days may be one the book has left
+ * behind, and a chance built on a price like that can be taken away the
+ * moment the book wakes up.  The time is the book's own, not ours.
+ */
+function priceMovedAt(market) {
+  const raw = Number(market?.lastOddsChangeTime);
+  if (!Number.isFinite(raw) || raw <= 0) return null;
+  const millis = raw > 1e12 ? raw : raw * 1000;
+  const date = new Date(millis);
+  return Number.isFinite(date.getTime()) ? date.toISOString() : null;
+}
+
 /** The line for an Over/Under price: "Over 2.5" -> 2.5 */
 function overUnderLine(label) {
   const match = String(label || '').match(/\b(\d+(?:\.\d+)?)\b/);
@@ -133,6 +148,7 @@ export function flattenSportyBet(payload, options = {}) {
             bookmaker,
             odds,
             minStake: null,
+            priceMovedAt: priceMovedAt(market),
             fetchedAt: now.toISOString(),
             url: options.url || '',
           });

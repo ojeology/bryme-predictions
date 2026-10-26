@@ -526,6 +526,60 @@ export function scanOpportunities(rawQuotes, options = {}) {
   return scanWithClusters(rawQuotes, options).opportunities;
 }
 
+
+/**
+ * How long ago the book last moved a price, in seconds.
+ *
+ * A book that has not touched a price for a long time may have left it
+ * behind, and a chance built on a price like that can be taken away the
+ * moment the book wakes up.  The time comes from the book itself.
+ */
+export function priceAgeSeconds(quote, now = new Date()) {
+  const raw = quote?.priceMovedAt;
+  if (!raw) return null;
+  const millis = typeof raw === 'number' ? raw : Date.parse(String(raw));
+  if (!Number.isFinite(millis)) return null;
+  const seconds = (now.getTime() - millis) / 1000;
+  return Number.isFinite(seconds) ? Math.round(seconds) : null;
+}
+
+/**
+ * How far apart the books are on one leg, and which one moved last.
+ *
+ * When two books disagree about a price, the one that has not moved for a
+ * long time is the one that will have to change first.  That is the leg to
+ * look at before placing the bet.
+ *
+ * The two thresholds are deliberate.  A price that has not moved for a day
+ * is not automatically wrong - most prices simply sit still until
+ * something happens near the match - so a leg is only called out when it
+ * has stood still for a long time WHILE the other book has been moving.
+ * That pattern is the one that means the two books have simply not
+ * noticed each other yet, and it is the one that disappears on its own.
+ */
+export const STALE_PRICE_SECONDS = 24 * 60 * 60;
+export const MOVING_PRICE_SECONDS = 6 * 60 * 60;
+
+export function legFreshness(legs, now = new Date()) {
+  const ages = legs.map((leg) => ({
+    bookmaker: leg.bookmaker,
+    ageSeconds: priceAgeSeconds(leg, now),
+  }));
+  const known = ages.filter((entry) => Number.isFinite(entry.ageSeconds));
+  if (known.length < 2) return { ages, staleLegs: [], staleBookmakers: [] };
+  // the book that has been moving most recently
+  const freshest = Math.min(...known.map((entry) => entry.ageSeconds));
+  // a leg whose price has stood still for a long time while another book
+  // has been moving its own price
+  const staleLegs = known.filter((entry) => entry.ageSeconds >= STALE_PRICE_SECONDS
+    && freshest <= MOVING_PRICE_SECONDS);
+  return {
+    ages,
+    staleLegs,
+    staleBookmakers: staleLegs.map((entry) => entry.bookmaker),
+  };
+}
+
 /**
  * The same scan, and the fixtures it grouped, so that the same grouping is
  * not worked out a second time by the report that follows it.
@@ -646,6 +700,7 @@ export function scanWithClusters(rawQuotes, options = {}) {
           way: first.way,
           quoteCount: fixture.length,
           latestQuoteAt: fixture.map((quote) => quote.fetchedAt).filter(Boolean).sort().at(-1) || null,
+          ...legFreshness(best.legs, now),
         });
       }
     }

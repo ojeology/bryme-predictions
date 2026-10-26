@@ -13,7 +13,7 @@ import { bookmakerLabel } from '../../src/lib/arbitrage.js';
 
 export const PUBLISH_FIELDS = [
   'event', 'eventId', 'sport', 'competition', 'startsAt', 'market',
-  'marketKey', 'rulesKey', 'way', 'outcome', 'label', 'odds',
+  'marketKey', 'rulesKey', 'way', 'outcome', 'label', 'odds', 'priceMovedAt',
 ];
 
 /**
@@ -28,12 +28,41 @@ export function packQuotes(quotes, book, capturedAt) {
   for (const quote of quotes || []) {
     const row = new Array(PUBLISH_FIELDS.length);
     for (let index = 0; index < PUBLISH_FIELDS.length; index += 1) {
+      const field = PUBLISH_FIELDS[index];
       const value = quote[PUBLISH_FIELDS[index]];
-      row[index] = value === undefined ? null : value;
+      if (value === undefined) { row[index] = null; continue; }
+      // the stamp is kept as a number of milliseconds: a row of prices is
+      // written and read thousands of times a day, and four bytes of
+      // digits are cheaper than twenty-four bytes of text
+      if (field === 'priceMovedAt') {
+        const millis = Date.parse(String(value));
+        row[index] = Number.isFinite(millis) ? millis : null;
+        continue;
+      }
+      row[index] = value;
     }
     rows.push(row);
   }
   return { capturedAt, book, format: 'compact', fields: PUBLISH_FIELDS, rows };
+}
+
+/**
+ * The moment a book last moved a price, as an ISO moment.
+ *
+ * The stamp travels as a number of milliseconds because a row of prices is
+ * written and read thousands of times a day, and four bytes of digits are
+ * cheaper than twenty-four bytes of text.  It comes back as a moment in
+ * words, because that is what the rest of the system speaks.
+ */
+function stampToIso(value) {
+  if (value === null || value === undefined || value === '') return null;
+  const millis = Number(value);
+  if (Number.isFinite(millis) && millis > 0) {
+    const date = new Date(millis);
+    return Number.isFinite(date.getTime()) ? date.toISOString() : null;
+  }
+  const parsed = Date.parse(String(value));
+  return Number.isFinite(parsed) ? new Date(parsed).toISOString() : null;
 }
 
 /**
@@ -56,7 +85,7 @@ export function expandRows(entry, book, capturedAt) {
   for (const row of rows) {
     if (!Array.isArray(row)) continue;
     if (sameOrder) {
-      const [event, eventId, sport, competition, startsAt, market, marketKey, rulesKey, way, outcome, outcomeLabel, odds] = row;
+      const [event, eventId, sport, competition, startsAt, market, marketKey, rulesKey, way, outcome, outcomeLabel, odds, priceMovedAt] = row;
       quotes.push({
         event: event ?? '',
         eventId: eventId ?? '',
@@ -75,6 +104,8 @@ export function expandRows(entry, book, capturedAt) {
         odds: Number(odds) || 0,
         minStake: null,
         url: '',
+        // when the book last moved this price, if the book says
+        priceMovedAt: stampToIso(priceMovedAt),
         fetchedAt: capturedAt,
         // the prices came out of the reader already in this shape: there is
         // no need to build them a second time
@@ -89,6 +120,7 @@ export function expandRows(entry, book, capturedAt) {
     quote.bookmakerLabel = label;
     quote.odds = Number(quote.odds) || 0;
     quote.way = Number(quote.way) || 2;
+    quote.priceMovedAt = stampToIso(quote.priceMovedAt);
     quote.fetchedAt = capturedAt;
     quote.rules = quote.rules || quote.rulesKey || 'unspecified';
     quote.rulesKey = quote.rulesKey || 'unspecified';

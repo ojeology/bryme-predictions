@@ -36,6 +36,7 @@ import {
   BOOKMAKERS,
   DEFAULT_ROUNDING,
   DEFAULT_STAKE,
+  bookmakerLabel,
   calculateArbitrage,
 } from '../lib/arbitrage';
 
@@ -102,6 +103,26 @@ function quoteAge(value) {
   if (seconds < 60) return { label: `${seconds}s old`, stale: seconds > 120 };
   if (seconds < 3600) return { label: `${Math.floor(seconds / 60)}m old`, stale: seconds > 300 };
   return { label: `${Math.floor(seconds / 3600)}h old`, stale: true };
+}
+
+
+/**
+ * How long the book itself has stood on this price.
+ *
+ * This is not the same as how old our copy of the price is: it is the
+ * moment the book last changed the number.  A price that has not moved for
+ * days may be one the book has left behind, and it can be taken away the
+ * moment the book wakes up.
+ */
+function priceStoodFor(value) {
+  if (!value) return null;
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return null;
+  const seconds = Math.max(0, Math.floor((Date.now() - date.getTime()) / 1000));
+  if (seconds < 60) return 'moved just now';
+  if (seconds < 3600) return `moved ${Math.floor(seconds / 60)}m ago`;
+  if (seconds < 86400) return `moved ${Math.floor(seconds / 3600)}h ago`;
+  return `moved ${Math.floor(seconds / 86400)}d ago`;
 }
 
 function safeHttpUrl(value) {
@@ -327,6 +348,8 @@ function BookCard({ connector }) {
 function OpportunityCard({ opportunity, onOpen, firstSeen, history }) {
   const age = quoteAge(opportunity.latestQuoteAt);
   const moves = history && history.length > 1 ? summariseHistory(history) : null;
+  const staleNames = (opportunity.staleBookmakers || [])
+    .map((book) => bookmakerLabel(book));
   return (
     <article className="bg-slate-900/60 border border-white/10 rounded-2xl overflow-hidden">
       <div className="p-5 border-b border-white/10 flex items-start justify-between gap-4">
@@ -348,6 +371,12 @@ function OpportunityCard({ opportunity, onOpen, firstSeen, history }) {
               {moves.priceMoves.length ? ` · ${moves.priceMoves.map((move) => `${move.book} ${move.from}→${move.to}`).join(', ')}` : ''}
             </p>
           ) : null}
+          {staleNames.length ? (
+            <p className="text-[11px] text-amber-400 mt-1.5 flex items-start gap-1.5">
+              <AlertTriangle className="w-3.5 h-3.5 mt-0.5 shrink-0" />
+              {staleNames.join(', ')} has not moved this price while the other book has. Check that price in the app first.
+            </p>
+          ) : null}
         </div>
         <div className="text-right shrink-0">
           <div className="font-mono text-3xl font-bold tabular-nums text-emerald-400">+{numeric(opportunity.theoreticalRoiPct)}%</div>
@@ -360,6 +389,9 @@ function OpportunityCard({ opportunity, onOpen, firstSeen, history }) {
         {opportunity.legs.map((leg) => {
           const legAge = quoteAge(leg.fetchedAt);
           const url = safeHttpUrl(leg.url);
+          const stood = priceStoodFor(leg.priceMovedAt);
+          const staleLeg = Array.isArray(opportunity.staleBookmakers)
+            && opportunity.staleBookmakers.includes(leg.bookmaker);
           return (
             <div key={leg.id} className="px-5 py-3.5 grid grid-cols-[1fr_auto] sm:grid-cols-[1.2fr_1fr_auto_auto] items-center gap-3">
               <div className="min-w-0">
@@ -371,6 +403,7 @@ function OpportunityCard({ opportunity, onOpen, firstSeen, history }) {
               <div className="text-right">
                 <div className="font-mono text-sm font-bold text-slate-100">@{numeric(leg.odds)}</div>
                 <div className={`text-[10px] ${legAge.stale ? 'text-amber-400' : 'text-slate-600'}`}>{legAge.label}</div>
+                {stood ? <div className={`text-[10px] ${staleLeg ? 'text-amber-400' : 'text-slate-600'}`}>{stood}</div> : null}
               </div>
               <div className="text-right col-span-2 sm:col-span-1">
                 <div className="font-mono text-sm font-bold text-emerald-400">{money(leg.stake)}</div>

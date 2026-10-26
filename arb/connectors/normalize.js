@@ -173,6 +173,8 @@ export function flattenBookPayload(payload, options = {}) {
       bookmaker: q.bookmaker || bookmaker,
       odds,
       minStake: q.minStake ?? options.minStake ?? null,
+      // when the book last moved this price, if the book says
+      priceMovedAt: q.priceMovedAt || null,
       fetchedAt: q.fetchedAt || now.toISOString(),
       url: q.url || '',
     });
@@ -200,6 +202,7 @@ export function flattenBookPayload(payload, options = {}) {
         rules: pick(item, ['rules', 'rulesKey', 'settlement']),
         way: pick(item, ['way', 'outcomeCount']),
         fetchedAt: pick(item, ['fetchedAt', 'timestamp', 'updatedAt']),
+        priceMovedAt: pick(item, ['priceMovedAt', 'lastOddsChangeTime', 'priceChangedAt', 'lastChangedAt']),
         url: pick(item, ['url', 'link']),
         sport: pick(item, ['sport', 'sportName']), competition: pick(item, ['competition', 'league', 'leagueName']),
       });
