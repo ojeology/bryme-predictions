@@ -128,6 +128,13 @@ function sampleQuotes(quotes, perBook = 40) {
  * books are not offering the same fixtures, because they are not offering
  * the same markets, or because the prices simply do not add up.
  */
+/**
+ * The last scan, kept while the prices it was made from are the prices on
+ * offer.  The phone asks for a fresh scan every half minute, and the
+ * answer only changes when the books publish new prices.
+ */
+let scanCache = null;
+
 export function overlapReport(quotes, clustersByGroup = null) {
   const byBook = {};
   const groups = new Map();
@@ -267,12 +274,29 @@ export async function scanConfiguredFeeds(env = {}, options = {}) {
   }
   const { quotes, connectors, errors, refreshing, priceAgeSeconds } = await loadConnectorQuotes(env, options);
   const maxQuoteAgeSeconds = maxFeedAge(env);
+
+  // The same prices always give the same answer, so the answer is kept
+  // while the prices are the same.  The phone asks every half minute; the
+  // work is only done again when the books have published new prices.
+  const cacheKey = connectors
+    .map((connector) => `${connector.id}:${connector.readAt || ''}:${connector.quoteCount || 0}`)
+    .join('|');
+  // only prices that were published with a time of their own can be
+  // compared like this: the same prices always give the same answer
+  const cacheable = connectors.some((connector) => connector.readAt);
+  if (cacheable && scanCache && scanCache.key === cacheKey) {
+    return {
+      ...scanCache.payload,
+      refreshing: Boolean(refreshing),
+      priceAgeSeconds: priceAgeSeconds ?? null,
+      scannedAt: new Date().toISOString(),
+    };
+  }
   const now = Date.now();
   const freshQuotes = quotes.filter((quote) => isFreshPreMatch(quote, now, maxQuoteAgeSeconds));
   if (quotes.length && !freshQuotes.length) {
     errors.push(`No quotes passed the pre-match and ${maxQuoteAgeSeconds}-second freshness checks. Missing fetchedAt/startsAt values are rejected.`);
   }
-  const __t2 = Date.now();
   const __t1 = Date.now();
   const { opportunities, clustersByGroup } = scanWithClusters(freshQuotes, {
     ...options,
@@ -281,7 +305,7 @@ export async function scanConfiguredFeeds(env = {}, options = {}) {
     alreadyNormalized: true,
   });
   console.log(`TIMING scan ${Date.now() - __t1} ms`);
-  return {
+  const payload = {
     ok: true,
     mode: 'feed',
     connectors,
@@ -301,6 +325,8 @@ export async function scanConfiguredFeeds(env = {}, options = {}) {
     errors: [...new Set(errors)],
     scannedAt: new Date().toISOString(),
   };
+  if (cacheable) scanCache = { key: cacheKey, payload };
+  return payload;
 }
 
 /**
@@ -392,7 +418,6 @@ async function scanWithDiscovered(env, options, usable, found) {
   const maxQuoteAgeSeconds = maxFeedAge(env);
   const now = Date.now();
   const freshQuotes = quotes.filter((quote) => isFreshPreMatch(quote, now, maxQuoteAgeSeconds));
-  const __t2 = Date.now();
   const __t1 = Date.now();
   const { opportunities, clustersByGroup } = scanWithClusters(freshQuotes, {
     ...options,

@@ -471,14 +471,19 @@ function startTime(quote) {
  */
 export function clusterFixtures(quotes) {
   const clusters = [];
-  const ordered = [...quotes].sort((a, b) => startTime(a) - startTime(b));
+  // The kick-off of every price is worked out once, not once per
+  // comparison.  Sorting thousands of prices used to build a fresh date for
+  // every comparison, and that alone was most of the work of a scan.
+  const clusterWhen = [];
+  const ordered = quotes
+    .map((quote) => ({ quote, when: startTime(quote) }))
+    .sort((a, b) => a.when - b.when);
   // A price can only belong to a match whose name shares a word with it, so
   // the clusters are kept in a list by word.  Without this every price was
   // compared with every other price of its market, and a book that sends a
   // full slate of five thousand prices used up the Worker's whole time.
   const byWord = new Map();
-  for (const quote of ordered) {
-    const when = startTime(quote);
+  for (const { quote, when } of ordered) {
     const words = fixtureWords(quote);
     const candidates = new Set();
     for (const word of words) {
@@ -493,7 +498,7 @@ export function clusterFixtures(quotes) {
     for (const index of candidates) {
       if (index <= best) continue;
       const cluster = clusters[index];
-      const started = startTime(cluster[0]);
+      const started = clusterWhen[index];
       if (Number.isFinite(when) && Number.isFinite(started)
           && when - started > TIME_WINDOW_MINUTES * 60000) continue;
       if (sameFixture(cluster[0], quote)) best = index;
@@ -505,6 +510,7 @@ export function clusterFixtures(quotes) {
     }
     if (!placed) {
       clusters.push([quote]);
+      clusterWhen.push(when);
       indexWords(byWord, words, clusters.length - 1);
     }
   }
@@ -610,6 +616,12 @@ export function scanWithClusters(rawQuotes, options = {}) {
       let best = null;
       for (const legs of combinations(perOutcome)) {
         if (new Set(legs.map((leg) => leg.bookmaker)).size < 2) continue;
+        // The prices are added up first.  Building the whole arbitrage -
+        // the stakes, the returns, the warnings - for every combination of
+        // every match was most of the work of a scan, and all of it was
+        // thrown away unless the prices added up to less than one.
+        const sum = legs.reduce((total, leg) => total + 1 / leg.odds, 0);
+        if (sum >= 1 - 1e-10) continue;
         const result = calculateArbitrage(legs, {
           totalStake: options.totalStake || DEFAULT_STAKE,
           rounding: options.rounding ?? DEFAULT_ROUNDING,
