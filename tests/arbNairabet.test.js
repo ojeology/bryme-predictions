@@ -62,7 +62,8 @@ test('the match, its league and its kick-off come through', () => {
     assert.equal(quote.competition, 'Premier League');
     assert.equal(quote.startsAt, '2026-10-31T12:30:00Z');
     assert.equal(quote.bookmaker, 'nairabet');
-    assert.equal(quote.rulesKey, '90-minutes');
+    // the draw does not settle a draw-no-bet market, and the books say so
+    assert.equal(quote.rulesKey, quote.marketKey === 'draw-no-bet' ? 'draw-voided' : '90-minutes');
   }
 });
 

@@ -49,6 +49,11 @@ function marketIdentity(market) {
   if (/double chance/i.test(name)) {
     return { key: 'double-chance', name: name, rules: '90-minutes', way: 2 };
   }
+  if (/^draw no bet$/i.test(name)) {
+    // the book says it plainly: "If the teams draw, the selection will be
+    // voided" - so the draw does not settle this market
+    return { key: 'draw-no-bet', name: 'Draw No Bet', rules: 'draw-voided', way: 2 };
+  }
   // anything else (player props, correct score, combos, half-time markets)
   // settles differently from book to book - it is left alone
   void text;
@@ -107,6 +112,9 @@ export function flattenSportyBet(payload, options = {}) {
           }
           if (identity.key === 'match-result-1x2') {
             if (!['home', 'draw', 'away'].includes(outcomeKey)) continue;
+          }
+          if (identity.key === 'draw-no-bet') {
+            if (!['home', 'away'].includes(outcomeKey)) continue;
           }
 
           quotes.push({

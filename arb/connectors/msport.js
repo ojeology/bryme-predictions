@@ -60,7 +60,7 @@ function marketIdentity(market) {
     return { key: 'double-chance', name: 'Double Chance', rules: '90-minutes', way: 2 };
   }
   if (/^(draw no bet|dnb)$/i.test(name)) {
-    return { key: 'draw-no-bet', name: 'Draw No Bet', rules: '90-minutes', way: 2 };
+    return { key: 'draw-no-bet', name: 'Draw No Bet', rules: 'draw-voided', way: 2 };
   }
   // everything else (next goal, 1UP/2UP, half-time, player props, correct
   // score) settles differently from book to book - it is left alone

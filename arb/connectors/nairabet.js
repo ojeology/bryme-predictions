@@ -40,7 +40,7 @@ function marketIdentity(market) {
   if (typeId === 18) return { key: 'goals', name: 'Over/Under', rules: '90-minutes', way: 2 };
   if (typeId === 29) return { key: 'both-teams-to-score', name: 'Both Teams To Score', rules: '90-minutes', way: 2 };
   if (typeId === 10) return { key: 'double-chance', name: 'Double Chance', rules: '90-minutes', way: 2 };
-  if (typeId === 11) return { key: 'draw-no-bet', name: 'Draw No Bet', rules: '90-minutes', way: 2 };
+  if (typeId === 11) return { key: 'draw-no-bet', name: 'Draw No Bet', rules: 'draw-voided', way: 2 };
   // anything else (correct score, halves, player props, combos) settles
   // differently from book to book - it is left alone
   return null;

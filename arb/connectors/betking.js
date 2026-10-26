@@ -67,7 +67,7 @@ function marketIdentity(name) {
     return { key: 'both-teams-to-score', name: 'Both Teams To Score', rules: '90-minutes', way: 2 };
   }
   if (/^draw no bet$/i.test(raw)) {
-    return { key: 'draw-no-bet', name: 'Draw No Bet', rules: '90-minutes', way: 2 };
+    return { key: 'draw-no-bet', name: 'Draw No Bet', rules: 'draw-voided', way: 2 };
   }
   // everything else (1up / 2up, half-time, player props, correct score)
   // settles differently from book to book - it is left alone
