@@ -76,6 +76,9 @@ export function expandRows(entry, book, capturedAt) {
         minStake: null,
         url: '',
         fetchedAt: capturedAt,
+        // the prices came out of the reader already in this shape: there is
+        // no need to build them a second time
+        normalised: true,
       });
       continue;
     }
@@ -90,6 +93,7 @@ export function expandRows(entry, book, capturedAt) {
     quote.rules = quote.rules || quote.rulesKey || 'unspecified';
     quote.rulesKey = quote.rulesKey || 'unspecified';
     quote.label = quote.label || quote.outcome || '';
+    quote.normalised = true;
     quotes.push(quote);
   }
   return quotes;

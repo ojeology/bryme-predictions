@@ -272,10 +272,13 @@ export async function loadConnectorQuotes(env = {}, options = {}) {
     }
 
     // normalizeQuote builds a new object of its own, so the quote is not
-    // copied again first
-    const normalized = sources.map((quote) => normalizeQuote(
-      quote.bookmaker === definition.id ? quote : { ...quote, bookmaker: definition.id },
-    ));
+    // copied again first.  Prices that came out of the published file in
+    // their final shape are used as they are: building them a second time
+    // is the work that used to run the Worker out of room.
+    const normalized = sources.map((quote) => {
+      if (quote.normalised && quote.bookmaker === definition.id) return quote;
+      return normalizeQuote(quote.bookmaker === definition.id ? quote : { ...quote, bookmaker: definition.id });
+    });
     const usable = normalized.filter(usableQuote);
     allQuotes.push(...usable);
 
