@@ -11,6 +11,52 @@ export const BOOKMAKERS = [
 export const DEFAULT_STAKE = 100000;
 export const DEFAULT_ROUNDING = 100;
 
+/**
+ * Two books that are really one book.
+ *
+ * A platform can serve the same book under more than one name.  When it
+ * does, the two "books" answer with the same prices for the same matches,
+ * and comparing them as if they were two different books would invent an
+ * arbitrage out of a single book's own prices - the kind that cannot be
+ * placed, because the two legs are the same book.
+ *
+ * A book is only treated as a twin when it agrees with another book on
+ * every shared price, down to the last one, over a good number of them.
+ * Two books that merely agree on most of their prices are two books.
+ */
+export function findTwinBooks(quotes, { minShared = 40, minShare = 0.999 } = {}) {
+  const byBook = new Map();
+  for (const quote of quotes) {
+    const book = quote.bookmaker;
+    if (!book) continue;
+    if (!byBook.has(book)) byBook.set(book, new Map());
+    // the match, the market and the price: what two books must agree on
+    const key = `${quote.event || ''}|${quote.startsAt || ''}|${quote.marketKey || ''}|${quote.outcome || ''}`;
+    byBook.get(book).set(key, Number(quote.odds));
+  }
+  const books = [...byBook.keys()].sort();
+  const twins = new Map();
+  for (let i = 0; i < books.length; i += 1) {
+    for (let j = i + 1; j < books.length; j += 1) {
+      const left = byBook.get(books[i]);
+      const right = byBook.get(books[j]);
+      let shared = 0;
+      let same = 0;
+      for (const [key, odds] of left) {
+        if (!right.has(key)) continue;
+        shared += 1;
+        if (Math.abs(right.get(key) - odds) < 1e-9) same += 1;
+      }
+      if (shared < minShared) continue;
+      if (shared / left.size < minShare || shared / right.size < minShare) continue;
+      if (same !== shared) continue;
+      // the two are one book: the second name is kept, the first is dropped
+      twins.set(books[i], books[j]);
+    }
+  }
+  return twins;
+}
+
 /** How far apart two books' kick-off times may be and still be the same fixture. */
 export const TIME_WINDOW_MINUTES = 120;
 
@@ -658,9 +704,18 @@ export function scanWithClusters(rawQuotes, options = {}) {
       })
     : quotes;
 
+  // A platform can serve one book under two names.  Such a pair answers
+  // with the same prices for the same matches, and comparing them as two
+  // books would invent an arbitrage that cannot be placed - the two legs
+  // would be the same book.  One of the pair is let go of before the scan.
+  const twins = findTwinBooks(freshQuotes);
+  const twinOf = new Map();
+  for (const [book, twin] of twins) twinOf.set(twin, book);
+
   const groups = new Map();
   const rejected = [];
   for (const quote of freshQuotes) {
+    if (twinOf.has(quote.bookmaker)) continue;
     const key = `${normalizeText(quote.sport)}|${quote.marketKey}|${quote.rulesKey}|${quote.way}`;
     if (!groups.has(key)) groups.set(key, []);
     groups.get(key).push(quote);
@@ -763,5 +818,5 @@ export function scanWithClusters(rawQuotes, options = {}) {
   opportunities.sort((a, b) => b.theoreticalRoiPct - a.theoreticalRoiPct);
   opportunities.rejectedGroups = rejected;
   opportunities.rejectedGroupCount = rejectedCount;
-  return { opportunities, clustersByGroup, bestByFixture };
+  return { opportunities, clustersByGroup, bestByFixture, twinBooks: twins };
 }

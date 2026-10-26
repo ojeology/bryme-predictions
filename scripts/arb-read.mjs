@@ -25,6 +25,7 @@ import { flattenBetking } from '../arb/connectors/betking.js';
 import { flattenSportyBet } from '../arb/connectors/sportybet.js';
 import { fetchLiveScoreBetQuotes } from '../arb/connectors/livescorebetFeed.js';
 import { flattenNairaBet } from '../arb/connectors/nairabet.js';
+import { findTwinBooks } from '../src/lib/arbitrage.js';
 import { flattenLineFeed } from '../arb/connectors/linefeed.js';
 import { packQuotes } from '../arb/connectors/published.js';
 import { clusterFixtures } from '../src/lib/arbitrage.js';
@@ -889,6 +890,16 @@ async function main() {
     note('browser', `unavailable: ${error?.message || error}`);
   } finally {
     try { await browser?.close(); } catch { /* the browser may already be gone */ }
+  }
+
+  // A platform can serve one book under two names.  Such a pair answers
+  // with the same prices for the same matches, and publishing both would
+  // make the scanner compare one book with itself and invent an
+  // arbitrage that cannot be placed.  One of the pair is let go of here.
+  const twins = findTwinBooks(Object.values(books).flat());
+  for (const [book, twin] of twins) {
+    note(book, `the same prices as ${twin}: one book under two names, so only one of them is published`);
+    delete books[book];
   }
 
   // only the prices that another book is also showing
