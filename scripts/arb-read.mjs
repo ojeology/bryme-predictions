@@ -901,6 +901,7 @@ async function main() {
     note(book, `the same prices as ${twin}: one book under two names, so only one of them is published`);
     delete books[book];
   }
+  if (twins.size) note('books', `${twins.size} pair(s) of names turned out to be one book and were not published twice`);
 
   // only the prices that another book is also showing
   const shared = sharedFixturesOnly(books);
