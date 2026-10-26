@@ -106,7 +106,12 @@ export async function readSnapshotBook(env = {}, book = '', { force = false } = 
     }
     if (!response) throw lastError || new Error('the prices could not be read');
     if (!response.ok) {
-      value = { capturedAt: null, entry: null, quotes: [], error: new Error(`the free reader has no prices for ${book} yet (HTTP ${response.status})`) };
+      value = {
+        capturedAt: null,
+        entry: null,
+        quotes: [],
+        error: new Error(`the free reader has published no prices for ${book} yet`),
+      };
     } else {
       const payload = await response.json();
       value = { capturedAt: payload?.capturedAt || null, entry: payload || null, error: null };

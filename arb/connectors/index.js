@@ -113,6 +113,7 @@ export async function loadConnectorQuotes(env = {}, options = {}) {
 
   const readBooks = async (force) => {
     const started = Date.now();
+    let quotes = 0;
     published.clear();
     publishedAt.clear();
     const problems = [];
@@ -120,6 +121,7 @@ export async function loadConnectorQuotes(env = {}, options = {}) {
       if (!definition.snapshot) continue;
       if (only && !only.has(definition.id)) continue;
       const result = await snapshotQuotes(env, definition.id, { force });
+      quotes += result.quotes.length;
       if (result.quotes.length) {
         published.set(definition.id, result.quotes);
         publishedAt.set(definition.id, result.capturedAt);
@@ -130,7 +132,7 @@ export async function loadConnectorQuotes(env = {}, options = {}) {
     // the notes of a cold read are not kept once fresh prices have arrived
     if (force) snapshotErrors.length = 0;
     snapshotErrors.push(...problems);
-    console.log(`TIMING read ${Date.now() - started} ms`);
+    console.log(`TIMING read ${Date.now() - started} ms wall, ${quotes} prices`);
   };
   let refreshing = false;
   await readBooks(false);

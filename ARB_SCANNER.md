@@ -293,3 +293,44 @@ has gone cold:
 
 The scan tells the truth about its age: `priceAgeSeconds` is how old the
 oldest price in the answer is, and `refreshing` says a read is under way.
+
+## What changed on 26 October, and why the scan is fast
+
+**The prices travel as rows.** The reader writes each book's prices as
+rows of twelve values rather than as objects with fourteen named fields.
+The same prices in the same file take a third less space, and the Worker
+spends less of its own time and memory taking them in. Reading a full
+slate of five books is the part of a scan that runs out of room first, so
+this is what buys the room for the next market and the next book.
+
+**The kick-off of every price is worked out once.** The prices used to be
+sorted with a fresh date built for every comparison — over two hundred
+thousand dates for one book. Now each price's kick-off is worked out once
+and carried along.
+
+**The prices are added up before the arbitrage is built.** For every
+match, every combination of the best prices was being turned into a full
+arbitrage — stakes, returns, warnings — and all of it was thrown away
+unless the prices added up to less than one. Now the sum is worked out
+first, and the rest is only built when there is something there.
+
+**The same prices are only worked out once.** The phone asks for a fresh
+scan every half minute. The answer only changes when the books publish new
+prices, so the answer is kept while the prices are the same.
+
+Together these took the scan from about 2,000 milliseconds of the Worker's
+time — which is more than the Worker is allowed, so the scan failed — to
+roughly 750 milliseconds in the steady state and about 1,500 milliseconds on
+the first scan after the books publish.
+
+**The Draw No Bet market is read.** SportyBet had it all along and the
+reader was throwing it away. It is only worth reading if both sides of
+the market are read the same way, so every book now says the same thing
+about how it settles: `draw-voided`, because the draw does not settle that
+market.
+
+**The books' edge refuses a burst.** When two reads ran at once, the books
+refused the runner and the largest book went missing for a whole cycle.
+The reader now asks for one page at a time with a pause between the
+pages, rests a minute and tries again when a call is refused, and the
+Worker will not start a read while another one is running.
