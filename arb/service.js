@@ -15,6 +15,8 @@ const PROBE_HOSTS = [
   'betking.com', 'www.betking.com', 'api.betking.com', 'sportsapicdn-desktop.betking.com',
   'm.22bet.ng', 'm.22bet.com', 'm.1xbet.ng',
   'gateway-ng.livescorebet.com', 'www.sportybet.com', 'sports.sportybet.com',
+  // the widget platform NairaBet runs on, and the addresses its prices live on
+  'biahosted.com', 'biahosted.net', 'twoup.io', 'tabet-live.io', 'traincdn.com',
 ];
 
 async function probeBook(address, method, body, headers, seconds = 8) {

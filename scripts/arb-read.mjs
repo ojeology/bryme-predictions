@@ -24,6 +24,7 @@ import { flattenMsport } from '../arb/connectors/msport.js';
 import { flattenBetking } from '../arb/connectors/betking.js';
 import { flattenSportyBet } from '../arb/connectors/sportybet.js';
 import { fetchLiveScoreBetQuotes } from '../arb/connectors/livescorebetFeed.js';
+import { flattenNairaBet } from '../arb/connectors/nairabet.js';
 import { clusterFixtures } from '../src/lib/arbitrage.js';
 
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36';
@@ -37,6 +38,9 @@ const BETKING_URLS = (process.env.BETKING_FEED_URL
 
 const LSB_URL = (process.env.LSCB_FEED_URL
   || 'https://gateway-ng.livescorebet.com/sportsbook/gateway/v3/view/events/matches?sportcategoryid=SBTC1_1&categoryid=SBTC1_1').trim();
+
+const NAIRABET_URL = (process.env.NAIRABET_FEED_URL
+  || 'https://sb2frontend-altenar2.biahosted.com/api/Widget/GetEvents?culture=en-GB&timezoneOffset=0&integration=nairabet&deviceType=desktop&sportId=66').trim();
 
 const SPORTYBET_ORIGIN = 'https://www.sportybet.com';
 const SPORTYBET_PAGE = `${SPORTYBET_ORIGIN}/ng/`;
@@ -132,6 +136,48 @@ async function readLiveScoreBet() {
     return quotes;
   } catch (error) {
     note('livescorebet', `failed: ${error?.message || error}`);
+    return [];
+  }
+}
+
+/**
+ * NairaBet's prices.  The book runs on the Altenar/SB widget platform, and
+ * that platform answers a public JSON endpoint with the whole price tree -
+ * no browser, no account, no cookie.
+ */
+async function readNairaBet() {
+  try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 30000);
+    const response = await fetch(NAIRABET_URL, {
+      method: 'GET',
+      headers: {
+        'User-Agent': UA,
+        Accept: 'application/json, text/plain, */*',
+        'Accept-Language': 'en-GB,en;q=0.9',
+        Referer: 'https://nairabet.com/',
+        Origin: 'https://nairabet.com',
+      },
+      signal: controller.signal,
+    });
+    const text = await response.text();
+    clearTimeout(timer);
+    if (!response.ok) {
+      note('nairabet', `failed: HTTP ${response.status}`);
+      return [];
+    }
+    let payload;
+    try { payload = JSON.parse(text); } catch {
+      note('nairabet', 'failed: the answer was not a price tree');
+      return [];
+    }
+    const quotes = flattenNairaBet(payload, { bookmaker: 'nairabet', now: new Date().toISOString() });
+    const fixtures = new Set(quotes.map((quote) => quote.event)).size;
+    note('nairabet', `${quotes.length} prices over ${fixtures} matches`);
+    return quotes;
+  } catch (error) {
+    if (error?.name === 'AbortError') note('nairabet', 'failed: the book did not answer in time');
+    else note('nairabet', `failed: ${error?.message || error}`);
     return [];
   }
 }
@@ -356,10 +402,7 @@ async function readSportyBet(browser) {
         }
       } catch { /* not a price tree */ }
     }
-    if (quotes.length) {
-      note('sportybet', `the slate: ${quotes.length} prices`);
-      return quotes;
-    }
+    if (quotes.length) note('sportybet', `the page's own calls: ${quotes.length} prices`);
 
     // The full slate: the site asks its price service for the events of each
     // tournament, so one tournament is opened and the call it makes is
@@ -600,12 +643,16 @@ function sharedFixturesOnly(books) {
 async function main() {
   const capturedAt = new Date().toISOString();
   const books = {};
+  await mkdir('out', { recursive: true });
 
   const mspportQuotes = await readMsport();
   if (mspportQuotes.length) books.msport = mspportQuotes;
 
   const lsbQuotes = await readLiveScoreBet();
   if (lsbQuotes.length) books.livescorebet = lsbQuotes;
+
+  const nairaQuotes = await readNairaBet();
+  if (nairaQuotes.length) books.nairabet = nairaQuotes;
 
   let browser = null;
   try {

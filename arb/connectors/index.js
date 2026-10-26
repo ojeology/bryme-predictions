@@ -14,7 +14,10 @@ export const CONNECTORS = [
   // its published prices come first: they carry the whole slate and cost no
   // browser time
   { id: 'sportybet', label: 'SportyBet NG', envKey: 'SPORTYBET_FEED_URL', snapshot: true },
-  { id: 'nairabet', label: 'NairaBet', envKey: 'NAIRABET_FEED_URL' },
+  // NairaBet's own price tree is nearly three megabytes: reading it here
+  // would cost more CPU than the whole scan may use, so the free reader
+  // reads it and publishes the prices that another book is also showing
+  { id: 'nairabet', label: 'NairaBet', envKey: 'NAIRABET_FEED_URL', snapshot: true, snapshotOnly: true },
   { id: '22bet', label: '22Bet NG', envKey: 'BET22_FEED_URL' },
   { id: '1xbet', label: '1xBet', envKey: 'BET1X_FEED_URL' },
   { id: 'livescorebet', label: 'LiveScore Bet NG', envKey: 'LSCB_FEED_URL', snapshot: true },
@@ -186,6 +189,17 @@ export async function loadConnectorQuotes(env = {}, options = {}) {
     }
     try {
       const feedUrl = env[definition.envKey];
+
+      // a book the free reader reads for us: its prices are read there, and
+      // read here only when the reader has published them
+      if (definition.snapshotOnly && !published.has(definition.id)) {
+        specific.push({
+          quotes: [],
+          error: new Error("The free reader has not published this book's prices yet."),
+          attempted: true,
+        });
+        continue;
+      }
 
       // the free reader's published prices come first
       if (published.has(definition.id)) {
