@@ -1,5 +1,5 @@
 {
- "at": "2026-10-26T17:31:18.104Z",
+ "at": "2026-10-26T17:31:19.776Z",
  "edge": "CDG",
  "phoneCountry": "NG",
  "workerCountry": "NG",
@@ -1361,6 +1361,19 @@
   },
   {
    "id": "jackpotbet",
+   "status": "none",
+   "url": "",
+   "quoteCount": 0,
+   "note": "no known page for this book",
+   "evidence": {
+    "scripts": [],
+    "chunks": [],
+    "candidatesTried": 0
+   },
+   "attempts": []
+  },
+  {
+   "id": "stake",
    "status": "none",
    "url": "",
    "quoteCount": 0,
