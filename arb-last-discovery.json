@@ -1,5 +1,5 @@
 {
- "at": "2026-10-26T17:31:25.409Z",
+ "at": "2026-10-26T17:31:27.112Z",
  "edge": "CDG",
  "phoneCountry": "NG",
  "workerCountry": "NG",
@@ -1387,6 +1387,19 @@
   },
   {
    "id": "betway",
+   "status": "none",
+   "url": "",
+   "quoteCount": 0,
+   "note": "no known page for this book",
+   "evidence": {
+    "scripts": [],
+    "chunks": [],
+    "candidatesTried": 0
+   },
+   "attempts": []
+  },
+  {
+   "id": "12bet",
    "status": "none",
    "url": "",
    "quoteCount": 0,
