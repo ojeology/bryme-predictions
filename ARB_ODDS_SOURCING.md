@@ -448,3 +448,31 @@ service answers with the parameter it did not like, which is a short way
 to a working call - and then answers 406, because the address it was
 asked from is not one the book serves.  Reading them would need an
 address in Nigeria; faking one is not something this lab does.
+
+## The books that answer, and the ones that will not (26 October, checked again)
+
+Every book below was opened in the runner's own Chrome, and every price
+address was tried from the Worker as well.  The result is not a puzzle: the
+books split cleanly in two.
+
+**They answer the runner and the Worker** (five books, all live):
+SportyBet, NairaBet, LiveScore Bet, BetKing, MSport.
+
+**They will not, because they refuse the address the request comes from:**
+
+| Book | What happens | From where it was tried |
+|---|---|---|
+| 22Bet | `406 feed/NotAcceptableException` | the Worker, the runner, the phone's own network, every country value, every header set |
+| 1xBet | the same answer, the same backend | the same |
+| Bet9ja | Akamai `Access Denied` - even in a real browser, so it is the address and not the client | the runner's browser, the Worker, the plain fetch |
+| Merrybet | `merrybet.ng` will not do TLS, `merrybet.com` times out at the origin (522) | the runner's browser |
+| Betway | `betway.ng` does not resolve at all | the runner's browser |
+
+BetKing's price feed is the same shape as Bet9ja's would be, and BetKing
+answers, so Bet9ja's block is the address rather than the platform.
+
+**What that means:** one small server in Nigeria would read all of them -
+22Bet, 1xBet and Bet9ja included - because that is the country they serve.
+Nothing about the scanner changes: the reader is an ordinary Node script.
+Faking an address is not an option, and this document does not try to offer
+one.

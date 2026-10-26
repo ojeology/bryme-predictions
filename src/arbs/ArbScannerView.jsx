@@ -348,6 +348,7 @@ function OpportunityCard({ opportunity, onOpen, firstSeen, history }) {
               <div className="min-w-0">
                 <div className="text-sm font-bold text-slate-100 truncate">{leg.label || leg.outcome}</div>
                 <div className="text-[11px] text-slate-500 sm:hidden">{leg.bookmakerLabel}</div>
+                {leg.rules ? <div className="text-[10px] text-slate-600 truncate">settles: {leg.rules}</div> : null}
               </div>
               <div className="hidden sm:block text-sm font-semibold text-slate-400">{leg.bookmakerLabel}</div>
               <div className="text-right">
@@ -356,6 +357,7 @@ function OpportunityCard({ opportunity, onOpen, firstSeen, history }) {
               </div>
               <div className="text-right col-span-2 sm:col-span-1">
                 <div className="font-mono text-sm font-bold text-emerald-400">{money(leg.stake)}</div>
+                <div className="text-[10px] text-slate-600">returns {money(Number(leg.stake || 0) * Number(leg.odds || 0))}</div>
                 {url && (
                   <a href={url} target="_blank" rel="noreferrer" className="text-[11px] font-semibold text-sky-400 inline-flex items-center gap-1 mt-0.5">
                     verify <ExternalLink className="w-3 h-3" />
@@ -486,6 +488,12 @@ export default function ArbScannerView() {
       setOpportunities(found);
       if (connectors.length) setConnection((current) => ({ ...current, state: 'ready', mode: data.mode || current.mode, connectors }));
       setScannedAt(new Date().toISOString());
+      // the phone's title says how many chances are open, so a glance at the
+      // task switcher is enough to know a new one has appeared
+      const title = found.length
+        ? `\u{1F534} ${found.length} ${found.length === 1 ? 'chance' : 'chances'} — Ground Zero`
+        : 'Ground Zero — arb lab';
+      if (document.title !== title) document.title = title;
       setPriceAge(Number.isFinite(Number(data.priceAgeSeconds)) ? Number(data.priceAgeSeconds) : null);
       // remember when this opportunity was first seen on this phone
       const stamp = new Date().toISOString();
