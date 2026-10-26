@@ -48,6 +48,7 @@ const CHECKS = [
   'Exact same market and line',
   'Settlement rules match (including overtime)',
   'Odds and stake limits re-checked at every bookmaker',
+  'The price on screen is still the price the book is offering',
 ];
 const DEFAULT_CONNECTORS = [
   { id: 'sportybet', label: 'SportyBet NG', status: 'not_configured', detail: 'No verified server-side feed is configured.', quoteCount: 0 },
@@ -1468,18 +1469,22 @@ export default function ArbScannerView() {
                     </div>
                   </div>
                   <div className="divide-y divide-white/5">
-                    {result.legs.map((leg) => (
-                      <div key={leg.id} className="px-5 py-3 grid grid-cols-[1fr_auto] gap-3 items-center">
-                        <div>
-                          <div className="text-sm font-bold text-slate-100">{leg.label || leg.outcome}</div>
-                          <div className="text-[11px] text-slate-500">{leg.bookmakerLabel} · @{numeric(leg.odds)} · return {money(leg.returnAmount, true)}</div>
+                    {result.legs.map((leg) => {
+                      const stood = priceStoodFor(leg.priceMovedAt);
+                      return (
+                        <div key={leg.id} className="px-5 py-3 grid grid-cols-[1fr_auto] gap-3 items-center">
+                          <div>
+                            <div className="text-sm font-bold text-slate-100">{leg.label || leg.outcome}</div>
+                            <div className="text-[11px] text-slate-500">{leg.bookmakerLabel} · @{numeric(leg.odds)} · return {money(leg.returnAmount, true)}</div>
+                            {stood ? <div className="text-[10px] text-slate-600">the book {stood}</div> : null}
+                          </div>
+                          <div className="text-right">
+                            <div className="font-mono text-lg font-bold text-slate-100">{money(leg.stake)}</div>
+                            <div className="text-[10px] text-slate-600">exact {money(leg.exactStake, true)}</div>
+                          </div>
                         </div>
-                        <div className="text-right">
-                          <div className="font-mono text-lg font-bold text-slate-100">{money(leg.stake)}</div>
-                          <div className="text-[10px] text-slate-600">exact {money(leg.exactStake, true)}</div>
-                        </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                   {result.warnings.length > 0 && (
                     <div className="m-4 bg-amber-500/10 border border-amber-500/30 rounded-lg px-3 py-2 text-xs text-amber-200 flex items-start gap-2">

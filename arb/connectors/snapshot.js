@@ -23,7 +23,12 @@ const REPO = 'ojeology/bryme-predictions';
 const BRANCH = 'prices';
 const RAW = `https://raw.githubusercontent.com/${REPO}`;
 const CACHE_MS = 60_000;
-const HEAD_CACHE_MS = 300_000;
+// The reader publishes fresh prices every ten minutes.  Looking up the
+// commit it published last costs a question to GitHub, and a copy of that
+// answer that is five minutes old is a commit that is five minutes old -
+// which is a whole publishing round out of date.  The lookup is done
+// every time the prices are read, so a new publish is seen at once.
+const HEAD_CACHE_MS = 45_000;
 const DEFAULT_MAX_AGE_SECONDS = 1800;
 
 const cache = new Map();
