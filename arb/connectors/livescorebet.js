@@ -67,10 +67,15 @@ function lineFrom(label) {
 function priceMovedAt(selection) {
   const raw = String(selection?.version || '').trim();
   if (!/^\d{17}$/.test(raw)) return null;
-  const iso = `${raw.slice(0, 4)}-${raw.slice(4, 6)}-${raw.slice(6, 8)}`
-    + `T${raw.slice(8, 10)}:${raw.slice(10, 12)}:${raw.slice(12, 14)}.${raw.slice(14, 17)}Z`;
-  const date = new Date(iso);
-  return Number.isFinite(date.getTime()) ? date.toISOString() : null;
+  // YYYYMMDDHHMMSSmmm read as digits, and turned into a moment by hand:
+  // the arithmetic is cheap, and building a Date for every price in a
+  // full slate is not
+  const millis = Date.UTC(
+    Number(raw.slice(0, 4)), Number(raw.slice(4, 6)) - 1, Number(raw.slice(6, 8)),
+    Number(raw.slice(8, 10)), Number(raw.slice(10, 12)), Number(raw.slice(12, 14)),
+    Number(raw.slice(14, 17)),
+  );
+  return Number.isFinite(millis) ? millis : null;
 }
 
 function marketIdentity(market) {

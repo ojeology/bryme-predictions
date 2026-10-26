@@ -47,22 +47,20 @@ export function packQuotes(quotes, book, capturedAt) {
 }
 
 /**
- * The moment a book last moved a price, as an ISO moment.
+ * The moment a book last moved a price, as a number of milliseconds.
  *
- * The stamp travels as a number of milliseconds because a row of prices is
- * written and read thousands of times a day, and four bytes of digits are
- * cheaper than twenty-four bytes of text.  It comes back as a moment in
- * words, because that is what the rest of the system speaks.
+ * The stamp travels as digits because a row of prices is written and read
+ * thousands of times a day, and four bytes of digits are cheaper than
+ * twenty-four bytes of text.  It stays as digits on this side too: turning
+ * twenty thousand stamps into words cost the Worker more time and memory
+ * than the whole of the rest of the scan.
  */
-function stampToIso(value) {
+function stampToMillis(value) {
   if (value === null || value === undefined || value === '') return null;
   const millis = Number(value);
-  if (Number.isFinite(millis) && millis > 0) {
-    const date = new Date(millis);
-    return Number.isFinite(date.getTime()) ? date.toISOString() : null;
-  }
+  if (Number.isFinite(millis) && millis > 0) return millis;
   const parsed = Date.parse(String(value));
-  return Number.isFinite(parsed) ? new Date(parsed).toISOString() : null;
+  return Number.isFinite(parsed) ? parsed : null;
 }
 
 /**
@@ -105,7 +103,7 @@ export function expandRows(entry, book, capturedAt) {
         minStake: null,
         url: '',
         // when the book last moved this price, if the book says
-        priceMovedAt: stampToIso(priceMovedAt),
+        priceMovedAt: stampToMillis(priceMovedAt),
         fetchedAt: capturedAt,
         // the prices came out of the reader already in this shape: there is
         // no need to build them a second time
@@ -120,7 +118,7 @@ export function expandRows(entry, book, capturedAt) {
     quote.bookmakerLabel = label;
     quote.odds = Number(quote.odds) || 0;
     quote.way = Number(quote.way) || 2;
-    quote.priceMovedAt = stampToIso(quote.priceMovedAt);
+    quote.priceMovedAt = stampToMillis(quote.priceMovedAt);
     quote.fetchedAt = capturedAt;
     quote.rules = quote.rules || quote.rulesKey || 'unspecified';
     quote.rulesKey = quote.rulesKey || 'unspecified';

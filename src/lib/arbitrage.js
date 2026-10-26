@@ -269,6 +269,27 @@ function splitFixture(event) {
   return [String(event || ''), ''];
 }
 
+/**
+ * A moment, in milliseconds, out of whatever the book wrote.
+ *
+ * A scan reads the same few moments thousands of times - every price of a
+ * book carries the same two of them - and building a fresh date for each
+ * one was most of the work of a scan.  The answers are remembered.
+ */
+const millisCache = new Map();
+
+export function millisOf(value) {
+  if (value === null || value === undefined || value === '') return NaN;
+  if (typeof value === 'number') return value;
+  const key = String(value);
+  const cached = millisCache.get(key);
+  if (cached !== undefined) return cached;
+  const millis = Date.parse(key);
+  if (millisCache.size > 5000) millisCache.clear();
+  millisCache.set(key, millis);
+  return millis;
+}
+
 function tokenize(value) {
   return String(value || '')
     .toLowerCase()
@@ -372,10 +393,11 @@ function sideMatches(aTokens, bTokens) {
  * as well as under itself.  A file can then be found by any of those
  * beginnings, and no match is lost.
  */
-const fixtureWordsCache = new WeakMap();
+const fixtureWordsCache = new Map();
 
 function fixtureWords(quote) {
-  const cached = fixtureWordsCache.get(quote);
+  const event = String(quote?.event ?? '');
+  const cached = fixtureWordsCache.get(event);
   if (cached) return cached;
   const sides = fixtureSides(quote);
   const words = new Set();
@@ -388,7 +410,8 @@ function fixtureWords(quote) {
     words.add(word);
     for (let length = 3; length < word.length; length += 1) words.add(word.slice(0, length));
   }
-  fixtureWordsCache.set(quote, words);
+  if (fixtureWordsCache.size > 8000) fixtureWordsCache.clear();
+  fixtureWordsCache.set(event, words);
   return words;
 }
 
@@ -413,21 +436,25 @@ function indexWords(byWord, words, index) {
  * prices, meant millions of short-lived lists of words and the Worker ran
  * out of memory.  The names are now taken apart once each.
  */
-const fixtureSidesCache = new WeakMap();
+const fixtureSidesCache = new Map();
 
 function fixtureSides(quote) {
-  let sides = fixtureSidesCache.get(quote);
+  const event = String(quote?.event ?? '');
+  let sides = fixtureSidesCache.get(event);
   if (!sides) {
-    const [home, away] = splitFixture(quote?.event);
+    const [home, away] = splitFixture(event);
     sides = { home: tokenize(home), away: tokenize(away) };
-    fixtureSidesCache.set(quote, sides);
+    // a book sends a full slate of prices for a match - tens of them -
+    // and the names of a match are taken apart once, not once per price
+    if (fixtureSidesCache.size > 8000) fixtureSidesCache.clear();
+    fixtureSidesCache.set(event, sides);
   }
   return sides;
 }
 
 export function sameFixture(a, b) {
-  const ta = new Date(a.startsAt || '').getTime();
-  const tb = new Date(b.startsAt || '').getTime();
+  const ta = millisOf(a?.startsAt);
+  const tb = millisOf(b?.startsAt);
   if (Number.isFinite(ta) && Number.isFinite(tb)
       && Math.abs(ta - tb) > TIME_WINDOW_MINUTES * 60000) return false;
   if (a.eventId && b.eventId && a.eventId === b.eventId) return true;
@@ -456,7 +483,7 @@ function combinations(items, limit = 5000) {
 
 /** The kick-off of a price, in milliseconds. No kick-off sorts last. */
 function startTime(quote) {
-  const time = new Date(quote?.startsAt || '').getTime();
+  const time = millisOf(quote?.startsAt);
   return Number.isFinite(time) ? time : Infinity;
 }
 
@@ -475,15 +502,21 @@ export function clusterFixtures(quotes) {
   // comparison.  Sorting thousands of prices used to build a fresh date for
   // every comparison, and that alone was most of the work of a scan.
   const clusterWhen = [];
-  const ordered = quotes
-    .map((quote) => ({ quote, when: startTime(quote) }))
-    .sort((a, b) => a.when - b.when);
+  // the prices are put in order by their kick-off, and the kick-off is
+  // worked out once and kept beside the price.  Wrapping every price in an
+  // object of its own made the garbage collector work overtime.
+  const ordered = quotes.map((quote, index) => index);
+  const whenOf = new Array(quotes.length);
+  for (let index = 0; index < quotes.length; index += 1) whenOf[index] = startTime(quotes[index]);
+  ordered.sort((a, b) => whenOf[a] - whenOf[b]);
   // A price can only belong to a match whose name shares a word with it, so
   // the clusters are kept in a list by word.  Without this every price was
   // compared with every other price of its market, and a book that sends a
   // full slate of five thousand prices used up the Worker's whole time.
   const byWord = new Map();
-  for (const { quote, when } of ordered) {
+  for (const index of ordered) {
+    const quote = quotes[index];
+    const when = whenOf[index];
     const words = fixtureWords(quote);
     const candidates = new Set();
     for (const word of words) {
@@ -516,6 +549,7 @@ export function clusterFixtures(quotes) {
   }
   return clusters;
 }
+
 
 /**
  * Scan normalized quotes. Only exact market + settlement-rule groups are

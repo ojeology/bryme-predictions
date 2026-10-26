@@ -23,6 +23,20 @@ import { flattenBetking, isBetking } from './betking.js';
 
 const STOP = new Set(['total', 'goals', 'goal', 'over', 'under', 'more', 'less', 'the', 'a', 'an', 'of', 'and']);
 
+/**
+ * A moment, in milliseconds, out of whatever the book wrote.
+ *
+ * Some books write the moment as digits and some write it as text; both
+ * come out of here as digits, because a full slate of prices is turned over
+ * in a moment and a date for each price is a date too many.
+ */
+function toMillis(value) {
+  if (value === null || value === undefined || value === '') return null;
+  if (typeof value === 'number') return Number.isFinite(value) && value > 0 ? value : null;
+  const parsed = Date.parse(String(value));
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
 export function slug(value) {
   return String(value ?? '')
     .toLowerCase()
@@ -173,8 +187,9 @@ export function flattenBookPayload(payload, options = {}) {
       bookmaker: q.bookmaker || bookmaker,
       odds,
       minStake: q.minStake ?? options.minStake ?? null,
-      // when the book last moved this price, if the book says
-      priceMovedAt: q.priceMovedAt || null,
+      // when the book last moved this price, if the book says: kept as
+      // digits, because a full slate of prices is turned over in a moment
+      priceMovedAt: toMillis(q.priceMovedAt),
       fetchedAt: q.fetchedAt || now.toISOString(),
       url: q.url || '',
     });

@@ -71,8 +71,7 @@ function priceMovedAt(market) {
   const raw = Number(market?.lastOddsChangeTime);
   if (!Number.isFinite(raw) || raw <= 0) return null;
   const millis = raw > 1e12 ? raw : raw * 1000;
-  const date = new Date(millis);
-  return Number.isFinite(date.getTime()) ? date.toISOString() : null;
+  return millis > 0 ? millis : null;
 }
 
 /** The line for an Over/Under price: "Over 2.5" -> 2.5 */

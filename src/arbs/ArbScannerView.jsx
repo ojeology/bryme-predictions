@@ -116,7 +116,8 @@ function quoteAge(value) {
  */
 function priceStoodFor(value) {
   if (!value) return null;
-  const date = new Date(value);
+  // the stamp travels as a number of milliseconds
+  const date = new Date(typeof value === 'number' ? value : String(value));
   if (Number.isNaN(date.getTime())) return null;
   const seconds = Math.max(0, Math.floor((Date.now() - date.getTime()) / 1000));
   if (seconds < 60) return 'moved just now';

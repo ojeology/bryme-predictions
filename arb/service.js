@@ -1,4 +1,4 @@
-import { scanOpportunities, scanWithClusters, clusterFixtures, normalizeQuote } from '../src/lib/arbitrage.js';
+import { scanOpportunities, scanWithClusters, clusterFixtures, millisOf, normalizeQuote } from '../src/lib/arbitrage.js';
 import { getConnectorStatus, loadConnectorQuotes } from './connectors/index.js';
 import { snapshotQuotes } from './connectors/snapshot.js';
 import { discoverBook, proveFeed, BOOK_PAGES, KNOWN_FEEDS } from './discovery.js';
@@ -91,8 +91,8 @@ function maxFeedAge(env) {
 }
 
 function isFreshPreMatch(quote, now, maxAgeSeconds) {
-  const fetchedAt = new Date(quote.fetchedAt || '').getTime();
-  const startsAt = new Date(quote.startsAt || '').getTime();
+  const fetchedAt = millisOf(quote.fetchedAt);
+  const startsAt = millisOf(quote.startsAt);
   if (!Number.isFinite(fetchedAt) || !Number.isFinite(startsAt)) return false;
   const age = (now - fetchedAt) / 1000;
   return age >= -30 && age <= maxAgeSeconds && startsAt > now;
