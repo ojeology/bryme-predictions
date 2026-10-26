@@ -364,3 +364,39 @@ refused the runner and the largest book went missing for a whole cycle.
 The reader now asks for one page at a time with a pause between the
 pages, rests a minute and tries again when a call is refused, and the
 Worker will not start a read while another one is running.
+
+## What changed on 26 October, in the evening: the Worker ran out of room
+
+Six books could be read, and the scan found real arbitrages, but the Worker
+was sometimes refusing the scan outright — with no explanation the phone
+could show, just a failure. The cause was memory.
+
+**The same names were written over and over.** A book sends tens of
+thousands of prices, and every price of a match carried the match's name,
+its league and its market, written out in full. The names are now written
+once in the file and numbered; the rows carry the number. The six files
+fell from 10.1 MB to 3.4 MB, and the heap after a scan from 43.6 MB to
+27.0 MB. A file published before this change is still read.
+
+**The prices were kept between requests.** The Worker kept each book's
+whole expanded slate — tens of thousands of prices — for a minute after
+every scan, so that the next request began with the last request's prices
+still in the room. The next request was then refused for want of memory
+before it had done any work at all. The scans that failed did so in a
+tenth of a second, which is the signature of this: the request never
+started. What is kept now is the text the reader published, which is a
+third of the size, and the prices are made only when a scan asks for them.
+
+**Two slates were held at once.** When the prices had expired, the Worker
+read all six books, found them too old, started a fresh read, waited for
+it, and read all six books again — holding both slates at once. The
+expired prices are now let go of before the wait.
+
+**How old a book is published is known before its prices are made.** An
+expired slate is worth nothing, and making six slates of tens of thousands
+of prices only to find out they are too old is the work that filled the
+Worker's memory.
+
+After all of this the scan holds about 58,000 prices from six books and
+comes back in under four seconds, and a test that had failed seven times
+out of twelve now passes twelve times out of twelve.
