@@ -150,7 +150,7 @@ async function inspectNairaBet(browser) {
         const name = node.name || node.title || node.displayName || '';
         if (node.odds && typeof node.odds === 'object') {
           const typeId = node.typeId ?? node.type?.id ?? null;
-          rows.push({ path, name, typeId, id: node.id, keys: Object.keys(node).slice(0, 24), odds: node.odds });
+          rows.push({ path, name, typeId, id: node.id, keys: Object.keys(node).slice(0, 24), odds: node.odds, node });
         }
         for (const [key, value] of Object.entries(node)) {
           if (key === 'odds') continue;
@@ -172,21 +172,14 @@ async function inspectNairaBet(browser) {
       }));
       // the whole of two total-goals markets, so the line and the
       // money-back flag can be read
-      const full = [];
-      const walkFull = (node) => {
-        if (!node || typeof node !== 'object' || full.length >= 2) return;
-        if (Array.isArray(node)) { for (const item of node) walkFull(item); return; }
-        const typeId = node.typeId ?? node.type?.id ?? null;
-        if (typeId === 18 && node.mst) {
-          full.push(JSON.parse(JSON.stringify(node)));
-          return;
+      const full = totals.slice(0, 2).map((row) => {
+        const copy = {};
+        for (const [key, value] of Object.entries(row.node || {})) {
+          if (key === 'odds') { copy.odds = value; continue; }
+          try { copy[key] = JSON.parse(JSON.stringify(value)); } catch { copy[key] = String(value); }
         }
-        for (const [key, value] of Object.entries(node)) {
-          if (key === 'odds') continue;
-          walkFull(value);
-        }
-      };
-      walkFull(payload);
+        return copy;
+      });
       const isMbValues = {};
       for (const row of totals) {
         for (const odd of Object.values(row.odds || {})) {
