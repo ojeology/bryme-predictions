@@ -363,6 +363,47 @@ function sideMatches(aTokens, bTokens) {
   return false;
 }
 
+
+/**
+ * The words that carry a club's name, in every form they might match.
+ *
+ * Two names match when one word starts with the other ("Man United" and
+ * "Manchester United"), so every word is filed under each of its beginnings
+ * as well as under itself.  A file can then be found by any of those
+ * beginnings, and no match is lost.
+ */
+const fixtureWordsCache = new WeakMap();
+
+function fixtureWords(quote) {
+  const cached = fixtureWordsCache.get(quote);
+  if (cached) return cached;
+  const sides = fixtureSides(quote);
+  const words = new Set();
+  // only the home side is used: two prices are the same match when the home
+  // team matches the home team, and the home names are the words that tell
+  // one club from another
+  for (const token of sides.home) {
+    const word = TOKEN_ALIASES[token] || token;
+    if (word.length < 3) continue;
+    words.add(word);
+    for (let length = 3; length < word.length; length += 1) words.add(word.slice(0, length));
+  }
+  fixtureWordsCache.set(quote, words);
+  return words;
+}
+
+/** File a cluster under each of the words it carries. */
+function indexWords(byWord, words, index) {
+  for (const word of words) {
+    const bucket = byWord.get(word);
+    if (bucket) {
+      if (bucket[bucket.length - 1] !== index) bucket.push(index);
+    } else {
+      byWord.set(word, [index]);
+    }
+  }
+}
+
 /** Are these two quotes about the same fixture? */
 /**
  * The two sides of a fixture, taken apart once and kept.
@@ -431,22 +472,41 @@ function startTime(quote) {
 export function clusterFixtures(quotes) {
   const clusters = [];
   const ordered = [...quotes].sort((a, b) => startTime(a) - startTime(b));
+  // A price can only belong to a match whose name shares a word with it, so
+  // the clusters are kept in a list by word.  Without this every price was
+  // compared with every other price of its market, and a book that sends a
+  // full slate of five thousand prices used up the Worker's whole time.
+  const byWord = new Map();
   for (const quote of ordered) {
     const when = startTime(quote);
+    const words = fixtureWords(quote);
+    const candidates = new Set();
+    for (const word of words) {
+      const bucket = byWord.get(word);
+      if (!bucket) continue;
+      for (const index of bucket) candidates.add(index);
+    }
     let placed = false;
-    for (let index = clusters.length - 1; index >= 0; index -= 1) {
+    let best = -1;
+    // the newest cluster that holds this match wins, exactly as when every
+    // cluster was checked one by one
+    for (const index of candidates) {
+      if (index <= best) continue;
       const cluster = clusters[index];
       const started = startTime(cluster[0]);
-      // the clusters are in order, so once one is too old the rest are too
       if (Number.isFinite(when) && Number.isFinite(started)
-          && when - started > TIME_WINDOW_MINUTES * 60000) break;
-      if (sameFixture(cluster[0], quote)) {
-        cluster.push(quote);
-        placed = true;
-        break;
-      }
+          && when - started > TIME_WINDOW_MINUTES * 60000) continue;
+      if (sameFixture(cluster[0], quote)) best = index;
     }
-    if (!placed) clusters.push([quote]);
+    if (best >= 0) {
+      clusters[best].push(quote);
+      indexWords(byWord, words, best);
+      placed = true;
+    }
+    if (!placed) {
+      clusters.push([quote]);
+      indexWords(byWord, words, clusters.length - 1);
+    }
   }
   return clusters;
 }
@@ -457,6 +517,14 @@ export function clusterFixtures(quotes) {
  * label.  A match that has already started is never returned.
  */
 export function scanOpportunities(rawQuotes, options = {}) {
+  return scanWithClusters(rawQuotes, options).opportunities;
+}
+
+/**
+ * The same scan, and the fixtures it grouped, so that the same grouping is
+ * not worked out a second time by the report that follows it.
+ */
+export function scanWithClusters(rawQuotes, options = {}) {
   const now = options.now ? new Date(options.now) : new Date();
   const list = Array.isArray(rawQuotes) ? rawQuotes : [];
   // prices that have already been through the normaliser are used as they
@@ -490,14 +558,33 @@ export function scanOpportunities(rawQuotes, options = {}) {
   }
 
   const opportunities = [];
+  const clustersByGroup = new Map();
+  let rejectedCount = 0;
   for (const [groupKey, groupQuotes] of groups) {
     const fixtures = clusterFixtures(groupQuotes);
+    clustersByGroup.set(groupKey, fixtures);
     for (const fixture of fixtures) {
       const outcomes = new Map();
       for (const quote of fixture) {
         if (!outcomes.has(quote.outcome)) outcomes.set(quote.outcome, []);
         outcomes.get(quote.outcome).push(quote);
       }
+      // a match only one book lists cannot be compared with itself
+      const booksHere = new Set(fixture.map((quote) => quote.bookmaker));
+      if (booksHere.size < 2) {
+        if (rejected.length < 200) {
+          rejected.push({
+            reason: 'only one book lists this match',
+            market: fixture[0].market,
+            event: fixture[0].event,
+            outcomes: outcomes.size,
+            way: fixture[0].way,
+          });
+        }
+        rejectedCount += 1;
+        continue;
+      }
+
       const way = fixture[0].way;
       if (outcomes.size !== way || way < 2 || way > 3) {
         rejected.push({
@@ -507,6 +594,7 @@ export function scanOpportunities(rawQuotes, options = {}) {
           outcomes: outcomes.size,
           way,
         });
+        rejectedCount += 1;
         continue;
       }
 
@@ -553,6 +641,6 @@ export function scanOpportunities(rawQuotes, options = {}) {
 
   opportunities.sort((a, b) => b.theoreticalRoiPct - a.theoreticalRoiPct);
   opportunities.rejectedGroups = rejected;
-  opportunities.rejectedGroupCount = rejected.length;
-  return opportunities;
+  opportunities.rejectedGroupCount = rejectedCount;
+  return { opportunities, clustersByGroup };
 }

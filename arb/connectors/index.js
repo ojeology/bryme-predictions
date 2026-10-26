@@ -128,7 +128,6 @@ export async function loadConnectorQuotes(env = {}, options = {}) {
   };
   const __t0 = Date.now();
   await readBooks(false);
-  console.log('TIMING readBooks', Date.now() - __t0, 'ms');
 
   // How old are the prices?  The age is taken from the prices themselves,
   // not from a summary: the summary can be served from a copy kept by the

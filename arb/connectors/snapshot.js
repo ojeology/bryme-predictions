@@ -214,7 +214,13 @@ function flattenInto(value, book, env) {
     return value;
   }
 
-  const stamp = (quotes) => quotes.map((quote) => ({ ...quote, fetchedAt: capturedAt }));
+  // the time the prices were read is written on the prices themselves:
+  // copying every price to add one field cost the Worker both time and
+  // memory when a book publishes a full slate
+  const stamp = (quotes) => {
+    for (const quote of quotes) quote.fetchedAt = capturedAt;
+    return quotes;
+  };
   try {
     let quotes = [];
     if (Array.isArray(entry.quotes)) {

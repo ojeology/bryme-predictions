@@ -1,4 +1,4 @@
-import { scanOpportunities, clusterFixtures, normalizeQuote } from '../src/lib/arbitrage.js';
+import { scanOpportunities, scanWithClusters, clusterFixtures, normalizeQuote } from '../src/lib/arbitrage.js';
 import { getConnectorStatus, loadConnectorQuotes } from './connectors/index.js';
 import { snapshotQuotes } from './connectors/snapshot.js';
 import { discoverBook, proveFeed, BOOK_PAGES, KNOWN_FEEDS } from './discovery.js';
@@ -128,7 +128,7 @@ function sampleQuotes(quotes, perBook = 40) {
  * books are not offering the same fixtures, because they are not offering
  * the same markets, or because the prices simply do not add up.
  */
-function overlapReport(quotes) {
+function overlapReport(quotes, clustersByGroup = null) {
   const byBook = {};
   const groups = new Map();
   for (const quote of quotes) {
@@ -145,8 +145,11 @@ function overlapReport(quotes) {
   const closest = [];
   let twoBooks = 0;
   let threeBooks = 0;
-  for (const groupQuotes of groups.values()) {
-    for (const cluster of clusterFixtures(groupQuotes)) {
+  for (const [groupKey, groupQuotes] of groups) {
+    // the scan has already worked out which prices belong to the same
+    // match; that work is not done a second time here
+    const clusters = clustersByGroup?.get(groupKey) || clusterFixtures(groupQuotes);
+    for (const cluster of clusters) {
       const books = new Set(cluster.map((quote) => quote.bookmaker));
       const label = [...books].sort().join(' + ');
       fixtureCounts[label] = (fixtureCounts[label] || 0) + 1;
@@ -162,6 +165,10 @@ function overlapReport(quotes) {
       // any book, added up.  Under 1.000 is an arbitrage; the nearer it is
       // to 1.000, the nearer the books are to disagreeing.  This is the
       // honest answer to "why was nothing found?".
+      // a match only one book lists has nothing to compare: the books can
+      // only be close to each other where two of them meet
+      if (books.size < 2) continue;
+
       const outcomes = new Map();
       for (const quote of cluster) {
         if (!outcomes.has(quote.outcome)) outcomes.set(quote.outcome, []);
@@ -266,13 +273,12 @@ export async function scanConfiguredFeeds(env = {}, options = {}) {
     errors.push(`No quotes passed the pre-match and ${maxQuoteAgeSeconds}-second freshness checks. Missing fetchedAt/startsAt values are rejected.`);
   }
   const __t2 = Date.now();
-  const opportunities = scanOpportunities(freshQuotes, {
+  const { opportunities, clustersByGroup } = scanWithClusters(freshQuotes, {
     ...options,
     maxQuoteAgeSeconds,
     now: new Date(now),
     alreadyNormalized: true,
   });
-  console.log('TIMING scan', Date.now() - __t2, 'ms for', freshQuotes.length, 'quotes');
   return {
     ok: true,
     mode: 'feed',
@@ -282,7 +288,7 @@ export async function scanConfiguredFeeds(env = {}, options = {}) {
     freshQuoteCount: freshQuotes.length,
     rejectedQuoteCount: quotes.length - freshQuotes.length,
     maxQuoteAgeSeconds,
-    overlap: overlapReport(freshQuotes),
+    overlap: overlapReport(freshQuotes, clustersByGroup),
     ...(options.debug === 2 ? { allQuotes: quotes.slice(0, 2500).map((quote) => ({
       bookmaker: quote.bookmaker, event: quote.event, startsAt: quote.startsAt,
       marketKey: quote.marketKey, outcome: quote.outcome, odds: quote.odds,
@@ -383,7 +389,7 @@ async function scanWithDiscovered(env, options, usable, found) {
   const now = Date.now();
   const freshQuotes = quotes.filter((quote) => isFreshPreMatch(quote, now, maxQuoteAgeSeconds));
   const __t2 = Date.now();
-  const opportunities = scanOpportunities(freshQuotes, {
+  const { opportunities, clustersByGroup } = scanWithClusters(freshQuotes, {
     ...options,
     maxQuoteAgeSeconds,
     now: new Date(now),

@@ -249,3 +249,30 @@ The manual ledger uses browser `localStorage` key `bryme.arbPlacementLedger.v1`.
 ## Risk and compliance
 
 A positive calculated ROI is not a guarantee of filled bets or profit. Odds can move, stakes can be limited, markets can be voided and settlement rules can differ. Users must manually re-check every leg before and during placement. 18+ only.
+
+## The books that are live now
+
+| Book | How it is read | Prices in the last scan |
+|---|---|---|
+| SportyBet NG | plain HTTP, the whole football slate (12 pages) | 12,763 |
+| NairaBet | the runner's browser asks the widget's price tree | 7,615 |
+| LiveScore Bet | plain HTTP (a `Request-Id` header is required) | 5,227 |
+| BetKing | the runner's browser reads the price feeds | 1,586 |
+| MSport | plain HTTP | 1,078 |
+| 22Bet NG | **not connected** - the feed refuses this country's address | 0 |
+| 1xBet | **not connected** - the feed refuses this country's address | 0 |
+
+## Working inside the Worker's time
+
+The Worker is allowed about two seconds of computing per request, so the
+scan has to stay small.  Three things keep it small:
+
+- the free reader publishes only the prices of the matches that at least two
+  books are showing, so the Worker's files hold the shared part of the slate
+  and nothing else;
+- the prices are grouped by the words of the home team's name, so a price is
+  only ever compared with the prices of the matches it could possibly be -
+  the result is the same as comparing every price with every other price,
+  and it takes a third of the time;
+- the report reuses the groups the scan has already worked out, instead of
+  grouping the same prices a second time.
