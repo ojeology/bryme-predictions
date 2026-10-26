@@ -18,8 +18,12 @@ export const CONNECTORS = [
   // would cost more CPU than the whole scan may use, so the free reader
   // reads it and publishes the prices that another book is also showing
   { id: 'nairabet', label: 'NairaBet', envKey: 'NAIRABET_FEED_URL', snapshot: true, snapshotOnly: true },
-  { id: '22bet', label: '22Bet NG', envKey: 'BET22_FEED_URL' },
-  { id: '1xbet', label: '1xBet', envKey: 'BET1X_FEED_URL' },
+  // The 22Bet family answers only an address inside the country it serves.
+  // When the reader runs there it publishes the prices like every other
+  // book, and the Worker reads them from there - it cannot fetch the feed
+  // itself from where it runs.
+  { id: '22bet', label: '22Bet NG', envKey: 'BET22_FEED_URL', snapshot: true, snapshotOnly: true },
+  { id: '1xbet', label: '1xBet', envKey: 'BET1X_FEED_URL', snapshot: true, snapshotOnly: true },
   { id: 'livescorebet', label: 'LiveScore Bet NG', envKey: 'LSCB_FEED_URL', snapshot: true },
   // MSport is read over plain HTTP (with the browser as a fallback)
   { id: 'msport', label: 'MSport', envKey: 'MSPORT_FEED_URL', reader: fetchMsportQuotes, snapshot: true },

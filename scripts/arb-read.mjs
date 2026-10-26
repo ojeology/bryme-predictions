@@ -25,6 +25,7 @@ import { flattenBetking } from '../arb/connectors/betking.js';
 import { flattenSportyBet } from '../arb/connectors/sportybet.js';
 import { fetchLiveScoreBetQuotes } from '../arb/connectors/livescorebetFeed.js';
 import { flattenNairaBet } from '../arb/connectors/nairabet.js';
+import { flattenLineFeed } from '../arb/connectors/linefeed.js';
 import { clusterFixtures } from '../src/lib/arbitrage.js';
 
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36';
@@ -733,6 +734,42 @@ function sharedFixturesOnly(books) {
 /* ------------------------------------------------------------------ *
  * Read everything, then write the snapshot.
  * ------------------------------------------------------------------ */
+/**
+ * The 22Bet family.
+ *
+ * One JSON endpoint carries the pre-match prices of 22Bet, 1xBet and their
+ * clones.  It answers only an address inside the country the book serves,
+ * so this works when the reader is running in Nigeria, and nowhere else.
+ * The address comes from the environment; nothing is guessed.
+ */
+async function readLineFeed(book, address) {
+  try {
+    const response = await fetch(address, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+        Accept: 'application/json',
+        'Accept-Language': 'en-NG,en;q=0.9',
+      },
+    });
+    const text = await response.text();
+    if (!response.ok) {
+      note(book, `the price feed answered HTTP ${response.status}`);
+      return [];
+    }
+    let payload = null;
+    try { payload = JSON.parse(text); } catch {
+      note(book, 'the answer was not a price tree');
+      return [];
+    }
+    const quotes = flattenLineFeed(payload, { bookmaker: book, url: address });
+    note(book, `${quotes.length} prices read from the line feed`);
+    return quotes;
+  } catch (error) {
+    note(book, `the price feed could not be read: ${error?.message || error}`);
+    return [];
+  }
+}
+
 async function main() {
   const capturedAt = new Date().toISOString();
   const books = {};
@@ -743,6 +780,14 @@ async function main() {
 
   const lsbQuotes = await readLiveScoreBet();
   if (lsbQuotes.length) books.livescorebet = lsbQuotes;
+
+  // The 22Bet family, when the reader is running where the book answers
+  for (const [book, envKey] of [['22bet', 'BET22_FEED_URL'], ['1xbet', 'BET1X_FEED_URL']]) {
+    const address = String(process.env[envKey] || '').trim();
+    if (!address) continue;
+    const quotes = await readLineFeed(book, address);
+    if (quotes.length) books[book] = quotes;
+  }
 
   let browser = null;
   try {
