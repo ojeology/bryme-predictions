@@ -107,6 +107,7 @@ export async function loadConnectorQuotes(env = {}, options = {}) {
   const readBooks = async (force) => {
     published.clear();
     publishedAt.clear();
+    const problems = [];
     for (const definition of CONNECTORS) {
       if (!definition.snapshot) continue;
       if (only && !only.has(definition.id)) continue;
@@ -115,9 +116,12 @@ export async function loadConnectorQuotes(env = {}, options = {}) {
         published.set(definition.id, result.quotes);
         publishedAt.set(definition.id, result.capturedAt);
       } else if (result.error) {
-        snapshotErrors.push(`${definition.label}: ${result.error.message}`);
+        problems.push(`${definition.label}: ${result.error.message}`);
       }
     }
+    // the notes of a cold read are not kept once fresh prices have arrived
+    if (force) snapshotErrors.length = 0;
+    snapshotErrors.push(...problems);
   };
   await readBooks(false);
 
@@ -142,9 +146,10 @@ export async function loadConnectorQuotes(env = {}, options = {}) {
         .map((at) => (Date.now() - new Date(at).getTime()) / 1000)
         .filter((age) => Number.isFinite(age));
       const age = newAges.length ? Math.round(Math.max(...newAges) / 60) : null;
+      const wasMinutes = Number.isFinite(oldest) ? `${Math.round(oldest / 60)} minutes old` : 'there were none';
       readerNotes.push(fresh.ok
-        ? `The prices had expired (${Math.round(oldest / 60)} minutes old), so a fresh read was started and waited for. The prices now are ${age} minute${age === 1 ? '' : 's'} old.`
-        : `The prices had expired (${Math.round(oldest / 60)} minutes old) and a fresh read was started.`);
+        ? `The prices had expired (${wasMinutes}), so a fresh read was started and waited for. The prices now are ${age} minute${age === 1 ? '' : 's'} old.`
+        : `The prices had expired (${wasMinutes}) and a fresh read was started.`);
     } else {
       readerNotes.push(`The prices had expired and the reader could not be started: ${started.error}.`);
     }
