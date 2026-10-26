@@ -317,3 +317,25 @@ export async function snapshotQuotes(env = {}, book = '', options = {}) {
   const filled = flattenInto({ capturedAt: value.capturedAt, text: value.text, quotes: [] }, book, env);
   return { quotes: filled.quotes || [], error: filled.error || null, capturedAt: value.capturedAt || null };
 }
+
+/**
+ * When a book published its prices, without making them.
+ *
+ * The scan needs to know how old the prices are before it makes them: an
+ * expired slate is worth nothing, and making six slates of tens of
+ * thousands of prices only to find out they are too old is the work that
+ * filled the Worker's memory.
+ */
+export async function snapshotAge(env = {}, book = '', options = {}) {
+  const value = await readSnapshotBook(env, book, options);
+  if (!value.text) return { capturedAt: value.capturedAt || null, error: value.error || null };
+  const captured = new Date(value.capturedAt);
+  const ageSeconds = (Date.now() - captured.getTime()) / 1000;
+  if (!Number.isFinite(ageSeconds) || ageSeconds > snapshotMaxAgeSeconds(env)) {
+    return {
+      capturedAt: value.capturedAt || null,
+      error: new Error(`the prices read ${Math.round(ageSeconds / 60)} minutes ago are too old to compare`),
+    };
+  }
+  return { capturedAt: value.capturedAt || null, error: null };
+}

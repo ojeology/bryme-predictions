@@ -7,7 +7,7 @@ import { fetchBookWithBrowser } from './browserBook.js';
 import { fetchMsportQuotes } from './msportFeed.js';
 import { fetchBetkingQuotes } from './betkingFeed.js';
 import { openSharedBrowser, closeSharedBrowser } from './browserSession.js';
-import { snapshotQuotes, dispatchReader, waitForFreshReader, snapshotMaxAgeSeconds } from './snapshot.js';
+import { snapshotQuotes, snapshotAge, dispatchReader, waitForFreshReader, snapshotMaxAgeSeconds } from './snapshot.js';
 
 export const CONNECTORS = [
   // these three are also read by the free reader on GitHub's runners, and
@@ -123,6 +123,15 @@ export async function loadConnectorQuotes(env = {}, options = {}) {
     for (const definition of CONNECTORS) {
       if (!definition.snapshot) continue;
       if (only && !only.has(definition.id)) continue;
+      // how old the prices are is known before they are made: an expired
+      // slate is worth nothing, and making six slates of tens of thousands
+      // of prices only to find out they are too old is the work that
+      // filled the Worker's memory
+      const age = await snapshotAge(env, definition.id, { force });
+      if (age.error) {
+        problems.push(`${definition.label}: ${age.error.message}`);
+        continue;
+      }
       const result = await snapshotQuotes(env, definition.id, { force });
       quotes += result.quotes.length;
       if (result.quotes.length) {
@@ -153,6 +162,13 @@ export async function loadConnectorQuotes(env = {}, options = {}) {
   if (!Number.isFinite(oldest) || oldest > maxAge) {
     // the prices have expired: there is nothing to compare, so the read is
     // started and waited for
+    //
+    // The prices that have just been read are let go of first.  They are
+    // of no use - they have expired - and the wait for the new read can be
+    // minutes long, and the Worker was running out of room because it was
+    // holding two full slates of prices at once.
+    published.clear();
+    publishedAt.clear();
     const started = await dispatchReader(env);
     if (started.dispatched) {
       const fresh = await waitForFreshReader(env, { timeoutMs: 200000 });
