@@ -1,5 +1,5 @@
 {
- "at": "2026-10-26T15:36:35.706Z",
+ "at": "2026-10-26T15:36:36.982Z",
  "edge": "DUB",
  "phoneCountry": "NG",
  "workerCountry": "NG",
@@ -1358,6 +1358,19 @@
      "sample": "<!DOCTYPE html>\n<!--[if lt IE 7]> <html class=\"no-js ie6 oldie\" lang=\"en-US\"> <![endif]-->\n<!--[if IE 7]>    <html class=\"no-js ie7 oldie\" lang=\"en-US\"> <![endif]-->\n<!--[if IE 8]>    <html class=\"no-js ie8 oldie\" lang=\"en-US\"> <![endif]-->\n<!--[if gt IE 8]><!--> <html class=\"no-js\" lang=\"en-US\"> <!"
     }
    ]
+  },
+  {
+   "id": "jackpotbet",
+   "status": "none",
+   "url": "",
+   "quoteCount": 0,
+   "note": "no known page for this book",
+   "evidence": {
+    "scripts": [],
+    "chunks": [],
+    "candidatesTried": 0
+   },
+   "attempts": []
   }
  ]
 }
