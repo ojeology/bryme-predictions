@@ -18,6 +18,9 @@ export const CONNECTORS = [
   // would cost more CPU than the whole scan may use, so the free reader
   // reads it and publishes the prices that another book is also showing
   { id: 'nairabet', label: 'NairaBet', envKey: 'NAIRABET_FEED_URL', snapshot: true, snapshotOnly: true },
+  // JackpotBet runs on the same platform as NairaBet and answers with its
+  // own prices, so the free reader reads it the same way
+  { id: 'jackpotbet', label: 'JackpotBet', envKey: 'JACKPOT_FEED_URL', snapshot: true, snapshotOnly: true },
   // The 22Bet family answers only an address inside the country it serves.
   // When the reader runs there it publishes the prices like every other
   // book, and the Worker reads them from there - it cannot fetch the feed

@@ -54,6 +54,7 @@ const DEFAULT_CONNECTORS = [
   { id: 'msport', label: 'MSport', status: 'not_configured', detail: 'No verified server-side feed is configured.', quoteCount: 0 },
   { id: 'betking', label: 'BetKing', status: 'not_configured', detail: 'No verified server-side feed is configured.', quoteCount: 0 },
   { id: 'nairabet', label: 'NairaBet', status: 'not_configured', detail: 'No verified server-side feed is configured.', quoteCount: 0 },
+  { id: 'jackpotbet', label: 'JackpotBet', status: 'not_configured', detail: 'No verified server-side feed is configured.', quoteCount: 0 },
   { id: '22bet', label: '22Bet NG', status: 'not_configured', detail: 'No verified server-side feed is configured.', quoteCount: 0 },
 ];
 
@@ -670,7 +671,7 @@ export default function ArbScannerView() {
     setDiscovering(true);
     // one book per request: the server may only open a limited number of
     // connections at a time, and hunting a single book takes a good many
-    const books = ['sportybet', 'msport', 'betking', 'livescorebet', 'nairabet', '22bet', '1xbet'];
+    const books = ['sportybet', 'msport', 'betking', 'livescorebet', 'nairabet', 'jackpotbet', '22bet', '1xbet'];
     const collected = new Map();
     const remember = (entry) => {
       if (!entry || !entry.id) return;

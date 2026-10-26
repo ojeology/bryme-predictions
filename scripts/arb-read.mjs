@@ -44,6 +44,28 @@ const LSB_URL = (process.env.LSCB_FEED_URL
 const NAIRABET_URL = (process.env.NAIRABET_FEED_URL
   || 'https://sb2frontend-altenar2.biahosted.com/api/Widget/GetEvents?culture=en-GB&timezoneOffset=0&integration=nairabet&deviceType=desktop&sportId=66').trim();
 
+/**
+ * The books that run on the Altenar/SB widget platform.
+ *
+ * The platform gives each book its own token, and with that token the same
+ * endpoint answers with that book's own prices.  One reader therefore
+ * serves every book on the platform: NairaBet, BetKing and JackpotBet all
+ * answer here, each with its own events and its own numbers.
+ */
+const ALTENAR_HOST = 'https://sb2frontend-altenar2.biahosted.com';
+const ALTENAR_BOOKS = {
+  nairabet: { label: 'NairaBet', site: 'https://nairabet.com/sports' },
+  betking: { label: 'BetKing', site: 'https://betking.com/' },
+  jackpotbet: { label: 'JackpotBet', site: 'https://jackpotbet.com/' },
+};
+const ALTENAR_SPORT_ID = 66;
+
+/** The prices of one book on the platform. */
+function altenarUrl(token) {
+  return `${ALTENAR_HOST}/api/Widget/GetEvents?culture=en-GB&timezoneOffset=0`
+    + `&integration=${encodeURIComponent(token)}&deviceType=desktop&sportId=${ALTENAR_SPORT_ID}`;
+}
+
 const SPORTYBET_ORIGIN = 'https://www.sportybet.com';
 const SPORTYBET_PAGE = `${SPORTYBET_ORIGIN}/ng/`;
 
@@ -140,6 +162,45 @@ async function readLiveScoreBet() {
     note('livescorebet', `failed: ${error?.message || error}`);
     return [];
   }
+}
+
+/**
+ * The prices of the other books that run on the same platform.
+ *
+ * The platform refuses an ordinary request from outside - it answers
+ * "403" to anything that does not look like the site's own web app - so
+ * the question is asked from inside the runner's own browser, where the
+ * page's own web app lives.  Nothing is guessed and no bet is placed.
+ */
+async function readAltenarBook(browser, bookId, definition) {
+  const quotes = [];
+  let page = null;
+  try {
+    page = await browser.newPage();
+    await page.setViewport({ width: 412, height: 900 });
+    await dressAsVisitor(page);
+    const url = altenarUrl(bookId);
+    const asked = await askInPage(page, { url, method: 'GET', credentials: false });
+    note(bookId, `asking -> HTTP ${asked?.status ?? 'nothing'}${asked?.length ? `, ${asked.length} bytes` : ''}`);
+    if (asked?.status !== 200 || !asked.body) {
+      note(bookId, 'the platform did not answer');
+      return quotes;
+    }
+    let payload;
+    try { payload = JSON.parse(asked.body); } catch {
+      note(bookId, 'the answer was not a price tree');
+      return quotes;
+    }
+    const found = flattenNairaBet(payload, { bookmaker: bookId, now: new Date().toISOString() });
+    quotes.push(...found);
+    const fixtures = new Set(found.map((quote) => quote.event)).size;
+    note(bookId, `${found.length} prices over ${fixtures} matches (${definition.label})`);
+  } catch (error) {
+    note(bookId, `failed: ${error?.message || error}`);
+  } finally {
+    if (page) await page.close().catch(() => {});
+  }
+  return quotes;
 }
 
 /**
@@ -803,6 +864,17 @@ async function main() {
 
     const nairaQuotes = await readNairaBet(browser);
     if (nairaQuotes.length) books.nairabet = nairaQuotes;
+
+    // the other books that run on the same platform, each with its own
+    // token: the same question, the same reader, a different book
+    for (const [bookId, definition] of Object.entries(ALTENAR_BOOKS)) {
+      if (bookId === 'nairabet') continue;
+      const found = await readAltenarBook(browser, bookId, definition);
+      if (found.length) books[bookId] = found;
+      // the books are read one at a time, and the platform does not like a
+      // burst of questions
+      await sleep(4000);
+    }
 
     // the books that are not connected yet are looked at, and what they ask
     // for is written down

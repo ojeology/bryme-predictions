@@ -1,8 +1,15 @@
 /**
- * NairaBet (the Altenar/SB widget platform that nairabet.com runs on).
+ * The books that run on the Altenar/SB widget platform.
  *
- * The book publishes its own prices as JSON:
- *   https://sb2frontend-altenar2.biahosted.com/api/Widget/GetEvents?culture=en-GB&timezoneOffset=0&integration=nairabet&deviceType=desktop&sportId=66
+ * Several books run on the same platform, and the platform gives each one
+ * its own token.  With the right token the same endpoint answers with that
+ * book's own prices - its own events, its own markets and its own numbers
+ * - so one adapter serves them all:
+ *   https://sb2frontend-altenar2.biahosted.com/api/Widget/GetEvents?culture=en-GB&timezoneOffset=0&integration=<token>&deviceType=desktop&sportId=66
+ *
+ * The tokens in use are read from the books' own pages (see
+ * ALTENAR_BOOKS below); a token the platform does not know is refused with
+ * an empty answer.
  *
  * The answer is one tree of parallel lists:
  *   events[]        a match: name, startDate, competitorIds, champId, marketIds
@@ -75,6 +82,22 @@ function doubleChanceOf(typeId) {
   return '';
 }
 
+/**
+ * The books on this platform, and the token each one is given.
+ *
+ * The token is the book's own name as the platform knows it.  It is found
+ * in the address of the book's own page, which asks the platform for that
+ * book's prices.
+ */
+export const ALTENAR_BOOKS = {
+  nairabet: { bookmaker: 'nairabet', label: 'NairaBet', token: 'nairabet', site: 'https://nairabet.com' },
+  betking: { bookmaker: 'betking', label: 'BetKing', token: 'betking', site: 'https://betking.com' },
+  jackpotbet: { bookmaker: 'jackpotbet', label: 'JackpotBet', token: 'jackpotbet', site: 'https://jackpotbet.com' },
+  stake: { bookmaker: 'stake', label: 'Stake', token: 'stake', site: 'https://stake.com' },
+  betway: { bookmaker: 'betway', label: 'Betway', token: 'betway', site: 'https://betway.com' },
+  '12bet': { bookmaker: '12bet', label: '12BET', token: '12bet', site: 'https://12bet.com' },
+};
+
 export function isNairaBet(payload) {
   return Boolean(payload && Array.isArray(payload.events) && Array.isArray(payload.odds)
     && Array.isArray(payload.markets) && Array.isArray(payload.competitors));
@@ -89,6 +112,8 @@ export function isNairaBet(payload) {
  */
 export function flattenNairaBet(payload, options = {}) {
   const bookmaker = options.bookmaker || 'nairabet';
+  // the label the phone shows for the book
+  const bookLabel = ALTENAR_BOOKS[bookmaker]?.label || bookmaker;
   const now = options.now ? new Date(options.now) : new Date();
   const quotes = [];
 
@@ -176,6 +201,7 @@ export function flattenNairaBet(payload, options = {}) {
           outcome: outcomeKey,
           label: label || outcomeKey,
           bookmaker,
+          bookmakerLabel: bookLabel,
           odds: price,
           fetchedAt: now.toISOString(),
         });
