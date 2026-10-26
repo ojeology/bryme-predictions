@@ -1,5 +1,5 @@
 {
- "at": "2026-10-26T14:04:33.548Z",
+ "at": "2026-10-26T14:04:35.462Z",
  "edge": "LHR",
  "phoneCountry": "NG",
  "workerCountry": "NG",
@@ -1241,7 +1241,7 @@
    "id": "betking",
    "status": "found",
    "url": "https://sportsapicdn-desktop.betking.com/api/feeds/prematch/mostpopularsports/en/1/7/3/",
-   "quoteCount": 1170,
+   "quoteCount": 1190,
    "note": "",
    "evidence": {},
    "attempts": [
