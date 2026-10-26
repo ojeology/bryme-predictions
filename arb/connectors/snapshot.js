@@ -31,6 +31,17 @@ const CACHE_MS = 60_000;
 const HEAD_CACHE_MS = 45_000;
 const DEFAULT_MAX_AGE_SECONDS = 1800;
 
+// What is kept between two requests.
+//
+// The prices of a book are kept as the text the reader published, and not
+// as the prices themselves.  A book publishes tens of thousands of prices,
+// and keeping them all, expanded, between two requests is what filled the
+// Worker's memory: the next request began with the last request's prices
+// still there, and the Worker was refused for want of room before it had
+// done any work at all.
+//
+// The text is a third of the size of the prices, and it is turned back into
+// prices only when a scan really needs them.
 const cache = new Map();
 let head = { sha: null, at: 0 };
 
@@ -76,11 +87,11 @@ export function snapshotMaxAgeSeconds(env = {}) {
  *
  * @param {object} env  the Worker environment
  * @param {string} book the book's id
- * @returns {Promise<{capturedAt: string|null, entry: object|null, error: Error|null}>}
+ * @returns {Promise<{capturedAt: string|null, text: string|null, error: Error|null}>}
  */
 export async function readSnapshotBook(env = {}, book = '', { force = false } = {}) {
   const base = snapshotBase(env);
-  if (!base || !book) return { capturedAt: null, entry: null, error: null };
+  if (!base || !book) return { capturedAt: null, text: null, error: null };
 
   const now = Date.now();
   const hit = cache.get(`${base}|${book}`);
@@ -93,7 +104,7 @@ export async function readSnapshotBook(env = {}, book = '', { force = false } = 
   // the commit does not answer.
   const addresses = sha ? [`${RAW}/${sha}/${book}.json`, `${base}/${book}.json`] : [`${base}/${book}.json`];
 
-  let value = { capturedAt: null, entry: null, quotes: [], error: null };
+  let value = { capturedAt: null, text: null, error: null };
   try {
     let response = null;
     let lastError = null;
@@ -115,22 +126,32 @@ export async function readSnapshotBook(env = {}, book = '', { force = false } = 
     if (!response.ok) {
       value = {
         capturedAt: null,
-        entry: null,
-        quotes: [],
+        text: null,
         error: new Error(`the free reader has published no prices for ${book} yet`),
       };
     } else {
-      const payload = await response.json();
-      value = { capturedAt: payload?.capturedAt || null, entry: payload || null, error: null };
-      // the tree is read, put through the adapter, and let go of
-      flattenInto(value, book, env);
+      // the text is kept, not the prices: the prices are ten times the
+      // size of the text, and the text is all that is needed to make them
+      const text = await response.text();
+      value = { capturedAt: capturedAtOf(text), text, error: null };
     }
   } catch (error) {
-    value = { capturedAt: null, entry: null, quotes: [], error };
+    value = { capturedAt: null, text: null, error };
   }
 
   cache.set(`${base}|${book}`, { at: now, value });
   return value;
+}
+
+/**
+ * The moment the prices were read, taken from the text without reading the
+ * whole of it.  The file begins with the moment, and a file that has gone
+ * cold is refused before it is turned into prices at all.
+ */
+function capturedAtOf(text) {
+  if (typeof text !== 'string') return null;
+  const found = /"capturedAt"\s*:\s*"([^"]+)"/.exec(text.slice(0, 400));
+  return found ? found[1] : null;
 }
 
 /**
@@ -233,16 +254,15 @@ export async function waitForFreshReader(env = {}, { timeoutMs = 150000 } = {}) 
  * book at a time.
  */
 function flattenInto(value, book, env) {
-  const entry = value.entry;
   const capturedAt = value.capturedAt;
-  if (!entry || !capturedAt) return value;
+  if (!value.text || !capturedAt) return value;
 
   const captured = new Date(capturedAt);
   const ageSeconds = (Date.now() - captured.getTime()) / 1000;
   if (!Number.isFinite(ageSeconds) || ageSeconds > snapshotMaxAgeSeconds(env)) {
     value.quotes = [];
     value.error = new Error(`the prices read ${Math.round(ageSeconds / 60)} minutes ago are too old to compare`);
-    value.entry = null;
+    value.text = null;
     return value;
   }
 
@@ -255,6 +275,7 @@ function flattenInto(value, book, env) {
   };
   try {
     let quotes = [];
+    const entry = JSON.parse(value.text);
     if (Array.isArray(entry.rows)) {
       quotes = expandRows(entry, book, capturedAt);
     } else if (Array.isArray(entry.quotes)) {
@@ -276,7 +297,8 @@ function flattenInto(value, book, env) {
     value.quotes = [];
     value.error = readError;
   }
-  value.entry = null;
+  // the text is let go of: the prices are all that are needed from here
+  value.text = null;
   return value;
 }
 
@@ -289,5 +311,9 @@ function flattenInto(value, book, env) {
  */
 export async function snapshotQuotes(env = {}, book = '', options = {}) {
   const value = await readSnapshotBook(env, book, options);
-  return { quotes: value.quotes || [], error: value.error || null, capturedAt: value.capturedAt || null };
+  // the text is turned into prices here, and only here: the prices are
+  // ten times the size of the text, and they are let go of as soon as the
+  // scan has used them
+  const filled = flattenInto({ capturedAt: value.capturedAt, text: value.text, quotes: [] }, book, env);
+  return { quotes: filled.quotes || [], error: filled.error || null, capturedAt: value.capturedAt || null };
 }
