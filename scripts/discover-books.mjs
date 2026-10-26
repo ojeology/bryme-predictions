@@ -14,10 +14,13 @@
 import { writeFileSync, mkdirSync, existsSync } from 'node:fs';
 
 const TARGETS = [
+  { id: 'nairabet', urls: ['https://nairabet.com/sports'] },
   { id: 'bet9ja', urls: ['https://sports.bet9ja.com/', 'https://www.bet9ja.com/'] },
   { id: 'merrybet', urls: ['https://merrybet.ng/', 'https://merrybet.com/'] },
   { id: 'betway', urls: ['https://www.betway.ng/'] },
 ];
+
+const NAIRABET_TREE = 'https://sb2frontend-altenar2.biahosted.com/api/Widget/GetEvents?culture=en-GB&timezoneOffset=0&integration=nairabet&deviceType=desktop&sportId=66';
 
 const WANTED = process.argv.slice(2).filter((value) => !value.startsWith('-'));
 const targets = WANTED.length ? TARGETS.filter((target) => WANTED.includes(target.id)) : TARGETS;
@@ -79,6 +82,78 @@ async function watch(page, label) {
   });
 }
 
+/**
+ * Look inside the price tree NairaBet's widget uses, and write down what
+ * the total-goals markets look like: the line, the price, and the flag that
+ * says whether the price is money-back.  A market on a half line can never
+ * be a push, so a money-back flag there changes nothing; on a whole line it
+ * changes everything.
+ */
+async function inspectNairaBet(browser) {
+  const page = await browser.newPage();
+  try {
+    log('== nairabet: opening the page so the widget is allowed to answer');
+    await page.goto('https://nairabet.com/sports', { waitUntil: 'domcontentloaded', timeout: 45000 });
+    await new Promise((resolve) => setTimeout(resolve, 12000));
+    const summary = await page.evaluate(async (address) => {
+      const answer = await fetch(address, { credentials: 'omit' });
+      if (!answer.ok) return { error: `HTTP ${answer.status}` };
+      const payload = await answer.json();
+      const rows = [];
+      const walk = (node, path) => {
+        if (!node || typeof node !== 'object') return;
+        if (Array.isArray(node)) {
+          for (const item of node) walk(item, path);
+          return;
+        }
+        const name = node.name || node.title || node.displayName || '';
+        if (node.odds && typeof node.odds === 'object') {
+          const typeId = node.typeId ?? node.type?.id ?? null;
+          rows.push({ path, name, typeId, id: node.id, keys: Object.keys(node).slice(0, 24), odds: node.odds });
+        }
+        for (const [key, value] of Object.entries(node)) {
+          if (key === 'odds') continue;
+          walk(value, path ? `${path}.${key}` : key);
+        }
+      };
+      walk(payload, '');
+      const totals = rows.filter((row) => /total|goals/i.test(row.name));
+      const byType = {};
+      for (const row of rows) {
+        const key = `${row.typeId}|${row.name}`;
+        byType[key] = (byType[key] || 0) + 1;
+      }
+      const sample = totals.slice(0, 3).map((row) => ({
+        name: row.name,
+        typeId: row.typeId,
+        keys: row.keys,
+        odds: row.odds,
+      }));
+      const isMbValues = {};
+      for (const row of totals) {
+        for (const odd of Object.values(row.odds || {})) {
+          if (odd && typeof odd === 'object' && 'isMB' in odd) {
+            const key = String(odd.isMB);
+            isMbValues[key] = (isMbValues[key] || 0) + 1;
+          }
+        }
+      }
+      return {
+        totalRows: rows.length,
+        totalMarkets: totals.length,
+        isMbValues,
+        marketTypes: Object.entries(byType).sort((a, b) => b[1] - a[1]).slice(0, 40),
+        sample,
+      };
+    }, NAIRABET_TREE);
+    log(`== nairabet: ${JSON.stringify(summary, null, 1)}`);
+  } catch (error) {
+    log(`== nairabet: failed: ${error?.message || error}`);
+  } finally {
+    await page.close().catch(() => {});
+  }
+}
+
 async function look(browser, target) {
   for (const address of target.urls) {
     const page = await browser.newPage();
@@ -115,6 +190,11 @@ async function main() {
   const reached = {};
   try {
     for (const target of targets) {
+      if (target.id === 'nairabet') {
+        await inspectNairaBet(browser);
+        reached[target.id] = true;
+        continue;
+      }
       reached[target.id] = await look(browser, target);
     }
   } finally {
