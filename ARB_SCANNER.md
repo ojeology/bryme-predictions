@@ -254,13 +254,26 @@ A positive calculated ROI is not a guarantee of filled bets or profit. Odds can 
 
 | Book | How it is read | Prices in the last scan |
 |---|---|---|
-| SportyBet NG | plain HTTP, the whole football slate (12 pages) | 12,763 |
-| NairaBet | the runner's browser asks the widget's price tree | 7,615 |
-| LiveScore Bet | plain HTTP (a `Request-Id` header is required) | 5,227 |
-| BetKing | the runner's browser reads the price feeds | 1,586 |
-| MSport | plain HTTP | 1,078 |
+| SportyBet NG | plain HTTP, the whole football slate (12 pages) | 15,703 |
+| NairaBet | the widget's price tree, with NairaBet's own token | 11,154 |
+| JackpotBet | the same widget, with JackpotBet's own token | 10,977 |
+| BetKing | the same widget, with BetKing's own token | 11,710 |
+| LiveScore Bet | plain HTTP (a `Request-Id` header is required) | 5,948 |
+| MSport | plain HTTP | 970 |
 | 22Bet NG | **not connected** - the feed refuses this country's address | 0 |
 | 1xBet | **not connected** - the feed refuses this country's address | 0 |
+
+**NairaBet, JackpotBet and BetKing all run on the same platform.**  The
+platform gives each book its own token, and with that token the same
+endpoint answers with that book's own events and its own numbers, so one
+adapter reads all three.  They are genuinely different books: on the prices
+they share, NairaBet and BetKing differ on roughly one price in five, and
+NairaBet and JackpotBet on one in thirteen.  A book that agreed with
+another book on every price could never make an arbitrage with it.
+
+**BetKing used to be read from its own edge**, which answers only a real
+browser and carries only 35 matches.  The platform route carries 1,257
+matches for the same book, over plain HTTP, for nothing.
 
 ## Working inside the Worker's time
 
@@ -276,6 +289,23 @@ scan has to stay small.  Three things keep it small:
   and it takes a third of the time;
 - the report reuses the groups the scan has already worked out, instead of
   grouping the same prices a second time.
+
+## When did the book last move this price?
+
+Two of the books publish the moment they last changed a price: SportyBet
+as a number, and LiveScore Bet as a stamp on the price itself.  That
+stamp travels with the price all the way to the phone, so the phone can
+say **"moved 3h ago"** under each price.
+
+That matters because a price that has not moved for a long time may be one
+the book has left behind.  When two books disagree and one of them has not
+touched its price for a day while the other keeps moving, that is the leg
+that will change first - the card says so, and names the book.
+
+The rule is deliberately narrow.  A price that has not moved is not
+automatically wrong: most prices sit still until something happens near
+the match.  A leg is only called out when it has stood still for more than
+a day **while another book has been moving its own price**.
 
 ## How the prices stay fresh
 
