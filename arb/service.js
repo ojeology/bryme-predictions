@@ -128,7 +128,7 @@ function sampleQuotes(quotes, perBook = 40) {
  * books are not offering the same fixtures, because they are not offering
  * the same markets, or because the prices simply do not add up.
  */
-function overlapReport(quotes, clustersByGroup = null) {
+export function overlapReport(quotes, clustersByGroup = null) {
   const byBook = {};
   const groups = new Map();
   for (const quote of quotes) {
@@ -273,12 +273,14 @@ export async function scanConfiguredFeeds(env = {}, options = {}) {
     errors.push(`No quotes passed the pre-match and ${maxQuoteAgeSeconds}-second freshness checks. Missing fetchedAt/startsAt values are rejected.`);
   }
   const __t2 = Date.now();
+  const __t1 = Date.now();
   const { opportunities, clustersByGroup } = scanWithClusters(freshQuotes, {
     ...options,
     maxQuoteAgeSeconds,
     now: new Date(now),
     alreadyNormalized: true,
   });
+  console.log(`TIMING scan ${Date.now() - __t1} ms`);
   return {
     ok: true,
     mode: 'feed',
@@ -391,12 +393,14 @@ async function scanWithDiscovered(env, options, usable, found) {
   const now = Date.now();
   const freshQuotes = quotes.filter((quote) => isFreshPreMatch(quote, now, maxQuoteAgeSeconds));
   const __t2 = Date.now();
+  const __t1 = Date.now();
   const { opportunities, clustersByGroup } = scanWithClusters(freshQuotes, {
     ...options,
     maxQuoteAgeSeconds,
     now: new Date(now),
     alreadyNormalized: true,
   });
+  console.log(`TIMING scan ${Date.now() - __t1} ms`);
   return {
     ok: true,
     mode: 'discover',

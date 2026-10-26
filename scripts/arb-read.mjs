@@ -26,6 +26,7 @@ import { flattenSportyBet } from '../arb/connectors/sportybet.js';
 import { fetchLiveScoreBetQuotes } from '../arb/connectors/livescorebetFeed.js';
 import { flattenNairaBet } from '../arb/connectors/nairabet.js';
 import { flattenLineFeed } from '../arb/connectors/linefeed.js';
+import { packQuotes } from '../arb/connectors/published.js';
 import { clusterFixtures } from '../src/lib/arbitrage.js';
 
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36';
@@ -823,31 +824,15 @@ async function main() {
   await mkdir('out', { recursive: true });
   const summary = { capturedAt, books: {}, notes };
   for (const [book, quotes] of Object.entries(shared)) {
-    const file = {
-      capturedAt,
-      book,
-      // only what the scanner compares: the settlement wording, the address
-      // the price came from and the stake note are left behind
-      quotes: quotes.map((quote) => ({
-        event: quote.event,
-        eventId: quote.eventId,
-        sport: quote.sport,
-        competition: quote.competition,
-        startsAt: quote.startsAt,
-        market: quote.market,
-        marketKey: quote.marketKey,
-        rulesKey: quote.rulesKey,
-        way: quote.way,
-        outcome: quote.outcome,
-        label: quote.label,
-        bookmaker: book,
-        odds: quote.odds,
-        fetchedAt: capturedAt,
-      })),
-    };
-    await writeFile(`out/${book}.json`, JSON.stringify(file));
-    summary.books[book] = { quotes: file.quotes.length, bytes: JSON.stringify(file).length };
-    console.log(`[done] ${book} -> out/${book}.json (${file.quotes.length} prices, ${summary.books[book].bytes} bytes)`);
+    // The prices are written as rows rather than as objects.  The same
+    // information travels in a third less space, and the Worker spends
+    // less of its own time and memory taking the prices in - which is the
+    // part of the scan that runs out of room first.
+    const file = packQuotes(quotes, book, capturedAt);
+    const text = JSON.stringify(file);
+    await writeFile(`out/${book}.json`, text);
+    summary.books[book] = { quotes: file.rows.length, bytes: text.length };
+    console.log(`[done] ${book} -> out/${book}.json (${file.rows.length} prices, ${text.length} bytes)`);
   }
   await writeFile('out/latest.json', JSON.stringify(summary));
   console.log(`[done] summary -> out/latest.json (${JSON.stringify(summary).length} bytes)`);

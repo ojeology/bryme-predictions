@@ -17,6 +17,7 @@
 import { flattenMsport } from './msport.js';
 import { flattenBetking } from './betking.js';
 import { flattenSportyBet } from './sportybet.js';
+import { expandRows } from './published.js';
 
 const REPO = 'ojeology/bryme-predictions';
 const BRANCH = 'prices';
@@ -242,7 +243,9 @@ function flattenInto(value, book, env) {
   };
   try {
     let quotes = [];
-    if (Array.isArray(entry.quotes)) {
+    if (Array.isArray(entry.rows)) {
+      quotes = expandRows(entry, book, capturedAt);
+    } else if (Array.isArray(entry.quotes)) {
       quotes = entry.quotes;
     } else if (book === 'msport' && entry.payload) {
       quotes = flattenMsport(entry.payload, { bookmaker: 'msport', url: entry.url, now: capturedAt });

@@ -112,6 +112,7 @@ export async function loadConnectorQuotes(env = {}, options = {}) {
   const readerNotes = [];
 
   const readBooks = async (force) => {
+    const started = Date.now();
     published.clear();
     publishedAt.clear();
     const problems = [];
@@ -129,8 +130,8 @@ export async function loadConnectorQuotes(env = {}, options = {}) {
     // the notes of a cold read are not kept once fresh prices have arrived
     if (force) snapshotErrors.length = 0;
     snapshotErrors.push(...problems);
+    console.log(`TIMING read ${Date.now() - started} ms`);
   };
-  const __t0 = Date.now();
   let refreshing = false;
   await readBooks(false);
 
