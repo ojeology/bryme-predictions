@@ -39,10 +39,15 @@ function marketIdentity(market) {
   const typeId = Number(market?.typeId);
 
   if (typeId === 1) {
-    // "1x2 - Enhanced Prices" is the same market at a promotional price; the
-    // plain one is used so that one match never carries two 1x2 prices
-    if (/enhanced/i.test(name)) return null;
-    return { key: 'match-result-1x2', name: '1X2', rules: '90-minutes', way: 3 };
+    // "1x2 - Enhanced Prices" is the same market at a better price, and
+    // "1x2 0%" is a different market with a different rule.  Which of the
+    // three is used is decided per match, in the choice below.
+    if (name === '1x2' || /enhanced/i.test(name)) {
+      return { key: 'match-result-1x2', name: '1X2', rules: '90-minutes', way: 3 };
+    }
+    // "1x2 0%" is a different market with a different rule, and is left
+    // alone
+    return null;
   }
   if (typeId === 18) return { key: 'goals', name: 'Over/Under', rules: '90-minutes', way: 2 };
   if (typeId === 29) return { key: 'both-teams-to-score', name: 'Both Teams To Score', rules: '90-minutes', way: 2 };
@@ -144,9 +149,24 @@ export function flattenNairaBet(payload, options = {}) {
     const startsAt = event?.startDate || null;
     const competition = String(champs.get(event?.champId)?.name || '');
 
+    // A match is listed with one 1x2 market: the plain one where the book
+    // offers it, and the better-priced one where the plain one is absent.
+    // 223 of NairaBet's matches carry only the better-priced market, and
+    // leaving them out took their 1x2 prices away altogether.
+    let oneByTwo = null;
+    for (const marketId of event?.marketIds || []) {
+      const market = markets.get(marketId);
+      if (!market || Number(market?.typeId) !== 1) continue;
+      const name = String(market?.name || '');
+      if (name === '1x2') { oneByTwo = market; break; }
+      if (/enhanced/i.test(name) && !oneByTwo) oneByTwo = market;
+    }
+
     for (const marketId of event?.marketIds || []) {
       const market = markets.get(marketId);
       if (!market) continue;
+      // only the chosen 1x2 is read, so one match never carries two
+      if (Number(market?.typeId) === 1 && market !== oneByTwo) continue;
       const identity = marketIdentity(market);
       if (!identity) continue;
 

@@ -653,6 +653,8 @@ export function scanWithClusters(rawQuotes, options = {}) {
 
   const opportunities = [];
   const clustersByGroup = new Map();
+  // the best price of each outcome of each shared match, worked out once
+  const bestByFixture = new Map();
   let rejectedCount = 0;
   for (const [groupKey, groupQuotes] of groups) {
     const fixtures = clusterFixtures(groupQuotes);
@@ -700,6 +702,9 @@ export function scanWithClusters(rawQuotes, options = {}) {
         }
         return [...unique.values()].slice(0, 5);
       });
+      // the same best prices are kept for the report that follows, so the
+      // work is not done a second time
+      bestByFixture.set(fixture, perOutcome);
 
       let best = null;
       for (const legs of combinations(perOutcome)) {
@@ -743,5 +748,5 @@ export function scanWithClusters(rawQuotes, options = {}) {
   opportunities.sort((a, b) => b.theoreticalRoiPct - a.theoreticalRoiPct);
   opportunities.rejectedGroups = rejected;
   opportunities.rejectedGroupCount = rejectedCount;
-  return { opportunities, clustersByGroup };
+  return { opportunities, clustersByGroup, bestByFixture };
 }

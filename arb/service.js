@@ -135,7 +135,7 @@ function sampleQuotes(quotes, perBook = 40) {
  */
 let scanCache = null;
 
-export function overlapReport(quotes, clustersByGroup = null) {
+export function overlapReport(quotes, clustersByGroup = null, bestByFixture = null) {
   const byBook = {};
   const groups = new Map();
   for (const quote of quotes) {
@@ -176,10 +176,22 @@ export function overlapReport(quotes, clustersByGroup = null) {
       // only be close to each other where two of them meet
       if (books.size < 2) continue;
 
+      // the scan has already worked out the best price of each outcome of
+      // this match; that work is not done a second time
+      const ready = bestByFixture?.get(cluster);
       const outcomes = new Map();
-      for (const quote of cluster) {
-        if (!outcomes.has(quote.outcome)) outcomes.set(quote.outcome, []);
-        outcomes.get(quote.outcome).push(quote);
+      if (ready) {
+        for (const list of ready) {
+          for (const quote of list) {
+            if (!outcomes.has(quote.outcome)) outcomes.set(quote.outcome, []);
+            outcomes.get(quote.outcome).push(quote);
+          }
+        }
+      } else {
+        for (const quote of cluster) {
+          if (!outcomes.has(quote.outcome)) outcomes.set(quote.outcome, []);
+          outcomes.get(quote.outcome).push(quote);
+        }
       }
       const way = cluster[0].way;
       if (outcomes.size === way && way >= 2 && way <= 3) {
@@ -298,7 +310,7 @@ export async function scanConfiguredFeeds(env = {}, options = {}) {
     errors.push(`No quotes passed the pre-match and ${maxQuoteAgeSeconds}-second freshness checks. Missing fetchedAt/startsAt values are rejected.`);
   }
   const __t1 = Date.now();
-  const { opportunities, clustersByGroup } = scanWithClusters(freshQuotes, {
+  const { opportunities, clustersByGroup, bestByFixture } = scanWithClusters(freshQuotes, {
     ...options,
     maxQuoteAgeSeconds,
     now: new Date(now),
@@ -316,7 +328,7 @@ export async function scanConfiguredFeeds(env = {}, options = {}) {
     maxQuoteAgeSeconds,
     priceAgeSeconds: priceAgeSeconds ?? null,
     refreshing: Boolean(refreshing),
-    overlap: overlapReport(freshQuotes, clustersByGroup),
+    overlap: overlapReport(freshQuotes, clustersByGroup, bestByFixture),
     ...(options.debug === 2 ? { allQuotes: quotes.slice(0, 2500).map((quote) => ({
       bookmaker: quote.bookmaker, event: quote.event, startsAt: quote.startsAt,
       marketKey: quote.marketKey, outcome: quote.outcome, odds: quote.odds,
@@ -419,7 +431,7 @@ async function scanWithDiscovered(env, options, usable, found) {
   const now = Date.now();
   const freshQuotes = quotes.filter((quote) => isFreshPreMatch(quote, now, maxQuoteAgeSeconds));
   const __t1 = Date.now();
-  const { opportunities, clustersByGroup } = scanWithClusters(freshQuotes, {
+  const { opportunities, clustersByGroup, bestByFixture } = scanWithClusters(freshQuotes, {
     ...options,
     maxQuoteAgeSeconds,
     now: new Date(now),
