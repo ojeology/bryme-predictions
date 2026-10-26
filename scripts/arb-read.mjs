@@ -158,9 +158,12 @@ async function readNairaBet(browser) {
     await dressAsVisitor(page);
 
     let body = null;
+    const widgetCalls = [];
     page.on('response', async (response) => {
       const url = response.url();
-      if (!/biahosted\.com\/api\/Widget\/GetEvents/i.test(url)) return;
+      if (!/biahosted\.(com|net)/i.test(url)) return;
+      widgetCalls.push(`${response.status()} ${url.slice(0, 150)}`);
+      if (!/\/api\/Widget\/GetEvents/i.test(url)) return;
       try {
         const text = await response.text();
         if (text && text.length > 5000 && !body) body = text;
@@ -170,7 +173,16 @@ async function readNairaBet(browser) {
     await page.goto('https://nairabet.com/sports', { waitUntil: 'domcontentloaded', timeout: 45000 }).catch(() => {});
     const arrived = await waitForRealPage(page, { timeoutMs: 30000 });
     note('nairabet', `page: ${arrived.ok ? 'arrived' : 'still checking'} (${arrived.state?.title || '?'})`);
-    await sleep(12000);
+    await sleep(25000);
+    for (const call of widgetCalls.slice(0, 20)) note('nairabet', `  widget call ${call}`);
+
+    if (!body) {
+      // the page did not ask for the prices by itself: the same question is
+      // asked from inside the page, where the site's own web app lives
+      const asked = await askInPage(page, { url: NAIRABET_URL, method: 'GET' });
+      note('nairabet', `asking the page -> HTTP ${asked?.status ?? 'nothing'}${asked?.length ? `, ${asked.length} bytes` : ''}`);
+      if (asked?.status === 200 && asked.body) body = asked.body;
+    }
 
     if (!body) {
       note('nairabet', 'the page did not ask for the prices');
@@ -461,6 +473,22 @@ async function readSportyBet(browser) {
       'the important list');
     take((await askSportyBet(`${SPORTYBET_ORIGIN}/api/ng/factsCenter/liveOrPrematchEvents?sportId=sr:sport:1`)).body,
       'the live list');
+
+    // The whole football slate.  This is the call the site itself makes
+    // when the football part is opened, with the markets the scanner
+    // compares and with its own paging.
+    const slate = [];
+    let pages = 1;
+    for (let page = 1; page <= pages; page += 1) {
+      const answer = await askSportyBet(`${SPORTYBET_ORIGIN}/api/ng/factsCenter/pcUpcomingEvents?sportId=sr:sport:1&marketId=1,18,10,29,11,26,36,14,60100&pageSize=100&pageNum=${page}&option=1`, 30);
+      const tournaments = answer?.body?.data?.tournaments;
+      const total = Number(answer?.body?.data?.totalNum || 0);
+      if (!tournaments) { note('sportybet', `page ${page} held no prices`); break; }
+      if (total) pages = Math.min(Math.ceil(total / 100), 20);
+      const found = take({ data: tournaments }, `page ${page} of ${pages}`);
+      slate.push(found);
+    }
+    note('sportybet', `the whole slate: ${slate.reduce((a, b) => a + b, 0)} prices`);
 
     // The site asks for the events of one tournament at a time.  One
     // tournament is opened in the browser and the call the page makes is
