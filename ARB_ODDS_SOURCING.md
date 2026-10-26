@@ -476,3 +476,82 @@ answers, so Bet9ja's block is the address rather than the platform.
 Nothing about the scanner changes: the reader is an ordinary Node script.
 Faking an address is not an option, and this document does not try to offer
 one.
+
+## SIX BOOKS FROM ONE PLATFORM (26 Oct 2026, late)
+
+NairaBet runs on the Altenar/SB widget platform.  The platform keeps a copy
+of each book that runs on it, and it gives every book its own **token**.
+The token is the book's own name, and it is written into the address of the
+book's own page.
+
+```
+https://sb2frontend-altenar2.biahosted.com/api/Widget/GetEvents
+    ?culture=en-GB&timezoneOffset=0
+    &integration=<THE BOOK'S TOKEN>
+    &deviceType=desktop
+    &sportId=66
+```
+
+**A token that the platform knows answers with that book's own prices.**
+A token it does not know is refused with an empty answer (HTTP 400).  The
+same endpoint therefore serves every book on the platform, and one adapter
+reads them all.
+
+**The tokens that answer (checked 26 Oct 2026):**
+
+| Token | Book | Events | Price tree |
+|---|---|---|---|
+| `nairabet` | NairaBet | 1,248 | 2.99 MB |
+| `betking` | BetKing | 1,257 | 3.66 MB |
+| `jackpotbet` | JackpotBet | 1,157 | 2.69 MB |
+| `stake` | Stake | — | answers |
+| `betway` | Betway | — | answers |
+| `12bet` | 12BET | — | answers |
+
+**These are genuinely different books, not copies of one book.**  Compared
+price by price on the matches they share:
+
+* NairaBet and BetKing share 13,965 prices and **2,614 of them differ**.
+* NairaBet and JackpotBet share 5,293 prices and **326 of them differ**.
+
+That is what makes them worth reading: a book that agrees with another
+book on every price cannot produce an arbitrage with it.
+
+**BetKing was already being read — from the wrong place.**  The old route
+was BetKing's own edge (`sportsapicdn-desktop.betking.com`), which answers
+only a real browser and carries just 35 matches.  The platform route
+carries **1,257 matches** for the same book, over plain HTTP, for nothing.
+
+### How to test a token without downloading three megabytes
+
+`GetSportInfo` answers with the same thirteen kilobytes for every valid
+token, and an empty answer for an invalid one:
+
+```
+https://sb2frontend-altenar2.biahosted.com/api/Widget/GetSportInfo
+    ?culture=en-GB&timezoneOffset=0&deviceType=desktop&language=en
+    &integration=<TOKEN>
+```
+
+HTTP 200 means the token is good.  HTTP 400 means it is not.  That is a
+cheap way to sweep a list of book names.
+
+### How to find the token of a book you know
+
+Open the book's own page and read the address of the prices it asks for:
+
+```
+1. open the book's site in a browser
+2. look at the network panel, find the request to
+   sb2frontend-*.biahosted.com/api/Widget/GetEvents
+3. read integration=... out of the address
+```
+
+The token is the book's own name, in lower case, usually without the
+suffix.  `nairabet.com` -> `nairabet`.  `betking.com` -> `betking`.
+
+### What is still not solved by this
+
+This platform does not carry 22Bet, 1xBet, Bet9ja, SportyBet, MSport or
+LiveScore Bet — their tokens are refused.  Those books have their own
+platforms, and 22Bet/1xBet/Bet9ja still need an address inside Nigeria.
