@@ -1,5 +1,5 @@
 {
- "at": "2026-10-26T10:37:10.171Z",
+ "at": "2026-10-26T10:37:14.101Z",
  "edge": "LHR",
  "phoneCountry": "NG",
  "workerCountry": "NG",
@@ -260,13 +260,13 @@
    "evidence": {
     "page": "https://1xbet.ng/en/",
     "scripts": [
-     "https://1xbet.ng/sys-static/sys-technical-pages-app-static/Desktop/Default/entry-8ceaf66281.js",
+     "https://1xbet.ng/sys-static/sys-technical-pages-app-static/Desktop/Default/entry-0019617f20.js",
      "https://1xbet.ng/sys-static/shared-assets/check-ob.js"
     ],
     "chunks": [
-     "https://1xbet.ng/sys-static/sys-technical-pages-app-static/Desktop/Default/5b70c0f4e0.js",
-     "https://1xbet.ng/sys-static/sys-technical-pages-app-static/Desktop/Default/7b0ed269bb.js",
-     "https://1xbet.ng/sys-static/sys-technical-pages-app-static/Desktop/Default/b37d85c543.js"
+     "https://1xbet.ng/sys-static/sys-technical-pages-app-static/Desktop/Default/0fbc5a2a13.js",
+     "https://1xbet.ng/sys-static/sys-technical-pages-app-static/Desktop/Default/34f0ad58a7.js",
+     "https://1xbet.ng/sys-static/sys-technical-pages-app-static/Desktop/Default/eeccd67309.js"
     ],
     "candidatesTried": 1
    },
