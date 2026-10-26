@@ -364,7 +364,10 @@ const ASK = `
         credentials: request.credentials === false ? 'omit' : 'include',
       });
       const text = await response.text();
-      return { status: response.status, length: text.length, body: text.slice(0, 4000000) };
+      // the whole of it: a big book answers with more than four million
+      // characters, and half an answer is not an answer at all - it is a
+      // piece of text that cannot be read
+      return { status: response.status, length: text.length, body: text };
     } catch (error) {
       return { status: 0, length: 0, error: String((error && error.message) || error) };
     }
