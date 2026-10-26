@@ -35,8 +35,7 @@ export function packQuotes(quotes, book, capturedAt) {
       // written and read thousands of times a day, and four bytes of
       // digits are cheaper than twenty-four bytes of text
       if (field === 'priceMovedAt') {
-        const millis = Date.parse(String(value));
-        row[index] = Number.isFinite(millis) ? millis : null;
+        row[index] = stampToMillis(value);
         continue;
       }
       row[index] = value;

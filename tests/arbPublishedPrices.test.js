@@ -93,3 +93,48 @@ test('a file written in another order is still read', () => {
   assert.equal(back[0].odds, read[0].odds);
   assert.equal(back[0].fetchedAt, CAPTURED);
 });
+
+test('the moment a book moved a price survives the journey', () => {
+  // the stamp is a number of milliseconds, and it has to stay a number:
+  // a string of digits is not a moment, and it was being thrown away
+  const quote = {
+    event: 'Arsenal v Chelsea',
+    eventId: 'sb:match:4242',
+    sport: 'Football',
+    competition: 'Premier League',
+    startsAt: '2026-10-31T15:00:00.000Z',
+    market: '1X2',
+    marketKey: 'match-result-1x2',
+    rulesKey: 'match-result-1x2',
+    way: 3,
+    outcome: 'home',
+    label: 'Arsenal',
+    odds: 1.85,
+    priceMovedAt: 1793023714551,
+  };
+  const packed = packQuotes([quote], 'sportybet', CAPTURED);
+  assert.equal(packed.rows[0][12], 1793023714551);
+  const back = expandRows(packed, 'sportybet', CAPTURED);
+  assert.equal(back[0].priceMovedAt, 1793023714551);
+});
+
+test('a stamp given as text is still read as a moment', () => {
+  const quote = {
+    event: 'Arsenal v Chelsea',
+    eventId: 'sb:match:4242',
+    sport: 'Football',
+    competition: 'Premier League',
+    startsAt: '2026-10-31T15:00:00.000Z',
+    market: '1X2',
+    marketKey: 'match-result-1x2',
+    rulesKey: 'match-result-1x2',
+    way: 3,
+    outcome: 'home',
+    label: 'Arsenal',
+    odds: 1.85,
+    priceMovedAt: '2026-10-26T12:33:23.181Z',
+  };
+  const packed = packQuotes([quote], 'sportybet', CAPTURED);
+  const back = expandRows(packed, 'sportybet', CAPTURED);
+  assert.equal(back[0].priceMovedAt, Date.parse('2026-10-26T12:33:23.181Z'));
+});
