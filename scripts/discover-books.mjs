@@ -21,6 +21,34 @@ const TARGETS = [
 ];
 
 const NAIRABET_TREE = 'https://sb2frontend-altenar2.biahosted.com/api/Widget/GetEvents?culture=en-GB&timezoneOffset=0&integration=nairabet&deviceType=desktop&sportId=66';
+const UA = 'Mozilla/5.0 (Linux; Android 13; Pixel 7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36';
+
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+/** Look like an ordinary visitor, and not like a machine. */
+async function dressAsVisitor(page) {
+  await page.setUserAgent(UA);
+  await page.setExtraHTTPHeaders({ 'Accept-Language': 'en-NG,en;q=0.9' });
+  await page.evaluateOnNewDocument(() => {
+    Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
+  }).catch(() => {});
+}
+
+/** Wait out a check page, if there is one. */
+async function waitForRealPage(page, { timeoutMs = 30000 } = {}) {
+  const deadline = Date.now() + timeoutMs;
+  let last = '';
+  while (Date.now() < deadline) {
+    const state = await page.evaluate(`(() => ({ title: document.title || '', href: location.href }))()`).catch(() => null);
+    if (state) {
+      last = `${state.title} | ${state.href}`;
+      if (!/just a moment|attention required|checking your browser|one more step/i.test(state.title)
+        && !/\/cdn-cgi\/challenge/.test(state.href)) return { ok: true, state };
+    }
+    await sleep(1500);
+  }
+  return { ok: false, state: { title: last } };
+}
 
 const WANTED = process.argv.slice(2).filter((value) => !value.startsWith('-'));
 const targets = WANTED.length ? TARGETS.filter((target) => WANTED.includes(target.id)) : TARGETS;
@@ -93,8 +121,21 @@ async function inspectNairaBet(browser) {
   const page = await browser.newPage();
   try {
     log('== nairabet: opening the page so the widget is allowed to answer');
-    await page.goto('https://nairabet.com/sports', { waitUntil: 'domcontentloaded', timeout: 45000 });
-    await new Promise((resolve) => setTimeout(resolve, 12000));
+    await page.setViewport({ width: 412, height: 900 });
+    await dressAsVisitor(page);
+    await page.goto('https://nairabet.com/sports', { waitUntil: 'domcontentloaded', timeout: 45000 }).catch(() => {});
+    const arrived = await waitForRealPage(page, { timeoutMs: 30000 });
+    log(`== nairabet: page ${arrived.ok ? 'arrived' : 'still checking'} (${arrived.state?.title || '?'})`);
+    await sleep(12000);
+    const clicked = await page.evaluate(`(() => {
+      const nodes = [...document.querySelectorAll('a,div,span,li,button')].filter(
+        (node) => node.children.length === 0 && /^(football|soccer)$/i.test((node.textContent || '').trim()),
+      );
+      if (nodes[0]) { nodes[0].click(); return true; }
+      return false;
+    })()`).catch(() => false);
+    await sleep(18000);
+    log(`== nairabet: opening football (${clicked ? 'yes' : 'no'})`);
     const summary = await page.evaluate(async (address) => {
       const answer = await fetch(address, { credentials: 'omit' });
       if (!answer.ok) return { error: `HTTP ${answer.status}` };
