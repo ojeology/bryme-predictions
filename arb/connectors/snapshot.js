@@ -99,7 +99,9 @@ export async function readSnapshotBook(env = {}, book = '', { force = false } = 
           redirect: 'follow',
         });
         if (answer.ok) { response = answer; break; }
-        lastError = new Error(`HTTP ${answer.status}`);
+        lastError = new Error(answer.status === 404
+          ? 'the free reader has published no prices for this book yet'
+          : `HTTP ${answer.status}`);
       } catch (error) {
         lastError = error;
       }
