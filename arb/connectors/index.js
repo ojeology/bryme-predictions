@@ -32,6 +32,11 @@ export const CONNECTORS = [
   { id: 'msport', label: 'MSport', envKey: 'MSPORT_FEED_URL', reader: fetchMsportQuotes, snapshot: true },
   // BetKing's edge only answers a real browser, so it gets one
   { id: 'betking', label: 'BetKing', envKey: 'BETKING_FEED_URL', reader: fetchBetkingQuotes, viaBrowser: true, snapshot: true },
+  // Stake, Betway and 12BET run on the same platform as NairaBet and
+  // JackpotBet, and the free reader reads them the same way
+  { id: 'stake', label: 'Stake', envKey: 'STAKE_FEED_URL', snapshot: true, snapshotOnly: true },
+  { id: 'betway', label: 'Betway', envKey: 'BETWAY_FEED_URL', snapshot: true, snapshotOnly: true },
+  { id: '12bet', label: '12BET', envKey: 'BET12_FEED_URL', snapshot: true, snapshotOnly: true },
 ];
 
 function configured(definition, env) {

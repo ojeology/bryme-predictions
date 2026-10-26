@@ -57,6 +57,11 @@ const ALTENAR_BOOKS = {
   nairabet: { label: 'NairaBet', site: 'https://nairabet.com/sports' },
   betking: { label: 'BetKing', site: 'https://betking.com/' },
   jackpotbet: { label: 'JackpotBet', site: 'https://jackpotbet.com/' },
+  // the same platform serves these three as well: the token is the book's
+  // own name, and each one answers with its own events and its own numbers
+  stake: { label: 'Stake', site: 'https://stake.com/' },
+  betway: { label: 'Betway', site: 'https://betway.com/' },
+  '12bet': { label: '12BET', site: 'https://12bet.com/' },
 };
 const ALTENAR_SPORT_ID = 66;
 
