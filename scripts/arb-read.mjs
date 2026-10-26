@@ -141,45 +141,56 @@ async function readLiveScoreBet() {
 }
 
 /**
- * NairaBet's prices.  The book runs on the Altenar/SB widget platform, and
- * that platform answers a public JSON endpoint with the whole price tree -
- * no browser, no account, no cookie.
+ * NairaBet's prices.
+ *
+ * NairaBet runs on the Altenar/SB widget platform.  The platform's price
+ * endpoint refuses an ordinary request from outside (it answers "403" to
+ * anything that does not look like the site's own web app), so the site's
+ * own page is opened and the answer the page itself receives is used.
+ * Nothing is guessed and no bet is placed.
  */
-async function readNairaBet() {
+async function readNairaBet(browser) {
+  const quotes = [];
+  let page = null;
   try {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 30000);
-    const response = await fetch(NAIRABET_URL, {
-      method: 'GET',
-      headers: {
-        'User-Agent': UA,
-        Accept: 'application/json, text/plain, */*',
-        'Accept-Language': 'en-GB,en;q=0.9',
-        Referer: 'https://nairabet.com/',
-        Origin: 'https://nairabet.com',
-      },
-      signal: controller.signal,
+    page = await browser.newPage();
+    await page.setViewport({ width: 412, height: 900 });
+    await dressAsVisitor(page);
+
+    let body = null;
+    page.on('response', async (response) => {
+      const url = response.url();
+      if (!/biahosted\.com\/api\/Widget\/GetEvents/i.test(url)) return;
+      try {
+        const text = await response.text();
+        if (text && text.length > 5000 && !body) body = text;
+      } catch { /* the body may already be gone */ }
     });
-    const text = await response.text();
-    clearTimeout(timer);
-    if (!response.ok) {
-      note('nairabet', `failed: HTTP ${response.status}`);
-      return [];
+
+    await page.goto('https://nairabet.com/sports', { waitUntil: 'domcontentloaded', timeout: 45000 }).catch(() => {});
+    const arrived = await waitForRealPage(page, { timeoutMs: 30000 });
+    note('nairabet', `page: ${arrived.ok ? 'arrived' : 'still checking'} (${arrived.state?.title || '?'})`);
+    await sleep(12000);
+
+    if (!body) {
+      note('nairabet', 'the page did not ask for the prices');
+      return quotes;
     }
     let payload;
-    try { payload = JSON.parse(text); } catch {
-      note('nairabet', 'failed: the answer was not a price tree');
-      return [];
+    try { payload = JSON.parse(body); } catch {
+      note('nairabet', 'the answer was not a price tree');
+      return quotes;
     }
-    const quotes = flattenNairaBet(payload, { bookmaker: 'nairabet', now: new Date().toISOString() });
-    const fixtures = new Set(quotes.map((quote) => quote.event)).size;
-    note('nairabet', `${quotes.length} prices over ${fixtures} matches`);
-    return quotes;
+    const found = flattenNairaBet(payload, { bookmaker: 'nairabet', now: new Date().toISOString() });
+    quotes.push(...found);
+    const fixtures = new Set(found.map((quote) => quote.event)).size;
+    note('nairabet', `${found.length} prices over ${fixtures} matches`);
   } catch (error) {
-    if (error?.name === 'AbortError') note('nairabet', 'failed: the book did not answer in time');
-    else note('nairabet', `failed: ${error?.message || error}`);
-    return [];
+    note('nairabet', `failed: ${error?.message || error}`);
+  } finally {
+    try { await page?.close(); } catch { /* the tab may already be gone */ }
   }
+  return quotes;
 }
 
 /* ------------------------------------------------------------------ *
@@ -360,174 +371,204 @@ async function readBetking(browser) {
  * The first run records every call the page makes, so the exact call the
  * book uses is used here as well - nothing is guessed.
  * ------------------------------------------------------------------ */
+/**
+ * SportyBet answers some of its lists with the matches one by one.  The
+ * price tree wants them under their tournament, so they are put back
+ * together here.
+ */
+function sportyBetTree(payload) {
+  const data = payload?.data;
+  if (!Array.isArray(data)) return null;
+  if (data.some((item) => Array.isArray(item?.events))) return payload;
+  const byTournament = new Map();
+  for (const event of data) {
+    const tournament = event?.sport?.category?.tournament;
+    const key = tournament?.id || 'sr:tournament:0';
+    if (!byTournament.has(key)) {
+      byTournament.set(key, { id: key, name: String(tournament?.name || ''), events: [] });
+    }
+    byTournament.get(key).events.push(event);
+  }
+  return { data: [...byTournament.values()] };
+}
+
 async function readSportyBet(browser) {
   const quotes = [];
   const seen = [];
-  const captured = [];
   let page = null;
+
+  /** Ask the book's own price service over plain HTTP. */
+  const askSportyBet = async (url, seconds = 25) => {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), seconds * 1000);
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: { 'User-Agent': UA, Accept: 'application/json', 'Accept-Language': 'en-NG,en;q=0.9' },
+        signal: controller.signal,
+      });
+      const text = await response.text();
+      if (!response.ok) return { status: response.status, body: null };
+      try { return { status: response.status, body: JSON.parse(text) }; } catch { return { status: response.status, body: null }; }
+    } catch (error) {
+      return { status: 0, body: null, error: String(error?.message || error) };
+    } finally {
+      clearTimeout(timer);
+    }
+  };
+
+  /** The prices of one answer of the book. */
+  const take = (payload, where) => {
+    if (!payload) return 0;
+    try {
+      const found = flattenSportyBet(sportyBetTree(payload), { bookmaker: 'sportybet' });
+      if (found.length) {
+        quotes.push(...found);
+        note('sportybet', `${where} -> ${found.length} prices`);
+        return found.length;
+      }
+    } catch { /* not a price tree */ }
+    return 0;
+  };
+
   try {
-    page = await browser.newPage();
-    await page.setViewport({ width: 412, height: 900 });
-    await dressAsVisitor(page);
-    page.on('response', async (response) => {
-      const url = response.url();
-      if (!/sportybet\.com\/api\//i.test(url)) return;
-      const request = response.request();
-      const call = { url, method: request?.method() || 'GET', body: request?.postData() || null, status: response.status() };
-      seen.push(call);
-      if (!/factsCenter/i.test(url)) return;
-      try {
-        const text = await response.text();
-        if (text && text.length > 500) captured.push({ ...call, body: text });
-      } catch { /* the body may already be gone */ }
-    });
-
-    await page.goto(SPORTYBET_PAGE, { waitUntil: 'domcontentloaded', timeout: 45000 }).catch(() => {});
-    const arrived = await waitForRealPage(page, { timeoutMs: 30000 });
-    note('sportybet', `page: ${arrived.ok ? 'arrived' : 'still checking'} (${arrived.state?.title || '?'})`);
-    await sleep(6000);
-
-    // the device id the site's own app asks for
-    const device = await askInPage(page, { url: `${SPORTYBET_ORIGIN}/api/ng/patron/deviceId`, method: 'POST' });
-    note('sportybet', `device id -> HTTP ${device?.status ?? 'nothing'}${device?.length ? `, ${device.length} bytes` : ''}`);
-
-    // whatever the page fetched for itself is the book's own answer
-    for (const item of captured) {
-      try {
-        const payload = JSON.parse(item.body);
-        const found = flattenSportyBet(payload, { bookmaker: 'sportybet' });
-        if (found.length) {
-          quotes.push(...found);
-          note('sportybet', `the page's own call ${item.url.slice(0, 90)} -> ${found.length} prices`);
-        }
-      } catch { /* not a price tree */ }
-    }
-    if (quotes.length) note('sportybet', `the page's own calls: ${quotes.length} prices`);
-
-    // The full slate: the site asks its price service for the events of each
-    // tournament, so one tournament is opened and the call it makes is
-    // watched.  The call the book itself uses is the one that is used here.
-    const list = await askInPage(page, {
-      url: `${SPORTYBET_ORIGIN}/api/ng/factsCenter/sportList?timeline=24&productId=1&option=1`,
-      method: 'GET',
-    });
-    let listPayload = null;
-    if (list?.status === 200 && list.body) {
-      try { listPayload = JSON.parse(list.body); } catch { /* not JSON */ }
-    }
+    // The book's own public calls. The tournament list says which
+    // tournaments there are; the highlight list carries the whole price tree
+    // of the matches that matter.
+    const list = await askSportyBet(`${SPORTYBET_ORIGIN}/api/ng/factsCenter/sportList?timeline=24&productId=3&option=3`);
     const tournaments = [];
-    const walk = (node) => {
+    const walk = (node, sport = null) => {
       if (!node || typeof node !== 'object') return;
-      if (Array.isArray(node)) { for (const item of node) walk(item); return; }
-      const id = node.id || node.tournamentId || node.srTournamentId;
+      if (Array.isArray(node)) { for (const item of node) walk(item, sport); return; }
+      const id = node.id || node.tournamentId;
       const name = node.name || node.tournamentName || node.desc;
-      if (typeof id === 'string' && /^sr:tournament:/.test(id) && name) {
-        tournaments.push({ id, name, events: node.eventSize || node.eventCount || 0 });
+      let currentSport = sport;
+      if (typeof id === 'string' && id.startsWith('sr:sport:')) currentSport = name;
+      if (typeof id === 'string' && id.startsWith('sr:tournament:') && name) {
+        tournaments.push({ id, name, events: node.eventSize || node.eventCount || 0, sport: currentSport });
       }
       for (const value of Object.values(node)) {
-        if (value && typeof value === 'object') walk(value);
+        if (value && typeof value === 'object') walk(value, currentSport);
       }
     };
-    walk(listPayload);
-    note('sportybet', `the tournament list: ${tournaments.length} tournaments`);
-    if (!tournaments.length) {
-      note('sportybet', `calls the page made: ${seen.length}`);
-      for (const call of seen.slice(0, 40)) note('sportybet', `  page call ${call.method} ${call.url} -> ${call.status}`);
-      return quotes;
-    }
+    walk(list.body?.data);
+    const football = tournaments.filter((t) => t.sport === 'Football');
+    note('sportybet', `the tournament list: ${tournaments.length} tournaments, ${football.length} of them football`);
 
-    // open the first tournament and watch what the page asks for
-    const wanted = tournaments.find((t) => t.events) || tournaments[0];
-    const before = seen.length;
-    await page.evaluate(`(() => {
-      const wanted = ${JSON.stringify(wanted.name)};
-      const nodes = [...document.querySelectorAll('div,span,a,li')].filter(
-        (node) => node.children.length === 0 && (node.textContent || '').trim() === wanted,
-      );
-      if (nodes[0]) { nodes[0].click(); return true; }
-      return false;
-    })()`).catch(() => false);
-    await sleep(9000);
-    const after = seen.slice(before);
-    note('sportybet', `opening "${wanted.name}" made ${after.length} calls`);
-    for (const call of after) note('sportybet', `  call ${call.method} ${call.url} -> ${call.status}${call.body ? ` body ${String(call.body).slice(0, 120)}` : ''}`);
+    take((await askSportyBet(`${SPORTYBET_ORIGIN}/api/ng/factsCenter/wapConfigurableNewHighlightEvents?sportId=sr:sport:1`)).body,
+      'the highlight list');
+    take((await askSportyBet(`${SPORTYBET_ORIGIN}/api/ng/factsCenter/importantEvents?sportId=sr:sport:1`)).body,
+      'the important list');
+    take((await askSportyBet(`${SPORTYBET_ORIGIN}/api/ng/factsCenter/liveOrPrematchEvents?sportId=sr:sport:1`)).body,
+      'the live list');
 
-    // the call that carries prices, and the way the tournament is named in it
-    let template = null;
-    for (const call of after) {
-      if (!/factsCenter/i.test(call.url)) continue;
-      if (!/event|odds|match|price/i.test(call.url + ' ' + String(call.body || ''))) continue;
-      template = call;
-      break;
-    }
-    if (!template) {
+    // The site asks for the events of one tournament at a time.  One
+    // tournament is opened in the browser and the call the page makes is
+    // watched, so the call the book itself uses is the one that is used
+    // here - nothing is guessed.
+    try {
+      page = await browser.newPage();
+      await page.setViewport({ width: 412, height: 900 });
+      await dressAsVisitor(page);
+      page.on('response', async (response) => {
+        const url = response.url();
+        if (!/sportybet\.com\/api\//i.test(url)) return;
+        const request = response.request();
+        seen.push({ url, method: request?.method() || 'GET', body: request?.postData() || null, status: response.status() });
+      });
+
+      await page.goto(SPORTYBET_PAGE, { waitUntil: 'domcontentloaded', timeout: 45000 }).catch(() => {});
+      const arrived = await waitForRealPage(page, { timeoutMs: 30000 });
+      note('sportybet', `page: ${arrived.ok ? 'arrived' : 'still checking'} (${arrived.state?.title || '?'})`);
+      await sleep(5000);
+
+      // open the football part of the site
+      const before = seen.length;
+      const clicked = await page.evaluate(`(() => {
+        const nodes = [...document.querySelectorAll('a,div,span,li,button')].filter(
+          (node) => node.children.length === 0 && /^(football|soccer)$/i.test((node.textContent || '').trim()),
+        );
+        if (nodes[0]) { nodes[0].click(); return true; }
+        return false;
+      })()`).catch(() => false);
+      await sleep(9000);
+      const after = seen.slice(before);
+      note('sportybet', `opening football (${clicked ? 'yes' : 'no'}) made ${after.length} calls`);
+      for (const call of after) note('sportybet', `  call ${call.method} ${call.url} -> ${call.status}`);
+
+      // the call that carries the prices of one tournament
+      let template = null;
       for (const call of after) {
-        if (/factsCenter/i.test(call.url)) { template = call; break; }
+        if (!/factsCenter/i.test(call.url)) continue;
+        if (!/event|odds|match|price|configurable/i.test(call.url + ' ' + String(call.body || ''))) continue;
+        template = call;
+        break;
       }
-    }
-    if (!template) {
-      note('sportybet', 'no price call was seen; the page calls were:');
-      for (const call of seen.slice(0, 40)) note('sportybet', `  page call ${call.method} ${call.url} -> ${call.status}`);
-      return quotes;
-    }
+      if (!template) {
+        for (const call of after) {
+          if (/factsCenter/i.test(call.url)) { template = call; break; }
+        }
+      }
 
-    // turn the call into a template: the tournament's own id in the
-    // address becomes the place holder
-    const idInUrl = template.url.includes(wanted.id);
-    note('sportybet', `the price call is ${template.method} ${template.url}${idInUrl ? ' (the tournament is in the address)' : ' (the tournament is in the body)'}`);
+      // the tournament the call was made for, and the place its id sits
+      let wanted = football.find((t) => template?.url?.includes(t.id)) || football.find((t) => template?.body?.includes(t.id));
+      if (!template || !wanted) {
+        // no tournament was named in the call: the first tournament of the
+        // list is asked for and the call is read as it is
+        wanted = football.slice().sort((a, b) => b.events - a.events)[0];
+        if (template && !wanted) {
+          note('sportybet', 'the price call was seen, but no tournament was named in it');
+        }
+      }
 
-    const buildCall = (tournament) => {
-      if (idInUrl) {
-        return {
-          url: template.url.replace(wanted.id, tournament.id),
-          method: template.method,
-          body: template.body ? String(template.body).replace(wanted.id, tournament.id) : null,
-        };
+      if (template && wanted) {
+        const idInUrl = String(template.url).includes(wanted.id);
+        note('sportybet', `the price call is ${template.method} ${template.url}${idInUrl ? ' (the tournament is in the address)' : ' (the tournament is in the body)'}`);
+        const wanted2 = football.filter((t) => t.events).sort((a, b) => b.events - a.events)
+          .slice(0, SPORTYBET_TOURNAMENT_LIMIT);
+        let done = 0;
+        let failed = 0;
+        for (let start = 0; start < wanted2.length; start += 6) {
+          const batch = wanted2.slice(start, start + 6);
+          const answers = await Promise.all(batch.map(async (tournament) => {
+            const url = idInUrl
+              ? String(template.url).replace(wanted.id, tournament.id)
+              : String(template.url);
+            const answer = await askSportyBet(url, 20);
+            return { tournament, answer };
+          }));
+          for (const { tournament, answer } of answers) {
+            done += 1;
+            if (answer?.status !== 200 || !answer.body) { failed += 1; continue; }
+            const found = take(answer.body, `tournament ${tournament.name}`);
+            if (!found) failed += 1;
+          }
+          note('sportybet', `${done} tournaments asked, ${failed} of them without prices`);
+        }
+      } else {
+        note('sportybet', 'no price call was seen; the page calls were:');
+        for (const call of seen.slice(0, 40)) note('sportybet', `  page call ${call.method} ${call.url} -> ${call.status}`);
       }
-      return {
-        url: template.url,
-        method: template.method,
-        body: template.body ? String(template.body).replace(wanted.id, tournament.id) : null,
-      };
-    };
-
-    // the whole slate, a few tournaments at a time
-    const wanted2 = tournaments.filter((t) => t.events).sort((a, b) => b.events - a.events)
-      .slice(0, SPORTYBET_TOURNAMENT_LIMIT);
-    let done = 0;
-    let failed = 0;
-    for (let start = 0; start < wanted2.length; start += 6) {
-      const batch = wanted2.slice(start, start + 6);
-      const answers = await Promise.all(batch.map(async (tournament) => {
-        const call = buildCall(tournament);
-        const answer = await askInPage(page, {
-          url: call.url,
-          method: call.method,
-          headers: { 'Content-Type': 'application/json' },
-          body: call.body,
-        });
-        return { tournament, answer };
-      }));
-      for (const { tournament, answer } of answers) {
-        done += 1;
-        if (answer?.status !== 200 || !answer.body) { failed += 1; continue; }
-        try {
-          const payload = JSON.parse(answer.body);
-          const found = flattenSportyBet(payload, { bookmaker: 'sportybet' });
-          quotes.push(...found);
-        } catch { failed += 1; }
-      }
-      if (done % 30 === 0 || done === wanted2.length) {
-        note('sportybet', `${done}/${wanted2.length} tournaments read, ${quotes.length} prices, ${failed} failed`);
-      }
+    } catch (error) {
+      note('sportybet', `the browser part failed: ${error?.message || error}`);
     }
-    note('sportybet', `the slate: ${quotes.length} prices from ${done - failed} tournaments`);
   } catch (error) {
     note('sportybet', `failed: ${error?.message || error}`);
   } finally {
     try { await page?.close(); } catch { /* the tab may already be gone */ }
   }
-  return quotes;
+
+  // the same match may come twice; one price per match and market is enough
+  const seenKeys = new Set();
+  const unique = [];
+  for (const quote of quotes) {
+    const key = `${quote.eventId}|${quote.marketKey}|${quote.outcome}`;
+    if (seenKeys.has(key)) continue;
+    seenKeys.add(key);
+    unique.push(quote);
+  }
+  note('sportybet', `the slate: ${unique.length} prices`);
+  return unique;
 }
 
 /* ------------------------------------------------------------------ *
@@ -540,7 +581,6 @@ async function readSportyBet(browser) {
 const DISCOVERY_TARGETS = [
   { id: '22bet', url: 'https://22bet.ng/' },
   { id: '1xbet', url: 'https://1xbet.ng/' },
-  { id: 'nairabet', url: 'https://nairabet.com/sports' },
 ];
 
 async function discoverBooks(browser) {
@@ -651,9 +691,6 @@ async function main() {
   const lsbQuotes = await readLiveScoreBet();
   if (lsbQuotes.length) books.livescorebet = lsbQuotes;
 
-  const nairaQuotes = await readNairaBet();
-  if (nairaQuotes.length) books.nairabet = nairaQuotes;
-
   let browser = null;
   try {
     browser = await openBrowser();
@@ -664,6 +701,9 @@ async function main() {
 
     const sportybetQuotes = await readSportyBet(browser);
     if (sportybetQuotes.length) books.sportybet = sportybetQuotes;
+
+    const nairaQuotes = await readNairaBet(browser);
+    if (nairaQuotes.length) books.nairabet = nairaQuotes;
 
     // the books that are not connected yet are looked at, and what they ask
     // for is written down

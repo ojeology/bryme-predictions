@@ -40,8 +40,8 @@ async function probeBook(address, method, body, headers, seconds = 8) {
       status: response.status,
       type: response.headers.get('content-type') || '',
       length: text.length,
-      head: text.slice(0, 3000),
-      tail: text.slice(-1200),
+      head: text.slice(0, 40000),
+      tail: text.slice(-4000),
     };
   } catch (error) {
     return {
