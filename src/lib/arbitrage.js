@@ -514,36 +514,51 @@ export function clusterFixtures(quotes) {
   // compared with every other price of its market, and a book that sends a
   // full slate of five thousand prices used up the Worker's whole time.
   const byWord = new Map();
+  // the matches already filed under each cluster, so the same match is not
+  // filed again for every one of its prices: a match carries tens of prices
+  // in a market, and filing each of them again filled the index with
+  // thousands of copies of the same handful of words
+  const filed = new Map();
+  // the set of candidate clusters is emptied and used again, rather than
+  // built anew for every price
+  const candidates = new Set();
   for (const index of ordered) {
     const quote = quotes[index];
     const when = whenOf[index];
     const words = fixtureWords(quote);
-    const candidates = new Set();
+    candidates.clear();
     for (const word of words) {
       const bucket = byWord.get(word);
       if (!bucket) continue;
-      for (const index of bucket) candidates.add(index);
+      for (const entry of bucket) candidates.add(entry);
     }
     let placed = false;
     let best = -1;
     // the newest cluster that holds this match wins, exactly as when every
     // cluster was checked one by one
-    for (const index of candidates) {
-      if (index <= best) continue;
-      const cluster = clusters[index];
-      const started = clusterWhen[index];
+    for (const entry of candidates) {
+      if (entry <= best) continue;
+      const cluster = clusters[entry];
+      const started = clusterWhen[entry];
       if (Number.isFinite(when) && Number.isFinite(started)
           && when - started > TIME_WINDOW_MINUTES * 60000) continue;
-      if (sameFixture(cluster[0], quote)) best = index;
+      if (sameFixture(cluster[0], quote)) best = entry;
     }
     if (best >= 0) {
       clusters[best].push(quote);
-      indexWords(byWord, words, best);
+      const seen = filed.get(best);
+      if (!seen) {
+        filed.set(best, new Set([quote.event]));
+      } else if (!seen.has(quote.event)) {
+        seen.add(quote.event);
+        indexWords(byWord, words, best);
+      }
       placed = true;
     }
     if (!placed) {
       clusters.push([quote]);
       clusterWhen.push(when);
+      filed.set(clusters.length - 1, new Set([quote.event]));
       indexWords(byWord, words, clusters.length - 1);
     }
   }

@@ -11,10 +11,45 @@
  */
 import { bookmakerLabel } from '../../src/lib/arbitrage.js';
 
+/**
+ * The words a book writes, kept once and shared.
+ *
+ * A book sends tens of thousands of prices, and the same few thousand
+ * names are written over and over: every price of a match carries the
+ * match's name, its league and its market.  Read as they arrive, every
+ * price carries its own copy of every name, and the Worker's memory runs
+ * out before the scan does.  The names are kept once and shared instead.
+ */
+const stringPool = new Map();
+const STRING_POOL_LIMIT = 20_000;
+
+function intern(value) {
+  if (value === null || value === undefined) return value;
+  const text = String(value);
+  const pooled = stringPool.get(text);
+  if (pooled !== undefined) return pooled;
+  if (stringPool.size < STRING_POOL_LIMIT) stringPool.set(text, text);
+  return text;
+}
+
 export const PUBLISH_FIELDS = [
   'event', 'eventId', 'sport', 'competition', 'startsAt', 'market',
   'marketKey', 'rulesKey', 'way', 'outcome', 'label', 'odds', 'priceMovedAt',
 ];
+
+/**
+ * The fields of a price that are words rather than numbers.
+ *
+ * A word is written once in the file and numbered; the rows carry the
+ * number.  A book sends tens of thousands of prices, and the same few
+ * thousand names are written over and over - the name of the match, its
+ * league, its market.  Written out, every price carried its own copy of
+ * every name, and the Worker ran out of memory taking the prices in.
+ */
+export const WORD_FIELDS = new Set([
+  'event', 'eventId', 'sport', 'competition', 'market', 'marketKey',
+  'rulesKey', 'outcome', 'label', 'startsAt',
+]);
 
 /**
  * Pack a book's prices for publication.
@@ -25,11 +60,22 @@ export const PUBLISH_FIELDS = [
  */
 export function packQuotes(quotes, book, capturedAt) {
   const rows = [];
+  const words = [];
+  const wordNumbers = new Map();
+  const numberOf = (value) => {
+    const text = String(value);
+    const known = wordNumbers.get(text);
+    if (known !== undefined) return known;
+    const number = words.length;
+    words.push(text);
+    wordNumbers.set(text, number);
+    return number;
+  };
   for (const quote of quotes || []) {
     const row = new Array(PUBLISH_FIELDS.length);
     for (let index = 0; index < PUBLISH_FIELDS.length; index += 1) {
       const field = PUBLISH_FIELDS[index];
-      const value = quote[PUBLISH_FIELDS[index]];
+      const value = quote[field];
       if (value === undefined) { row[index] = null; continue; }
       // the stamp is kept as a number of milliseconds: a row of prices is
       // written and read thousands of times a day, and four bytes of
@@ -38,11 +84,23 @@ export function packQuotes(quotes, book, capturedAt) {
         row[index] = stampToMillis(value);
         continue;
       }
+      // a word is written once and numbered
+      if (WORD_FIELDS.has(field)) {
+        row[index] = value === null ? null : numberOf(value);
+        continue;
+      }
       row[index] = value;
     }
     rows.push(row);
   }
-  return { capturedAt, book, format: 'compact', fields: PUBLISH_FIELDS, rows };
+  return {
+    capturedAt,
+    book,
+    format: 'compact',
+    fields: PUBLISH_FIELDS,
+    words,
+    rows,
+  };
 }
 
 /**
@@ -79,23 +137,30 @@ export function expandRows(entry, book, capturedAt) {
   const label = bookmakerLabel(book);
   const quotes = [];
   const rows = Array.isArray(entry?.rows) ? entry.rows : [];
+  // the words, each written once in the file
+  const words = Array.isArray(entry?.words) ? entry.words : null;
+  const wordOf = (value) => {
+    if (words === null) return value;
+    if (typeof value === 'number') return intern(words[value] ?? '');
+    return value;
+  };
   for (const row of rows) {
     if (!Array.isArray(row)) continue;
     if (sameOrder) {
       const [event, eventId, sport, competition, startsAt, market, marketKey, rulesKey, way, outcome, outcomeLabel, odds, priceMovedAt] = row;
       quotes.push({
-        event: event ?? '',
-        eventId: eventId ?? '',
-        sport: sport ?? 'Football',
-        competition: competition ?? '',
-        startsAt: startsAt ?? null,
-        market: market ?? '',
-        marketKey: marketKey ?? '',
-        rules: rulesKey ?? 'unspecified',
-        rulesKey: rulesKey ?? 'unspecified',
+        event: intern(wordOf(event) ?? ''),
+        eventId: intern(wordOf(eventId) ?? ''),
+        sport: intern(wordOf(sport) ?? 'Football'),
+        competition: intern(wordOf(competition) ?? ''),
+        startsAt: intern(wordOf(startsAt) ?? null),
+        market: intern(wordOf(market) ?? ''),
+        marketKey: intern(wordOf(marketKey) ?? ''),
+        rules: intern(wordOf(rulesKey) ?? 'unspecified'),
+        rulesKey: intern(wordOf(rulesKey) ?? 'unspecified'),
         way: Number(way) || 2,
-        outcome: outcome ?? '',
-        label: outcomeLabel ?? outcome ?? '',
+        outcome: intern(wordOf(outcome) ?? ''),
+        label: intern(wordOf(outcomeLabel) ?? wordOf(outcome) ?? ''),
         bookmaker: book,
         bookmakerLabel: label,
         odds: Number(odds) || 0,
@@ -112,7 +177,10 @@ export function expandRows(entry, book, capturedAt) {
     }
     // a file written in some other order is read the careful way
     const quote = {};
-    for (let index = 0; index < fields.length; index += 1) quote[fields[index]] = row[index];
+    for (let index = 0; index < fields.length; index += 1) {
+      const field = fields[index];
+      quote[field] = WORD_FIELDS.has(field) ? wordOf(row[index]) : row[index];
+    }
     quote.bookmaker = book;
     quote.bookmakerLabel = label;
     quote.odds = Number(quote.odds) || 0;

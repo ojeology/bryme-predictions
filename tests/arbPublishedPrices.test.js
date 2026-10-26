@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { packQuotes, expandRows, PUBLISH_FIELDS } from '../arb/connectors/published.js';
+import { packQuotes, expandRows, PUBLISH_FIELDS, WORD_FIELDS } from '../arb/connectors/published.js';
 import { flattenSportyBet } from '../arb/connectors/sportybet.js';
 import { normalizeQuote } from '../src/lib/arbitrage.js';
 
@@ -137,4 +137,80 @@ test('a stamp given as text is still read as a moment', () => {
   const packed = packQuotes([quote], 'sportybet', CAPTURED);
   const back = expandRows(packed, 'sportybet', CAPTURED);
   assert.equal(back[0].priceMovedAt, Date.parse('2026-10-26T12:33:23.181Z'));
+});
+
+test('a word is written once and numbered, so the file is much smaller', () => {
+  // The same match, the same league and the same market are written over
+  // and over - once for every price of every book.  Written out, every
+  // price carried its own copy of every name, and the Worker ran out of
+  // memory taking six books in at once.
+  const quotes = [];
+  for (let index = 0; index < 500; index += 1) {
+    quotes.push({
+      event: 'Arsenal v Chelsea',
+      eventId: 'sb:match:4242',
+      sport: 'Football',
+      competition: 'Premier League',
+      startsAt: '2026-10-31T15:00:00.000Z',
+      market: '1X2',
+      marketKey: 'match-result-1x2',
+      rulesKey: 'match-result-1x2',
+      way: 3,
+      outcome: index % 3 === 0 ? 'home' : index % 3 === 1 ? 'draw' : 'away',
+      label: 'Arsenal',
+      odds: 1.85,
+    });
+  }
+  const packed = packQuotes(quotes, 'sportybet', CAPTURED);
+  assert.ok(Array.isArray(packed.words), 'the file should carry a list of words');
+  assert.ok(packed.words.length < 30, `expected few words, got ${packed.words.length}`);
+  // every word is a number in the rows
+  for (const row of packed.rows) {
+    assert.equal(typeof row[0], 'number', 'the match name should be a number');
+    assert.equal(typeof row[10], 'number', 'the outcome should be a number');
+    assert.equal(typeof row[11], 'number', 'the odds should still be a number');
+  }
+  const back = expandRows(packed, 'sportybet', CAPTURED);
+  assert.equal(back.length, quotes.length);
+  for (let index = 0; index < quotes.length; index += 1) {
+    assert.equal(back[index].event, 'Arsenal v Chelsea');
+    assert.equal(back[index].competition, 'Premier League');
+    assert.equal(back[index].marketKey, 'match-result-1x2');
+    assert.equal(back[index].startsAt, '2026-10-31T15:00:00.000Z');
+    assert.equal(back[index].outcome, quotes[index].outcome);
+    assert.equal(back[index].odds, quotes[index].odds);
+  }
+});
+
+test('a file written before the words were numbered is still read', () => {
+  // the reader publishes the new form, but a price file that was published
+  // earlier is still out there, and it must still be read
+  const quote = {
+    event: 'Arsenal v Chelsea',
+    eventId: 'sb:match:4242',
+    sport: 'Football',
+    competition: 'Premier League',
+    startsAt: '2026-10-31T15:00:00.000Z',
+    market: '1X2',
+    marketKey: 'match-result-1x2',
+    rulesKey: 'match-result-1x2',
+    way: 3,
+    outcome: 'home',
+    label: 'Arsenal',
+    odds: 1.85,
+  };
+  const packed = packQuotes([quote], 'sportybet', CAPTURED);
+  const old = { ...packed };
+  delete old.words;
+  for (const row of old.rows) {
+    for (let index = 0; index < row.length; index += 1) {
+      // only the words were numbered; the odds and the moment stay numbers
+      if (WORD_FIELDS.has(PUBLISH_FIELDS[index])) row[index] = packed.words[row[index]];
+    }
+  }
+  const back = expandRows(old, 'sportybet', CAPTURED);
+  assert.equal(back.length, 1);
+  assert.equal(back[0].event, 'Arsenal v Chelsea');
+  assert.equal(back[0].odds, 1.85);
+  assert.equal(back[0].outcome, 'home');
 });
