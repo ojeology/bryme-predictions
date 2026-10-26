@@ -1,0 +1,41 @@
+# FIND THE PRICE ADDRESSES OF A BOOK
+#
+# Some books answer only a client that looks like an ordinary browser.  This
+# workflow opens those books in the runner's own Chrome and writes down the
+# calls the page makes, so the price address can be found and read by the
+# free reader.  It reads public pages only: no account, no bet.
+name: ARB Discovery
+
+on:
+  workflow_dispatch:
+    inputs:
+      book:
+        description: 'book id to look at (empty = all of them)'
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+concurrency:
+  group: arb-discovery
+  cancel-in-progress: true
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install the browser driver
+        run: npm install --no-save --no-audit --no-fund puppeteer-core
+
+      - name: Open the books and watch what they ask for
+        run: node scripts/discover-books.mjs ${{ inputs.book }}
