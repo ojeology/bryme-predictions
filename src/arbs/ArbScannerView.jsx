@@ -193,6 +193,23 @@ function writeHistory(history) {
   try { localStorage.setItem(HISTORY_KEY, JSON.stringify(history.slice(-HISTORY_MAX))); } catch { /* private mode */ }
 }
 
+// How close the books came on every scan.  Kept on the phone, so it is
+// this phone's own record and nothing else.
+const NEARMISS_KEY = 'arb.nearmiss.v1';
+
+function readNearMiss() {
+  try {
+    const value = JSON.parse(localStorage.getItem(NEARMISS_KEY) || '[]');
+    return Array.isArray(value) ? value : [];
+  } catch {
+    return [];
+  }
+}
+
+function writeNearMiss(records) {
+  try { localStorage.setItem(NEARMISS_KEY, JSON.stringify(records.slice(-200))); } catch { /* private mode */ }
+}
+
 function readRunHistory() {
   try {
     const value = JSON.parse(localStorage.getItem(RUN_HISTORY_KEY) || '[]');
@@ -393,6 +410,7 @@ export default function ArbScannerView() {
   const [priceAge, setPriceAge] = useState(null);
   const [seen, setSeen] = useState(readSeen);
   const [history, setHistory] = useState(readHistory);
+  const [nearMiss, setNearMiss] = useState(readNearMiss);
   const [scannedAt, setScannedAt] = useState(null);
   const [runSummary, setRunSummary] = useState(null);
   const [runHistory, setRunHistory] = useState(readRunHistory);
@@ -522,6 +540,12 @@ export default function ArbScannerView() {
       if (entries.length) {
         writeHistory([...knownHistory, ...entries]);
         setHistory(readHistory());
+      }
+      const closest = (data.overlap?.closestPairs || []).slice(0, 3);
+      if (closest.length) {
+        const knownNear = readNearMiss();
+        writeNearMiss([...knownNear, { at: stamp, pairs: closest }]);
+        setNearMiss(readNearMiss());
       }
       // the prices were getting old: the reader has been started, so keep
       // looking until they are fresh
@@ -1099,6 +1123,17 @@ export default function ArbScannerView() {
                     ? `${runSummary.overlap.arbitragePairs} pair(s) sum under 1.000 — that is an arbitrage.`
                     : `Nothing summed under 1.000. The closest was ${(runSummary.overlap.closestPairs || [])[0]?.impliedSum ?? '—'} — that is how near the books came to disagreeing.`}
                 </p>
+                {nearMiss.length ? (
+                  <p className="text-[10px] leading-relaxed text-slate-500 mt-1">
+                    {(() => {
+                      const sums = nearMiss.flatMap((entry) => (entry.pairs || []).map((pair) => Number(pair.impliedSum || 9)));
+                      const best = sums.length ? Math.min(...sums) : null;
+                      const near = sums.filter((sum) => sum < 1.02).length;
+                      if (best === null) return null;
+                      return `On this phone the books have come within ${((1 - best) * 100).toFixed(2)}% of an arbitrage, ${near} time${near === 1 ? '' : 's'} in ${nearMiss.length} scans.`;
+                    })()}
+                  </p>
+                ) : null}
               </div>
             )}
           </div>
