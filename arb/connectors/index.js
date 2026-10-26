@@ -127,6 +127,7 @@ export async function loadConnectorQuotes(env = {}, options = {}) {
     snapshotErrors.push(...problems);
   };
   const __t0 = Date.now();
+  let refreshing = false;
   await readBooks(false);
 
   // How old are the prices?  The age is taken from the prices themselves,
@@ -163,6 +164,7 @@ export async function loadConnectorQuotes(env = {}, options = {}) {
     const started = await dispatchReader(env);
     if (started.dispatched) {
       readerNotes.push(`The prices are ${Math.round(oldest / 60)} minutes old; a fresh read has been started in the background.`);
+      refreshing = true;
     }
   }
 
@@ -322,5 +324,14 @@ export async function loadConnectorQuotes(env = {}, options = {}) {
   if (combined.error) errors.push(`Combined feed: ${combined.error.message}`);
   errors.push(...snapshotErrors);
   errors.push(...readerNotes);
-  return { quotes: allQuotes, connectors, errors: [...new Set(errors)] };
+  const priceAges = allQuotes
+    .map((quote) => (quote.fetchedAt ? (Date.now() - new Date(quote.fetchedAt).getTime()) / 1000 : null))
+    .filter((age) => Number.isFinite(age));
+  return {
+    quotes: allQuotes,
+    connectors,
+    errors: [...new Set(errors)],
+    refreshing,
+    priceAgeSeconds: priceAges.length ? Math.round(Math.max(...priceAges)) : null,
+  };
 }

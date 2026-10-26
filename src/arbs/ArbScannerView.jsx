@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Activity,
   AlertTriangle,
@@ -137,6 +137,24 @@ function readLedger() {
   }
 }
 
+// How long an opportunity has been showing on this phone.  The phone
+// remembers what it has seen, so a price that keeps coming back can be
+// told apart from one that flashed past once.
+const SEEN_KEY = 'arb.seen.v1';
+
+function readSeen() {
+  try {
+    const value = JSON.parse(localStorage.getItem(SEEN_KEY) || '{}');
+    return value && typeof value === 'object' ? value : {};
+  } catch {
+    return {};
+  }
+}
+
+function writeSeen(seen) {
+  try { localStorage.setItem(SEEN_KEY, JSON.stringify(seen)); } catch { /* private mode */ }
+}
+
 function readRunHistory() {
   try {
     const value = JSON.parse(localStorage.getItem(RUN_HISTORY_KEY) || '[]');
@@ -251,7 +269,7 @@ function BookCard({ connector }) {
   );
 }
 
-function OpportunityCard({ opportunity, onOpen }) {
+function OpportunityCard({ opportunity, onOpen, firstSeen }) {
   const age = quoteAge(opportunity.latestQuoteAt);
   return (
     <article className="bg-slate-900/60 border border-white/10 rounded-2xl overflow-hidden">
@@ -260,6 +278,7 @@ function OpportunityCard({ opportunity, onOpen }) {
           <div className="flex flex-wrap items-center gap-2 mb-2">
             <StatusPill tone="green" icon={BadgeCheck}>matched {opportunity.way}-way</StatusPill>
             <StatusPill tone={age.stale ? 'amber' : 'blue'} icon={Clock3}>{age.label}</StatusPill>
+            {firstSeen ? <StatusPill tone="blue" icon={Clock3}>seen since {firstSeen}</StatusPill> : null}
           </div>
           <h3 className="font-extrabold text-slate-100 text-lg leading-6">{opportunity.event}</h3>
           <p className="text-xs text-slate-500 mt-1">
@@ -323,6 +342,9 @@ export default function ArbScannerView() {
   const [connection, setConnection] = useState({ state: 'loading', mode: 'manual', connectors: DEFAULT_CONNECTORS });
   const [opportunities, setOpportunities] = useState([]);
   const [scanning, setScanning] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [priceAge, setPriceAge] = useState(null);
+  const [seen, setSeen] = useState(readSeen);
   const [scannedAt, setScannedAt] = useState(null);
   const [runSummary, setRunSummary] = useState(null);
   const [runHistory, setRunHistory] = useState(readRunHistory);
@@ -399,6 +421,9 @@ export default function ArbScannerView() {
     return () => { controller.abort(); window.clearTimeout(timer); };
   }, []);
 
+  const scanRef = useRef(null);
+  const pollRef = useRef({ count: 0, timer: null });
+
   const scanLive = useCallback(async () => {
     if (scanning) return;
     setScanning(true);
@@ -415,6 +440,28 @@ export default function ArbScannerView() {
       setOpportunities(found);
       if (connectors.length) setConnection((current) => ({ ...current, state: 'ready', mode: data.mode || current.mode, connectors }));
       setScannedAt(new Date().toISOString());
+      setPriceAge(Number.isFinite(Number(data.priceAgeSeconds)) ? Number(data.priceAgeSeconds) : null);
+      // remember when this opportunity was first seen on this phone
+      const stamp = new Date().toISOString();
+      const known = readSeen();
+      let changed = false;
+      for (const opportunity of found) {
+        if (!opportunity?.id) continue;
+        if (!known[opportunity.id]) { known[opportunity.id] = stamp; changed = true; }
+      }
+      if (changed) { writeSeen(known); setSeen(known); }
+      // the prices were getting old: the reader has been started, so keep
+      // looking until they are fresh
+      const stale = data.refreshing === true || Number(data.priceAgeSeconds || 0) > 300;
+      if (stale && pollRef.current.count < 12) {
+        pollRef.current.count += 1;
+        setRefreshing(true);
+        if (pollRef.current.timer) window.clearTimeout(pollRef.current.timer);
+        pollRef.current.timer = window.setTimeout(() => { scanRef.current?.(); }, 30000);
+      } else {
+        pollRef.current.count = 0;
+        setRefreshing(false);
+      }
       record = {
         id: uid(),
         at: new Date().toISOString(),
@@ -461,6 +508,10 @@ export default function ArbScannerView() {
       if (record) setRunHistory((current) => [record, ...current].slice(0, MAX_RUN_HISTORY));
     }
   }, [connection.connectors, rounding, scanning, totalStake]);
+
+  // the refresh timer calls the newest scan, not the one it was made with
+  useEffect(() => { scanRef.current = scanLive; }, [scanLive]);
+  useEffect(() => () => { if (pollRef.current.timer) window.clearTimeout(pollRef.current.timer); }, []);
 
   useEffect(() => {
     if (!autoRefresh || connection.mode !== 'feed') return undefined;
@@ -1102,7 +1153,7 @@ export default function ArbScannerView() {
         <section className="space-y-4">
           <Panel
             title="Opportunities"
-            subtitle={`₦${numeric(totalStake)} bankroll · exact event, market and rules matching · ${scannedAt ? `last run ${timeLabel(scannedAt)}` : 'not run yet'}`}
+            subtitle={`₦${numeric(totalStake)} bankroll · exact event, market and rules matching · ${scannedAt ? `last run ${timeLabel(scannedAt)}` : 'not run yet'}${refreshing ? ' · reading fresh prices now' : priceAge !== null ? ` · prices ${priceAge < 60 ? `${priceAge}s` : `${Math.floor(priceAge / 60)}m`} old` : ''}`}
             icon={Gauge}
             right={(
               <div className="flex items-center gap-3">
@@ -1122,7 +1173,12 @@ export default function ArbScannerView() {
             {opportunities.length > 0 ? (
               <div className="p-4 space-y-4">
                 {opportunities.map((opportunity) => (
-                  <OpportunityCard key={opportunity.id} opportunity={opportunity} onOpen={openInCalculator} />
+                  <OpportunityCard
+                    key={opportunity.id}
+                    opportunity={opportunity}
+                    onOpen={openInCalculator}
+                    firstSeen={seen?.[opportunity.id] ? timeLabel(seen[opportunity.id]) : null}
+                  />
                 ))}
               </div>
             ) : (

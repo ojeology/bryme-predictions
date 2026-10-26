@@ -265,7 +265,7 @@ export async function scanConfiguredFeeds(env = {}, options = {}) {
     }
     return scanWithDiscovered(env, options, usable, found);
   }
-  const { quotes, connectors, errors } = await loadConnectorQuotes(env, options);
+  const { quotes, connectors, errors, refreshing, priceAgeSeconds } = await loadConnectorQuotes(env, options);
   const maxQuoteAgeSeconds = maxFeedAge(env);
   const now = Date.now();
   const freshQuotes = quotes.filter((quote) => isFreshPreMatch(quote, now, maxQuoteAgeSeconds));
@@ -288,6 +288,8 @@ export async function scanConfiguredFeeds(env = {}, options = {}) {
     freshQuoteCount: freshQuotes.length,
     rejectedQuoteCount: quotes.length - freshQuotes.length,
     maxQuoteAgeSeconds,
+    priceAgeSeconds: priceAgeSeconds ?? null,
+    refreshing: Boolean(refreshing),
     overlap: overlapReport(freshQuotes, clustersByGroup),
     ...(options.debug === 2 ? { allQuotes: quotes.slice(0, 2500).map((quote) => ({
       bookmaker: quote.bookmaker, event: quote.event, startsAt: quote.startsAt,
