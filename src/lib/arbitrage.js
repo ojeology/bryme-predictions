@@ -413,12 +413,33 @@ function combinations(items, limit = 5000) {
   return output;
 }
 
-/** Cluster quotes that belong to the same fixture. */
+/** The kick-off of a price, in milliseconds. No kick-off sorts last. */
+function startTime(quote) {
+  const time = new Date(quote?.startsAt || '').getTime();
+  return Number.isFinite(time) ? time : Infinity;
+}
+
+/**
+ * Cluster quotes that belong to the same fixture.
+ *
+ * The quotes are looked at in the order they start, and a cluster that
+ * starts long before the price being placed is left alone: two prices can
+ * only be the same fixture when they start within the same window.  That
+ * keeps the answer the same and keeps the work small when a book sends
+ * thousands of prices.
+ */
 export function clusterFixtures(quotes) {
   const clusters = [];
-  for (const quote of quotes) {
+  const ordered = [...quotes].sort((a, b) => startTime(a) - startTime(b));
+  for (const quote of ordered) {
+    const when = startTime(quote);
     let placed = false;
-    for (const cluster of clusters) {
+    for (let index = clusters.length - 1; index >= 0; index -= 1) {
+      const cluster = clusters[index];
+      const started = startTime(cluster[0]);
+      // the clusters are in order, so once one is too old the rest are too
+      if (Number.isFinite(when) && Number.isFinite(started)
+          && when - started > TIME_WINDOW_MINUTES * 60000) break;
       if (sameFixture(cluster[0], quote)) {
         cluster.push(quote);
         placed = true;

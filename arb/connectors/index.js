@@ -126,7 +126,9 @@ export async function loadConnectorQuotes(env = {}, options = {}) {
     if (force) snapshotErrors.length = 0;
     snapshotErrors.push(...problems);
   };
+  const __t0 = Date.now();
   await readBooks(false);
+  console.log('TIMING readBooks', Date.now() - __t0, 'ms');
 
   // How old are the prices?  The age is taken from the prices themselves,
   // not from a summary: the summary can be served from a copy kept by the
@@ -245,6 +247,7 @@ export async function loadConnectorQuotes(env = {}, options = {}) {
     await closeSharedBrowser(sharedBrowser);
   }
 
+  const __t1 = Date.now();
   const allQuotes = [];
   const errors = [];
   const connectors = await Promise.all(CONNECTORS.map(async (definition, index) => {

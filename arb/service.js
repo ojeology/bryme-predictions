@@ -265,12 +265,14 @@ export async function scanConfiguredFeeds(env = {}, options = {}) {
   if (quotes.length && !freshQuotes.length) {
     errors.push(`No quotes passed the pre-match and ${maxQuoteAgeSeconds}-second freshness checks. Missing fetchedAt/startsAt values are rejected.`);
   }
+  const __t2 = Date.now();
   const opportunities = scanOpportunities(freshQuotes, {
     ...options,
     maxQuoteAgeSeconds,
     now: new Date(now),
     alreadyNormalized: true,
   });
+  console.log('TIMING scan', Date.now() - __t2, 'ms for', freshQuotes.length, 'quotes');
   return {
     ok: true,
     mode: 'feed',
@@ -380,6 +382,7 @@ async function scanWithDiscovered(env, options, usable, found) {
   const maxQuoteAgeSeconds = maxFeedAge(env);
   const now = Date.now();
   const freshQuotes = quotes.filter((quote) => isFreshPreMatch(quote, now, maxQuoteAgeSeconds));
+  const __t2 = Date.now();
   const opportunities = scanOpportunities(freshQuotes, {
     ...options,
     maxQuoteAgeSeconds,

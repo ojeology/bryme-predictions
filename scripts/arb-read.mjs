@@ -173,8 +173,18 @@ async function readNairaBet(browser) {
     await page.goto('https://nairabet.com/sports', { waitUntil: 'domcontentloaded', timeout: 45000 }).catch(() => {});
     const arrived = await waitForRealPage(page, { timeoutMs: 30000 });
     note('nairabet', `page: ${arrived.ok ? 'arrived' : 'still checking'} (${arrived.state?.title || '?'})`);
-    await sleep(25000);
-    for (const call of widgetCalls.slice(0, 20)) note('nairabet', `  widget call ${call}`);
+    await sleep(12000);
+    // the widget asks for the prices of a sport when one is opened
+    const clicked = await page.evaluate(`(() => {
+      const nodes = [...document.querySelectorAll('a,div,span,li,button')].filter(
+        (node) => node.children.length === 0 && /^(football|soccer)$/i.test((node.textContent || '').trim()),
+      );
+      if (nodes[0]) { nodes[0].click(); return true; }
+      return false;
+    })()`).catch(() => false);
+    await sleep(18000);
+    note('nairabet', `opening football (${clicked ? 'yes' : 'no'})`);
+    for (const call of widgetCalls.slice(0, 40)) note('nairabet', `  widget call ${call}`);
 
     if (!body) {
       // the page did not ask for the prices by itself: the same question is
