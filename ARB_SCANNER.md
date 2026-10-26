@@ -276,3 +276,20 @@ scan has to stay small.  Three things keep it small:
   and it takes a third of the time;
 - the report reuses the groups the scan has already worked out, instead of
   grouping the same prices a second time.
+
+## How the prices stay fresh
+
+Three clocks keep the prices new, so the phone never shows a price that
+has gone cold:
+
+1. **the Worker's own clock** - a trigger on the Worker starts the free
+   reader every ten minutes (`triggers.crons` in `wrangler.jsonc`, and the
+   `scheduled` handler in `worker.js`);
+2. **GitHub's own schedule** - the same workflow also carries a fifteen
+   minute schedule, though GitHub does not always run it;
+3. **the phone itself** - a scan whose prices are more than five minutes old
+   starts a read and keeps looking until the new prices arrive, so the
+   button never hands back a stale price without saying so.
+
+The scan tells the truth about its age: `priceAgeSeconds` is how old the
+oldest price in the answer is, and `refreshing` says a read is under way.
