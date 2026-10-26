@@ -13,7 +13,7 @@ This feature calculates and tracks manually placed arbitrage bets. It does **not
 - A local placement ledger with per-leg placed markers, actual-return settlement and CSV export. Records are not deleted by the UI.
 - A shared Web Request API for Cloudflare Workers and Vite development/preview.
 - Modular connector definitions for SportyBet, MSport, LiveScore Bet, NairaBet, 22Bet and 1xBet.
-  **SportyBet, MSport and LiveScore Bet are connected and live**; the other three are **not
+  **SportyBet, MSport, LiveScore Bet, BetKing and NairaBet are connected and live**; 22Bet and 1xBet are **not
   configured** (their books block or are down - see `ARB_ODDS_SOURCING.md`).
 - A five-minute default stale-price cutoff for configured feeds, plus rejection of missing timestamps and matches that have already started.
 
@@ -42,7 +42,7 @@ comma decimal (`2,10`, read as `2.10`). The ambiguous three-digit comma form
 dropped from the scan. A missing price costs you an opportunity; a mis-read
 price would invent one.
 
-## The free reader (how four books are read without a browser or a paid plan)
+## The free reader (how five books are read without a browser or a paid plan)
 
 Two of the books answer only a client that looks like an ordinary browser on
 an ordinary connection. The Worker is refused outright — not because of what
@@ -56,7 +56,7 @@ repository and are exactly that kind of ordinary machine:
 | step | what happens |
 | --- | --- |
 | `.github/workflows/arb-reader.yml` | runs every fifteen minutes, and on demand |
-| `scripts/arb-read.mjs` | reads the books: MSport and LiveScore Bet over plain HTTP, BetKing and SportyBet in the runner's own Chrome |
+| `scripts/arb-read.mjs` | reads the books: MSport, LiveScore Bet and SportyBet over plain HTTP, BetKing and NairaBet in the runner's own Chrome |
 | the `prices` branch | the prices are published there, one file per book, already in comparable form |
 | `arb/connectors/snapshot.js` | the Worker reads the published file for the commit that is current, so a cached copy can never be mistaken for fresh prices |
 

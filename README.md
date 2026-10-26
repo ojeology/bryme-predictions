@@ -74,7 +74,7 @@ with invented odds.
 
 ## Connecting the books (without a terminal)
 
-### The free reader — four books, no browser minutes, no paid plan
+### The free reader — five books, no browser minutes, no paid plan
 
 Two of the books (MSport and BetKing) answer only a client that looks like an
 ordinary browser on an ordinary connection. The Worker is refused outright,
@@ -85,9 +85,9 @@ So the reading is done by **GitHub's runners**, which are free for a public
 repository:
 
 - `.github/workflows/arb-reader.yml` runs every fifteen minutes (and on
-  demand), reads all four books and publishes the prices to the `prices`
+  demand), reads all five books and publishes the prices to the `prices`
   branch of this repository.
-- MSport and LiveScore Bet are read over plain HTTP; BetKing and SportyBet
+- MSport, LiveScore Bet and SportyBet are read over plain HTTP; BetKing and NairaBet
   are read in the runner's own Chrome — the answers the site's own page
   fetches for itself are the answers that are used, so nothing is guessed.
 - Only the prices another book is also showing are published: a price for a
@@ -187,6 +187,7 @@ arb/
                            asks for, and fetches price addresses from inside it
     msport.js/msportFeed.js   MSport: the price tree and the browser read
 - `arb/connectors/betking.js` - BetKing adapter (Betagy tree, prices inside each match)
+- `arb/connectors/nairabet.js` - NairaBet adapter (the Altenar/SB widget price tree)
 - `arb/connectors/betkingFeed.js` - BetKing browser reader
 - `arb/connectors/browserSession.js` - one shared browser for the whole scan
     normalize.js          any book payload -> the scanner's quote shape

@@ -189,7 +189,9 @@ async function readNairaBet(browser) {
     if (!body) {
       // the page did not ask for the prices by itself: the same question is
       // asked from inside the page, where the site's own web app lives
-      const asked = await askInPage(page, { url: NAIRABET_URL, method: 'GET' });
+      // without credentials: the platform answers with a wildcard origin,
+      // and a request that asks for credentials is refused by the browser
+      const asked = await askInPage(page, { url: NAIRABET_URL, method: 'GET', credentials: false });
       note('nairabet', `asking the page -> HTTP ${asked?.status ?? 'nothing'}${asked?.length ? `, ${asked.length} bytes` : ''}`);
       if (asked?.status === 200 && asked.body) body = asked.body;
     }
@@ -290,7 +292,7 @@ const ASK = `
         method: request.method || 'GET',
         headers: request.headers || { 'Accept': 'application/json' },
         body: request.body === undefined ? undefined : request.body,
-        credentials: 'include',
+        credentials: request.credentials === false ? 'omit' : 'include',
       });
       const text = await response.text();
       return { status: response.status, length: text.length, body: text.slice(0, 4000000) };
