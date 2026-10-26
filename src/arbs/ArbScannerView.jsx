@@ -155,6 +155,44 @@ function writeSeen(seen) {
   try { localStorage.setItem(SEEN_KEY, JSON.stringify(seen)); } catch { /* private mode */ }
 }
 
+// What the phone has seen: every opportunity it has found, and how the
+// prices behind it moved.  A price that keeps coming back, and keeps its
+// edge, is a different thing from one that flashed past for a minute.
+const HISTORY_KEY = 'arb.history.v1';
+const HISTORY_MAX = 400;
+
+function readHistory() {
+  try {
+    const value = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+    return Array.isArray(value) ? value : [];
+  } catch {
+    return [];
+  }
+}
+
+/** How an opportunity has moved since the phone first found it. */
+function summariseHistory(entries) {
+  const first = entries[0];
+  const last = entries[entries.length - 1];
+  const priceMoves = [];
+  for (const leg of last.legs || []) {
+    const before = (first.legs || []).find((item) => item.book === leg.book && item.outcome === leg.outcome);
+    if (before && before.odds !== leg.odds) {
+      priceMoves.push({ book: leg.book, from: before.odds, to: leg.odds });
+    }
+  }
+  return {
+    count: entries.length,
+    firstRoi: numeric(first.roi),
+    lastRoi: numeric(last.roi),
+    priceMoves,
+  };
+}
+
+function writeHistory(history) {
+  try { localStorage.setItem(HISTORY_KEY, JSON.stringify(history.slice(-HISTORY_MAX))); } catch { /* private mode */ }
+}
+
 function readRunHistory() {
   try {
     const value = JSON.parse(localStorage.getItem(RUN_HISTORY_KEY) || '[]');
@@ -269,8 +307,9 @@ function BookCard({ connector }) {
   );
 }
 
-function OpportunityCard({ opportunity, onOpen, firstSeen }) {
+function OpportunityCard({ opportunity, onOpen, firstSeen, history }) {
   const age = quoteAge(opportunity.latestQuoteAt);
+  const moves = history && history.length > 1 ? summariseHistory(history) : null;
   return (
     <article className="bg-slate-900/60 border border-white/10 rounded-2xl overflow-hidden">
       <div className="p-5 border-b border-white/10 flex items-start justify-between gap-4">
@@ -286,6 +325,12 @@ function OpportunityCard({ opportunity, onOpen, firstSeen }) {
           </p>
           <p className="text-sm font-semibold text-slate-200 mt-2">{opportunity.market}</p>
           <p className="text-[11px] text-slate-500 mt-0.5">rules: {opportunity.rules || 'confirm before placing'}</p>
+          {moves ? (
+            <p className="text-[11px] text-slate-400 mt-1.5">
+              edge {moves.firstRoi}% → {moves.lastRoi}% over {moves.count} readings
+              {moves.priceMoves.length ? ` · ${moves.priceMoves.map((move) => `${move.book} ${move.from}→${move.to}`).join(', ')}` : ''}
+            </p>
+          ) : null}
         </div>
         <div className="text-right shrink-0">
           <div className="font-mono text-3xl font-bold tabular-nums text-emerald-400">+{numeric(opportunity.theoreticalRoiPct)}%</div>
@@ -345,6 +390,7 @@ export default function ArbScannerView() {
   const [refreshing, setRefreshing] = useState(false);
   const [priceAge, setPriceAge] = useState(null);
   const [seen, setSeen] = useState(readSeen);
+  const [history, setHistory] = useState(readHistory);
   const [scannedAt, setScannedAt] = useState(null);
   const [runSummary, setRunSummary] = useState(null);
   const [runHistory, setRunHistory] = useState(readRunHistory);
@@ -450,6 +496,25 @@ export default function ArbScannerView() {
         if (!known[opportunity.id]) { known[opportunity.id] = stamp; changed = true; }
       }
       if (changed) { writeSeen(known); setSeen(known); }
+      // write down what was found, so the phone can show how the edge moved
+      const knownHistory = readHistory();
+      const entries = found.map((opportunity) => ({
+        at: stamp,
+        id: opportunity.id,
+        event: opportunity.event,
+        marketKey: opportunity.marketKey,
+        roi: Number(opportunity.theoreticalRoiPct || 0),
+        sum: Number(opportunity.impliedSum || 0),
+        legs: (opportunity.legs || []).map((leg) => ({
+          book: leg.bookmaker,
+          outcome: leg.outcome,
+          odds: Number(leg.odds || 0),
+        })),
+      }));
+      if (entries.length) {
+        writeHistory([...knownHistory, ...entries]);
+        setHistory(readHistory());
+      }
       // the prices were getting old: the reader has been started, so keep
       // looking until they are fresh
       const stale = data.refreshing === true || Number(data.priceAgeSeconds || 0) > 300;
@@ -1178,6 +1243,7 @@ export default function ArbScannerView() {
                     opportunity={opportunity}
                     onOpen={openInCalculator}
                     firstSeen={seen?.[opportunity.id] ? timeLabel(seen[opportunity.id]) : null}
+                    history={history.filter((entry) => entry.id === opportunity.id)}
                   />
                 ))}
               </div>

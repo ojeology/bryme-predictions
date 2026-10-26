@@ -11,7 +11,7 @@
  *
  *   node scripts/discover-books.mjs [bookId ...]
  */
-import { writeFileSync, mkdirSync } from 'node:fs';
+import { writeFileSync, mkdirSync, existsSync } from 'node:fs';
 
 const TARGETS = [
   { id: 'bet9ja', urls: ['https://sports.bet9ja.com/', 'https://www.bet9ja.com/'] },
@@ -37,7 +37,7 @@ function findChrome() {
   ];
   for (const candidate of candidates) {
     try {
-      if (require('node:fs').existsSync(candidate)) return candidate;
+      if (existsSync(candidate)) return candidate;
     } catch { /* keep looking */ }
   }
   return undefined;
