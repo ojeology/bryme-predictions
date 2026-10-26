@@ -136,6 +136,25 @@ export async function dispatchReader(env = {}) {
   const repo = String(env.ARB_READER_REPO || REPO).trim();
   const workflow = String(env.ARB_READER_WORKFLOW || 'arb-reader.yml').trim();
   if (!token) return { dispatched: false, error: 'no token for the reader' };
+
+  // Two readers at once ask the books twice as fast, and the books refuse
+  // a burst.  A read that is still running is left to finish.
+  try {
+    const response = await fetch(`https://api.github.com/repos/${repo}/actions/workflows/${workflow}/runs?per_page=1`, {
+      headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github+json', 'User-Agent': 'BrymeArbScanner/1.0' },
+    });
+    if (response.ok) {
+      const payload = await response.json();
+      const latest = payload?.workflow_runs?.[0];
+      const started = latest?.created_at ? new Date(latest.created_at).getTime() : NaN;
+      const running = latest?.status === 'in_progress' || latest?.status === 'queued';
+      const ageMinutes = Number.isFinite(started) ? (Date.now() - started) / 60000 : Infinity;
+      if (running && ageMinutes < 20) {
+        return { dispatched: false, error: 'a read is already running' };
+      }
+    }
+  } catch { /* if the check cannot be made, carry on */ }
+
   try {
     const response = await fetch(`https://api.github.com/repos/${repo}/actions/workflows/${workflow}/dispatches`, {
       method: 'POST',

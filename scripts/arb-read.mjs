@@ -459,7 +459,12 @@ async function readSportyBet(browser) {
     // The book's own public calls. The tournament list says which
     // tournaments there are; the highlight list carries the whole price tree
     // of the matches that matter.
-    const list = await askSportyBet(`${SPORTYBET_ORIGIN}/api/ng/factsCenter/sportList?timeline=24&productId=3&option=3`);
+    let list = await askSportyBet(`${SPORTYBET_ORIGIN}/api/ng/factsCenter/sportList?timeline=24&productId=3&option=3`);
+    if (!list?.body) {
+      note('sportybet', `the tournament list was refused (HTTP ${list?.status ?? 'none'}) - resting a minute and asking again`);
+      await sleep(60000);
+      list = await askSportyBet(`${SPORTYBET_ORIGIN}/api/ng/factsCenter/sportList?timeline=24&productId=3&option=3`);
+    }
     const tournaments = [];
     const walk = (node, sport = null) => {
       if (!node || typeof node !== 'object') return;
@@ -492,10 +497,18 @@ async function readSportyBet(browser) {
     const slate = [];
     let pages = 1;
     for (let page = 1; page <= pages; page += 1) {
-      const answer = await askSportyBet(`${SPORTYBET_ORIGIN}/api/ng/factsCenter/pcUpcomingEvents?sportId=sr:sport:1&marketId=1,18,10,29,11,26,36,14,60100&pageSize=100&pageNum=${page}&option=1`, 30);
-      const tournaments = answer?.body?.data?.tournaments;
+      if (page > 1) await sleep(1800);
+      const url = `${SPORTYBET_ORIGIN}/api/ng/factsCenter/pcUpcomingEvents?sportId=sr:sport:1&marketId=1,18,10,29,11,26,36,14,60100&pageSize=100&pageNum=${page}&option=1`;
+      let answer = await askSportyBet(url, 30);
+      let tournaments = answer?.body?.data?.tournaments;
+      if (!tournaments) {
+        note('sportybet', `page ${page} was refused (HTTP ${answer?.status ?? 'none'}) - resting and trying it again`);
+        await sleep(45000);
+        answer = await askSportyBet(url, 30);
+        tournaments = answer?.body?.data?.tournaments;
+      }
       const total = Number(answer?.body?.data?.totalNum || 0);
-      if (!tournaments) { note('sportybet', `page ${page} held no prices`); break; }
+      if (!tournaments) { note('sportyBet', `page ${page} held no prices`); break; }
       if (total) pages = Math.min(Math.ceil(total / 100), 20);
       const found = take({ data: tournaments }, `page ${page} of ${pages}`);
       slate.push(found);
