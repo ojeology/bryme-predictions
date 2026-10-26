@@ -380,25 +380,31 @@ things follow from where the browser runs:
   22Bet says the site is restricted, so those two cannot be read this way.
 - MSport and BetKing do not care, and both work.
 
-**4. Some books are not blocked - they are broken.**  22Bet's price service
-answers HTTP 500 to every variant of its line-feed address, NairaBet's hosts
-answer 530 and 1016, Merrybet's answer 525.  These are outages at the book.
-No amount of reading, probing or browsing will produce a price from a
-service that is returning an error, so the right move is to wait and keep
-the recipe ready.
+**4. A book can answer and still refuse.**  22Bet and 1xBet share one price
+service, and its line-feed answers are found in the app's own code (see
+below).  Asked from an address the book does not serve, that service
+answers **HTTP 406 NotAcceptable** - it is not broken, it is refusing the
+country.  The same call with the parameters the app sends answers **400
+with the exact parameter that is wrong**, so the endpoint and the
+parameters are right; what is left is the country of the caller.
+
+**5. Some books are not blocked - they are broken.**  Merrybet's address
+answers 525.  These are outages at the book.  No amount of reading,
+probing or browsing will produce a price from a service that is returning
+an error, so the right move is to wait and keep the recipe ready.
 
 **What is left, and what it would take:**
 
 | book | state | what is needed |
 | --- | --- | --- |
-| SportyBet | live | - |
+| SportyBet | live, whole football slate | - |
 | LiveScore Bet | live | - |
 | MSport | live (browser) | - |
 | BetKing | live (browser) | - |
+| NairaBet | live | - |
 | Bet9ja | untried in a browser | Akamai blocks the Worker; a real browser may pass it |
-| 22Bet | origin 500 | wait for the price service; the header scheme is ready |
-| 1xBet | geo-blocked to the browser | would need a licensed feed or the book's own cooperation |
-| NairaBet | origin down | wait |
+| 22Bet | country refused (406) | an address the book serves (Nigeria) |
+| 1xBet | country refused (406) | an address the book serves (Nigeria) |
 
 The honest truth about adding books: more books only help if they price the
 same fixture.  Three books agreeing on a match is the normal case and is
@@ -407,3 +413,38 @@ differently from the others.  A fourth and fifth book raise the chance of
 finding that difference, and BetKing, MSport and SportyBet all feed from the
 same Sportradar/SportyNet family, so they will often agree - which is a
 fact about the odds, not a defect in the reader.
+
+## The addresses that are known to work
+
+| book | address | how it is read |
+| --- | --- | --- |
+| SportyBet | `GET /api/ng/factsCenter/pcUpcomingEvents?sportId=sr:sport:1&marketId=1,18,10,29,11,26,36,14,60100&pageSize=100&pageNum=N&option=1` | the site's own call, twelve pages, the whole football slate (1,154 matches) |
+| SportyBet | `GET /api/ng/factsCenter/wapConfigurableNewHighlightEvents?sportId=sr:sport:1` | fifty matches with every market, the top list |
+| SportyBet | `GET /api/ng/factsCenter/sportList?timeline=24&productId=3&option=3` | the tournament list, with how many matches each holds |
+| LiveScore Bet | `GET gateway-ng.livescorebet.com/sportsbook/gateway/v3/view/events/matches?sportcategoryid=SBTC1_1&categoryid=SBTC3_<id>` | one competition at a time, header `Request-Id` needed |
+| MSport | `POST /api/ng/facts-center/query/frontend/sports-matches-list?sportId=sr:sport:1&timeslot=Today` | the book's own headers, no browser needed off a Cloudflare address |
+| BetKing | `GET sportsapicdn-desktop.betking.com/api/feeds/prematch/mostpopularsports/en/1/7/3/` | only from a real browser |
+| NairaBet | `GET sb2frontend-altenar2.biahosted.com/api/Widget/GetEvents?culture=en-GB&timezoneOffset=0&integration=nairabet&deviceType=desktop&sportId=66` | the platform answers a plain request from the Worker, but refuses the free runner's address (403), so the reader takes it from the page |
+| 22Bet / 1xBet | `GET /service-api/LineFeed/GetSportsShortZip?sports=1&lng=en&tf=0&tz=0&afterDays=0&country=0&partner=0&gr=0&top=false&virtualSports=false&cyberFlag=0&sportCategoriesFlag=0&minOffset=0&countryOnly=false&isPartner=false&withCountries=false&groupChamps=false&filterSports=0&fcountry=0` | the answer is 406 from an address the book does not serve |
+
+### How the 22Bet / 1xBet path was found
+
+Both books run the same platform.  The app that serves 22Bet.ng loads its
+code from `v2l.traincdn.com`, and the chunk names are listed in the app
+bundle.  Four of the chunks carry the price calls, and they name the
+whole feed catalogue:
+
+```
+/service-api/LineFeed/GetSportsShortZip
+/service-api/LineFeed/GetChampZip
+/service-api/LineFeed/Get1x2_VZip
+/service-api/LiveFeed/GetSportsShortZip
+...
+```
+
+The bundle also holds the type and default of every parameter the app
+sends, so the request can be written exactly as the app writes it.  The
+service answers with the parameter it did not like, which is a short way
+to a working call - and then answers 406, because the address it was
+asked from is not one the book serves.  Reading them would need an
+address in Nigeria; faking one is not something this lab does.
