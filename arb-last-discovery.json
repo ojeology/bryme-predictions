@@ -1,5 +1,5 @@
 {
- "at": "2026-10-27T08:18:09.660Z",
+ "at": "2026-10-27T08:18:12.758Z",
  "edge": "LHR",
  "phoneCountry": "NG",
  "workerCountry": "NG",
@@ -1234,6 +1234,14 @@
      ],
      "reason": "JSON, but no prices in it",
      "sample": "{\"header\":{\"requestId\":\"1b656773-291b-4823-b7cb-519f068251dc\",\"versionApi\":\"2.35.0-415\",\"serverTime\":\"2026-10-25 18:54:50\",\"version\":\"20261025185450667\",\"viewType\":\"SportsViewV3\",\"sourceUid\":\"39ebf621-d5e9-4540-8209-5b612b99b7f5\"},\"sports\":[{\"id\":\"SBTC1_3\",\"originalId\":\"SBTC1_3\",\"name\":\"American Foo"
+    },
+    {
+     "url": "http://api.jqueryui.com/category/ui-core/",
+     "ok": false,
+     "status": 200,
+     "keys": [],
+     "reason": "not JSON",
+     "sample": "<!doctype html>\n<html class=\"no-js\" lang=\"en-US\">\n<head>\n\t<meta charset=\"utf-8\">\n\t<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n\n\t<title>UI Core | jQuery UI API Documentation</title>\n\n\t<meta name=\"author\" content=\"OpenJS Foundation - openjsf.org\">\n\t<meta name=\"description\" content=\"\">\n\t<meta"
     }
    ]
   },
