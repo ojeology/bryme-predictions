@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Ten Questions You Will Probably Fail — The 3-Second Quiz</title>
+<meta name="description" content="Ten questions. Three seconds each. Every answer is real, and most are not the version you're carrying around.">
+<meta property="og:title" content="Ten Questions You Will Probably Fail">
+<meta property="og:description" content="The 3-second quiz. Score 8 or more and you're a fascinator.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#080a0f">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23080a0f'/><text x='16' y='23' font-size='19' font-weight='800' text-anchor='middle' fill='%23ffbe6c' font-family='system-ui'>3</text></svg>">
+<style>
+  :root{
+    --bg:#080a0f; --panel:#111620; --line:rgba(255,255,255,.12);
+    --tx:#f2f6ff; --dim:#98a6bc; --amber:#ffbe6c; --cool:#96cdff;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;background:var(--bg);color:var(--tx);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
+  body{padding:0 0 70px;overflow-x:hidden}
+  a{color:inherit}
+  .glow{position:fixed;inset:0;pointer-events:none;z-index:0;
+    background:radial-gradient(60% 38% at 50% 0%,rgba(255,190,108,.11),transparent 70%),
+               radial-gradient(55% 40% at 50% 100%,rgba(150,205,255,.05),transparent 70%);}
+  .wrap{position:relative;z-index:1;max-width:620px;margin:0 auto;padding:0 20px}
+
+  .topbar{display:flex;justify-content:space-between;align-items:center;padding:20px 0 0}
+  .back{font-size:13px;color:var(--dim);text-decoration:none;font-weight:600;
+    display:inline-flex;align-items:center;gap:7px;padding:7px 0}
+  .back:hover{color:var(--tx)}
+  .brand{font-size:11px;letter-spacing:.26em;color:var(--dim);font-weight:700;text-transform:uppercase}
+
+  header{padding:34px 0 24px;text-align:center}
+  .kicker{font-size:11px;letter-spacing:.32em;color:var(--amber);font-weight:700;text-transform:uppercase}
+  h1{font-size:clamp(33px,9.6vw,54px);line-height:1.03;margin:14px 0 0;letter-spacing:-.022em;font-weight:800}
+  h1 em{font-style:normal;color:var(--amber)}
+  .sub{color:var(--dim);font-size:15px;margin:14px auto 0;line-height:1.55;max-width:430px}
+
+  .bar{display:flex;gap:7px;margin:26px 0 0}
+  .bar i{flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,.10);transition:background .3s}
+  .bar i.on{background:var(--amber)}
+
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:22px;margin-top:18px}
+  .qmeta{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+  .qnum{font-size:11px;letter-spacing:.22em;color:var(--amber);font-weight:800}
+  .score{font-size:11px;letter-spacing:.18em;color:var(--dim);font-weight:800}
+  .qtext{font-size:clamp(21px,5.8vw,27px);font-weight:700;line-height:1.24;margin:8px 0 18px;letter-spacing:-.012em}
+
+  .timer{height:5px;border-radius:3px;background:rgba(255,255,255,.10);overflow:hidden;margin-bottom:20px}
+  .timer b{display:block;height:100%;width:100%;background:var(--amber);transform-origin:left center}
+  .timer.run b{animation:drain var(--d,3s) linear forwards}
+  @keyframes drain{from{transform:scaleX(1)}to{transform:scaleX(0)}}
+
+  .opt{display:flex;align-items:center;gap:14px;width:100%;text-align:left;
+    background:#151b26;border:1px solid var(--line);color:var(--tx);
+    border-radius:16px;padding:15px 16px;margin-bottom:11px;font:inherit;font-size:16px;
+    font-weight:600;cursor:pointer;transition:transform .12s,opacity .3s,background .3s,border-color .3s}
+  .opt:hover:not(:disabled){background:#1a2130}
+  .opt:active:not(:disabled){transform:scale(.99)}
+  .opt .ltr{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;
+    background:rgba(255,255,255,.08);color:var(--cool);font-size:13px;font-weight:800}
+  .opt .txt{display:flex;flex-direction:column;gap:2px;min-width:0}
+  .opt .txt small{font-size:12px;font-weight:500;color:var(--dim)}
+  .opt.right{background:var(--amber);border-color:var(--amber);color:#1a130a}
+  .opt.right .ltr{background:rgba(0,0,0,.18);color:#1a130a}
+  .opt.right .txt small{color:rgba(26,19,10,.66)}
+  .opt.gone{opacity:.28}
+  .opt:disabled{cursor:default}
+
+  .why{margin-top:4px;border-top:1px solid var(--line);padding-top:16px;
+    font-size:15px;line-height:1.62;color:#c9d5e6;opacity:0;transform:translateY(6px);
+    transition:opacity .35s,transform .35s}
+  .why.in{opacity:1;transform:none}
+  .why .src{display:block;margin-top:9px;font-size:11.5px;letter-spacing:.05em;color:#71809a}
+
+  .verdict{font-size:15px;color:var(--amber);font-weight:800;margin-bottom:14px;letter-spacing:.02em}
+
+  .btn{display:inline-block;background:var(--amber);color:#1a130a;border:0;border-radius:14px;
+    padding:15px 26px;font:inherit;font-weight:800;font-size:16px;cursor:pointer;margin-top:18px}
+  .btn:active{transform:scale(.985)}
+
+  .bands{list-style:none;padding:0;margin:20px 0 0}
+  .bands li{display:flex;justify-content:space-between;padding:12px 4px;
+    border-bottom:1px solid rgba(255,255,255,.07);font-size:15px;color:var(--dim)}
+  .bands li b{color:var(--tx);font-weight:700}
+  .bands li.hot{background:var(--amber);color:#1a130a;border:0;border-radius:12px;
+    padding:13px 16px;margin:8px -12px;font-weight:800}
+  .bands li.hot b{color:#1a130a}
+
+  .cta{margin-top:18px;display:flex;flex-wrap:wrap;gap:10px}
+  .cta .btn,.cta .btn2{flex:1 1 auto;text-align:center;text-decoration:none}
+  .btn2{display:inline-block;background:transparent;color:var(--tx);border:1px solid var(--line);
+    border-radius:14px;padding:15px 22px;font:inherit;font-weight:700;font-size:16px;cursor:pointer}
+  .btn2:active{transform:scale(.985)}
+
+  section.eps{margin-top:52px}
+  h2{font-size:11px;letter-spacing:.26em;color:var(--dim);text-transform:uppercase;
+    font-weight:800;margin:0 0 16px}
+  .ep{display:flex;gap:14px;align-items:center;background:var(--panel);
+    border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:11px;
+    text-decoration:none;transition:background .2s}
+  .ep:hover{background:#151c28}
+  .ep .thumb{flex:none;width:52px;height:92px;border-radius:9px;
+    background:linear-gradient(160deg,#1b2331,#0d1219);border:1px solid var(--line);
+    position:relative;overflow:hidden}
+  .ep .thumb::after{content:"";position:absolute;left:50%;top:0;bottom:0;width:1px;
+    background:linear-gradient(180deg,transparent,rgba(150,205,255,.75),transparent)}
+  .ep .t{flex:1;min-width:0}
+  .ep .t b{display:block;font-size:15px;font-weight:700;margin-bottom:3px}
+  .ep .t span{font-size:12px;color:var(--dim)}
+  .ep .go{flex:none;font-size:11px;font-weight:800;letter-spacing:.1em;color:#1a130a;
+    background:var(--amber);padding:9px 13px;border-radius:9px}
+
+  footer{margin-top:44px;text-align:center;color:#5d6b80;font-size:12px;line-height:1.7}
+  footer a{color:#71809a}
+  .hide{display:none}
+</style>
+</head>
+<body>
+<div class="glow"></div>
+<div class="wrap">
+
+  <div class="topbar">
+    <a class="back" href="https://predictions.thebryme.com">← predictions.thebryme.com</a>
+    <span class="brand">The Bryme</span>
+  </div>
+
+  <header>
+    <div class="kicker">The 3-Second Quiz</div>
+    <h1>Ten Questions<br>You Will Probably <em>Fail</em></h1>
+    <p class="sub">Three seconds each. Every answer is real — and most of them are not the version you're carrying around.</p>
+  </header>
+
+  <div class="bar" id="bar"></div>
+
+  <div class="card" id="card">
+    <div class="qmeta">
+      <span class="qnum" id="qnum">QUESTION 01</span>
+      <span class="score" id="score">SCORE 0</span>
+    </div>
+    <div class="qtext" id="qtext">…</div>
+    <div class="timer" id="timer"><b></b></div>
+    <div id="opts"></div>
+    <div class="why" id="why"></div>
+  </div>
+
+  <div class="card hide" id="end">
+    <div class="qmeta"><span class="qnum">RESULT</span></div>
+    <div class="qtext" id="endhead">–</div>
+    <div class="verdict" id="endverdict"></div>
+    <ul class="bands" id="bands">
+      <li data-lo="0" data-hi="2"><span>0 – 2</span><b>Human</b></li>
+      <li data-lo="3" data-hi="5"><span>3 – 5</span><b>Awake</b></li>
+      <li data-lo="6" data-hi="7"><span>6 – 7</span><b>Sharp</b></li>
+      <li data-lo="8" data-hi="9"><span>8 – 9</span><b>Fascinator</b></li>
+      <li data-lo="10" data-hi="10"><span>10</span><b>Beyond Possible</b></li>
+    </ul>
+    <div class="cta">
+      <button class="btn" id="again">Play again</button>
+      <a class="btn2" href="https://www.youtube.com/@beyondpossible" id="ytlink">Watch the video</a>
+    </div>
+  </div>
+
+  <section class="eps">
+    <h2>Episodes</h2>
+    <a class="ep" href="#" data-ep="ep4">
+      <div class="thumb"></div>
+      <div class="t"><b>Ten Questions You Will Probably Fail</b><span>EP004 · 3:07</span></div>
+      <span class="go">WATCH</span></a>
+    <a class="ep" href="#" data-ep="ep3">
+      <div class="thumb"></div>
+      <div class="t"><b>You Are Not One Person</b><span>EP003 · 1:54</span></div>
+      <span class="go">WATCH</span></a>
+    <a class="ep" href="#" data-ep="ep2">
+      <div class="thumb"></div>
+      <div class="t"><b>You Have Never Been in the Present</b><span>EP002 · 1:52</span></div>
+      <span class="go">WATCH</span></a>
+    <a class="ep" href="#" data-ep="ep1">
+      <div class="thumb"></div>
+      <div class="t"><b>Beyond Possible</b><span>EP001 · 1:54</span></div>
+      <span class="go">WATCH</span></a>
+  </section>
+
+  <footer>
+    Every answer is sourced. Score 8 or more and you're a fascinator.<br>
+    © <span id="yr"></span> The Bryme
+  </footer>
+</div>
+
+<script>
+/* ---------------------------------------------------------------
+   Question bank. This is the single source of truth for the quiz.
+   Edit here, or replace with a fetch("quiz.json") if you want to
+   maintain it as data — the shape is identical.
+   --------------------------------------------------------------- */
+const BANK = [
+ {n:1,q:"Fastest object humans have ever built?",
+  o:["40,000 km/h — Apollo 10","250,000 km/h — Helios 2","690,000 km/h — Parker Solar Probe","2,000,000 km/h — Voyager 1"],a:2,
+  why:"Parker Solar Probe, 24 Dec 2024, about 692,000 km/h while passing 6.1 million km from the Sun. It did not fire an engine to get there — it fell.",
+  src:"NASA / JHU-APL"},
+ {n:2,q:"Fastest star ever measured?",
+  o:["300 km/s","8,000 km/s","60,000 km/s","250,000 km/s"],a:1,
+  why:"S4716 orbits the black hole at the centre of our galaxy every four years at roughly 8,000 km per second.",
+  src:"Peissker et al., Astrophysical Journal, 2022"},
+ {n:3,q:"How fast does a sneeze leave your body?",
+  o:["About 16 km/h","About 60 km/h","About 160 km/h","About 500 km/h"],a:0,
+  why:"The 160 km/h figure was estimated in the 1940s and never measured. High-speed imaging puts the real peak near 4.5 metres per second.",
+  src:"Tang et al., 2013"},
+ {n:4,q:"After the heart stops, brain activity continues for…",
+  o:["Nothing at all","About 10 seconds","A few minutes","About 12 hours"],a:2,
+  why:"Two of four dying patients showed surges of gamma activity lasting minutes. Four patients — that is the whole study.",
+  src:"Xu, Mihaylova, Borjigin et al., PNAS, 2023"},
+ {n:5,q:"How much of the ocean floor has been mapped?",
+  o:["About 5%","About 30%","About 60%","About 95%"],a:1,
+  why:"27.3% as of June 2025. In 2017 it was 6%. Most of the sea floor is less well charted than the surface of Mars.",
+  src:"Nippon Foundation–GEBCO Seabed 2030"},
+ {n:6,q:"On Venus, which is longer?",
+  o:["The orbit","They are equal","Venus does not rotate","The rotation"],a:3,
+  why:"One rotation takes 243 Earth days; one orbit takes 225. The day outlasts the year.",
+  src:"NASA Venus fact sheet"},
+ {n:7,q:"Loudest possible sound in air on Earth?",
+  o:["120 dB","150 dB","194 dB","1,000 dB"],a:2,
+  why:"At about 194 dB the troughs of the pressure wave reach vacuum. Push harder and it stops being sound and becomes a shock wave.",
+  src:"Acoustic reference"},
+ {n:8,q:"What does an ordinary cloud weigh?",
+  o:["About 5 kilograms","About 500 tonnes","About 500 kilograms","About 5 million tonnes"],a:1,
+  why:"A one-kilometre cumulus holds roughly 500 tonnes of water — about eighty adult elephants, floating over your head.",
+  src:"USGS Water Science School"},
+ {n:9,q:"No spacesuit. How long before you pass out?",
+  o:["10 to 15 seconds","Instantly","About 2 minutes","About 30 minutes"],a:0,
+  why:"You do not explode and you do not instantly freeze. The oxygen already in your blood runs out.",
+  src:"ESA"},
+ {n:10,q:"How many atoms are you made of?",
+  o:["7 million","7 billion","7 trillion","7 octillion"],a:3,
+  why:"About 7 × 10²⁷ for a 70 kg adult. Roughly a hundred thousand times more atoms than there are stars in the observable universe.",
+  src:"Standard composition model"}
+];
+
+const TIME = 3.0;
+const LETTERS = "ABCD";
+let i = 0, score = 0, locked = false, t0 = 0, raf = null;
+const $ = s => document.querySelector(s);
+const el = (t, c, h) => { const n = document.createElement(t);
+  if (c) n.className = c; if (h !== undefined) n.innerHTML = h; return n; };
+
+document.getElementById("yr").textContent = new Date().getFullYear();
+
+function buildBar(){
+  const b = $("#bar"); b.innerHTML = "";
+  BANK.forEach(() => b.appendChild(el("i")));
+  paintBar();
+}
+function paintBar(){
+  [...$("#bar").children].forEach((n, k) => n.classList.toggle("on", k < i));
+}
+
+function question(){
+  locked = false;
+  paintBar();
+  const q = BANK[i];
+  $("#qnum").textContent = "QUESTION " + String(i + 1).padStart(2, "0");
+  $("#score").textContent = "SCORE " + score;
+  $("#qtext").textContent = q.q;
+
+  const why = $("#why"); why.className = "why"; why.innerHTML = "";
+
+  const tm = $("#timer");
+  tm.classList.remove("run");
+  tm.style.setProperty("--d", TIME + "s");
+  tm.querySelector("b").style.animation = "none";
+  void tm.offsetWidth;
+  tm.classList.add("run");
+
+  const box = $("#opts"); box.innerHTML = "";
+  q.o.forEach((text, k) => {
+    const parts = text.split(" — ");
+    const b = el("button", "opt");
+    b.innerHTML = '<span class="ltr">' + LETTERS[k] + '</span><span class="txt">' + parts[0] +
+      (parts[1] ? '<small>' + parts[1] + '</small>' : '') + '</span>';
+    b.onclick = () => answer(k);
+    box.appendChild(b);
+  });
+
+  t0 = performance.now();
+  cancelAnimationFrame(raf);
+  const tick = now => {
+    if (locked) return;
+    if (now - t0 >= TIME * 1000) { answer(-1); return; }
+    raf = requestAnimationFrame(tick);
+  };
+  raf = requestAnimationFrame(tick);
+}
+
+function answer(picked){
+  if (locked) return;
+  locked = true;
+  cancelAnimationFrame(raf);
+  $("#timer").classList.remove("run");
+
+  const q = BANK[i];
+  [...$("#opts").children].forEach((b, k) => {
+    b.disabled = true;
+    b.classList.add(k === q.a ? "right" : "gone");
+  });
+  if (picked === q.a) score++;
+  $("#score").textContent = "SCORE " + score;
+
+  const why = $("#why");
+  const lead = picked === -1
+    ? '<b style="color:var(--amber)">Out of time.</b> '
+    : picked === q.a
+      ? '<b style="color:var(--amber)">Correct.</b> '
+      : '<b>Not quite.</b> ';
+  why.innerHTML = lead + q.why + '<span class="src">' + q.src + '</span>';
+
+  const next = el("button", "btn", i === BANK.length - 1 ? "See your score" : "Next question");
+  next.onclick = () => { i++; i >= BANK.length ? finish() : question(); };
+  why.appendChild(next);
+  requestAnimationFrame(() => why.classList.add("in"));
+}
+
+function finish(){
+  paintBar();
+  $("#card").classList.add("hide");
+  $("#end").classList.remove("hide");
+  $("#endhead").textContent = score + " out of 10";
+  const kids = [...$("#bands").children];
+  kids.forEach(n => n.classList.remove("hot"));
+  const band = kids.find(n => score >= +n.dataset.lo && score <= +n.dataset.hi);
+  if (band) band.classList.add("hot");
+  $("#endverdict").textContent = band ? band.querySelector("b").textContent : "";
+  window.scrollTo({top: 0, behavior: "smooth"});
+}
+
+$("#again").onclick = () => {
+  i = 0; score = 0;
+  $("#end").classList.add("hide");
+  $("#card").classList.remove("hide");
+  question();
+  window.scrollTo({top: 0, behavior: "smooth"});
+};
+
+/* Episode links — replace the hrefs with your real YouTube URLs. */
+const EP = {
+  ep1: "#", ep2: "#", ep3: "#", ep4: "#"
+};
+document.querySelectorAll("[data-ep]").forEach(a => {
+  a.href = EP[a.dataset.ep] || "#";
+});
+
+buildBar();
+question();
+</script>
+</body>
+</html>
