@@ -1,0 +1,493 @@
+{
+ "capturedAt": "2026-10-31T20:23:58.103Z",
+ "books": {
+  "22bet": {
+   "url": "https://22bet.ng/",
+   "title": "Access to website is restricted",
+   "body": "Access to this website is prohibited in the USA.\nUS\nYour IP:\n4.150.197.51",
+   "calls": [
+    {
+     "url": "https://22bet.ng/hd-api/external/apps/a1047eab1035d58682a53557e0b2a75edbfd15fd/api.js",
+     "method": "GET",
+     "status": 200,
+     "body": null
+    },
+    {
+     "url": "https://22bet.ng/fatman-api/74162a95d23a02bac074394343090fbdfdd05de1/ab.json",
+     "method": "POST",
+     "status": 200,
+     "body": "{\"state\":[]}"
+    },
+    {
+     "url": "https://22bet.ng/translation-api/by-lang/en",
+     "method": "GET",
+     "status": 200,
+     "body": null
+    },
+    {
+     "url": "https://22bet.ng/hd-api/external/assets/hdf.js",
+     "method": "GET",
+     "status": 200,
+     "body": null
+    },
+    {
+     "url": "https://22bet.ng/captcha-api/assets/hunt-captcha.js",
+     "method": "GET",
+     "status": 200,
+     "body": null
+    },
+    {
+     "url": "https://connect.facebook.net/en_US/fbevents.js",
+     "method": "GET",
+     "status": 200,
+     "body": null,
+     "snippet": "/**\n* Copyright (c) 2017-present, Facebook, Inc. All rights reserved.\n*\n* You are hereby granted a non-exclusive, worldwide, royalty-free license to use,\n* copy, modify, and distribute this software in source code or binary form for use\n* in connection with the web services and APIs provided by Facebook.\n*\n* As with any software that integrates with the Facebook platform, your use of\n* this softwa",
+     "length": 437578
+    },
+    {
+     "url": "https://22bet.ng/fatman-api/74162a95d23a02bac074394343090fbdfdd05de1/event.json",
+     "method": "POST",
+     "status": 200,
+     "body": "{\"sw\":412,\"sh\":900,\"e\":10273,\"sids\":[]}"
+    },
+    {
+     "url": "https://22bet.ng/fatman-api/74162a95d23a02bac074394343090fbdfdd05de1/event.json",
+     "method": "POST",
+     "status": 200,
+     "body": "{\"sw\":412,\"sh\":900,\"u\":0,\"e\":5159,\"m\":{\"i1\":1,\"i2\":153},\"sids\":[]}"
+    },
+    {
+     "url": "https://tm.ads.sportradar.com/dist/tag-manager.js?id=STM-AAAAAL",
+     "method": "GET",
+     "status": 200,
+     "body": null,
+     "snippet": "(function (window) {\n\n\nconst VariablesConfig = [ { name:\"srt\",\n    value:{ trackerName:\"_srt_argus\" } },\n  { name:\"srtm\",\n    value:{ config:\"STM-AAAAAL\",\n      affiliateId:\"1083\",\n      affiliateType:\"advertiser\" } },\n  { name:\"eventExecutionOptions\",\n    value:{ denyList:[  ] } },\n  { name:\"retargetingOptions\",\n    value:{ restrictions:[ { key:\"sport\",\n          whiteList:[ \"soccer\",\n           ",
+     "length": 334739
+    },
+    {
+     "url": "https://analytics.twitter.com/1/i/adsct?bci=4&dv=UTC%26en-US%2Cen%26Google%20Inc.%26Linux%20x86_64%26255%26800%26600%264%2624%26800%26600%260%26na%261&eci=3&event=%7B%7D&event_id=9a321876-bb44-4d16-84c2-b7115b36ee0c&integration=advertiser&p_id=Twitter&p_user_id=0&pl_id=500734dd-4b4f-4f0f-90f2-df7e053503ee&tw_document_href=https%3A%2F%2F22bet.ng%2F&tw_engaged_ms=1&tw_iframe_status=0&tw_pid_src=1&tw_session_count=1&tw_session_id=1793478213384-30016179&tw_session_start=1&twpid=tw.1793478213383.761262435181168473&txn_id=o775h&type=javascript&version=2.4.12",
+     "method": "GET",
+     "status": 200,
+     "body": null
+    },
+    {
+     "url": "https://analytics.ahrefs.com/api/event",
+     "method": "POST",
+     "status": 200,
+     "body": "{\"n\":\"pageview\",\"u\":\"https://22bet.ng/\",\"l\":[\"en-US\",\"en\"],\"k\":\"xp2zVgw+Jxjo82Gjau3LNQ\",\"r\":null,\"sw\":800,\"sh\":600,\"sr\":1,\"t\":\"Access to website is restricted\"}"
+    },
+    {
+     "url": "https://t.co/1/i/adsct?bci=4&dv=UTC%26en-US%2Cen%26Google%20Inc.%26Linux%20x86_64%26255%26800%26600%264%2624%26800%26600%260%26na%261&eci=3&event=%7B%7D&event_id=9a321876-bb44-4d16-84c2-b7115b36ee0c&integration=advertiser&p_id=Twitter&p_user_id=0&pl_id=500734dd-4b4f-4f0f-90f2-df7e053503ee&tw_document_href=https%3A%2F%2F22bet.ng%2F&tw_engaged_ms=1&tw_iframe_status=0&tw_pid_src=1&tw_session_count=1&tw_session_id=1793478213384-30016179&tw_session_start=1&twpid=tw.1793478213383.761262435181168473&txn_id=o775h&type=javascript&version=2.4.12",
+     "method": "GET",
+     "status": 200,
+     "body": null
+    },
+    {
+     "url": "https://www.google.com/rmkt/collect/16941684389/?random=1793478213484&cv=11&fst=1793478213484&fmt=8&bg=ffffff&guid=ON&async=1&en=gtag.config&gtm=45be6at0h2v9227074352za20ozb812396281zd812396281xecxf1&gcd=13l3l3l3l1l1&dma=0&tag_exp=115938465~115938468~118897920~118897930~120213116~120385423~120469145~120469153~121246026~121246034~123636747~123691370~123814946&u_w=800&u_h=600&url=https%3A%2F%2F22bet.ng%2F&rcb=7&frm=0&tiba=Access%20to%20website%20is%20restricted&hn=www.googleadservices.com&npa=0&pscdl=noapi&auid=1149777088.1793478213&uaa=&uab=&uafvl=&uamb=0&uam=&uap=&uapv=&uaw=0&data=event%3Dgtag.config&ept=68&gcp=5",
+     "method": "POST",
+     "status": 200,
+     "body": null
+    },
+    {
+     "url": "https://googleads.g.doubleclick.net/pagead/viewthroughconversion/16941684389/?random=1793478213484&cv=11&fst=1793478213484&bg=ffffff&guid=ON&async=1&en=gtag.config&gtm=45be6at0h2v9227074352za20ozb812396281zd812396281xecxf1&gcd=13l3l3l3l1l1&dma=0&tag_exp=115938465~115938468~118897920~118897930~120213116~120385423~120469145~120469153~121246026~121246034~123636747~123691370~123814946&u_w=800&u_h=600&url=https%3A%2F%2F22bet.ng%2F&rcb=7&frm=0&tiba=Access%20to%20website%20is%20restricted&hn=www.googleadservices.com&npa=0&pscdl=noapi&auid=1149777088.1793478213&uaa=&uab=&uafvl=&uamb=0&uam=&uap=&uapv=&uaw=0&data=event%3Dgtag.config&ept=9&rfmt=3&fmt=4",
+     "method": "GET",
+     "status": 200,
+     "body": null
+    },
+    {
+     "url": "https://16036416.fls.doubleclick.net/activityi;src=16036416;type=invmedia;cat=pagev0;rcb=15;ord=670750032647;npa=0;auiddc=1149777088.1793478213;uaa=;uab=;uafvl=;uamb=0;uam=;uap=;uapv=;uaw=0;pscdl=noapi;frm=0;_tu=KFA;gtm=45fe6at0h2v9235510715z8812396281za20gzb812396281zd812396281xeaxf1;gcd=13l3l3l3l1l1;dma=0;dc_fmt=2;tag_exp=115616985~115938465~115938469~118897920~118897930~120213116~120385423~120412526~120469145~120469153~121246026~121246034~123691370~123814944;epver=2;dc_random=1793478213_pKu7GVWthkkOcgPUAxhPXiMe3WGU9mzrgA;_dc_test=1;~oref=https%3A%2F%2F22bet.ng%2F?",
+     "method": "GET",
+     "status": 302,
+     "body": null
+    },
+    {
+     "url": "https://www.google.com/pagead/1p-user-list/16941684389/?random=1793478213484&cv=11&fst=1793476800000&bg=ffffff&guid=ON&async=1&en=gtag.config&gtm=45be6at0h2v9227074352za20ozb812396281zd812396281xecxf1&gcd=13l3l3l3l1l1&dma=0&tag_exp=115938465~115938468~118897920~118897930~120213116~120385423~120469145~120469153~121246026~121246034~123636747~123691370~123814946&u_w=800&u_h=600&url=https%3A%2F%2F22bet.ng%2F&rcb=7&frm=0&tiba=Access%20to%20website%20is%20restricted&hn=www.googleadservices.com&npa=0&pscdl=noapi&auid=1149777088.1793478213&uaa=&uab=&uafvl=&uamb=0&uam=&uap=&uapv=&uaw=0&data=event%3Dgtag.config&ept=9&rfmt=3&fmt=3&is_vtc=1&cid=CAQS4gEAQM4h3HXQonN3XdIakjrRDbvtfQFLx3TdBIUZwvHNdCDMDXhcNMoY6W73Z0qS7Wwtpe-SVOhLRf8MjBLzZXC319phiFKzStXSIUMcp9aWmtu09f5tTwSUJ_H9tsoYxhHSlmfmTTYljFezynog6vc13YCFM3Lng-Szq0uRvl-EPIhn8CIFfncHUxYI94gvNTCs5TcwmQjSLV5QKFlaZgiIg1oipdK6kVhSUSOPgs0vzULSbXiGRB4MR669AcRAZWTCOkOkDHVyHiA44qtJ6xubak6LTgGvc1uQHZmJTuMeuAu6&random=3447818065&rmt_tld=0&ipr=y",
+     "method": "GET",
+     "status": 200,
+     "body": null
+    },
+    {
+     "url": "https://16036416.fls.doubleclick.net/activityi;dc_pre=CI3O2P6K5ZcDFcK0jgQdsvQm9A;src=16036416;type=invmedia;cat=pagev0;rcb=15;ord=670750032647;npa=0;auiddc=1149777088.1793478213;uaa=;uab=;uafvl=;uamb=0;uam=;uap=;uapv=;uaw=0;pscdl=noapi;frm=0;_tu=KFA;gtm=45fe6at0h2v9235510715z8812396281za20gzb812396281zd812396281xeaxf1;gcd=13l3l3l3l1l1;dma=0;dc_fmt=2;tag_exp=115616985~115938465~115938469~118897920~118897930~120213116~120385423~120412526~120469145~120469153~121246026~121246034~123691370~123814944;epver=2;dc_random=1793478213_pKu7GVWthkkOcgPUAxhPXiMe3WGU9mzrgA;_dc_test=1;~oref=https%3A%2F%2F22bet.ng%2F?",
+     "method": "GET",
+     "status": 200,
+     "body": null
+    },
+    {
+     "url": "https://analytics.google.com/g/collect?v=2&tid=G-P3NVEEM8WD&gtm=45je6at0h2v870050480za20ozb812396281zd812396281xf1&_p=1793478212694&_gaz=1&gcd=13l3l3l3l1l1&npa=0&dma=0&_eu=AAAAAGAC&cid=744838964.1793478214&frm=0&pscdl=noapi&rcb=1&sr=800x600&uaa=&uab=&uafvl=&uam=&uamb=0&uap=&uapv=&uaw=0&ul=en-us&gaf=2&_s=1&tag_exp=115938465~115938468~118897920~118897930~120213116~120385422~120469145~120469153~121246026~121246034~123691370&sid=1793478213&sct=1&seg=0&dl=https%3A%2F%2F22bet.ng%2F&dt=Access%20to%20website%20is%20restricted&en=page_view&_fv=1&_nsi=1&_ss=1&tfd=2479",
+     "method": "POST",
+     "status": 204,
+     "body": null
+    },
+    {
+     "url": "https://ad.doubleclick.net/activity;src=16036416;type=invmedia;cat=pagev0;rcb=15;ord=670750032647;npa=0;auiddc=1149777088.1793478213;uaa=;uab=;uafvl=;uamb=0;uam=;uap=;uapv=;uaw=0;pscdl=noapi;frm=0;_tu=KFA;gtm=45fe6at0h2v9235510715z8812396281za20gzb812396281zd812396281xeaxf1;gcd=13l3l3l3l1l1;dma=0;dc_fmt=3;tag_exp=115616985~115938465~115938469~118897920~118897930~120213116~120385423~120412526~120469145~120469153~121246026~121246034~123691370~123814944;epver=2;dc_random=1793478213_pKu7GVWthkkOcgPUAxhPXiMe3WGU9mzrgA;~oref=https%3A%2F%2F22bet.ng%2F?",
+     "method": "POST",
+     "status": 302,
+     "body": null
+    },
+    {
+     "url": "https://ad.doubleclick.net/activity;_dc_ptd=ChEI8KOW1wYQ9I_xtKuWp-6TARIfANkPczQQa7P590MtnNc8LxFX9stjSe1hqa75YsiKLA;dc_pre=CMfs0_6K5ZcDFVCwxQId9u4AyQ;src=16036416;type=invmedia;cat=pagev0;rcb=15;ord=670750032647;npa=0;auiddc=1149777088.1793478213;uaa=;uab=;uafvl=;uamb=0;uam=;uap=;uapv=;uaw=0;pscdl=noapi;frm=0;_tu=KFA;gtm=45fe6at0h2v9235510715z8812396281za20gzb812396281zd812396281xeaxf1;gcd=13l3l3l3l1l1;dma=0;dc_fmt=3;tag_exp=115616985~115938465~115938469~118897920~118897930~120213116~120385423~120412526~120469145~120469153~121246026~121246034~123691370~123814944;epver=2;dc_random=1793478213_pKu7GVWthkkOcgPUAxhPXiMe3WGU9mzrgA;~oref=https%3A%2F%2F22bet.ng%2F?",
+     "method": "GET",
+     "status": 302,
+     "body": null
+    },
+    {
+     "url": "https://www.google.com/gmp/conversion/_dc_unique_id=3241390866282341916;_dc_ptd=ChEI8KOW1wYQ9I_xtKuWp-6TARIlANkPczTNS8zLLNJbOJE7RNkZrrFO4dUts4kirDaW8T86Hw2aDw;_dc_time=1793478213;cid=CAQS4gEAQM4h3LwNZqzp3ZmGMdZTODOxjl24C2exUze51ji7wTu-FiK4x7ZmXTTrPhEn24hA9A4Bp-IKNhg_qwaEW_ksvn2suY6SHxQuuyXGueBBiPcAZyo2YfrzRvZYKXBO2-vKmZB7RVvxZDOZR6kuN45qE-kWnWzkd7HsMI3_5kuLitYEgRK8jBaEIxghz7SMIgeRkIZhtQ15LQtOBdDCEaUbgWkEyuHngjsfLHi4d5cA6AWP59TZubfpX-UvOFiYWkndj1VcSABkImR7ooUyEWQk7soE497suqT2u2Roch9j7hUF;eps=AHas8cAQl0ffRFYxBa_CcuM-eA0AUprPqfE-SUDD16ah1Kl7wbUNgrZVzh23rJv7YwHufLJ5iz0f2ENaTVTcaekoFq8-cmEvJf9HHQJGsZqacgaq4w;dc_pre=CMfs0_6K5ZcDFVCwxQId9u4AyQ;src=16036416;type=invmedia;cat=pagev0;rcb=15;ord=670750032647;npa=0;auiddc=1149777088.1793478213;uaa=;uab=;uafvl=;uamb=0;uam=;uap=;uapv=;uaw=0;pscdl=noapi;frm=0;_tu=KFA;gtm=45fe6at0h2v9235510715z8812396281za20gzb812396281zd812396281xeaxf1;gcd=13l3l3l3l1l1;dma=0;dc_fmt=3;tag_exp=115616985~115938465~115938469~118897920~118897930~120213116~120385423~120412526~120469145~120469153~121246026~121246034~123691370~123814944;epver=2;dc_random=1793478213_pKu7GVWthkkOcgPUAxhPXiMe3WGU9mzrgA;~oref=https%3A%2F%2F22bet.ng%2F?",
+     "method": "GET",
+     "status": 200,
+     "body": null
+    },
+    {
+     "url": "https://adservice.google.com/ddm/fls/z/dc_pre=CI3O2P6K5ZcDFcK0jgQdsvQm9A;src=16036416;type=invmedia;cat=pagev0;rcb=15;ord=670750032647;npa=0;auiddc=*;uaa=;uab=;uafvl=;uamb=0;uam=;uap=;uapv=;uaw=0;pscdl=noapi;frm=0;_tu=KFA;gtm=45fe6at0h2v9235510715z8812396281za20gzb812396281zd812396281xeaxf1;gcd=13l3l3l3l1l1;dma=0;dc_fmt=2;tag_exp=115616985~115938465~115938469~118897920~118897930~120213116~120385423~120412526~120469145~120469153~121246026~121246034~123691370~123814944;epver=2;dc_random=1793478213_pKu7GVWthkkOcgPUAxhPXiMe3WGU9mzrgA;_dc_test=1;~oref=https%3A%2F%2F22bet.ng%2F",
+     "method": "GET",
+     "status": 200,
+     "body": null
+    },
+    {
+     "url": "https://www.facebook.com/tr/?id=1970294057196667&ev=PageView&dl=https%3A%2F%2F22bet.ng%2F&rl=&if=false&ts=1793478213740&iw=false&sw=800&sh=600&udwv[ph][0][v]=8190d4815cf558b8c1be194c973d9d64597c7a6471ef59e45e838cb20c3a0b16&udwv[ph][0][s]=1&v=2.9.433&r=stable&ec=0&o=14366&aems=0%3B0&fbp=fb.1.1793478213735.661301476189977430&ler=empty&cdl=API_unavailable&pmd[title]=Access%20to%20website%20is%20restricted&pmd[locale]=en&pmd[description]=&plt=1505.2000000000116&iss=1&imft=1&tz=0&it=1793478212990&coo=false&exp=s0&expv2[0]=pl1&expv2[1]=el2&expv2[2]=bc1&expv2[3]=ra2&expv2[4]=rp2&expv2[5]=ct3&expv2[6]=hf1&expv2[7]=sd1&expv2[8]=sp1&expv2[9]=ek1&expv2[10]=pc1&expv2[11]=gs1&expv2[12]=zs1&expv2[13]=cp1&expv2[14]=es1&expv2[15]=ac1&expv2[16]=so1&expv2[17]=wc1&expv2[18]=la1&expv2[19]=sf1&expv2[20]=da1&expv2[21]=io1&expv2[22]=ae1&expv2[23]=sx1&expv2[24]=if1&expv2[25]=fd1&expv2[26]=bg1&expv2[27]=mg1&expv2[28]=kl1&expv2[29]=sg1&expv2[30]=mk1&expv2[31]=sn1&expv2[32]=ec1&expv2[33]=mp1&expv2[34]=ps1&expv2[35]=fx1&expv2[36]=vt1&expv2[37]=dp1&expv2[38]=fw1&expv2[39]=cn1&expv2[40]=tz1&expv2[41]=pe1&expv2[42]=ee1&expv2[43]=bu1&expv2[44]=ta1&expv2[45]=ot1&expv2[46]=hv1&expv2[47]=ep3&expv2[48]=rh0&expv2[49]=ah0&expv2[50]=nv1&expv2[51]=oq0&rqm=GET",
+     "method": "GET",
+     "status": 200,
+     "body": null
+    },
+    {
+     "url": "https://a.sportradarserving.com/pixel?type=js&aid=1083&id=1463",
+     "method": "GET",
+     "status": 302,
+     "body": null
+    },
+    {
+     "url": "https://www.facebook.com/tr/?id=3410492689133530&ev=PageView&dl=https%3A%2F%2F22bet.ng%2F&rl=&if=false&ts=1793478213817&iw=false&sw=800&sh=600&v=2.9.433&r=stable&ec=0&o=28&ler=empty&cdl=API_unavailable&it=1793478212990&coo=false&exp=s0&expv2[0]=pl1&expv2[1]=el3&expv2[2]=bc1&expv2[3]=ra2&expv2[4]=rp2&expv2[5]=ct3&expv2[6]=hf1&expv2[7]=sd1&expv2[8]=sp1&expv2[9]=ek1&expv2[10]=pc1&expv2[11]=gs1&expv2[12]=zs1&expv2[13]=cp1&expv2[14]=es1&expv2[15]=ac1&expv2[16]=so1&expv2[17]=wc1&expv2[18]=la1&expv2[19]=sf1&expv2[20]=da1&expv2[21]=io1&expv2[22]=ae1&expv2[23]=sx1&expv2[24]=if1&expv2[25]=fd1&expv2[26]=bg1&expv2[27]=mg1&expv2[28]=kl1&expv2[29]=sg1&expv2[30]=mk1&expv2[31]=sn1&expv2[32]=ec1&expv2[33]=mp1&expv2[34]=ps1&expv2[35]=fx1&expv2[36]=vt1&expv2[37]=dp1&expv2[38]=fw1&expv2[39]=cn1&expv2[40]=tz1&expv2[41]=pe1&expv2[42]=ee1&expv2[43]=bu1&expv2[44]=ta1&expv2[45]=mt0&expv2[46]=ot1&expv2[47]=hv1&expv2[48]=ep3&expv2[49]=rh0&expv2[50]=ah0&expv2[51]=nv1&expv2[52]=oq0&rqm=GET",
+     "method": "GET",
+     "status": 200,
+     "body": null
+    },
+    {
+     "url": "https://a.sportradarserving.com/ul_cb/pixel?type=js&aid=1083&id=1463",
+     "method": "GET",
+     "status": 200,
+     "body": null
+    },
+    {
+     "url": "https://tracker.ads.sportradar.com/dist/tracker.js",
+     "method": "GET",
+     "status": 200,
+     "body": null,
+     "snippet": "/*! For license information please see tracker.js.LICENSE.txt */\nvar _ads;!function(){var t={137:function(t,e){\"use strict\";function n(t,e){(null==e||e>t.length)&&(e=t.length);for(var n=0,o=new Array(e);n<e;n++)o[n]=t[n];return o}Object.defineProperty(e,\"__esModule\",{value:!0}),e.default=function t(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:{};if(arguments.length>1)return Promi",
+     "length": 28081
+    },
+    {
+     "url": "https://x.bidswitch.net/syncd?dsp_id=409&user_id=ada183d6-c58d-46b8-a408-04ee69d9177d&user_group=2&redir=%2F%2Fuse.sportradarserving.com%2Fbsw_sync%3Fbsw_uid%3D%24%7BBSW_UID%7D",
+     "method": "GET",
+     "status": 302,
+     "body": null
+    },
+    {
+     "url": "https://x.bidswitch.net/ul_cb/syncd?dsp_id=409&user_id=ada183d6-c58d-46b8-a408-04ee69d9177d&user_group=2&redir=%2F%2Fuse.sportradarserving.com%2Fbsw_sync%3Fbsw_uid%3D%24%7BBSW_UID%7D",
+     "method": "GET",
+     "status": 302,
+     "body": null
+    },
+    {
+     "url": "https://ps.eyeota.net/match?bid=d9gd6vu&uid=5e66ca028a451ebc13c868bc5a95af3c&gdpr=1&gdpr_consent=",
+     "method": "GET",
+     "status": 200,
+     "body": null
+    },
+    {
+     "url": "https://tracker.ads.sportradar.com/dist//sp-3.8.0.js",
+     "method": "GET",
+     "status": 200,
+     "body": null,
+     "snippet": "/*! For license information please see sp-3.8.0.js.LICENSE.txt */\n\"use strict\";!function(){function e(e,n){var t,o={};for(t in e)Object.prototype.hasOwnProperty.call(e,t)&&0>n.indexOf(t)&&(o[t]=e[t]);if(null!=e&&\"function\"==typeof Object.getOwnPropertySymbols){var r=0;for(t=Object.getOwnPropertySymbols(e);r<t.length;r++)0>n.indexOf(t[r])&&Object.prototype.propertyIsEnumerable.call(e,t[r])&&(o[t[r]",
+     "length": 74143
+    },
+    {
+     "url": "https://pippio.com/api/sync?pid=5324&it=1&iv=1b470e483e24046d150ec151fb80df660cbfbd1a002ae149817e05df589e3572791426b5417dce21&_=2",
+     "method": "GET",
+     "status": 307,
+     "body": null
+    },
+    {
+     "url": "https://use.sportradarserving.com/bsw_sync?bsw_uid=91cc8502-da03-45d7-aefd-a6f8605a3f84",
+     "method": "GET",
+     "status": 200,
+     "body": null
+    },
+    {
+     "url": "https://track.trackingtraffo.com/pixel/js?auth=wxjuxb8e&event=visit&uid=undefined&tid={TRANSACTION_ID}&cur={CURRENCY}&amount={DEPOSIT}",
+     "method": "GET",
+     "status": 200,
+     "body": null
+    },
+    {
+     "url": "https://track.trackingtraffo.com/pixel?auth=wxjuxb8e&event=visit&uid=undefined&tid=%7BTRANSACTION_ID%7D&cur=%7BCURRENCY%7D&amount=%7BDEPOSIT%7D&site=22bet.ng&ln=en-US",
+     "method": "GET",
+     "status": 200,
+     "body": null
+    },
+    {
+     "url": "https://analytics.google.com/g/collect?v=2&tid=G-P3NVEEM8WD&gtm=45je6at0h2v870050480za20gzb812396281zd812396281xf1&_p=1793478212694&gcd=13l3l3l3l1l1&npa=0&dma=0&_eu=AEAAAGQC&ae=a&cid=744838964.1793478214&frm=0&pscdl=noapi&rcb=1&sr=800x600&uaa=&uab=&uafvl=&uam=&uamb=0&uap=&uapv=&uaw=0&ul=en-us&gaf=2&_s=2&tag_exp=115938465~115938468~118897920~118897930~120213116~120385422~120469145~120469153~121246026~121246034~123691370&sid=1793478213&sct=1&seg=0&dl=https%3A%2F%2F22bet.ng%2F&dt=Access%20to%20website%20is%20restricted&en=scroll&epn.percent_scrolled=90&_et=9&tfd=7491",
+     "method": "POST",
+     "status": 204,
+     "body": null
+    },
+    {
+     "url": "https://analytics.twitter.com/i/adsct?bci=4&cv=100%261&dv=UTC%26en-US%2Cen%26Google%20Inc.%26Linux%20x86_64%26255%26800%26600%264%2624%26800%26600%260%26na%261&eci=2&event_id=902aa7d1-ea53-46cd-ad68-b3e2390d6552&events=%5B%5B%22auto_long_site_dwell%22%2C%7B%7D%5D%5D&integration=advertiser&p_id=Twitter&p_user_id=0&pl_id=500734dd-4b4f-4f0f-90f2-df7e053503ee&tw_document_href=https%3A%2F%2F22bet.ng%2F&tw_engaged_ms=10001&tw_iframe_status=0&tw_pid_src=1&tw_session_count=1&tw_session_id=1793478213384-30016179&twpid=tw.1793478213383.761262435181168473&txn_id=o775h&type=javascript&version=2.4.12",
+     "method": "GET",
+     "status": 200,
+     "body": null
+    },
+    {
+     "url": "https://t.co/i/adsct?bci=4&cv=100%261&dv=UTC%26en-US%2Cen%26Google%20Inc.%26Linux%20x86_64%26255%26800%26600%264%2624%26800%26600%260%26na%261&eci=2&event_id=902aa7d1-ea53-46cd-ad68-b3e2390d6552&events=%5B%5B%22auto_long_site_dwell%22%2C%7B%7D%5D%5D&integration=advertiser&p_id=Twitter&p_user_id=0&pl_id=500734dd-4b4f-4f0f-90f2-df7e053503ee&tw_document_href=https%3A%2F%2F22bet.ng%2F&tw_engaged_ms=10001&tw_iframe_status=0&tw_pid_src=1&tw_session_count=1&tw_session_id=1793478213384-30016179&twpid=tw.1793478213383.761262435181168473&txn_id=o775h&type=javascript&version=2.4.12",
+     "method": "GET",
+     "status": 200,
+     "body": null
+    }
+   ],
+   "withPrices": [
+    {
+     "url": "https://connect.facebook.net/en_US/fbevents.js",
+     "method": "GET",
+     "status": 200,
+     "body": null,
+     "snippet": "/**\n* Copyright (c) 2017-present, Facebook, Inc. All rights reserved.\n*\n* You are hereby granted a non-exclusive, worldwide, royalty-free license to use,\n* copy, modify, and distribute this software in source code or binary form for use\n* in connection with the web services and APIs provided by Facebook.\n*\n* As with any software that integrates with the Facebook platform, your use of\n* this softwa",
+     "length": 437578
+    },
+    {
+     "url": "https://tm.ads.sportradar.com/dist/tag-manager.js?id=STM-AAAAAL",
+     "method": "GET",
+     "status": 200,
+     "body": null,
+     "snippet": "(function (window) {\n\n\nconst VariablesConfig = [ { name:\"srt\",\n    value:{ trackerName:\"_srt_argus\" } },\n  { name:\"srtm\",\n    value:{ config:\"STM-AAAAAL\",\n      affiliateId:\"1083\",\n      affiliateType:\"advertiser\" } },\n  { name:\"eventExecutionOptions\",\n    value:{ denyList:[  ] } },\n  { name:\"retargetingOptions\",\n    value:{ restrictions:[ { key:\"sport\",\n          whiteList:[ \"soccer\",\n           ",
+     "length": 334739
+    },
+    {
+     "url": "https://tracker.ads.sportradar.com/dist/tracker.js",
+     "method": "GET",
+     "status": 200,
+     "body": null,
+     "snippet": "/*! For license information please see tracker.js.LICENSE.txt */\nvar _ads;!function(){var t={137:function(t,e){\"use strict\";function n(t,e){(null==e||e>t.length)&&(e=t.length);for(var n=0,o=new Array(e);n<e;n++)o[n]=t[n];return o}Object.defineProperty(e,\"__esModule\",{value:!0}),e.default=function t(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:{};if(arguments.length>1)return Promi",
+     "length": 28081
+    },
+    {
+     "url": "https://tracker.ads.sportradar.com/dist//sp-3.8.0.js",
+     "method": "GET",
+     "status": 200,
+     "body": null,
+     "snippet": "/*! For license information please see sp-3.8.0.js.LICENSE.txt */\n\"use strict\";!function(){function e(e,n){var t,o={};for(t in e)Object.prototype.hasOwnProperty.call(e,t)&&0>n.indexOf(t)&&(o[t]=e[t]);if(null!=e&&\"function\"==typeof Object.getOwnPropertySymbols){var r=0;for(t=Object.getOwnPropertySymbols(e);r<t.length;r++)0>n.indexOf(t[r])&&Object.prototype.propertyIsEnumerable.call(e,t[r])&&(o[t[r]",
+     "length": 74143
+    }
+   ]
+  },
+  "1xbet": {
+   "url": "https://1xbet.ng/",
+   "title": "1xbet Nigeria",
+   "body": "Access denied!\n\nThis website is not available in your country.\n\nUS\n4.150.197.51\n08000077777\ninfo-en@1xbet-team.com",
+   "calls": [
+    {
+     "url": "https://1xbet.ng/bff-api/config/group/get?groups=b.core,d.core&lang=en&d=1xbet.ng&g=US&p=412",
+     "method": "GET",
+     "status": 200,
+     "body": null,
+     "snippet": "{\"-1000\":159,\"-1001\":412,\"-1002\":{\"icons\":\"1.0.1142\",\"ui\":\"3.3.523\"},\"-1004\":{\"id\":\"en\",\"title\":\"English\",\"code\":\"en\",\"locale\":\"en_GB\"},\"-1005\":{\"1\":\"dictionary2\\/main\\/en\\/dictionary_c8367bb5f711ca955ef903eb1697d0d8.json\",\"2\":\"dictionary2\\/office\\/en\\/dictionary_65fdfd740f79ec56db4b88dd62bad32d.json\",\"3\":\"dictionary2\\/v3_main\\/en\\/dictionary_e201cd94809083cf541082e432c79763.json\",\"4\":\"dictionary2",
+     "length": 29078
+    },
+    {
+     "url": "https://1xbet.ng/analytics-module-api/v1/analytics?projectId=412&domain=1xbet.ng",
+     "method": "GET",
+     "status": 200,
+     "body": null
+    },
+    {
+     "url": "https://1xbet.ng/bff-api/config/group/get?groups=d.customize&lang=en&d=1xbet.ng&g=US&p=412",
+     "method": "GET",
+     "status": 200,
+     "body": null
+    },
+    {
+     "url": "https://1xbet.ng/fatman-api/a6f69e4388362d761ee5bb073edb23ae3d9341fb/fc",
+     "method": "POST",
+     "status": 204,
+     "body": null
+    },
+    {
+     "url": "https://1xbet.ng/bff-api/config/group/get?groups=d.technical,d.global&lang=en&d=1xbet.ng&g=US&p=412",
+     "method": "GET",
+     "status": 200,
+     "body": null
+    },
+    {
+     "url": "https://1xbet.ng/fatman-api/a6f69e4388362d761ee5bb073edb23ae3d9341fb/ab.json",
+     "method": "POST",
+     "status": 200,
+     "body": "{\"w\":55,\"state\":[]}"
+    },
+    {
+     "url": "https://1xbet.ng/genfiles/event-logos/favicon/dcb250626f322875361f882061381008_100.png",
+     "method": "GET",
+     "status": 200,
+     "body": null
+    },
+    {
+     "url": "https://1xbet.ng/genfiles/event-logos/favicon/dcb250626f322875361f882061381008_100.png",
+     "method": "GET",
+     "status": 200,
+     "body": null
+    },
+    {
+     "url": "https://1xbet.ng/fatman-api/a6f69e4388362d761ee5bb073edb23ae3d9341fb/event.json",
+     "method": "POST",
+     "status": 200,
+     "body": "{\"w\":55,\"sw\":412,\"sh\":900,\"e\":10273,\"sids\":[]}"
+    },
+    {
+     "url": "https://1xbet.ng/fatman-api/a6f69e4388362d761ee5bb073edb23ae3d9341fb/event.json",
+     "method": "POST",
+     "status": 200,
+     "body": "{\"w\":55,\"sw\":412,\"sh\":900,\"e\":11054,\"m\":{\"s1\":\"6f7407d9-be6b-4477-897d-58c4c836b320\"},\"sids\":[]}"
+    },
+    {
+     "url": "https://1xbet.ng/fatman-api/a6f69e4388362d761ee5bb073edb23ae3d9341fb/event.json",
+     "method": "POST",
+     "status": 200,
+     "body": "{\"w\":55,\"sw\":412,\"sh\":900,\"e\":1193,\"m\":{\"i1\":153,\"s1\":\"en\"},\"sids\":[]}"
+    },
+    {
+     "url": "https://1xbet.ng/bff-api/config/v2/contacts.json?lang=en&country=153&isVipUser=false&d=1xbet.ng&g=US&p=412",
+     "method": "GET",
+     "status": 200,
+     "body": null
+    },
+    {
+     "url": "https://tm.ads.sportradar.com/dist/tag-manager.js?id=STM-AAAAB9",
+     "method": "GET",
+     "status": 200,
+     "body": null,
+     "snippet": "var _ads=function(t){function e(e){for(var n,o,i=e[0],u=e[1],a=0,f=[];a<i.length;a++)o=i[a],Object.prototype.hasOwnProperty.call(r,o)&&r[o]&&f.push(r[o][0]),r[o]=0;for(n in u)Object.prototype.hasOwnProperty.call(u,n)&&(t[n]=u[n]);for(c&&c(e);f.length;)f.shift()()}var n={},r={0:0};function o(e){if(n[e])return n[e].exports;var r=n[e]={i:e,l:!1,exports:{}};return t[e].call(r.exports,r,r.exports,o),r.",
+     "length": 196647
+    },
+    {
+     "url": "https://connect.facebook.net/en_US/fbevents.js",
+     "method": "GET",
+     "status": 200,
+     "body": null,
+     "snippet": "/**\n* Copyright (c) 2017-present, Facebook, Inc. All rights reserved.\n*\n* You are hereby granted a non-exclusive, worldwide, royalty-free license to use,\n* copy, modify, and distribute this software in source code or binary form for use\n* in connection with the web services and APIs provided by Facebook.\n*\n* As with any software that integrates with the Facebook platform, your use of\n* this softwa",
+     "length": 437578
+    },
+    {
+     "url": "https://analytics.google.com/g/collect?v=2&tid=G-7JGWL9SV66&gtm=45je6as1v897130004za208zd897130004xf1&_p=1793478229341&em=tv.1~em.ODS1igyfeIhzOTHENqwIfH1sb8t0oxg8FT6iY2YCmeo&emd=tvd.1~i1.fem.ma.r22.n22.lA.s!b64!I19fVEVDSE5JQ0FMX1BBR0VTX0FQUF9fPi5kZWZhdWx0LWxheW91dC1jb250YWluZXI&_gaz=1&gcd=13l3l3l3l1l1&npa=0&dma=0&ecid=996546864&_eu=AAAAAGAC&cid=127260076.1793478230&ec_mode=a&frm=0&pscdl=noapi&rcb=7&sr=800x600&uaa=&uab=&uafvl=&uam=&uamb=0&uap=&uapv=&uaw=0&ul=en-us&gaf=2&_s=2&tag_exp=115616986~115938466~115938469~118869188~118897920~118897930~120213116~120385423~120469145~120469153~121246026~121246034~123691370&sid=1793478229&sct=1&seg=0&dl=https%3A%2F%2F1xbet.ng%2Fen%2Fblock&dt=1xbet%20Nigeria&en=page_view&_fv=1&_nsi=1&_ss=1&_ee=1&ep.optimize_id=GTM-5R4MT54&tfd=4842",
+     "method": "POST",
+     "status": 204,
+     "body": null
+    },
+    {
+     "url": "https://analytics.google.com/g/collect?v=2&tid=G-7JGWL9SV66&gtm=45je6as1v897130004za200zd897130004xf1&_p=1793478229341&gcd=13l3l3l3l1l1&npa=0&dma=0&ecid=996546864&_eu=AAAAAGQC&cid=127260076.1793478230&frm=0&pscdl=noapi&rcb=7&sr=800x600&uaa=&uab=&uafvl=&uam=&uamb=0&uap=&uapv=&uaw=0&ul=en-us&gaf=2&_s=1&tag_exp=115616986~115938466~115938469~118869188~118897920~118897930~120213116~120385423~120469145~120469153~121246026~121246034~123691370&sid=1793478229&sct=1&seg=0&dl=https%3A%2F%2F1xbet.ng%2Fen%2Fblock&dt=1xbet%20Nigeria&en=geoblock_call&_ee=1&ep.optimize_id=GTM-5R4MT54&epn.countryId=153&ep.languageId=en&_et=2&upn.ref_id=159&tfd=4841",
+     "method": "POST",
+     "status": 204,
+     "body": null
+    },
+    {
+     "url": "https://www.google.com/rmkt/collect/16558231032/?random=1793478229809&cv=11&fst=1793478229809&fmt=8&bg=ffffff&guid=ON&async=1&en=gtag.config&gtm=45be6as1v9191709615za20ozb9218447135zd9218447135xecxf1&gcd=13l3l3l3l1l1&dma=0&tag_exp=115616985~115938466~115938469~118897920~118897930~119381662~120213116~120385422~120412528~120469145~120469153~121246026~121246034~123691370~123691407&u_w=800&u_h=600&url=https%3A%2F%2F1xbet.ng%2Fen%2Fblock&rcb=12&frm=0&tiba=1xbet%20Nigeria&hn=www.googleadservices.com&npa=0&pscdl=noapi&auid=1460664610.1793478230&uaa=&uab=&uafvl=&uamb=0&uam=&uap=&uapv=&uaw=0&data=event%3Dgtag.config&ept=68&gcp=5",
+     "method": "POST",
+     "status": 200,
+     "body": null
+    },
+    {
+     "url": "https://www.google.com/rmkt/collect/16558231032/?random=1793478229828&cv=11&fst=1793478229828&fmt=8&bg=ffffff&guid=ON&async=1&gtm=45be6as1v9191709615z89218447135za20gzb9218447135zd9218447135xeaxf1&gcd=13l3l3l3l1l1&dma=0&tag_exp=115616985~115938466~115938469~118897920~118897930~119381662~120213116~120385422~120412528~120469145~120469153~121246026~121246034~123691370~123691407&u_w=800&u_h=600&url=https%3A%2F%2F1xbet.ng%2Fen%2Fblock&rcb=12&frm=0&tiba=1xbet%20Nigeria&hn=www.googleadservices.com&npa=0&pscdl=noapi&auid=1460664610.1793478230&uaa=&uab=&uafvl=&uamb=0&uam=&uap=&uapv=&uaw=0&_tu=CA&ept=68&gcp=5",
+     "method": "POST",
+     "status": 200,
+     "body": null
+    },
+    {
+     "url": "https://googleads.g.doubleclick.net/pagead/viewthroughconversion/16558231032/?random=1793478229809&cv=11&fst=1793478229809&bg=ffffff&guid=ON&async=1&en=gtag.config&gtm=45be6as1v9191709615za20ozb9218447135zd9218447135xecxf1&gcd=13l3l3l3l1l1&dma=0&tag_exp=115616985~115938466~115938469~118897920~118897930~119381662~120213116~120385422~120412528~120469145~120469153~121246026~121246034~123691370~123691407&u_w=800&u_h=600&url=https%3A%2F%2F1xbet.ng%2Fen%2Fblock&rcb=12&frm=0&tiba=1xbet%20Nigeria&hn=www.googleadservices.com&npa=0&pscdl=noapi&auid=1460664610.1793478230&uaa=&uab=&uafvl=&uamb=0&uam=&uap=&uapv=&uaw=0&data=event%3Dgtag.config&ept=9&rfmt=3&fmt=4",
+     "method": "GET",
+     "status": 200,
+     "body": null
+    },
+    {
+     "url": "https://googleads.g.doubleclick.net/pagead/viewthroughconversion/16558231032/?random=1793478229828&cv=11&fst=1793478229828&bg=ffffff&guid=ON&async=1&gtm=45be6as1v9191709615z89218447135za20gzb9218447135zd9218447135xeaxf1&gcd=13l3l3l3l1l1&dma=0&tag_exp=115616985~115938466~115938469~118897920~118897930~119381662~120213116~120385422~120412528~120469145~120469153~121246026~121246034~123691370~123691407&u_w=800&u_h=600&url=https%3A%2F%2F1xbet.ng%2Fen%2Fblock&rcb=12&frm=0&tiba=1xbet%20Nigeria&hn=www.googleadservices.com&npa=0&pscdl=noapi&auid=1460664610.1793478230&uaa=&uab=&uafvl=&uamb=0&uam=&uap=&uapv=&uaw=0&_tu=CA&ept=9&rfmt=3&fmt=4",
+     "method": "GET",
+     "status": 200,
+     "body": null
+    },
+    {
+     "url": "https://www.google.com/pagead/1p-user-list/16558231032/?random=1793478229809&cv=11&fst=1793476800000&bg=ffffff&guid=ON&async=1&en=gtag.config&gtm=45be6as1v9191709615za20ozb9218447135zd9218447135xecxf1&gcd=13l3l3l3l1l1&dma=0&tag_exp=115616985~115938466~115938469~118897920~118897930~119381662~120213116~120385422~120412528~120469145~120469153~121246026~121246034~123691370~123691407&u_w=800&u_h=600&url=https%3A%2F%2F1xbet.ng%2Fen%2Fblock&rcb=12&frm=0&tiba=1xbet%20Nigeria&hn=www.googleadservices.com&npa=0&pscdl=noapi&auid=1460664610.1793478230&uaa=&uab=&uafvl=&uamb=0&uam=&uap=&uapv=&uaw=0&data=event%3Dgtag.config&ept=9&rfmt=3&fmt=3&is_vtc=1&cid=CAQS4gEAQM4h3Fny_VeLk2dn9UlZLtlzw--fignPYX1I6VjdRb_QllPta08eJHwD5Z-C7dFuVY2BBdMWo9XzEUa9Pn70Jgg814JX460qrdMS_rgEMYz7d2-3HxncZBr_i0U4tXPEyEIAqi9-zel70loAaa64IQrpanydsDjrC-t7BOFRZm0NUqQUSn5AT4f6ODlXmKH8oBbaX1lXj-MNmw1S0XKBmzb7FPMinRSLeKBvjwpXWsvYZQJhynAlibuDPZZmksEAbPsXIyPp6XtBuLaiJFngCAdmiVnCQqVgJzb4nEyiFVWR&random=3989016665&rmt_tld=0&ipr=y",
+     "method": "GET",
+     "status": 200,
+     "body": null
+    },
+    {
+     "url": "https://www.google.com/pagead/1p-user-list/16558231032/?random=1793478229828&cv=11&fst=1793476800000&bg=ffffff&guid=ON&async=1&gtm=45be6as1v9191709615z89218447135za20gzb9218447135zd9218447135xeaxf1&gcd=13l3l3l3l1l1&dma=0&tag_exp=115616985~115938466~115938469~118897920~118897930~119381662~120213116~120385422~120412528~120469145~120469153~121246026~121246034~123691370~123691407&u_w=800&u_h=600&url=https%3A%2F%2F1xbet.ng%2Fen%2Fblock&rcb=12&frm=0&tiba=1xbet%20Nigeria&hn=www.googleadservices.com&npa=0&pscdl=noapi&auid=1460664610.1793478230&uaa=&uab=&uafvl=&uamb=0&uam=&uap=&uapv=&uaw=0&_tu=CA&ept=9&rfmt=3&fmt=3&is_vtc=1&cid=CAQS4gEAQM4h3ALN7pSo7IDFVWDac9fs-GkXJlm8BD4pseifNuIMIpzzMJK7ge-JIvA6lNf8nfyhkXswzzk3RL2sAtUYx3clf5y43rcx-rp1D0SXQ1tsJ96DbWZLzJUqgfDTxAaLXfwEYj9ail_Hz2vHeAFKwi94lgjBNxJI5mYNHx1u0BqIETQvlV0nQfu5-UevsfiEc1AIN-JDEcCkFb9foFo_XyGhNLiOJvgPJZUKJ8Q6qVkfKqUE4WuZTNjDF0fm1qyn5cJAojMJYuevlWfCnGkrLvfOol7Dg-onSmpHJpatVy23&random=3638259922&rmt_tld=0&ipr=y",
+     "method": "GET",
+     "status": 200,
+     "body": null
+    },
+    {
+     "url": "https://connect.facebook.net/signals/config/1286677219560573?v=2.9.433&r=stable&domain=1xbet.ng&optin_meta_enabled_capi=true&hme=4453c87d489b6902031c012cadd2731893cd69feb64fe8a61b339727247a7703&ex_m=118%2C242%2C171%2C27%2C82%2C83%2C162%2C78%2C77%2C11%2C181%2C102%2C20%2C153%2C141%2C46%2C85%2C90%2C149%2C176%2C183%2C8%2C4%2C5%2C7%2C6%2C3%2C103%2C115%2C32%2C17%2C31%2C18%2C33%2C34%2C35%2C37%2C55%2C163%2C87%2C126%2C22%2C24%2C51%2C47%2C49%2C48%2C95%2C104%2C108%2C124%2C160%2C164%2C53%2C125%2C29%2C26%2C133%2C79%2C43%2C166%2C165%2C167%2C157%2C155%2C30%2C42%2C66%2C123%2C178%2C80%2C21%2C128%2C93%2C76%2C23%2C97%2C98%2C130%2C96%2C151%2C150%2C154%2C109%2C177%2C180%2C41%2C56%2C127%2C54%2C161%2C72%2C185%2C110%2C184%2C211%2C263%2C84%2C283%2C282%2C281%2C14%2C25%2C28%2C40%2C62%2C117%2C68%2C10%2C73%2C111%2C112%2C113%2C119%2C144%2C38%2C36%2C146%2C147%2C148%2C143%2C142%2C172%2C86%2C175%2C173%2C174%2C57%2C69%2C67%2C137%2C19%2C179%2C52%2C333%2C334%2C335%2C332%2C349%2C371%2C256%2C238%2C70%2C239%2C237%2C374%2C365%2C59%2C257%2C121%2C145%2C92%2C135%2C61%2C134%2C140%2C139%2C65%2C74%2C168%2C88%2C89%2C129%2C44%2C39%2C60%2C63%2C114%2C182%2C1%2C138%2C16%2C136%2C12%2C2%2C64%2C105%2C15%2C75%2C71%2C132%2C101%2C100%2C187%2C188%2C106%2C107%2C9%2C116%2C186%2C58%2C158%2C99%2C91%2C81%2C131%2C120%2C169%2C50%2C159%2C0%2C94%2C152%2C156%2C170%2C45%2C122%2C13%2C189",
+     "method": "GET",
+     "status": 200,
+     "body": null,
+     "snippet": "/**\n* Copyright (c) 2017-present, Facebook, Inc. All rights reserved.\n*\n* You are hereby granted a non-exclusive, worldwide, royalty-free license to use,\n* copy, modify, and distribute this software in source code or binary form for use\n* in connection with the web services and APIs provided by Facebook.\n*\n* As with any software that integrates with the Facebook platform, your use of\n* this softwa",
+     "length": 540736
+    },
+    {
+     "url": "https://www.facebook.com/tr/?id=1286677219560573&ev=PageView&dl=https%3A%2F%2F1xbet.ng%2Fen%2Fblock&rl=&if=false&ts=1793478230010&iw=false&sw=800&sh=600&v=2.9.433&r=stable&a=tmSimo-GTM-WebTemplate-2.0.8-fcg&ec=0&o=12318&aems=0%3B0&fbp=fb.1.1793478230004.91760319193116437&eid=ob3_plugin-set_952d7de6caa8dcdf3ed55be8a9d3bf5c01bbebf7863f52cc57e6dc5e7d1e25be&ler=empty&cdl=API_unavailable&pmd[title]=1xbet%20Nigeria&plt=1304.8000000000175&iss=1&imft=1&tz=0&it=1793478229708&coo=false&tm=1&cf=1&expv2[0]=pl0&expv2[1]=el3&expv2[2]=bc1&expv2[3]=ra2&expv2[4]=rp2&expv2[5]=ct3&expv2[6]=hf1&expv2[7]=ai0&expv2[8]=sd1&expv2[9]=sp1&expv2[10]=ek1&expv2[11]=pc1&expv2[12]=gs1&expv2[13]=zs1&expv2[14]=cp1&expv2[15]=es1&expv2[16]=ac1&expv2[17]=so1&expv2[18]=wc1&expv2[19]=la1&expv2[20]=sf1&expv2[21]=da1&expv2[22]=io1&expv2[23]=ae1&expv2[24]=sx1&expv2[25]=if1&expv2[26]=fd1&expv2[27]=bg1&expv2[28]=mg1&expv2[29]=kl1&expv2[30]=sg1&expv2[31]=mk1&expv2[32]=sn1&expv2[33]=ec1&expv2[34]=mp1&expv2[35]=ps1&expv2[36]=fx1&expv2[37]=vt1&expv2[38]=dp1&expv2[39]=fw1&expv2[40]=cn1&expv2[41]=tz1&expv2[42]=pe1&expv2[43]=ee1&expv2[44]=bu1&expv2[45]=ta1&expv2[46]=ot1&expv2[47]=hv1&expv2[48]=ep1&expv2[49]=rh0&expv2[50]=ah0&expv2[51]=nv1&expv2[52]=oq1&rqm=GET",
+     "method": "GET",
+     "status": 200,
+     "body": null
+    },
+    {
+     "url": "https://mpc-prod-24-s6uit34pua-uw.a.run.app/events?cee=no",
+     "method": "POST",
+     "status": 200,
+     "body": "{\"event_name\":\"PageView\",\"smart_setup\":{\"is_auto_web_details\":true},\"event_id\":\"ob3_plugin-set_952d7de6caa8dcdf3ed55be8a9d3bf5c01bbebf7863f52cc57e6dc5e7d1e25be\",\"fb.pixel_id\":\"1286677219560573\",\"websi"
+    },
+    {
+     "url": "https://capi-automation.s3.us-east-2.amazonaws.com/public/client_js/capiParamBuilder/clientParamBuilder.bundle.js",
+     "method": "GET",
+     "status": 200,
+     "body": null
+    },
+    {
+     "url": "https://analytics.google.com/g/collect?v=2&tid=G-7JGWL9SV66&gtm=45je6as1v897130004za200zd897130004xf1&_p=1793478229341&gcd=13l3l3l3l1l1&npa=0&dma=0&ecid=996546864&_eu=AEAAAGQC&ae=a&cid=127260076.1793478230&frm=0&pscdl=noapi&rcb=7&sr=800x600&uaa=&uab=&uafvl=&uam=&uamb=0&uap=&uapv=&uaw=0&ul=en-us&gaf=2&_s=3&tag_exp=115616986~115938466~115938469~118869188~118897920~118897930~120213116~120385423~120469145~120469153~121246026~121246034~123691370&sid=1793478229&sct=1&seg=0&dl=https%3A%2F%2F1xbet.ng%2Fen%2Fblock&dt=1xbet%20Nigeria&en=scroll&ep.optimize_id=GTM-5R4MT54&epn.percent_scrolled=90&_et=34&tfd=9878",
+     "method": "POST",
+     "status": 204,
+     "body": null
+    }
+   ],
+   "withPrices": [
+    {
+     "url": "https://1xbet.ng/bff-api/config/group/get?groups=b.core,d.core&lang=en&d=1xbet.ng&g=US&p=412",
+     "method": "GET",
+     "status": 200,
+     "body": null,
+     "snippet": "{\"-1000\":159,\"-1001\":412,\"-1002\":{\"icons\":\"1.0.1142\",\"ui\":\"3.3.523\"},\"-1004\":{\"id\":\"en\",\"title\":\"English\",\"code\":\"en\",\"locale\":\"en_GB\"},\"-1005\":{\"1\":\"dictionary2\\/main\\/en\\/dictionary_c8367bb5f711ca955ef903eb1697d0d8.json\",\"2\":\"dictionary2\\/office\\/en\\/dictionary_65fdfd740f79ec56db4b88dd62bad32d.json\",\"3\":\"dictionary2\\/v3_main\\/en\\/dictionary_e201cd94809083cf541082e432c79763.json\",\"4\":\"dictionary2",
+     "length": 29078
+    },
+    {
+     "url": "https://tm.ads.sportradar.com/dist/tag-manager.js?id=STM-AAAAB9",
+     "method": "GET",
+     "status": 200,
+     "body": null,
+     "snippet": "var _ads=function(t){function e(e){for(var n,o,i=e[0],u=e[1],a=0,f=[];a<i.length;a++)o=i[a],Object.prototype.hasOwnProperty.call(r,o)&&r[o]&&f.push(r[o][0]),r[o]=0;for(n in u)Object.prototype.hasOwnProperty.call(u,n)&&(t[n]=u[n]);for(c&&c(e);f.length;)f.shift()()}var n={},r={0:0};function o(e){if(n[e])return n[e].exports;var r=n[e]={i:e,l:!1,exports:{}};return t[e].call(r.exports,r,r.exports,o),r.",
+     "length": 196647
+    },
+    {
+     "url": "https://connect.facebook.net/en_US/fbevents.js",
+     "method": "GET",
+     "status": 200,
+     "body": null,
+     "snippet": "/**\n* Copyright (c) 2017-present, Facebook, Inc. All rights reserved.\n*\n* You are hereby granted a non-exclusive, worldwide, royalty-free license to use,\n* copy, modify, and distribute this software in source code or binary form for use\n* in connection with the web services and APIs provided by Facebook.\n*\n* As with any software that integrates with the Facebook platform, your use of\n* this softwa",
+     "length": 437578
+    },
+    {
+     "url": "https://connect.facebook.net/signals/config/1286677219560573?v=2.9.433&r=stable&domain=1xbet.ng&optin_meta_enabled_capi=true&hme=4453c87d489b6902031c012cadd2731893cd69feb64fe8a61b339727247a7703&ex_m=118%2C242%2C171%2C27%2C82%2C83%2C162%2C78%2C77%2C11%2C181%2C102%2C20%2C153%2C141%2C46%2C85%2C90%2C149%2C176%2C183%2C8%2C4%2C5%2C7%2C6%2C3%2C103%2C115%2C32%2C17%2C31%2C18%2C33%2C34%2C35%2C37%2C55%2C163%2C87%2C126%2C22%2C24%2C51%2C47%2C49%2C48%2C95%2C104%2C108%2C124%2C160%2C164%2C53%2C125%2C29%2C26%2C133%2C79%2C43%2C166%2C165%2C167%2C157%2C155%2C30%2C42%2C66%2C123%2C178%2C80%2C21%2C128%2C93%2C76%2C23%2C97%2C98%2C130%2C96%2C151%2C150%2C154%2C109%2C177%2C180%2C41%2C56%2C127%2C54%2C161%2C72%2C185%2C110%2C184%2C211%2C263%2C84%2C283%2C282%2C281%2C14%2C25%2C28%2C40%2C62%2C117%2C68%2C10%2C73%2C111%2C112%2C113%2C119%2C144%2C38%2C36%2C146%2C147%2C148%2C143%2C142%2C172%2C86%2C175%2C173%2C174%2C57%2C69%2C67%2C137%2C19%2C179%2C52%2C333%2C334%2C335%2C332%2C349%2C371%2C256%2C238%2C70%2C239%2C237%2C374%2C365%2C59%2C257%2C121%2C145%2C92%2C135%2C61%2C134%2C140%2C139%2C65%2C74%2C168%2C88%2C89%2C129%2C44%2C39%2C60%2C63%2C114%2C182%2C1%2C138%2C16%2C136%2C12%2C2%2C64%2C105%2C15%2C75%2C71%2C132%2C101%2C100%2C187%2C188%2C106%2C107%2C9%2C116%2C186%2C58%2C158%2C99%2C91%2C81%2C131%2C120%2C169%2C50%2C159%2C0%2C94%2C152%2C156%2C170%2C45%2C122%2C13%2C189",
+     "method": "GET",
+     "status": 200,
+     "body": null,
+     "snippet": "/**\n* Copyright (c) 2017-present, Facebook, Inc. All rights reserved.\n*\n* You are hereby granted a non-exclusive, worldwide, royalty-free license to use,\n* copy, modify, and distribute this software in source code or binary form for use\n* in connection with the web services and APIs provided by Facebook.\n*\n* As with any software that integrates with the Facebook platform, your use of\n* this softwa",
+     "length": 540736
+    }
+   ]
+  }
+ }
+}
