@@ -1,5 +1,5 @@
 {
- "at": "2026-11-03T23:59:33.362Z",
+ "at": "2026-11-03T23:59:36.446Z",
  "edge": "LHR",
  "phoneCountry": "NG",
  "workerCountry": "NG",
@@ -17,7 +17,7 @@
      "https://22bet.ng/hd-api/external/apps/a1047eab1035d58682a53557e0b2a75edbfd15fd/api.js",
      "https://22bet.ng/hd-api/external/apps/a1047eab1035d58682a53557e0b2a75edbfd15fd/api.js",
      "https://v2l.traincdn.com/bundle/app/cdnChecker/Default/cdnChecker.66b509943bee75b5.bundle.js",
-     "https://v2l.traincdn.com/bundle/app/Application/Desktop/application.37b0e537ef3522f4.bundle.js"
+     "https://v2l.traincdn.com/bundle/app/Application/Desktop/application.87e23cae293a2e52.bundle.js"
     ],
     "chunks": [],
     "candidatesTried": 2
